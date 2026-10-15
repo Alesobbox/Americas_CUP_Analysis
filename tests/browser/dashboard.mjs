@@ -1,0 +1,353 @@
+import assert from 'node:assert/strict'
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import os from 'node:os'
+import { createRequire } from 'node:module'
+const require = createRequire(import.meta.url)
+let playwright
+try { playwright = require('playwright') }
+catch { playwright = require(process.env.REGATTA_PLAYWRIGHT || path.join(os.homedir(), '.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright')) }
+const base = process.env.REGATTA_URL || 'http://127.0.0.1:5173'
+const output = process.env.REGATTA_QA_OUTPUT || path.join(os.tmpdir(), 'ac40-dashboard-qa')
+await fs.mkdir(output, { recursive: true })
+const browser = await playwright.chromium.launch({ channel: 'chrome', headless: true })
+const context = await browser.newContext({ viewport: { width: 1586, height: 992 }, acceptDownloads: true })
+await context.addInitScript(() => localStorage.setItem('regatta_view_mode', 'grid'))
+const page = await context.newPage()
+page.setDefaultTimeout(15000)
+const errors = []
+const dataRequests = []
+const failedRequests = []
+const consoleErrors = []
+let expectedFailure = false
+page.on('console', (message) => { if (message.type() === 'error' && !expectedFailure) consoleErrors.push(message.text()) })
+const checks = []
+const catalog = JSON.parse(await fs.readFile('public/data/manifests.json', 'utf8')).regattas.flatMap((group) => group.races)
+const readReplay = async (id) => JSON.parse(await fs.readFile('public/data/replays/' + id + '.json', 'utf8'))
+const nav = async (name) => page.getByRole('navigation', { name: 'Main Navigation' }).getByRole('button', { name, exact: true }).click()
+const check = async (name, fn) => {
+  await fn()
+  checks.push(name)
+  console.log('PASS ' + name)
+}
+page.on('pageerror', (error) => errors.push(error.message))
+page.on('request', (request) => {
+  if (request.url().startsWith(base + '/data/')) dataRequests.push(new URL(request.url()).pathname)
+})
+page.on('requestfailed', (request) => {
+  if (!expectedFailure && request.url().startsWith(base) && request.failure()?.errorText !== 'net::ERR_ABORTED') failedRequests.push(request.url())
+})
+const load = async (race = 'naples_pr1', extra = '') => {
+  await page.goto(base + '/?race=' + encodeURIComponent(race) + '&t=gun' + extra)
+  await page.getByRole('banner').waitFor()
+  await page.locator('.fleet-table tbody tr').first().waitFor()
+}
+try {
+  if (!process.argv.includes('--capture')) {
+    await check('all 28 races load in Grid with complete fleet and event states', async () => {
+      for (const race of catalog) {
+        await load(race.id)
+        assert.equal(await page.locator('.fleet-table tbody tr').count(), race.competitors_count)
+        assert.equal(await page.getByRole('navigation', { name: 'Main Navigation' }).getByRole('button').count(), 4)
+        await nav('Analysis')
+        await page.getByRole('heading', { name: 'Race metrics', exact: true }).waitFor()
+        await nav('Reports')
+        await page.getByRole('link', { name: 'Download the complete artifact inventory' }).waitFor()
+      }
+    })
+  }
+  for (const [width, height] of [[1586, 992], [1280, 720], [390, 844]]) {
+    for (const id of ['naples_pr1', 'naples_mr_final']) {
+      await check('interactions ' + id + ' at ' + width + '×' + height, async () => {
+        await page.setViewportSize({ width, height })
+        await load(id)
+        const replay = await readReplay(id)
+        const primary = replay.competitors[0]
+        const other = replay.competitors.find((boat) => boat.id !== primary.id)
+        const slider = page.getByRole('slider', { name: 'Race playhead' })
+        const start = Number(await slider.getAttribute('aria-valuenow'))
+        await slider.focus(); await slider.press('ArrowRight')
+        assert.equal(Number(await slider.getAttribute('aria-valuenow')), start + 5000)
+        await page.getByTitle('Step backward 5 seconds').click()
+        assert.equal(Number(await slider.getAttribute('aria-valuenow')), start)
+        await page.getByRole('radio', { name: '2x', exact: true }).click()
+        assert.equal(await page.getByRole('radio', { name: '2x', exact: true }).getAttribute('aria-checked'), 'true')
+        await page.getByTitle('Play replay (Space)').click()
+        await page.getByTitle('Pause replay (Space)').waitFor()
+        await page.getByTitle('Pause replay (Space)').click()
+        await page.getByTitle('Collapse panel', { exact: true }).click()
+        await page.getByTitle('Expand panel', { exact: true }).click()
+        await page.locator('.fleet-table-row').filter({ has: page.locator('.boat-code-text', { hasText: other.team_code }) }).first().focus()
+        await page.keyboard.press('Enter')
+        assert.equal(await page.locator('.boat-code-strong').innerText(), other.team_code)
+        await page.getByRole('button', { name: 'All Boats', exact: true }).click()
+        await page.locator('.hdr-dropdown-popover .popover-item').filter({ hasText: primary.team_code }).first().click()
+        assert.equal(await page.locator('canvas[aria-label="Live vessel positions"]').getAttribute('data-visible-boat'), primary.id)
+        assert.equal(await page.locator('.fleet-table tbody tr').count(), replay.competitors.length)
+        assert.equal(await page.locator('.boat-code-strong').innerText(), primary.team_code)
+        assert.equal(await page.locator('.chart-svg-canvas polyline').count(), 3)
+        await page.locator('.boat-chip-btn').filter({ hasText: other.team_code }).first().click()
+        assert.equal(await page.locator('.boat-code-strong').innerText(), other.team_code)
+        assert.equal(await page.locator('canvas[aria-label="Live vessel positions"]').getAttribute('data-visible-boat'), other.id)
+        await page.locator('.header-right-actions .hdr-pill-dropdown-btn').nth(1).click()
+        await page.locator('.hdr-dropdown-popover').getByRole('button', { name: /All Boats/ }).click()
+        await page.getByRole('button', { name: 'Settings', exact: true }).click()
+        await page.getByLabel('Orientation', { exact: true }).selectOption('course')
+        await page.getByLabel('Boat display', { exact: true }).selectOption('enhanced')
+        await page.getByLabel('Trail length', { exact: true }).selectOption('60s')
+        await page.getByLabel('Trail colour', { exact: true }).selectOption('vmg')
+        await page.getByLabel('Show virtual safety borders').check()
+        await page.getByRole('button', { name: 'Close settings' }).press('Escape')
+        assert.equal(await page.getByRole('dialog', { name: 'Dashboard settings' }).count(), 0)
+        await page.getByRole('button', { name: 'Fit full racecourse', exact: true }).click()
+        const canvas = page.locator('canvas[aria-label="Live vessel positions"]')
+        const oldScale = JSON.parse(await canvas.getAttribute('data-viewport')).scale
+        await page.getByRole('button', { name: 'Zoom in', exact: true }).click()
+        await page.waitForFunction((scale) => JSON.parse(document.querySelector('canvas[aria-label="Live vessel positions"]').dataset.viewport).scale > scale, oldScale)
+        await page.getByRole('button', { name: 'Zoom out', exact: true }).click()
+        await page.getByRole('button', { name: 'Reset view', exact: true }).click()
+        const canvasBox = await canvas.boundingBox()
+        const viewport = JSON.parse(await canvas.getAttribute('data-viewport'))
+        const time = Number(await slider.getAttribute('aria-valuenow'))
+        const index = Math.min(replay.telemetry.timestamps.length - 1, Math.floor((time - replay.chronology.window_start) / 100))
+        const candidate = replay.competitors.map((boat) => {
+          const tel = replay.telemetry.boats[boat.id]
+          const dx = tel.x[index] - viewport.center[0], dy = tel.y[index] - viewport.center[1]
+          const angle = viewport.rotationDeg * Math.PI / 180
+          return { boat, x: viewport.width / 2 + (Math.cos(angle) * dx - Math.sin(angle) * dy) * viewport.scale,
+            y: viewport.height / 2 - (Math.sin(angle) * dx + Math.cos(angle) * dy) * viewport.scale }
+        }).find((item) => item.x > 15 && item.x < canvasBox.width - 15 && item.y > 90 && item.y < canvasBox.height - 110)
+        assert.ok(candidate, 'A visible map vessel must be clickable')
+        await canvas.click({ position: { x: candidate.x, y: candidate.y } })
+        assert.equal(await page.locator('.boat-code-strong').innerText(), candidate.boat.team_code)
+        await page.getByRole('button', { name: 'Auto-track fleet', exact: true }).click()
+        await page.getByRole('button', { name: 'Follow selected boat', exact: true }).click()
+        await page.getByRole('button', { name: 'Toggle safety borders', exact: true }).click()
+        await page.getByRole('button', { name: 'Toggle fullscreen', exact: true }).click()
+        await page.waitForFunction(() => !!document.fullscreenElement)
+        await page.getByRole('button', { name: 'Toggle fullscreen', exact: true }).click()
+        await page.getByRole('tab', { name: 'All Events', exact: true }).click()
+        await page.getByRole('tab', { name: 'Tacks / Gybes', exact: true }).click()
+        await page.getByRole('tab', { name: 'Wind Shifts', exact: true }).click()
+        await page.getByRole('tab', { name: 'Marks Only', exact: true }).click()
+        await page.getByRole('button', { name: /Course & layers/ }).click()
+        await page.getByText('Race Corridor Boundaries', { exact: true }).waitFor()
+        await page.getByRole('button', { name: 'Add note', exact: true }).click()
+        await page.getByPlaceholder('Type tactical note...').fill('QA ' + width + ' ' + id)
+        await page.getByPlaceholder('Type tactical note...').press('Enter')
+        await page.getByRole('tab', { name: 'Notes', exact: true }).click()
+        await page.getByText('QA ' + width + ' ' + id, { exact: true }).waitFor()
+        await page.locator('.window-select-btn').click()
+        await page.getByRole('button', { name: 'Full Race', exact: true }).click()
+        await page.locator('.metric-chip-btn').filter({ hasText: 'TWA' }).click()
+        assert.equal(await page.locator('.chart-row-container').count(), 2)
+        await page.locator('.metric-chip-btn').filter({ hasText: 'TWA' }).click()
+        const downloadPromise = page.waitForEvent('download')
+        await page.getByRole('button', { name: 'Export', exact: true }).click()
+        const download = await downloadPromise
+        assert.equal(JSON.parse(await fs.readFile(await download.path(), 'utf8')).id, id)
+        await download.delete()
+        await nav('Compare')
+        await page.getByLabel('Primary boat A').selectOption(primary.id)
+        await page.getByLabel('Compare with').selectOption(other.id)
+        await page.getByLabel('Primary boat A').selectOption(other.id)
+        assert.equal(await page.getByLabel('Compare with').inputValue(), other.id)
+        await page.getByText('A and B are the same boat.', { exact: false }).waitFor()
+        await page.getByLabel('Primary boat A').selectOption(primary.id)
+        await page.getByText('SEPARATION', { exact: true }).waitFor()
+        await page.screenshot({ path: path.join(output, id + '-compare-' + width + '.png') })
+        await nav('Analysis')
+        await page.getByRole('heading', { name: 'Race metrics', exact: true }).waitFor()
+        await page.getByText('Definitions, coverage and provenance', { exact: true }).click()
+        await page.getByText('Method version:', { exact: false }).waitFor()
+        await page.getByRole('tab', { name: 'Historical view', exact: true }).click()
+        await page.getByRole('heading', { name: 'Manoeuvre distributions', exact: true }).waitFor()
+        await page.evaluate(() => scrollTo(0, 0))
+        await page.screenshot({ path: path.join(output, id + '-analysis-' + width + '.png') })
+        await nav('Reports')
+        await page.getByLabel('Artifact scope').selectOption('all')
+        await page.getByRole('link', { name: 'Download the complete artifact inventory' }).waitFor()
+        await page.screenshot({ path: path.join(output, id + '-reports-' + width + '.png') })
+        await nav('Replay')
+        await page.getByRole('slider', { name: 'Race playhead' }).press('Home')
+        assert.ok(!(await page.locator('.timeline-events-list').innerText()).toLowerCase().includes('finish'))
+        await page.getByRole('button', { name: 'Reset view', exact: true }).click()
+        await page.screenshot({ path: path.join(output, id + '-' + width + '.png'), fullPage: true })
+        const dimensions = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth }))
+        assert.ok(dimensions.scroll <= dimensions.width + 1, 'Horizontal page overflow at ' + width)
+      })
+    }
+  }
+  await check('detail panels, chart selectors, note buttons and keyboard controls', async () => {
+    await page.setViewportSize({ width: 1586, height: 992 })
+    await load('naples_pr1')
+    const replay = await readReplay('naples_pr1')
+    const slider = page.getByRole('slider', { name: 'Race playhead' })
+    for (const speed of ['0.5x', '1x', '2x', '4x']) {
+      await page.getByRole('radio', { name: speed, exact: true }).click()
+      assert.equal(await page.getByRole('radio', { name: speed, exact: true }).getAttribute('aria-checked'), 'true')
+    }
+    const before = Number(await slider.getAttribute('aria-valuenow'))
+    await page.getByTitle('Step forward 5 seconds').click()
+    assert.equal(Number(await slider.getAttribute('aria-valuenow')), before + 5000)
+    await slider.press('End')
+    await page.getByTitle('Play replay (Space)').click()
+    await page.getByTitle('Pause replay (Space)').waitFor()
+    assert.ok(Number(await slider.getAttribute('aria-valuenow')) < replay.chronology.window_end)
+    await page.getByTitle('Pause replay (Space)').click()
+    await slider.press('End')
+    await page.getByRole('button', { name: 'Show all events', exact: true }).click()
+    await page.locator('.timeline-event-item').first().focus()
+    await page.keyboard.press('Enter')
+    assert.ok(Number(await slider.getAttribute('aria-valuenow')) < replay.chronology.window_end)
+    const notes = page.getByRole('article', { name: 'Events and Notes' })
+    for (const tab of ['All', 'Tacks', 'Marks', 'Wind', 'Notes']) {
+      await notes.getByRole('tab', { name: tab, exact: true }).click()
+      assert.equal(await notes.getByRole('tab', { name: tab, exact: true }).getAttribute('aria-selected'), 'true')
+    }
+    await notes.getByRole('button', { name: 'Add note', exact: true }).click()
+    await page.getByPlaceholder('Type tactical note...').fill('cancelled QA note')
+    await notes.getByRole('button', { name: 'Cancel', exact: true }).click()
+    assert.ok(!(await notes.innerText()).includes('cancelled QA note'))
+    await notes.getByRole('button', { name: 'Add note', exact: true }).click()
+    await page.getByPlaceholder('Type tactical note...').fill('QA saved by button')
+    await notes.getByRole('button', { name: 'Save', exact: true }).click()
+    await notes.getByText('QA saved by button', { exact: true }).waitFor()
+    for (const window of ['1 min', '3 min', '5 min', '10 min', 'Full Race']) {
+      await page.locator('.window-select-btn').click()
+      await page.getByRole('button', { name: window, exact: true }).click()
+      assert.equal(await page.locator('.window-select-btn').innerText(), window)
+    }
+    for (const metric of ['SOG', 'VMG', 'TWA']) {
+      const chip = page.locator('.metric-chip-btn').filter({ hasText: metric })
+      await chip.click(); assert.equal(await page.locator('.chart-row-container').count(), 2)
+      await chip.click(); assert.equal(await page.locator('.chart-row-container').count(), 3)
+    }
+    const chart = page.locator('.stacked-charts-stage')
+    await chart.click({ position: { x: 450, y: 30 } })
+    assert.notEqual(Number(await slider.getAttribute('aria-valuenow')), before)
+    await notes.getByText('QA saved by button', { exact: true }).click()
+    await page.locator('.header-right-actions .hdr-pill-dropdown-btn').first().click()
+    await page.keyboard.press('Escape')
+    assert.equal(await page.locator('.hdr-dropdown-popover').count(), 0)
+    await page.locator('.header-right-actions .hdr-pill-dropdown-btn').first().click()
+    await page.getByRole('button', { name: 'FULL RACE ARCHIVE...' }).click()
+    await page.keyboard.press('Escape')
+    assert.equal(await page.getByRole('dialog', { name: 'Choose race' }).count(), 0)
+    await nav('Analysis')
+    await page.getByRole('heading', { name: 'Race metrics', exact: true }).waitFor()
+    const boat = replay.competitors.find((item) => item.id !== replay.competitors[0].id)
+    await page.locator('.analysis-team-select').filter({ hasText: boat.team_code }).first().click()
+    await nav('Replay')
+    assert.equal(await page.locator('.boat-code-strong').innerText(), boat.team_code)
+    await nav('Analysis')
+    await page.getByRole('tab', { name: 'Historical view', exact: true }).click()
+    await page.getByRole('heading', { name: 'Manoeuvre distributions', exact: true }).waitFor()
+    for (let index = 0; index < await page.getByRole('combobox').count(); index++) {
+      const select = page.getByRole('combobox').nth(index)
+      const options = await select.locator('option').evaluateAll((items) => items.map((item) => item.value))
+      if (options.length > 1) {
+        await select.selectOption(options[1])
+        assert.equal(await select.inputValue(), options[1])
+      }
+    }
+    await nav('Reports')
+    const inventory = await (await fetch(base + '/data/artifacts.json')).json()
+    await page.getByLabel('Artifact scope').selectOption('all')
+    assert.equal(await page.locator('.workspace-table-wrap').last().locator('tbody tr').count(), inventory.artifacts.length)
+    await page.getByLabel('Artifact scope').selectOption('global')
+    assert.equal(await page.locator('.workspace-table-wrap').last().locator('tbody tr').count(), inventory.artifacts.filter((item) => !item.race_id).length)
+  })
+  await check('race picker resets filter, selection and race-scoped notes', async () => {
+    await nav('Replay')
+    await page.locator('.header-right-actions .hdr-pill-dropdown-btn').first().click()
+    await page.getByRole('button', { name: 'FULL RACE ARCHIVE...' }).click()
+    await page.getByRole('dialog', { name: 'Choose race' }).getByRole('button', { name: /26 05 22 CAG IPR Race 1/ }).click()
+    await page.locator('.fleet-table tbody tr').first().waitFor()
+    assert.equal(await page.locator('.fleet-table tbody tr').count(), 8)
+    assert.equal(await page.locator('canvas[aria-label="Live vessel positions"]').getAttribute('data-visible-boat'), 'all')
+    await page.getByRole('tab', { name: 'Notes', exact: true }).click()
+    assert.ok(!(await page.locator('.events-list-scrollable').innerText()).includes('QA '))
+  })
+  await check('legacy workbench links open the matching dashboard views', async () => {
+    await page.goto(base + '/?race=naples_pr1&layout=workbench&tab=duel&t=gun')
+    await page.getByRole('heading', { name: 'Compare at the shared playhead' }).waitFor()
+    await page.goto(base + '/?race=naples_pr1&layout=workbench&tab=start&t=gun')
+    await page.getByRole('heading', { name: 'Race analysis', exact: true }).waitFor()
+  })
+  await check('all artifact downloads resolve to data files', async () => {
+    const inventory = await (await fetch(base + '/data/artifacts.json')).json()
+    assert.equal(inventory.summary.replayed_boat_races, 224)
+    for (const artifact of inventory.artifacts) {
+      const response = await fetch(base + artifact.url, { method: 'HEAD' })
+      assert.equal(response.status, 200, artifact.url)
+      assert.ok(!response.headers.get('content-type')?.includes('text/html'), artifact.url)
+    }
+  })
+  await check('missing analysis feed leaves replay available', async () => {
+    expectedFailure = true
+    await page.route('**/data/analysis/naples_pr1.json', (route) => route.fulfill({ status: 404, body: '{}' }))
+    await load('naples_pr1')
+    await page.getByText('Event feed unavailable for this race', { exact: true }).first().waitFor()
+    await page.unroute('**/data/analysis/naples_pr1.json')
+  })
+  await check('missing replay has a recoverable load error', async () => {
+    await page.route('**/data/replays/naples_pr1.json', (route) => route.fulfill({ status: 404, body: '{}' }))
+    await page.reload()
+    await page.getByText('DATA LOAD ERROR', { exact: true }).waitFor()
+    await page.unroute('**/data/replays/naples_pr1.json')
+    await page.getByRole('button', { name: 'Retry', exact: true }).click()
+    await page.getByRole('banner').waitFor()
+  })
+  expectedFailure = false
+  await check('OpenStreetMap default, attribution and offline fallback', async () => {
+    const mapContext = await browser.newContext({ viewport: { width: 1586, height: 992 } })
+    const mapPage = await mapContext.newPage()
+    const osmRequests = []
+    const osmResponses = []
+    let testingOffline = false
+    mapPage.on('pageerror', (error) => errors.push(error.message))
+    mapPage.on('console', (message) => { if (message.type() === 'error' && !testingOffline) consoleErrors.push(message.text()) })
+    mapContext.on('response', (response) => {
+      if (response.url().startsWith(base) && response.status() >= 400) failedRequests.push(response.status() + ' ' + response.url())
+    })
+    mapContext.on('requestfailed', (request) => {
+      if (request.url().startsWith(base) && request.failure()?.errorText !== 'net::ERR_ABORTED') failedRequests.push(request.url())
+    })
+    mapPage.on('request', (request) => { if (request.url().includes('tile.openstreetmap.org/')) osmRequests.push(request.url()) })
+    mapPage.on('response', (response) => { if (response.url().includes('tile.openstreetmap.org/') && response.status() === 200) osmResponses.push(response.url()) })
+    const firstTile = mapPage.waitForResponse((response) => response.url().includes('tile.openstreetmap.org/') && response.status() === 200, { timeout: 15000 }).catch(() => null)
+    const workerResponse = mapContext.waitForEvent('response', { predicate: (response) => response.url().includes('maplibre-gl-worker') && response.status() === 200 })
+    await mapPage.goto(base + '/?race=naples_pr1&t=gun')
+    await mapPage.locator('.maplibregl-canvas').waitFor()
+    await mapPage.waitForFunction(() => document.querySelector('.map-osm-attribution') || document.body.innerText.includes('Offline'))
+    await firstTile
+    await workerResponse
+    await mapPage.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {})
+    assert.ok(osmRequests.length > 0, 'Default map must request OSM tiles')
+    const attribution = mapPage.getByRole('link', { name: 'OpenStreetMap', exact: true })
+    if (await attribution.count()) assert.equal(await attribution.getAttribute('href'), 'https://www.openstreetmap.org/copyright')
+    await mapPage.screenshot({ path: path.join(output, 'openstreetmap.png') })
+    await mapPage.getByRole('button', { name: 'Technical 2D metric grid view' }).click()
+    assert.equal(await mapPage.locator('.maplibregl-canvas').count(), 0)
+    await mapPage.route('**/tile.openstreetmap.org/**', (route) => route.abort())
+    testingOffline = true
+    await mapPage.getByRole('button', { name: 'OpenStreetMap view', exact: true }).click()
+    await mapPage.getByText('Map tiles offline', { exact: false }).waitFor()
+    await mapPage.screenshot({ path: path.join(output, 'map-offline.png') })
+    await fs.writeFile(path.join(output, 'map-network.json'), JSON.stringify({ tileRequests: osmRequests.length, successfulTiles: osmResponses.length }, null, 2))
+    await mapContext.close()
+  })
+  assert.deepEqual(errors, [], 'Browser exceptions')
+  assert.deepEqual(failedRequests, [], 'Failed application requests')
+  assert.deepEqual(consoleErrors, [], 'Unexpected console errors')
+  const inventory = await (await fetch(base + '/data/artifacts.json')).json()
+  const allowedData = new Set(['/data/artifacts.json', ...inventory.artifacts.map((item) => item.url)])
+  assert.deepEqual([...new Set(dataRequests)].filter((url) => !allowedData.has(url)), [], 'All data requests must resolve through the dashboard inventory')
+  await fs.writeFile(path.join(output, 'results.json'), JSON.stringify({ checks, errors, failedRequests, consoleErrors }, null, 2))
+  console.log(JSON.stringify({ checks: checks.length, errors: errors.length, failedRequests: failedRequests.length }))
+} catch (error) {
+  await page.screenshot({ path: path.join(output, 'failure.png'), fullPage: true }).catch(() => {})
+  await fs.writeFile(path.join(output, 'results.json'), JSON.stringify({ checks, error: error.message, errors, failedRequests }, null, 2))
+  throw error
+} finally { await browser.close() }

@@ -1,0 +1,183 @@
+/* Regatta Replay instrument interface. See docs/design-system.md. */
+
+:root {
+  /* Neutral chrome keeps the course and team liveries prominent. */
+  --bg-app: #0a0f18;
+  --bg-surface: #101722;
+  --bg-panel: #111827;
+  --bg-card: #17212f;
+  --bg-card-hover: #1c2938;
+  --bg-input: #0c1420;
+  --bg-active: #183344;
+  --bg-hover: var(--bg-card-hover);
+
+  --border-subtle: #2b3745;
+  --border-medium: #405265;
+  --border-strong: #60748a;
+  --border-focus: #06b6d4;
+
+  --telemetry-cyan: #06b6d4;
+  --telemetry-amber: #f59e0b;
+  --telemetry-emerald: #4ac0a6;
+  --racing-red: #ef4444;
+
+  /* Compatibility names used by established race components. */
+  --foiling-cyan: var(--telemetry-cyan);
+  --foiling-cyan-glow: rgba(6, 182, 212, 0.18);
+  --telemetry-cyan-glow: var(--foiling-cyan-glow);
+  --racing-red-glow: rgba(239, 68, 68, 0.18);
+  --prada-red: var(--racing-red);
+  --prada-red-hover: var(--racing-red);
+  --prada-red-glow: var(--racing-red-glow);
+  --silver-trophy: #edf2f7;
+  --silver-sheen: #d4e0e9;
+  --silver-burnished: #b2c0cd;
+  --silver-muted: #8d9daa;
+  --safety-orange: var(--telemetry-amber);
+  --pirelli-gold: var(--telemetry-amber);
+  --telemetry-purple: #9b88cb;
+
+  /* Text & Typography Hierarchy */
+  --text-white: #ffffff;
+  --text-primary: #edf2f7;
+  --text-secondary: #b2c0cd;
+  --text-muted: #8d9daa;
+  --text-faint: #8292a2;
+
+  /* Font Families */
+  --font-display: 'Chakra Petch', -apple-system, sans-serif;
+  --font-ui: 'Chakra Petch', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  /* Compatibility Aliases */
+  --ink: var(--text-primary);
+  --muted: var(--text-secondary);
+  --faint: var(--text-muted);
+  --line: var(--border-subtle);
+  --panel: var(--bg-panel);
+  --accent: var(--telemetry-cyan);
+
+  color-scheme: dark;
+  color: var(--text-primary);
+  background-color: var(--bg-app);
+  font-family: var(--font-ui);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Universal Box Sizing & Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-medium);
+}
+
+/* Tabular Numbers for Telemetry & Metrics */
+.tabular,
+dd,
+output,
+.race-clock,
+.gap-cell,
+.start-row span,
+.standing-row span,
+.summary-table td {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' on;
+}
+
+/* Interactive Element Focus */
+button, select, input {
+  font-family: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 1px;
+}
+
+/* Error / Loading Screen */
+.screen-message {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  background: var(--bg-app);
+  color: var(--text-secondary);
+}
+
+.screen-message p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--racing-red);
+  text-transform: uppercase;
+}
+
+.screen-message strong {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  color: var(--text-white);
+  font-weight: 600;
+}
+
+.screen-message button {
+  padding: 8px 18px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--text-white);
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.screen-message button:hover {
+  border-color: var(--telemetry-cyan);
+  background: var(--bg-hover);
+}
