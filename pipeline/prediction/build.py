@@ -265,6 +265,9 @@ def export_archive(root: Path, *, race_id=None, pre_n=100000, live_n=20000):
     verify_public(root,index=index)
     atomic_json(directory/"index.json",index)  # publish index last
     atomic_json(directory/"cup_2027.json",cup)  # convenient stable download alias
+    if (root/"public"/"data"/"manifests.json").is_file():
+        from scripts.build_artifact_inventory import build_inventory
+        build_inventory(root)
     report=verify_public(root)
     report.update(seconds=round(time.perf_counter()-started,3),unavailable_reason="Audited completion denominator absent" if not reviews else None)
     atomic_json(root/".forecast"/"build_report.json",report)
@@ -318,4 +321,7 @@ def export_pre_race_scenario(root: Path, race_id: str, *, tws_kt: float, directi
     target["presets"]=[p for p in target.get("presets",[]) if not(p["tws_kt"]==tws_kt and p["direction_offset_deg"]==direction_offset_deg)]+[preset]
     verify_public(root,index=index)
     atomic_json(directory/"index.json",index)
+    if (root/"public"/"data"/"manifests.json").is_file():
+        from scripts.build_artifact_inventory import build_inventory
+        build_inventory(root)
     return {"path":relative,"status":artifact["pre_race"]["status"],"reason":artifact["pre_race"].get("reason")}

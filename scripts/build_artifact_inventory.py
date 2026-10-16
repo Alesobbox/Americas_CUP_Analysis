@@ -28,6 +28,11 @@ def build_inventory(root: Path = ROOT) -> dict:
             for preset in entry.get("presets", []):
                 if preset.get("path"):
                     race_paths["predictions/" + preset["path"]] = (entry["race_id"], "Pre-race condition scenario", "Forecast")
+        # Immutable earlier objects remain valid for readers holding an older
+        # index. Keep every public JSON discoverable without calling it current.
+        for retained in (data / "predictions").rglob("*.json"):
+            relative = retained.relative_to(data).as_posix()
+            race_paths.setdefault(relative, (None, "Forecast archive artifact", "Forecast"))
     entries = []
     for relative, (race_id, label, view) in sorted(race_paths.items()):
         path = data / relative
