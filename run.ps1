@@ -9,6 +9,9 @@ $npmTool = Join-Path $nodeRoot 'npm.cmd'
 if (-not (Test-Path -LiteralPath $npmTool)) { $npmTool = (Get-Command npm.cmd -ErrorAction Stop).Source }
 
 $pythonTool = $env:REGATTA_PYTHON
+if ([string]::IsNullOrWhiteSpace($pythonTool) -and (Test-Path -LiteralPath (Join-Path $PSScriptRoot '.venv\Scripts\python.exe'))) {
+    $pythonTool = Join-Path $PSScriptRoot '.venv\Scripts\python.exe'
+}
 if ([string]::IsNullOrWhiteSpace($pythonTool)) { $pythonTool = Join-Path $pythonRoot 'python.exe' }
 if ($Action -in @('ingest', 'verify') -and -not (Test-Path -LiteralPath $pythonTool)) {
     $pythonCommand = Get-Command python.exe -ErrorAction SilentlyContinue
@@ -35,6 +38,7 @@ try {
             Invoke-Checked -File $pythonTool -Arguments @('-m', 'unittest', 'discover', '-s', 'tests/unit', '-p', 'test_*.py')
             Invoke-Checked -File $pythonTool -Arguments @('tests/e2e/test_runner.py', '--tier', 'all')
             Invoke-Checked -File $pythonTool -Arguments @('-m', 'unittest', 'discover', '-s', 'tests', '-p', 'tier5_*.py')
+            Invoke-Checked -File $pythonTool -Arguments @('-m', 'pipeline.prediction', 'verify')
         }
     }
 } finally {

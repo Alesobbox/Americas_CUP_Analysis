@@ -197,4 +197,4 @@ The larger scientific requirement is more independent competitive data and a pro
 
 ## Implementation status of this revision
 
-Changed now: execution/research/resolution documents and the stale AGENTS source-size sentence. Deferred to the execution work: Git setup, lockfile/environment creation, identity refactor, filters, mixture fitting, backtests, artifacts and UI. No reported numeric probability, bridge horizon, empirical mixture advantage, match concentration or payload budget is claimed to have been validated.
+This review originally changed the specifications only. The subsequent implementation now includes local Git provenance, a locked environment, session identity, causal filters, mixture fitting, backtests, artifacts and the fifth Forecast view. [The implementation runbook](forecasting_implementation.md) records current evidence gates and verified rule corrections. No experimental numeric output is a claim of established calibration; missing completion evidence, transfer evidence and unresolved rule branches still suppress unsupported probabilities.

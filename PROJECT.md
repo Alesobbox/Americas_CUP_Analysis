@@ -1,6 +1,6 @@
 # AC40 replay dashboard
 
-The dashboard has four views: Replay, Analysis, Compare, and Reports. It exposes 28 source sessions: nine Cagliari races and nineteen Naples races, containing 224 replayed boat-races.
+The dashboard has five views: Replay, Analysis, Compare, Reports, and Forecast. It exposes 28 source sessions: nine Cagliari races and nineteen Naples races, containing 224 replayed boat-races.
 
 ## Runtime and data flow
 
@@ -11,6 +11,7 @@ The dashboard has four views: Replay, Analysis, Compare, and Reports. It exposes
 - `pipeline/historical_analysis.py` owns historical formulas, units, availability rules, coverage, and event feeds. The browser reads its metrics.
 - `scripts/build_artifact_inventory.py` publishes replay, analysis, and index downloads in Reports.
 - `scripts/analysis_snapshot.py` provides a bounded archive overview without printing telemetry arrays.
+- `pipeline/prediction/` builds causal raw-data features, audited completion, joint ranking references, correlated Monte Carlo candidates and the AC38 tournament adapter. Forecast consumes immutable, content-addressed static JSON; it never fits a model in TypeScript. See [forecast implementation and evidence gates](docs/forecasting_implementation.md).
 
 Source measurements, interpolation, reconstructed results, estimated continuous gaps, and unavailable channels remain distinguishable. Source session assets determine boat identity and course marks. Map mode uses OpenStreetMap with attribution; Grid mode makes no tile requests. Virtual contacts describe geometric overlaps rather than official rulings.
 

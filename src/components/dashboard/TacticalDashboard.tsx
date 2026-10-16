@@ -13,10 +13,11 @@ import { BoatPerformanceCard } from './BoatPerformanceCard'
 import { TelemetryWorkspace } from './TelemetryWorkspace'
 import { EventsNotesPanel } from './EventsNotesPanel'
 import { ReportsWorkspace } from './ReportsWorkspace'
+import { ForecastWorkspace } from './ForecastWorkspace'
 import './dashboard.css'
 import './workspaces.css'
 
-export type DashboardView = 'replay' | 'analysis' | 'compare' | 'reports'
+export type DashboardView = 'replay' | 'analysis' | 'compare' | 'reports' | 'forecast'
 interface Props {
   replay: ReplayManifest; frame: ReplayFrame; catalog: RaceListing[]; currentRace: RaceListing | null
   activeView: DashboardView; onViewChange: (view: DashboardView) => void
@@ -49,7 +50,7 @@ export function TacticalDashboard(p: Props) {
   const primary = p.replay.competitors.find((boat) => boat.id === p.selectedId) ?? p.replay.competitors[0]
   const timeline = <RaceTimelinePanel replay={p.replay} frame={p.frame} playing={p.playing} speed={p.speed} onToggle={p.onToggle} onSeek={p.onSeek} onStep={p.onStep} onSpeed={p.onSpeed} selectedId={p.selectedId} events={events} />
   const telemetry = <TelemetryWorkspace replay={p.replay} frame={p.frame} selectedId={p.selectedId} onSelectBoat={p.onSelectBoat} onSeek={p.onSeek} visibleBoatId={p.visibleBoatId} />
-  const chooseView = (view: string) => { if (['replay', 'analysis', 'compare', 'reports'].includes(view)) p.onViewChange(view as DashboardView) }
+  const chooseView = (view: string) => { if (['replay', 'analysis', 'compare', 'reports', 'forecast'].includes(view)) p.onViewChange(view as DashboardView) }
   return <div className="tactical-dashboard-root theme-tactical-light">
     <TacticalHeader replay={p.replay} frame={p.frame} currentRace={p.currentRace} catalog={p.catalog} activeNav={p.activeView} onSelectNav={chooseView} onSelectRace={p.onSelectRace} visibleBoats={p.visibleBoatId ?? 'all'} onVisibleBoatsChange={(id) => p.onVisibleBoatChange(id === 'all' ? null : id)} onOpenPicker={p.onOpenPicker} onOpenSettings={() => setSettingsOpen(true)} />
     {p.activeView === 'replay' && <>
@@ -71,6 +72,7 @@ export function TacticalDashboard(p: Props) {
     {p.activeView === 'analysis' && <AnalysisModal inline selectedBoatId={p.selectedId} onSelectBoat={p.onSelectBoat} comparisonId={p.comparisonId} onSelectComparison={p.onSelectComparison} onSelectRace={(id) => { const race = p.catalog.find((item) => item.id === id); if (race) p.onSelectRace(race) }} currentRaceId={p.replay.id} replayRaceIds={p.catalog.map((race) => race.id)} onOpenReplay={p.onOpenAnalysisReplay} onClose={() => p.onViewChange('replay')} />}
     {p.activeView === 'compare' && <div className="dashboard-secondary-layout">{timeline}<section className="dashboard-workspace" aria-label="Compare boats"><h2>Compare at the shared playhead</h2><label>Primary boat A <select aria-label="Primary boat A" value={primary.id} onChange={(event) => p.onSelectBoat(event.target.value)}>{p.replay.competitors.map((boat) => <option key={boat.id} value={boat.id}>{boat.team_code} · {boat.team_name}</option>)}</select></label><ComparisonPanel replay={p.replay} frame={p.frame} primary={primary} secondaryId={p.comparisonId} onSecondary={p.onSelectComparison} /><p>Changing A preserves your explicit B selection. Instantaneous comparison uses replay positions, speeds and leg progress at the playhead; the historical Analysis tab exposes exported race aggregates.</p>{telemetry}</section></div>}
     {p.activeView === 'reports' && <ReportsWorkspace replay={p.replay} catalog={p.catalog} onOpenRace={(race, view) => { p.onSelectRace(race); chooseView(view.toLowerCase()) }} />}
+    {p.activeView === 'forecast' && <ForecastWorkspace key={p.replay.id} replay={p.replay} playhead={p.frame.timestamp} selectedId={p.selectedId} onSelectBoat={p.onSelectBoat} onSeek={p.onSeek} playing={p.playing} onToggle={p.onToggle} />}
     {settingsOpen && <div className="modal-shade" onMouseDown={(event) => { if (event.target === event.currentTarget) setSettingsOpen(false) }}><section role="dialog" aria-modal="true" aria-label="Dashboard settings" className="dashboard-settings dashboard-workspace">
       <div className="workspace-heading"><h2>Dashboard settings</h2><button autoFocus aria-label="Close settings" onClick={() => setSettingsOpen(false)}>×</button></div>
       <label>Map source <select aria-label="Map source" value={p.viewMode} onChange={(event) => p.onViewModeChange(event.target.value as ViewMode)}><option value="map">OpenStreetMap</option><option value="grid">Offline Grid</option></select></label>
@@ -79,7 +81,7 @@ export function TacticalDashboard(p: Props) {
       <label>Trail length <select aria-label="Trail length" value={p.trailLength} onChange={(event) => p.onTrailLengthChange(event.target.value as TrailLength)}>{['off', '10s', '30s', '60s', 'leg', 'race'].map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
       <label>Trail colour <select aria-label="Trail colour" value={p.trailColor} onChange={(event) => p.onTrailColorChange(event.target.value as TrailColor)}>{['team', 'speed', 'vmg'].map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
       <label><input type="checkbox" checked={p.showSafetyBorders} onChange={p.onToggleSafetyBorders} /> Show virtual safety borders</label>
-      <p>Space plays or pauses; arrow keys seek 5 seconds; keys 1–4 select the main tabs. Notes are saved locally for each race.</p>
+      <p>Space plays or pauses; arrow keys seek 5 seconds; keys 1–5 select the main tabs. Notes are saved locally for each race.</p>
     </section></div>}
   </div>
 }

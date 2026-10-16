@@ -1,4 +1,4 @@
-import type { CupPrediction, ForecastStatus, PredictionIndex, PredictionPreset, PredictionReference, RacePrediction } from '../types/prediction'
+import type { CupPrediction, ForecastStatus, PredictionIndex, PredictionPreset, PredictionRaceReference, PredictionReference, RacePrediction } from '../types/prediction'
 
 const statuses: ForecastStatus[] = ['available', 'estimated', 'gate_ambiguous', 'unavailable']
 const usable = (status: ForecastStatus) => status === 'available' || status === 'estimated'
@@ -7,6 +7,7 @@ const finite = (value: unknown): value is number => typeof value === 'number' &&
 const probability = (value: unknown) => finite(value) && value >= 0 && value <= 1
 const nonempty = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0
 const sameIds = (left: string[], right: string[]) => left.length === right.length && new Set(left).size === left.length && left.every((id) => right.includes(id))
+const idList = (value: unknown): value is string[] => Array.isArray(value) && value.length > 0 && value.every(nonempty) && new Set(value).size === value.length
 
 function invalid(message: string): never { throw new Error(`Forecast unavailable: ${message}`) }
 
@@ -19,6 +20,19 @@ async function readJson(path: string, signal?: AbortSignal): Promise<unknown> {
   const response = await fetch(path, { signal })
   if (!response.ok) invalid(`artifact could not be loaded (${response.status})`)
   if (!response.headers.get('content-type')?.toLowerCase().includes('json')) invalid('artifact did not return JSON')
+  const expectedHash = /(?:^|[/_])([a-f0-9]{64})\.json$/.exec(path)?.[1]
+  if (expectedHash) {
+    if (!globalThis.crypto?.subtle) invalid('artifact integrity checking is unavailable in this browser')
+    const body = await response.text()
+    // Backend files contain canonical JSON plus one optional platform newline.
+    // Hash the exact UTF-8 content; reserializing would change Python escapes.
+    const canonicalBody = body.replace(/\r?\n$/, '')
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonicalBody))
+    const actualHash = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('')
+    if (actualHash !== expectedHash) invalid('artifact content does not match its immutable hash')
+    try { return JSON.parse(body) as unknown }
+    catch { return invalid('artifact contains invalid JSON') }
+  }
   try { return await response.json() as unknown }
   catch { return invalid('artifact contains invalid JSON') }
 }
@@ -36,6 +50,9 @@ export function parsePredictionIndex(value: unknown): PredictionIndex {
     if (!record(entry) || !nonempty(entry.race_id) || ids.has(entry.race_id)) invalid('invalid or duplicate race in index')
     ids.add(entry.race_id)
     checkedPath(entry.path)
+    if (entry.boat_ids !== undefined || entry.replay_boat_ids !== undefined) {
+      if (!idList(entry.boat_ids) || !idList(entry.replay_boat_ids) || !entry.replay_boat_ids.every((id) => (entry.boat_ids as string[]).includes(id))) invalid('invalid scheduled/replay field in index')
+    }
     if (entry.presets !== undefined) {
       if (!Array.isArray(entry.presets)) invalid('invalid preset list')
       const presetIds = new Set<string>()
@@ -50,21 +67,28 @@ export function parsePredictionIndex(value: unknown): PredictionIndex {
   return value as unknown as PredictionIndex
 }
 
-export function parseRacePrediction(value: unknown, context: { raceId: string; boatIds: string[]; boatClass: string; reference?: PredictionReference; scope?: string }): RacePrediction {
+export function parseRacePrediction(value: unknown, context: { raceId: string; boatIds: string[]; boatClass: string; reference?: PredictionRaceReference; scope?: string; conditions?: { tws_kt: number; direction_offset_deg: number } }): RacePrediction {
   if (!record(value) || !record(value.header) || !record(value.pre_race) || !record(value.live)) invalid('incomplete race artifact')
   const h = value.header
   if (h.schema_version !== 'prediction-1' || h.race_id !== context.raceId) invalid('artifact does not match the selected race')
-  if (!Array.isArray(h.boat_ids) || !h.boat_ids.every(nonempty) || !sameIds(h.boat_ids, context.boatIds)) invalid('competitor field does not match the selected race')
+  if (!idList(h.boat_ids)) invalid('competitor field does not match the selected race')
+  const fieldIds = h.boat_ids
+  const rosterDeclared = h.replay_boat_ids !== undefined || h.scheduled_entries !== undefined || context.reference?.boat_ids !== undefined || context.reference?.replay_boat_ids !== undefined
+  if (rosterDeclared) {
+    if (!idList(context.reference?.boat_ids) || !sameIds(fieldIds, context.reference.boat_ids) || !idList(h.replay_boat_ids) || !sameIds(h.replay_boat_ids, context.boatIds) || !idList(context.reference.replay_boat_ids) || !sameIds(context.reference.replay_boat_ids, context.boatIds) || !context.boatIds.every((id) => fieldIds.includes(id))) invalid('scheduled/replay competitor field does not match the forecast index and selected race')
+    if (!Array.isArray(h.scheduled_entries) || h.scheduled_entries.some((entry) => !record(entry) || !nonempty(entry.id) || !nonempty(entry.team_code) || !nonempty(entry.team_name)) || !sameIds(h.scheduled_entries.map((entry) => entry.id as string), fieldIds)) invalid('scheduled roster does not contain the complete competitor field')
+  } else if (!sameIds(fieldIds, context.boatIds)) invalid('competitor field does not match the selected race')
   if (h.boat_class !== context.boatClass) invalid('boat class does not match the selected race')
   if (context.scope && h.scope !== context.scope) invalid('scenario scope does not match this card')
+  if (context.conditions && (!record(h.conditions) || h.conditions.tws_kt !== context.conditions.tws_kt || h.conditions.direction_offset_deg !== context.conditions.direction_offset_deg)) invalid('scenario conditions do not match the exact selected wind')
   if (![h.model_ref, h.source_manifest_hash, h.scenario_hash].every(nonempty)) invalid('model and input provenance is missing')
   verifyReference(h, context.reference)
   if (!Array.isArray(h.status_dictionary) || !sameIds(h.status_dictionary as string[], statuses) || !Array.isArray(h.method_and_assumption_refs)) invalid('quality and method definitions are missing')
   const pre = value.pre_race
-  if (!statuses.includes(pre.status as ForecastStatus) || !record(pre.expected_position_by_boat) || !sameIds(Object.keys(pre.expected_position_by_boat), context.boatIds)) invalid('incomplete pre-race predictions')
-  if (pre.nonfinish_score !== 'N' && pre.nonfinish_score !== context.boatIds.length) invalid('nonfinish position does not match the scheduled field')
+  if (!statuses.includes(pre.status as ForecastStatus) || !record(pre.expected_position_by_boat) || !sameIds(Object.keys(pre.expected_position_by_boat), fieldIds)) invalid('incomplete pre-race predictions')
+  if (pre.nonfinish_score !== 'N' && pre.nonfinish_score !== fieldIds.length) invalid('nonfinish position does not match the scheduled field')
   for (const position of Object.values(pre.expected_position_by_boat)) {
-    if (usable(pre.status as ForecastStatus) ? !finite(position) || position < 1 || position > context.boatIds.length : position !== null) invalid('invalid or unavailable expected position')
+    if (usable(pre.status as ForecastStatus) ? !finite(position) || position < 1 || position > fieldIds.length : position !== null) invalid('invalid or unavailable expected position')
   }
   const live = value.live
   if (!Array.isArray(live.state_timestamps_ms)) invalid('checkpoint times are missing')
@@ -75,7 +99,7 @@ export function parseRacePrediction(value: unknown, context: { raceId: string; b
   if (live.reason_code !== undefined && (!Array.isArray(live.reason_code) || live.reason_code.length !== count)) invalid('checkpoint reasons are incomplete')
   for (const key of ['win_prob_by_boat', 'source_age_ms_by_boat', 'position_uncertainty_summary_by_boat', 'quality_code_by_boat']) {
     const columns = live[key]
-    if (!record(columns) || !sameIds(Object.keys(columns), context.boatIds) || Object.values(columns).some((column) => !Array.isArray(column) || column.length !== count)) invalid(`checkpoint column ${key} does not contain the complete field`)
+    if (!record(columns) || !sameIds(Object.keys(columns), fieldIds) || Object.values(columns).some((column) => !Array.isArray(column) || column.length !== count)) invalid(`checkpoint column ${key} does not contain the complete field`)
   }
   const prediction = value as unknown as RacePrediction
   for (let i = 0; i < count; i++) {
@@ -85,11 +109,11 @@ export function parseRacePrediction(value: unknown, context: { raceId: string; b
     if (finite(h.train_cutoff_ms) && h.train_cutoff_ms > stateTime) invalid('training cutoff is later than the forecast state')
     const status = checkpointStatus(prediction, i)
     if (!status) invalid('checkpoint quality is unknown')
-    const values = [...context.boatIds.map((id) => prediction.live.win_prob_by_boat[id][i]), prediction.live.no_finisher_prob[i]]
+    const values = [...fieldIds.map((id) => prediction.live.win_prob_by_boat[id][i]), prediction.live.no_finisher_prob[i]]
     if (usable(status)) {
       if (!values.every(probability) || Math.abs((values as number[]).reduce((sum, p) => sum + p, 0) - 1) > 1e-5) invalid('joint winning probabilities are incomplete or do not sum to one')
     } else if (!values.every((p) => p === null)) invalid('unavailable checkpoint contains probabilities')
-    for (const id of context.boatIds) {
+    for (const id of fieldIds) {
       const age = prediction.live.source_age_ms_by_boat[id][i]
       if (age !== null && (!finite(age) || age < 0)) invalid('source age is invalid')
     }
@@ -132,6 +156,7 @@ export function parseCupPrediction(value: unknown): CupPrediction {
   for (const key of ['scenario_envelope_by_team', 'rule_bounds_by_team']) {
     const bounds = value[key]
     if (bounds === undefined) continue
+    if (bounds === null && !usable(value.status as ForecastStatus)) continue
     if (!record(bounds) || !sameIds(Object.keys(bounds), ids)) invalid('Cup scenarios contain an incomplete field')
     for (const bound of Object.values(bounds)) {
       if (bound === null && !usable(value.status as ForecastStatus)) continue

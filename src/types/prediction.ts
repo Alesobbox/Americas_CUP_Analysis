@@ -6,6 +6,11 @@ export interface PredictionReference {
   scenario_hash?: string
 }
 
+export interface PredictionRaceReference extends PredictionReference {
+  boat_ids?: string[]
+  replay_boat_ids?: string[]
+}
+
 export interface PredictionPreset extends PredictionReference {
   id: string
   path?: string
@@ -18,7 +23,7 @@ export interface PredictionPreset extends PredictionReference {
 
 export interface PredictionIndex {
   schema_version: 'prediction-index-1'
-  races: Array<PredictionReference & { race_id: string; path: string; presets?: PredictionPreset[] }>
+  races: Array<PredictionRaceReference & { race_id: string; path: string; presets?: PredictionPreset[] }>
   cup_path: string
 }
 
@@ -26,6 +31,8 @@ export interface PredictionHeader extends PredictionReference {
   schema_version: 'prediction-1'
   race_id: string
   boat_ids: string[]
+  replay_boat_ids?: string[]
+  scheduled_entries?: Array<{ id: string; team_code: string; team_name: string }>
   boat_class: string
   model_ref: string
   source_manifest_hash: string
@@ -68,7 +75,7 @@ export interface CupPrediction {
   status: ForecastStatus
   reason?: string
   teams: Array<{ id: string; name: string }>
-  scenario_envelope_by_team?: Record<string, { lower: number; upper: number } | null>
-  rule_bounds_by_team?: Record<string, { lower: number; upper: number } | null>
+  scenario_envelope_by_team?: Record<string, { lower: number; upper: number } | null> | null
+  rule_bounds_by_team?: Record<string, { lower: number; upper: number } | null> | null
   evaluated_scenarios?: string[]
 }

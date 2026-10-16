@@ -53,6 +53,7 @@ export function TacticalHeader({
     { id: 'analysis', label: 'Analysis' },
     { id: 'compare', label: 'Compare' },
     { id: 'reports', label: 'Reports' },
+    { id: 'forecast', label: 'Forecast' },
   ]
 
   const raceDisplayLabel = useMemo(() => {

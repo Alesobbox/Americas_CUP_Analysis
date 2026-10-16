@@ -2,7 +2,7 @@
 
 Version: research revision 2, 15 October 2026; incorporates the user's full engineering/statistical review.
 
-Status: implementation specification. Forecasting models have not been implemented or benchmarked in this revision. This document replaces the earlier conversational model-selection proposal. Its companion [research review](forecasting_research_review.md) records the primary evidence and limitations behind the decisions. The binding [point-by-point review resolution and mathematical annex](forecasting_review_resolution.md) records every critique, the adopted correction or reason for disagreement, and the state-estimation/mixture specifications.
+Status: the revised specification is implemented in the core forecasting package and Forecast view; see [implementation, runbook and current evidence gates](forecasting_implementation.md). Unsupported unconditional forecasts remain unavailable and optional Phase 2 research is deferred. This document replaces the earlier conversational model-selection proposal. Its companion [research review](forecasting_research_review.md) records the primary evidence and limitations behind the decisions. The binding [point-by-point review resolution and mathematical annex](forecasting_review_resolution.md) records every critique, the adopted correction or reason for disagreement, and the state-estimation/mixture specifications.
 
 ## 1. Fixed product contract
 

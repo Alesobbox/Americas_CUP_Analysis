@@ -37,16 +37,14 @@ from pipeline.config import (
     get_venue_projection,
 )
 from pipeline.projection import wgs84_to_metric, project_polygon_coords
+from pipeline.identity import resolve_identity
 
 
 def session_competitor_identity(asset_id: str, assets: Dict[str, Any]) -> CompetitorInfo:
     """Race session identity overrides the legacy asset catalog."""
-    fallback = COMPETITORS[asset_id]
-    asset = assets.get(asset_id, {})
-    code = (asset.get("abbreviation") or fallback.code).strip()
-    name = (asset.get("official_name") or asset.get("name") or fallback.official_name).strip()
-    return CompetitorInfo(code=code, uuid=asset_id, name=name, official_name=name,
-                          color=asset.get("colour_code") or fallback.color)
+    identity = resolve_identity(asset_id, assets, fallback=COMPETITORS.get(asset_id))
+    return CompetitorInfo(code=identity["entry_id"], uuid=asset_id, name=identity["name"],
+                          official_name=identity["name"], color=identity["color"])
 
 
 # ---------------------------------------------------------------------------

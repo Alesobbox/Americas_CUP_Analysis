@@ -30,12 +30,12 @@ class DashboardSourceContractTests(unittest.TestCase):
         visit((ROOT / "src/main.tsx").resolve())
         self.assertEqual(sources - seen, set(), "Unused production modules must be removed or connected to the dashboard")
 
-    def test_published_data_has_only_replay_and_analysis_outputs(self):
+    def test_published_data_has_only_documented_output_families(self):
         data = ROOT / "public/data"
         self.assertEqual({path.name for path in data.iterdir() if path.is_file()},
                          {"manifests.json", "artifacts.json"})
         self.assertEqual({path.name for path in data.iterdir() if path.is_dir()},
-                         {"analysis", "replays"})
+                         {"analysis", "replays", "predictions"})
 
 
 if __name__ == "__main__":

@@ -13,7 +13,7 @@ function initialView(params: URLSearchParams): DashboardView {
   if (params.get('modal') === 'summary') return 'reports'
   if (requested === 'duel') return 'compare'
   if (requested === 'start') return 'analysis'
-  return requested === 'analysis' || requested === 'compare' || requested === 'reports' ? requested : 'replay'
+  return requested === 'analysis' || requested === 'compare' || requested === 'reports' || requested === 'forecast' ? requested : 'replay'
 }
 
 function savedViewMode(): ViewMode {
@@ -143,6 +143,7 @@ export default function App() {
     const onKey = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement
       if (event.defaultPrevented || target.closest('input,select,textarea,button,a,[role="button"],[role="slider"],[role="dialog"]') || target.isContentEditable) return
+      if (document.querySelector('[role="dialog"][aria-modal="true"]')) return
       if (event.key === 'Escape') setPickerOpen(false)
       else if (event.key === ' ' && engine) {
         event.preventDefault()
@@ -154,6 +155,7 @@ export default function App() {
       else if (event.key === '2') setActiveView('analysis')
       else if (event.key === '3') setActiveView('compare')
       else if (event.key === '4') setActiveView('reports')
+      else if (event.key === '5') setActiveView('forecast')
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)

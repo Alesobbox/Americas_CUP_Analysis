@@ -14,6 +14,20 @@ def build_inventory(root: Path = ROOT) -> dict:
     for race in races:
         race_paths[race.get("replay_file", race.get("file"))] = (race["id"], "Replay", "Replay")
         race_paths["analysis/" + race["id"] + ".json"] = (race["id"], "Analysis", "Analysis")
+    prediction_index = data / "predictions" / "index.json"
+    if prediction_index.is_file():
+        predictions = json.loads(prediction_index.read_text(encoding="utf-8"))
+        race_paths["predictions/index.json"] = (None, "Forecast catalog", "Forecast")
+        race_paths["predictions/" + predictions["cup_path"]] = (None, "America's Cup evidence and scenarios", "Forecast")
+        race_paths["predictions/" + predictions["source_manifest_path"]] = (None, "Forecast source provenance", "Forecast")
+        if (data / "predictions" / "verification.json").is_file():
+            race_paths["predictions/verification.json"] = (None, "Forecast verification results", "Forecast")
+        for entry in predictions["races"]:
+            race_paths["predictions/" + entry["path"]] = (entry["race_id"], "Race forecast", "Forecast")
+            race_paths["predictions/models/" + entry["model_ref"] + ".json"] = (None, "Forecast model and validation card", "Forecast")
+            for preset in entry.get("presets", []):
+                if preset.get("path"):
+                    race_paths["predictions/" + preset["path"]] = (entry["race_id"], "Pre-race condition scenario", "Forecast")
     entries = []
     for relative, (race_id, label, view) in sorted(race_paths.items()):
         path = data / relative

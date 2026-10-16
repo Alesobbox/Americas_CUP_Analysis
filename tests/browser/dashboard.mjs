@@ -48,7 +48,7 @@ try {
       for (const race of catalog) {
         await load(race.id)
         assert.equal(await page.locator('.fleet-table tbody tr').count(), race.competitors_count)
-        assert.equal(await page.getByRole('navigation', { name: 'Main Navigation' }).getByRole('button').count(), 4)
+        assert.equal(await page.getByRole('navigation', { name: 'Main Navigation' }).getByRole('button').count(), 5)
         await nav('Analysis')
         await page.getByRole('heading', { name: 'Race metrics', exact: true }).waitFor()
         await nav('Reports')
