@@ -31,9 +31,9 @@ def provenance(root, metadata):
             return None
     files = sorted([*root.glob("pipeline/**/*.py"), *root.glob("src/**/*.ts"), *root.glob("src/**/*.tsx"),
                     *root.glob("src/**/*.css"),root/".python-version",root/"AGENTS.md",root/"PROJECT.md",root/"run.ps1",
-                    root/"pyproject.toml", root/"uv.lock", root/"package-lock.json",
+                    root/"pyproject.toml", root/"uv.lock", root/"package.json",root/"package-lock.json",root/"vite.config.ts",
                     *root.glob("docs/forecast*.json")])
-    source_paths=("pipeline","src","scripts","tests","docs","pyproject.toml","uv.lock","package-lock.json","PROJECT.md","run.ps1")
+    source_paths=("pipeline","src","scripts","tests","docs","pyproject.toml","uv.lock","package.json","package-lock.json","vite.config.ts","PROJECT.md","run.ps1")
     dirty=query("status","--porcelain","--",*source_paths)
     return {"source_commit": query("log","-1","--format=%H","--",*source_paths),
             "source_dirty": None if dirty is None else bool(dirty),

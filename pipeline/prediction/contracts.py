@@ -6,6 +6,8 @@ import json
 import math
 import os
 import re
+import tempfile
+import time
 from pathlib import Path
 
 STATUSES = ["available", "estimated", "gate_ambiguous", "unavailable"]
@@ -21,9 +23,26 @@ def content_hash(value):
 
 def atomic_json(path: Path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix+".tmp")
-    temporary.write_bytes(canonical(value)+b"\n")
-    os.replace(temporary, path)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=path.parent, prefix="."+path.name+".", suffix=".tmp", delete=False) as stream:
+            temporary = Path(stream.name)
+            stream.write(canonical(value)+b"\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        for attempt in range(8):
+            try:
+                os.replace(temporary, path)
+                break
+            except PermissionError:
+                # Windows readers/antivirus can briefly deny replacement. Never
+                # fall back to truncating the last successfully published file.
+                if attempt == 7:
+                    raise
+                time.sleep(min(.1*2**attempt, 1.))
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def validate_race(value):
