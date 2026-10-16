@@ -87,6 +87,10 @@ describe('forecast contracts and time access', () => {
     expect(pre).not.toContain('OTHER A')
     expect(live).toContain('DNS')
     expect(live).toContain('0.0%')
+    const unsupported = renderToStaticMarkup(createElement(PreRaceForecastCard, { prediction: null, rosterPrediction: prediction, error: 'Scenario unsupported.', replay, selectedId: 'a' }))
+    expect(unsupported).toContain('DNS')
+    expect(unsupported).toContain('nonfinish scored N (3)')
+    expect(unsupported).not.toContain('1.40')
   })
   it('preserves unknown values as null and refuses numeric values in unavailable states', () => {
     const unavailable = fixture()

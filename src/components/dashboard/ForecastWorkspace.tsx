@@ -41,15 +41,16 @@ export function LiveForecastCard({ prediction, error, playhead, replay, selected
   </article>
 }
 
-export function PreRaceForecastCard({ prediction, error, replay, selectedId, children }: Pick<Props, 'replay' | 'selectedId'> & { prediction: RacePrediction | null; error: string | null; children?: React.ReactNode }) {
+export function PreRaceForecastCard({ prediction, rosterPrediction, error, replay, selectedId, children }: Pick<Props, 'replay' | 'selectedId'> & { prediction: RacePrediction | null; rosterPrediction?: RacePrediction | null; error: string | null; children?: React.ReactNode }) {
   const available = prediction && ['available', 'estimated'].includes(prediction.pre_race.status) && !error
+  const roster = prediction ?? rosterPrediction ?? null
   return <article className="forecast-card" aria-labelledby="pre-forecast-title">
     <div className="forecast-card-heading"><span className="forecast-scope">Before the start · AC40</span><span className={`forecast-status ${available ? 'forecast-status-ready' : ''}`}>{available ? 'Available' : 'Unavailable'}</span></div>
     <h3 id="pre-forecast-title">Expected finishing position</h3>
-    <p>Expected position · nonfinish scored N ({prediction?.header.boat_ids.length ?? replay.competitors.length}). Uses the scheduled opponents and the selected conditions.</p>
+    <p>Expected position · nonfinish scored N ({roster?.header.boat_ids.length ?? replay.competitors.length}). Uses the scheduled opponents and the selected conditions.</p>
     {children}
     {!available && <p role="status" className="forecast-unavailable">{reasonText(error ?? prediction?.pre_race.reason, prediction ? 'Audited completion and outcome evidence is required for an unconditional expected position.' : 'Loading the pre-race forecast…')}</p>}
-    <div className="workspace-table-wrap"><table><thead><tr><th>Boat</th><th>Expected position</th></tr></thead><tbody>{forecastBoats(prediction, replay).map((boat) => {
+    <div className="workspace-table-wrap"><table><thead><tr><th>Boat</th><th>Expected position</th></tr></thead><tbody>{forecastBoats(roster, replay).map((boat) => {
       const value = available ? prediction.pre_race.expected_position_by_boat[boat.id] : null
       return <tr key={boat.id} aria-selected={boat.id === selectedId}><th scope="row">{boat.team_code}</th><td>{value == null ? '—' : value.toFixed(2)}</td></tr>
     })}</tbody></table></div>
@@ -124,7 +125,7 @@ export function ForecastWorkspace(p: Props) {
     <div className="forecast-playhead"><button onClick={p.onToggle}>{p.playing ? 'Pause replay' : 'Play replay'}</button><label>Race playhead <input aria-label="Forecast race playhead" type="range" min={p.replay.chronology.window_start} max={p.replay.chronology.window_end} step={1000} value={p.playhead} onChange={(event) => p.onSeek(Number(event.target.value))} /></label><output>{new Date(p.playhead).toISOString().slice(11, 19)} UTC</output></div>
     <div className="forecast-grid">
       <LiveForecastCard prediction={race} error={raceError} playhead={p.playhead} replay={p.replay} selectedId={p.selectedId} />
-      <PreRaceForecastCard prediction={prePrediction} error={preError} replay={p.replay} selectedId={p.selectedId}>
+      <PreRaceForecastCard prediction={prePrediction} rosterPrediction={race} error={preError} replay={p.replay} selectedId={p.selectedId}>
         <label>Pre-race conditions <select aria-label="Pre-race conditions" value={conditionsMode} onChange={(event) => setConditionsMode(event.target.value)}><option value="recorded">Recorded start conditions</option><option value="scenario">Enter wind conditions</option></select></label>
         {conditionsMode === 'scenario' && <div className="forecast-conditions"><label>Wind speed (knots)<input aria-label="Pre-race wind speed" type="number" min="0" step="0.1" value={tws} onChange={(event) => setTws(event.target.value)} list="forecast-wind-presets" /><datalist id="forecast-wind-presets">{[8, 12, 16, 20].map((value) => <option key={value} value={value} />)}</datalist></label><label>Direction offset from course (°)<input aria-label="Pre-race wind direction offset" type="number" step="1" value={offset} onChange={(event) => setOffset(event.target.value)} list="forecast-direction-presets" /><datalist id="forecast-direction-presets">{[-15, 0, 15].map((value) => <option key={value} value={value} />)}</datalist></label><p>Applies to expected position only. Presets use exactly 8, 12, 16 or 20 knots and −15°, 0° or +15° when supported.</p></div>}
       </PreRaceForecastCard>
