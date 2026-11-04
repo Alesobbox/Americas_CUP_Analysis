@@ -1,7 +1,0 @@
-[project]
-name = "regatta-offline-study-authoring"
-version = "1.0.0"
-requires-python = ">=3.12"
-dependencies = ["reportlab>=4,<5", "Pillow>=11,<13", "pypdf>=5,<7", "pypdfium2>=4,<6", "pdfplumber>=0.11,<1"]
-
-# Reading the pack needs none of these packages. They are for authoring and QA.
