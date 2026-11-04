@@ -1,5 +1,4 @@
 """Keep superseded drafts outside the delivery and refresh local navigation."""
-from pathlib import Path
 import json,shutil
 import build_pack as b
 P=b.P
@@ -22,7 +21,7 @@ for f in [P/'START_HERE.html',P/'07_Flashcards.html',P/'09_Interactive_Lab.html'
 checks=b.P/'verification/pack-checks.json'
 data=json.loads(checks.read_text())
 # PDF checks were rendered and inspected separately; refresh local links after cleanup.
-from verify_pack import link_check,source_check
+from verify_pack import link_check, source_check
 data['local_links']=link_check();data['source']=source_check()
 assert not data['local_links']['errors'],data['local_links']['errors']
 assert not data['source']['source_drift'] and not data['source']['public_drift'] and not data['source']['invalid_citation_ranges']

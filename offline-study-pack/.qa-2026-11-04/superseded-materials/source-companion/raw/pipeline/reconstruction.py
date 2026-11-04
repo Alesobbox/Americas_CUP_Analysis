@@ -23,9 +23,6 @@ from pipeline.config import (
     UUID_TO_MARK,
 )
 
-# ---------------------------------------------------------------------------
-# Authoritative Constants
-# ---------------------------------------------------------------------------
 GUN_TIME_EPOCH_MS: int = 1790079000000
 WINDOW_START_EPOCH_MS: int = 1790078820000
 WINDOW_END_EPOCH_MS: int = 1790080768700
@@ -45,9 +42,6 @@ GBR_B_OCS_AWARDED_MS: int = 1790079000333
 USA_UUID: str = "126368d2-98e9-4c3e-97ce-fb047d40ab0e"
 
 
-# ---------------------------------------------------------------------------
-# Data Structures
-# ---------------------------------------------------------------------------
 @dataclass
 class GateCrossing:
     leg: int
@@ -97,9 +91,6 @@ class ReconstructionResult:
     leg_definitions: List[Dict[str, Any]]
 
 
-# ---------------------------------------------------------------------------
-# Geometric Trajectory Helpers
-# ---------------------------------------------------------------------------
 def compute_bow_position(
     x_gps: float,
     y_gps: float,
@@ -183,9 +174,6 @@ def compute_distance_to_start_line(
     return rel_x * nx + rel_y * ny
 
 
-# ---------------------------------------------------------------------------
-# Reconstruction Engine
-# ---------------------------------------------------------------------------
 class RaceReconstructionEngine:
     """Reconstructs AC40 regatta chronology, gate crossings, and competitor states."""
 

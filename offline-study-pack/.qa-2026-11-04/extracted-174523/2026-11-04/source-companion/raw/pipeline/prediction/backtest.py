@@ -7,7 +7,7 @@ from .source import load_dataset
 from .state import CausalRace
 from .contracts import atomic_json
 from .evaluation import DEVELOPMENT_DAYS, AUDIT_DAYS, aggregate, scores, promotion, guardrails
-from .models import UniformOrderModel, EmpiricalOrderModel, StrengthModel
+from .models import EmpiricalOrderModel, StrengthModel
 from .labels import before_day
 from .simulation import simulate_order_reference, simulate_race
 

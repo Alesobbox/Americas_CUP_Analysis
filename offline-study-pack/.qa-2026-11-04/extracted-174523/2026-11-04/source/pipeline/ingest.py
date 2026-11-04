@@ -37,7 +37,7 @@ from pipeline.config import (
     CODE_TO_UUID,
     get_venue_projection,
 )
-from pipeline.projection import wgs84_to_metric, project_polygon_coords
+from pipeline.projection import wgs84_to_metric
 from pipeline.identity import resolve_identity
 
 
@@ -48,9 +48,6 @@ def session_competitor_identity(asset_id: str, assets: Dict[str, Any]) -> Compet
                           official_name=identity["name"], color=identity["color"])
 
 
-# ---------------------------------------------------------------------------
-# Mathematical Interpolation Helpers
-# ---------------------------------------------------------------------------
 def interpolate_linear(
     t: float,
     t0: float,
@@ -235,9 +232,6 @@ def resample_xy_series(
     return res_x, res_y
 
 
-# ---------------------------------------------------------------------------
-# Data Containers
-# ---------------------------------------------------------------------------
 @dataclass
 class RawBoatStreams:
     gnss: List[Tuple[int, float, float]] = field(default_factory=list)  # (t, lat, lon)
@@ -451,9 +445,6 @@ class IngestionResult:
 
 
 
-# ---------------------------------------------------------------------------
-# Streaming Ingestion Pipeline
-# ---------------------------------------------------------------------------
 class IngestionPipeline:
     """High-performance streaming parser and synchronizer for America's Cup telemetry."""
 

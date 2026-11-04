@@ -5,13 +5,9 @@ mark identifiers, competitor catalog, and unit conversion constants.
 """
 
 from dataclasses import dataclass
-from typing import Final, Dict, Any, Tuple
+from typing import Final, Dict, Tuple
 
 
-# ---------------------------------------------------------------------------
-# Geodetic Origin & Local Metric Projection Parameters
-# ---------------------------------------------------------------------------
-# Naples origin is fixed at the Course Center (midpoint between bottom and top gates).
 LAT0: Final[float] = 40.80948067
 LON0: Final[float] = 14.23726898
 
@@ -33,9 +29,6 @@ EARTH_RADIUS_LOCAL_M: Final[float] = 6374912.38
 EARTH_RADIUS_WGS84_M: Final[float] = 6371008.8
 
 
-# ---------------------------------------------------------------------------
-# Course Geometry & Rules
-# ---------------------------------------------------------------------------
 COURSE_AXIS_DEG: Final[float] = 39.99999999878744
 COURSE_LENGTH_M: Final[float] = 2259.4401327907335
 
@@ -49,9 +42,6 @@ MPS_TO_KNOTS: Final[float] = 1.94384449
 KNOTS_TO_MPS: Final[float] = 1.0 / MPS_TO_KNOTS
 
 
-# ---------------------------------------------------------------------------
-# Gate Mark Assets (RM1 through RM8)
-# ---------------------------------------------------------------------------
 MARK_RM1_UUID: Final[str] = "3e0be123-6ef5-4485-8b35-19e84cb4d8dd"
 MARK_RM2_UUID: Final[str] = "e018121d-b03e-4be7-9998-2a000135a599"
 MARK_RM3_UUID: Final[str] = "d72957d4-4eb3-41ef-9a51-5983a906aa8b"
@@ -177,15 +167,9 @@ def get_venue_projection(venue: str | None) -> Tuple[float, float, float, float]
     return (LAT0, LON0, K_LAT, K_LON)
 
 
-# ---------------------------------------------------------------------------
-# Official Wind & Support Assets
-# ---------------------------------------------------------------------------
 OFFICIAL_WIND_ASSET_ID: Final[str] = "0a18270a-3758-46e8-9a5e-3b441051674f"
 
 
-# ---------------------------------------------------------------------------
-# Competitors Catalog (9 AC40 Racing Boats)
-# ---------------------------------------------------------------------------
 @dataclass(frozen=True)
 class CompetitorInfo:
     code: str
