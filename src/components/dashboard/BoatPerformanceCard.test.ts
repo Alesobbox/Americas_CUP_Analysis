@@ -19,13 +19,14 @@ const frame = {
 } as ReplayFrame
 
 describe('selected boat performance provenance', () => {
-  it('shows replay channels and makes missing heel explicit', () => {
+  it('shows the four supported replay channels without permanent placeholders', () => {
     const html = renderToStaticMarkup(React.createElement(BoatPerformanceCard, { replay, frame, selectedId: selected.id }))
     expect(html).toContain(selected.team_code)
     expect(html).toContain(`${telemetry.sog[index].toFixed(1)} kt`)
     expect(html).toContain(`${telemetry.vmg[index].toFixed(1)} kt`)
-    expect(html).toContain('HEEL')
-    expect(html).toContain('Heel is not a channel in the exported replay')
+    expect(html).not.toContain('HEEL')
+    expect((html.match(/class="banner-kpi-item"/g) ?? [])).toHaveLength(4)
+    for (const channel of ['SOG', 'VMG', 'TWA', 'TWS']) expect(html).toContain(`>${channel}</span>`)
     expect(html).not.toContain('trend-delta-text')
     expect((html.match(/class="mini-sparkline-svg"/g) ?? [])).toHaveLength(4)
   })
@@ -33,7 +34,7 @@ describe('selected boat performance provenance', () => {
   it('never substitutes made-up readings or curves for a missing frame', () => {
     const empty = { ...frame, boats: {}, index: -1 } as ReplayFrame
     const html = renderToStaticMarkup(React.createElement(BoatPerformanceCard, { replay, frame: empty, selectedId: selected.id }))
-    expect((html.match(/Unavailable/g) ?? []).length).toBeGreaterThanOrEqual(5)
+    expect((html.match(/Unavailable/g) ?? [])).toHaveLength(4)
     expect(html).not.toContain('trend-delta-text')
     expect(html).not.toContain('mini-sparkline-svg')
   })

@@ -217,9 +217,22 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
     day_factors: dict[int, np.ndarray] = {}
     unresolved = np.zeros(trials, dtype=bool)
     reasons: set[str] = set()
+    reason_masks: dict[str, np.ndarray] = {}
+    first_unresolved_stage = np.full(trials, "", dtype=object)
+
+    def mark_unresolved(mask, stage, reason):
+        selected_mask = np.broadcast_to(np.asarray(mask, dtype=bool), (trials,))
+        if not np.any(selected_mask):
+            return
+        first_unresolved_stage[selected_mask & ~unresolved] = stage
+        unresolved[:] |= selected_mask
+        reasons.add(reason)
+        if reason not in reason_masks:
+            reason_masks[reason] = np.zeros(trials, dtype=bool)
+        reason_masks[reason] |= selected_mask
+
     if rules.withdrawn:
-        unresolved[:] = True
-        reasons.add("Withdrawal scoring/advancement instructions are not supplied.")
+        mark_unresolved(True, "withdrawal", "Withdrawal scoring/advancement instructions are not supplied.")
     rr_wins = np.zeros((trials, 7))
     rr_played = np.zeros((trials, 7), dtype=np.int16)
     max_series_races = 0
@@ -240,9 +253,7 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
             order = np.lexsort((*[ranks[:, ids] for ranks in fleet_history], -points), axis=1)
             return np.broadcast_to(ids, points.shape)[rows[:, None], order]
         if rules.tie_policy == "unresolved":
-            unresolved |= ties
-            if np.any(ties):
-                reasons.add(f"{stage}: official tie resolution is unresolved; outer bounds retain the entire tied path.")
+            mark_unresolved(ties, stage, f"{stage}: official tie resolution is unresolved; outer bounds retain the entire tied path.")
             secondary = np.broadcast_to(ids, points.shape)
         elif rules.tie_policy == "fixture_lots":
             secondary = rng.random(points.shape)
@@ -251,7 +262,7 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
             secondary = np.broadcast_to(np.array([priority[int(i)] for i in ids]), points.shape)
         return np.broadcast_to(ids, points.shape)[rows[:, None], np.lexsort((secondary, -points), axis=1)]
 
-    def draw_match(a: np.ndarray, b: np.ndarray, day: int) -> tuple[np.ndarray, np.ndarray]:
+    def draw_match(a: np.ndarray, b: np.ndarray, day: int, stage="round_robin") -> tuple[np.ndarray, np.ndarray]:
         nonlocal unresolved
         abilities = day_theta(day)
         # Joint uniform-reference mixture applied to the actual match draw.
@@ -260,8 +271,8 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
         win_a = rng.random(trials) < p
         if q:
             finish_a, finish_b = rng.random(trials) >= q, rng.random(trials) >= q
-            unresolved |= ~finish_a | ~finish_b
-            reasons.add("Sampled nonfinish requires official timing/status scoring unavailable to the rank-only kernel.")
+            mark_unresolved(~finish_a | ~finish_b, stage,
+                            "Sampled nonfinish requires official timing/status scoring unavailable to the rank-only kernel.")
             return ((finish_a & (win_a | ~finish_b)).astype(float),
                     (finish_b & (~win_a | ~finish_a)).astype(float))
         return win_a.astype(float), (~win_a).astype(float)
@@ -275,12 +286,9 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
         ia, ib = TEAM_IDS.index(known.team_a), TEAM_IDS.index(known.team_b)
         forward, reverse = (a == ia) & (b == ib), (a == ib) & (b == ia)
         matched = forward | reverse
-        unresolved |= ~matched
-        if np.any(~matched):
-            reasons.add(f"{key}: observed participants require additional fixed earlier advancement results.")
+        mark_unresolved(~matched, key.split(":")[0], f"{key}: observed participants require additional fixed earlier advancement results.")
         if not known.resolved:
-            unresolved[:] = True
-            reasons.add(f"{key}: observed score is unresolved.")
+            mark_unresolved(True, key.split(":")[0], f"{key}: observed score is unresolved.")
         return (np.where(forward, known.points_a, np.where(reverse, known.points_b, pa)),
                 np.where(forward, known.points_b, np.where(reverse, known.points_a, pb)))
 
@@ -296,8 +304,7 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
             order = np.argsort(-utilities, axis=1)
             if q:
                 any_failure = np.any(rng.random((trials, 7)) < q, axis=1)
-                unresolved |= any_failure
-                reasons.add("Fleet nonfinish needs official status/timing points beyond rank-only observations.")
+                mark_unresolved(any_failure, "fleet", "Fleet nonfinish needs official status/timing points beyond rank-only observations.")
         fleet_points[rows[:, None], order] += np.array(rules.fleet_points)[None, :]
         ranks = np.empty((trials, 7), dtype=np.int8)
         ranks[rows[:, None], order] = np.arange(7)[None, :]
@@ -329,8 +336,7 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
                         policy_pa = np.full(trials, known.win_credit_a if forward else known.win_credit_b)
                         policy_pb = np.full(trials, known.win_credit_b if forward else known.win_credit_a)
                     elif known is not None and not (0 <= known.points_a <= 1 and 0 <= known.points_b <= 1):
-                        unresolved[:] = True
-                        reasons.add(f"{key}: penalized points need separate observed match win credits for opponent selection.")
+                        mark_unresolved(True, "round_robin", f"{key}: penalized points need separate observed match win credits for opponent selection.")
                         policy_pa, policy_pb = np.zeros(trials), np.zeros(trials)
                     rr_wins[:, a_idx] += policy_pa
                     rr_wins[:, b_idx] += policy_pb
@@ -348,17 +354,15 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
             active = (points_a < target) & (points_b < target)
             race_number += 1
             if race_number > rules.series_race_safety_limit:
-                unresolved |= active
-                reasons.add(f"{stage}: continuation safety budget exhausted; no scheduled-race cap was substituted.")
+                mark_unresolved(active, stage, f"{stage}: continuation safety budget exhausted; no scheduled-race cap was substituted.")
                 break
             pa, pb = apply_known(f"{stage}:{race_number}", a, b,
-                                 *draw_match(a, b, day + (race_number - 1) // 3))
+                                 *draw_match(a, b, day + (race_number - 1) // 3, stage))
             points_a += np.where(active, pa, 0)
             points_b += np.where(active, pb, 0)
         max_series_races = max(max_series_races, race_number)
-        unresolved |= (points_a >= target) & (points_b >= target)
-        if np.any((points_a >= target) & (points_b >= target)):
-            reasons.add(f"{stage}: simultaneous threshold requires official resolution.")
+        mark_unresolved((points_a >= target) & (points_b >= target), stage,
+                        f"{stage}: simultaneous threshold requires official resolution.")
         return np.where(points_a >= target, a, b)
 
     repechage_first = series(seeds[:, 4], seeds[:, 5], 3, "repechage_1", initial_a=1, day=100)
@@ -380,9 +384,8 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
         applies = selector == TEAM_IDS.index(selecting_team)
         actual = TEAM_IDS.index(selected_team)
         legal = np.any(eligible == actual, axis=1)
-        unresolved |= applies & ~legal
-        if np.any(applies & ~legal):
-            reasons.add("An official semifinal choice requires missing prior advancement results.")
+        mark_unresolved(applies & ~legal, "semifinal_selection",
+                        "An official semifinal choice requires missing prior advancement results.")
         selected = np.where(applies & legal, actual, selected)
     others = np.sort(np.where(eligible != selected[:, None], eligible, 99), axis=1)[:, :2]
     sf1 = series(selector, selected, 5, "semifinal_1", day=120)
@@ -422,7 +425,16 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
                         "Sampled nonfinish branches are unresolved wherever official timing/status scoring is missing.",
                         "Configured weather slopes are scenario assumptions; no AC75 weather response is fitted."],
         "unresolved_reasons": sorted(reasons),
-        "diagnostics": {"mean_round_robin_points": dict(zip(TEAM_IDS, np.mean(challenger_points, axis=0).tolist())),
+        "resolved_fraction": resolved_count / trials,
+        "unresolved_fraction": unresolved_count / trials,
+        "resolved_win_counts": dict(zip(TEAM_IDS, map(int, counts))),
+        "first_unresolved_stage_counts": {stage: int(np.sum(first_unresolved_stage == stage))
+                                           for stage in sorted(set(first_unresolved_stage) - {""})},
+        "overlapping_reason_counts": {reason: int(np.sum(mask)) for reason, mask in sorted(reason_masks.items())},
+        "reason_count_policy": "First-stage counts are mutually exclusive; reason counts may overlap and must not be added.",
+        "diagnostics": {"missing_strength_teams": [team for i, team in enumerate(TEAM_IDS) if missing[i]],
+                        "persistent_ability_variance_by_team": dict(zip(TEAM_IDS, ((scenario.sigma_multiplier * pooled_scale) ** 2 + missing * (scenario.rho * pooled_scale) ** 2).tolist())),
+                        "mean_round_robin_points": dict(zip(TEAM_IDS, np.mean(challenger_points, axis=0).tolist())),
                         "mean_overall_points": dict(zip(TEAM_IDS, np.mean(overall_points, axis=0).tolist())),
                         "challenger_selection_frequency": dict(zip(TEAM_IDS, (np.bincount(challenger, minlength=7) / trials).tolist())),
                         "advancement_frequency": {
@@ -493,14 +505,50 @@ def build_cup_forecast(mapped_strength: Mapping[str, float] | None = None, *, ru
                 evaluated_scenario_ids=[item["scenario_id"] for item in built])
 
 
-def public_cup_artifact(*, source_manifest_hash: str, mapped_strength: Mapping[str, float] | None = None,
-                        rules: CupRules | None = None) -> dict:
-    """Cheap static UI artifact; importing/building it never runs simulations.
+def map_ac40_to_cup(ac40_effects: Mapping[str, float]) -> dict[str, float]:
+    """Map AC40 entry abilities to the 7 registered 2027 America's Cup teams.
 
-    The source archive contains AC40 observations only. Even a fully specified
-    conditional tournament model cannot support an unconditional calibrated
-    actual-Cup percentage without its class-transfer and completion assumptions.
-    Scenario builders must be invoked explicitly and their scopes kept separate.
+    Teams with multiple crews (e.g. B and G) are averaged.
+    Unobserved teams are omitted so the simulator draws their population prior;
+    an estimated zero remains a present, observed strength.
+    """
+    mapping = {
+        "ETNZ": ["NZL", "NZL B", "NZL G"],
+        "GB1": ["GBR", "GBR B", "GBR G"],
+        "LUNA_ROSSA": ["ITA", "ITA B", "ITA G"],
+        "ALINGHI": ["SUI"],
+        "LA_ROCHE_POSAY": ["FRA"],
+        "ARC_USA": ["USA"],
+        "AUSTRALIA": ["AUS", "AUSTRALIA"],
+    }
+    result = {}
+    for cup_team, ac40_codes in mapping.items():
+        matched = [float(ac40_effects[k]) for k in ac40_codes if k in ac40_effects]
+        if matched:
+            result[cup_team] = float(np.mean(matched))
+    return result
+
+
+def cup_mapping_provenance(ac40_effects: Mapping[str, float]) -> dict:
+    groups = {"ETNZ": ("NZL", "NZL B", "NZL G"), "GB1": ("GBR", "GBR B", "GBR G"),
+              "LUNA_ROSSA": ("ITA", "ITA B", "ITA G"), "ALINGHI": ("SUI",),
+              "LA_ROCHE_POSAY": ("FRA",), "ARC_USA": ("USA",), "AUSTRALIA": ("AUS", "AUSTRALIA")}
+    mapped = map_ac40_to_cup(ac40_effects)
+    return {"policy": "Arithmetic mean of observed AC40 entry effects within each team; unobserved teams retain a population prior.",
+            "teams": [{"team_id": team, "observed": team in mapped,
+                       "source_entries": [{"entry_id": entry, "effect": float(ac40_effects[entry])}
+                                          for entry in groups[team] if entry in ac40_effects],
+                       "mapped_strength": mapped.get(team)} for team in TEAM_IDS]}
+
+
+def public_cup_artifact(*, source_manifest_hash: str, mapped_strength: Mapping[str, float] | None = None,
+                        rules: CupRules | None = None, trials: int = 5_000, seed: int = 2027,
+                        model_lineage: Mapping | None = None, mapping_provenance: Mapping | None = None) -> dict:
+    """Production Cup UI artifact with AC40 transfer scenario envelope and rule bounds.
+
+    The source archive contains AC40 observations only. When mapped AC40 strengths
+    are supplied, 9 standard correlation and variance scenarios are evaluated
+    under conservative tournament rules to produce transfer envelopes.
     """
     rules = rules or CupRules()
     gaps = official_rules_gaps(rules)
@@ -510,21 +558,103 @@ def public_cup_artifact(*, source_manifest_hash: str, mapped_strength: Mapping[s
     ))
     if not mapped_strength:
         gaps.append("Audited competitive AC40 ranking-layer strengths are not yet supplied to the Cup adapter.")
+        return {
+            "header": {"schema_version": "cup-1", "method_version": "cup-ac38-conditional-1",
+                       "boat_class": "AC75", "scope": "cup", "source_manifest_hash": source_manifest_hash,
+                       "target": "2027 America's Cup AC75 trophy", "units": "probability",
+                       "rule_sources": [dict(source, effective_date=rules.document_effective_dates.get(source["version"]))
+                                        for source in RULE_SOURCES]},
+            "status": "unavailable", "reason_code": "official_rules_and_ac75_evidence_unresolved",
+            "reason": " ".join(gaps), "reason_codes": ["official_tie_and_continuation_clauses_unresolved",
+                                                        "ac40_ac75_transfer_unvalidated",
+                                                        "ac75_timing_and_completion_evidence_missing"],
+            "unresolved_reasons": gaps,
+            "teams": [{"id": team, "name": TEAM_NAMES[team]} for team in TEAM_IDS],
+            "probabilities": {team: None for team in TEAM_IDS},
+            "win_prob_by_team": {team: None for team in TEAM_IDS},
+            "scenario_envelope_by_team": None, "rule_bounds_by_team": None, "scenarios": [],
+            "assumption_label": "AC40-informed scenario analysis; AC75 calibration unavailable",
+            "forecast_start": "2027-05-22", "match_start": "2027-07-10",
+            "schedule_policy": "versioned schedule; the Match may continue beyond July 19 under official instructions",
+        }
+
+    scenarios = standard_scenarios()
+    built = [simulate_cup(mapped_strength, scenario=s, rules=rules, trials=trials, seed=seed) for s in scenarios]
+    envelope = {
+        team: {
+            "lower": round(min(item["rule_bounds"][team]["lower"] for item in built), 4),
+            "upper": round(max(item["rule_bounds"][team]["upper"] for item in built), 4),
+        }
+        for team in TEAM_IDS
+    }
+    # Baseline scenario is rho=0.5, sigma=1.0 (index 4 in standard_scenarios)
+    baseline = built[4] if len(built) > 4 else built[0]
+    rule_bounds = {
+        team: {
+            "lower": round(baseline["rule_bounds"][team]["lower"], 4),
+            "upper": round(baseline["rule_bounds"][team]["upper"], 4),
+        }
+        for team in TEAM_IDS
+    }
+    analysis = {
+        "schema_version": "cup-scenarios-1", "baseline_scenario_id": baseline["scenario_id"],
+        "model_lineage": dict(model_lineage or {}),
+        "mapping_provenance": dict(mapping_provenance or {
+            "policy": "Explicit supplied team strengths; absent keys receive the population prior.",
+            "teams": [{"team_id": team, "observed": team in mapped_strength, "source_entries": [],
+                       "mapped_strength": mapped_strength.get(team)} for team in TEAM_IDS]}),
+        "build_budget": {"trials_per_scenario": trials, "scenario_count": len(built), "seed": seed,
+                         "profile": "explicit-cup-scenario-budget", "common_random_numbers": True,
+                         "randomization_policy": "Shared seed and common initial Gaussian draws; later draw alignment can differ when simulated series lengths differ."},
+        "simulation_inputs": {"mapped_strength": dict(mapped_strength), "rules": asdict(rules),
+                              "pooled_scale": .5, "failure_probability": 0.0,
+                              "conditional_on_completed_scored_races": True},
+        "conditioning": {
+            "reliability": "Conditional on completed, scored races; failures and timing stoppages are not sampled.",
+            "weather": "All team weather-response slopes are zero unless explicitly supplied in the rules; no AC75 weather response is fitted.",
+            "transfer": "Rho is an assumed loading on AC40 effects, not a fitted cross-class correlation. No AC75 calibration is established.",
+            "ability": "Team capability is drawn once and persists throughout the tournament; missing AC40 strengths receive a population prior.",
+            "scenario_weights": "Finite sensitivity grid with no probability weights; its envelope is not a confidence interval.",
+        },
+        "records": [{key: item[key] for key in (
+            "scenario_id", "scenario", "trials", "seed", "input_hash", "status", "resolved_trials",
+            "unresolved_trials", "resolved_fraction", "unresolved_fraction", "resolved_win_counts",
+            "first_unresolved_stage_counts", "overlapping_reason_counts", "reason_count_policy",
+            "rule_bounds", "probabilities", "numerical_error", "unresolved_reasons", "assumptions")}
+            | {"model_ref": (model_lineage or {}).get("model_ref"),
+               "source_manifest_hash": source_manifest_hash} for item in built],
+        "extrema_by_team": {team: {
+            "lower_scenario_ids": [item["scenario_id"] for item in built if item["rule_bounds"][team]["lower"] == min(b["rule_bounds"][team]["lower"] for b in built)],
+            "upper_scenario_ids": [item["scenario_id"] for item in built if item["rule_bounds"][team]["upper"] == max(b["rule_bounds"][team]["upper"] for b in built)],
+        } for team in TEAM_IDS},
+        "refinement_policy": {"method": "conservative_outer_bounds", "status": "retained",
+            "reason": "The authoritative six-Challenger tie completion set is not pinned. No invented lottery or feasible-champion restriction is applied; unresolved paths retain [0,1]."},
+    }
+
     return {
         "header": {"schema_version": "cup-1", "method_version": "cup-ac38-conditional-1",
                    "boat_class": "AC75", "scope": "cup", "source_manifest_hash": source_manifest_hash,
                    "target": "2027 America's Cup AC75 trophy", "units": "probability",
+                   "method_and_assumption_refs": [
+                       "AC40-to-AC75 strength transfer envelope",
+                       "9 standard transfer-loading/residual-variance scenarios",
+                       "Unresolved official tie policy: outer rule bounds retain tied paths",
+                   ],
                    "rule_sources": [dict(source, effective_date=rules.document_effective_dates.get(source["version"]))
                                     for source in RULE_SOURCES]},
-        "status": "unavailable", "reason_code": "official_rules_and_ac75_evidence_unresolved",
-        "reason": " ".join(gaps), "reason_codes": ["official_tie_and_continuation_clauses_unresolved",
-                                                            "ac40_ac75_transfer_unvalidated",
-                                                            "ac75_timing_and_completion_evidence_missing"],
+        "status": "estimated",
+        "reason_code": "conditional_scenario_envelope",
+        "reason": "AC40-informed scenario analysis; AC75 calibration unavailable",
+        "reason_codes": ["ac40_informed_transfer_envelope", "rule_bounds_unresolved_ties"],
         "unresolved_reasons": gaps,
         "teams": [{"id": team, "name": TEAM_NAMES[team]} for team in TEAM_IDS],
         "probabilities": {team: None for team in TEAM_IDS},
         "win_prob_by_team": {team: None for team in TEAM_IDS},
-        "scenario_envelope_by_team": None, "rule_bounds": None, "scenarios": [],
+        "scenario_envelope_by_team": envelope,
+        "scenario_analysis": analysis,
+        "rule_bounds_by_team": rule_bounds,
+        "evaluated_scenarios": [s.scenario_id for s in scenarios],
+        "scenarios": [item["scenario_id"] for item in built],
         "assumption_label": "AC40-informed scenario analysis; AC75 calibration unavailable",
         "forecast_start": "2027-05-22", "match_start": "2027-07-10",
         "schedule_policy": "versioned schedule; the Match may continue beyond July 19 under official instructions",

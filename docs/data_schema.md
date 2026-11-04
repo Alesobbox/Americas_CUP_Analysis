@@ -2,6 +2,8 @@
 
 The browser loads `public/data/manifests.json` and then the selected `public/data/replays/<id>.json`. `src/types/replay.ts` is the client type contract; `pipeline/export_replay.py` writes the artifact. Keep both in sync when adding a field. Historical analysis has separate versioned artifacts and definitions.
 
+Published output families are `replays/`, `analysis/`, `predictions/`, and `environment/`. The last contains separate `environment-1` historical model context for the header, plus exact raw API responses under `environment/responses/`; it does not add measured telemetry channels to replay objects. See [environment data](environment_data.md) for units, UTC-hour selection, source provenance, and acquisition/verification commands. The root `artifacts.json` inventory lists every published data file.
+
 ## Catalog
 
 Current manifests contain `regattas[]`. Each regatta has an ID, name, venue, and `races[]`; each race identifies its ID, name, date, and `replay_file`. The client also accepts older flat catalogs with `races[]` and `file`. The catalog separates nine Cagliari and nineteen Naples sessions. A winner field, when present, describes the reconstruction and must carry `result_provenance`; it is not an independently verified official result.
@@ -46,3 +48,21 @@ Every boat's array has exactly the length of `telemetry.timestamps`. Ingestion i
 ## Source and result boundaries
 
 Source classification and recorded gate times must remain distinct from reconstructed crossing times, finish rank, and elapsed time. `virtual_contact_incidents[]` are SAT overlaps of modeled Keep Clear envelopes, not recorded penalties. Historical scalar metrics include quality, coverage seconds, and null with a reason when unavailable. See [source_audit.md](source_audit.md) for source availability and reconstruction limits.
+
+## Team analytics extensions
+
+Historical detail schema `2.0` and method `historical-2` retain their existing formulas. Each boat optionally adds independently versioned `performance` and `debrief` objects; the detail optionally adds `tactical_insights`. An absent extension is an unavailable feature, never a zero score. Replay arrays and the event-feed contract are unchanged.
+
+The performance extension stores all normalized scores and matched-leg peer evidence in Python. Tactical snapshots use independent raw official-wind measurement times and trailing windows, with explicit expiry and conditional projection labels. The browser selects an exported snapshot at or before the playhead and draws exported performance values. Full definitions, provenance limits, source coverage and refresh commands are in [team analytics](team_analytics.md) and [historical analysis](historical_analysis.md).
+
+`performance.scope` adds expected/matched legs, exclusions, minimum peer support and union-covered seconds. Dimension `leg_evidence` includes its start/end milliseconds, quality, contributing peer values/coverage/counts/intervals, excluded peers with reasons and qualifying manoeuvre events. These are additive fields under `performance-1`; index arithmetic and availability rules are unchanged. Older details without these fields remain readable, with missing evidence disclosed.
+
+## Reports and technical inventory
+
+Each analysis detail produces `<id>_summary.csv` and `<id>_performance.csv` in `analysis/`. They serialize canonical values and preserve null as an empty cell, alongside IDs, units, method, source, quality, coverage, window, denominator and comparison support. Reports consumes the race-matched analysis JSON; legacy replay summaries are not fallbacks for unavailable historical metrics.
+
+Inventory schema `1.1` adds producer-owned `kind`, `status`, `scope` and `primary_download`. Status distinguishes current, supporting and retained objects. At most six current-race primary downloads are shown; a collapsed searchable explorer exposes the full inventory. The reader still accepts schema `1.0`, whose unclassified entries remain technical downloads.
+
+## Cup scenario evidence
+
+Usable `cup-ac38-conditional-2` artifacts require `scenario_analysis` with schema `cup-scenarios-1`. This contains the baseline ID, explicit simulation budget, conditioning, model/training cutoff lineage, missing-versus-observed mapping provenance, per-scenario bounds/counts/parameters/seeds/input hashes, numerical error and envelope endpoint attribution. Unresolved paths retain null point probabilities for every team. Legacy method 1 and explicitly unavailable method 2 remain readable. See [forecasting implementation](forecasting_implementation.md) for the contract and publication workflow.

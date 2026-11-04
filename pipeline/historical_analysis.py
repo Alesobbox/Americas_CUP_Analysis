@@ -23,6 +23,9 @@ EVENT_FEED_METHOD_VERSION = "event-feed-1"
 WIND_SHIFT_THRESHOLD_DEG = 10.0
 WIND_SHIFT_MIN_INTERVAL_MS = 30_000
 KT_TO_MPS = 1 / 1.94384449
+PERFORMANCE_SCHEMA_VERSION = "1.0"
+PERFORMANCE_METHOD_VERSION = "performance-1"
+DEBRIEF_METHOD_VERSION = "debrief-1"
 
 
 DEFINITIONS = {
@@ -419,6 +422,272 @@ def build_event_feed(detail):
             "method_version": EVENT_FEED_METHOD_VERSION, "events": events}
 
 
+def _performance_eligible(boat):
+    """Retain valid completed legs even when the rest of a race was not finished."""
+    start = boat.get("start") or {}
+    return (boat.get("classification") not in ("OCS", "RET", "DNS", "DID_NOT_START", "RETIRED")
+            and not start.get("ocs") and start.get("crossing_time_ms") is not None
+            and not boat.get("source_conflicts"))
+
+
+def _positive_finite(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value > 0
+
+
+def _performance_exclusion_reason(boat, number, metric_id, retention=False):
+    if boat.get("source_conflicts"):
+        return "source state conflicts with the reconstructed race window"
+    if not _performance_eligible(boat):
+        return "retired, non-starting, OCS or missing a valid start crossing"
+    leg = next((item for item in boat.get("legs", []) if item.get("leg") == number), None)
+    if not leg or not leg.get("complete"):
+        return "missing previous crossing" if leg and leg.get("gate") else "missing or incomplete leg crossing"
+    start, end = leg.get("start_ms"), leg.get("end_ms")
+    if start is not None and end is not None and end <= start:
+        return "non-increasing crossing timestamps in source/reconstruction"
+    if retention:
+        return "no qualifying same-kind manoeuvre with a fully covered detector window inside this leg"
+    metric = leg.get("metrics", {}).get(metric_id, {})
+    if metric.get("quality") != "derived":
+        return metric.get("reason") or "partial or unavailable source-covered leg metric"
+    if not _positive_finite(metric.get("value")):
+        return "leg metric is not positive and finite"
+    return "less than 95% valid source coverage or invalid crossing interval"
+
+
+def _performance_leg(boat, leg_number, metric_id):
+    if not _performance_eligible(boat):
+        return None
+    for leg in boat.get("legs", []):
+        if leg.get("leg") != leg_number or not leg.get("complete"):
+            continue
+        start, end = leg.get("start_ms"), leg.get("end_ms")
+        if start is None or end is None or end <= start:
+            continue
+        metric = leg.get("metrics", {}).get(metric_id, {})
+        value, coverage = metric.get("value"), metric.get("coverage_s")
+        if (metric.get("quality") != "derived" or not _positive_finite(value)
+                or not _positive_finite(coverage) or coverage + 1e-6 < .95 * ((end - start) / 1000)):
+            continue
+        return leg, value, coverage
+    return None
+
+
+def _covered_event_window(boat, timestamp, sample_interval_ms=100):
+    """Cover the detector's 60-sample search and five-sample entry extension."""
+    if not isinstance(timestamp, (int, float)) or not math.isfinite(timestamp):
+        return False
+    coverage = boat.get("source_coverage") or {}
+    start, end = timestamp - 65 * sample_interval_ms, timestamp + 60 * sample_interval_ms
+    for field in ("sog", "heading", "twd"):
+        info = coverage.get(field) or {}
+        first, last = info.get("first_ms"), info.get("last_ms")
+        if first is None or last is None or first > start or last < end:
+            return False
+        if any(a < end and b > start for a, b in info.get("gaps", [])):
+            return False
+    return True
+
+
+def _retention_by_leg(boat, kind, sample_interval_ms=100):
+    if not _performance_eligible(boat):
+        return {}
+    groups = defaultdict(list)
+    completed = {leg["leg"]: leg for leg in boat.get("legs", []) if leg.get("complete")}
+    for event in boat.get("manoeuvres", []):
+        leg = completed.get(event.get("leg"))
+        timestamp = event.get("timestamp")
+        entry, minimum = event.get("entry_speed_kt"), event.get("min_speed_kt")
+        if (event.get("type") != kind or event.get("quality") != "reconstructed" or not leg
+                or not _positive_finite(entry) or not isinstance(minimum, (int, float))
+                or not math.isfinite(minimum) or not 0 <= minimum <= entry
+                or not _positive_finite(event.get("speed_loss_kt")) or event["speed_loss_kt"] < 2.5
+                or not _covered_event_window(boat, timestamp, sample_interval_ms)):
+            continue
+        start, end = leg.get("start_ms"), leg.get("end_ms")
+        if (start is None or end is None or timestamp - 65 * sample_interval_ms < start
+                or timestamp + 60 * sample_interval_ms > end):
+            continue
+        groups[event["leg"]].append((100 * minimum / entry, timestamp, event))
+    result = {}
+    for leg, observations in groups.items():
+        windows = sorted((t - 65 * sample_interval_ms, t + 60 * sample_interval_ms) for _, t, _ in observations)
+        merged = []
+        for start, end in windows:
+            if merged and start <= merged[-1][1]:
+                merged[-1][1] = max(merged[-1][1], end)
+            else:
+                merged.append([start, end])
+        covered_s = sum(end - start for start, end in merged) / 1000
+        result[leg] = (sum(value for value, _, _ in observations) / len(observations), len(observations), covered_s,
+                       [{"timestamp_ms": t, "entry_speed_kt": event["entry_speed_kt"],
+                         "minimum_speed_kt": event["min_speed_kt"], "retention_pct": value,
+                         "window_start_ms": t - 65 * sample_interval_ms,
+                         "window_end_ms": t + 60 * sample_interval_ms}
+                        for value, t, event in observations])
+    return result
+
+
+def attach_performance_analysis(detail):
+    """Add reproducible post-race peer comparisons using exported source evidence.
+
+    Ratios are calculated on the exact same completed leg before equal-leg
+    aggregation. Each peer boat has one vote, independent of its event count.
+    This function also supports refreshing existing detail files without replay
+    telemetry, and never replaces the original historical scalars.
+    """
+    boats = detail.get("boats", [])
+    sample_interval_ms = detail.get("race", {}).get("sample_interval_ms", 100)
+    if not _positive_finite(sample_interval_ms):
+        raise ValueError("performance sample_interval_ms must be positive and finite")
+    dimensions = (("upwind_vmg", "Upwind course VMG", "course_vmg_kt", 1),
+                  ("downwind_vmg", "Downwind course VMG", "course_vmg_kt", 0),
+                  ("upwind_speed", "Upwind speed", "sog_mean_kt", 1),
+                  ("downwind_speed", "Downwind speed", "sog_mean_kt", 0),
+                  ("tack_retention", "Tack retention", "TACK", None),
+                  ("gybe_retention", "Gybe retention", "GYBE", None))
+    retention = {(b["id"], kind): _retention_by_leg(b, kind, sample_interval_ms)
+                 for b in boats for kind in ("TACK", "GYBE")}
+    for boat in boats:
+        exported = []
+        for dimension_id, label, metric_id, parity in dimensions:
+            is_retention = parity is None
+            evidence, peer_ids = [], set()
+            for leg in boat.get("legs", []):
+                number = leg.get("leg")
+                if not isinstance(number, int) or (parity is not None and number % 2 != parity):
+                    continue
+                own = retention[(boat["id"], metric_id)].get(number) if is_retention else _performance_leg(boat, number, metric_id)
+                if own is None:
+                    continue
+                value = own[0] if is_retention else own[1]
+                peers, peer_details, excluded_peers = [], [], []
+                own_leg = next(item for item in boat["legs"] if item["leg"] == number)
+                for other in boats:
+                    if other["id"] == boat["id"]:
+                        continue
+                    candidate = retention[(other["id"], metric_id)].get(number) if is_retention else _performance_leg(other, number, metric_id)
+                    if candidate is not None:
+                        peers.append((other["id"], candidate[0] if is_retention else candidate[1]))
+                        other_leg = next(item for item in other["legs"] if item["leg"] == number)
+                        peer_details.append({"id": other["id"], "team_code": other.get("team_code", other["id"]),
+                                             "team_name": other.get("team_name", other.get("team_code", other["id"])),
+                                             "value": candidate[0] if is_retention else candidate[1],
+                                             "coverage_s": candidate[2], "sample_count": candidate[1] if is_retention else 1,
+                                             "start_ms": other_leg["start_ms"], "end_ms": other_leg["end_ms"],
+                                             "quality": "reconstructed" if is_retention else "derived"})
+                    else:
+                        excluded_peers.append({"id": other["id"], "team_code": other.get("team_code", other["id"]),
+                                               "reason": _performance_exclusion_reason(other, number, metric_id, is_retention)})
+                peer_mean = sum(v for _, v in peers) / len(peers) if peers else None
+                if not _positive_finite(peer_mean):
+                    continue
+                peer_ids.update(p for p, _ in peers)
+                evidence.append({"leg": number, "value": value, "peer_mean": peer_mean,
+                                 "index": 100 * value / peer_mean, "peer_count": len(peers),
+                                 "peer_ids": [p for p, _ in peers],
+                                 "sample_count": own[1] if is_retention else 1,
+                                 "coverage_s": own[2], "start_ms": own_leg["start_ms"], "end_ms": own_leg["end_ms"],
+                                 "quality": "reconstructed" if is_retention else "derived",
+                                 "peers": peer_details, "excluded_peers": excluded_peers,
+                                 "events": own[3] if is_retention else []})
+            count = len(evidence)
+            formula = ("Mean over matched legs of 100 × boat mean(100 × minimum SOG / entry SOG) / other-boats mean retention"
+                       if is_retention else f"Mean over matched legs of 100 × boat {metric_id} / other-boats mean {metric_id}")
+            item = {"id": dimension_id, "label": label,
+                    "index": sum(e["index"] for e in evidence) / count if count else None,
+                    "value": sum(e["value"] for e in evidence) / count if count else None,
+                    "peer_mean": sum(e["peer_mean"] for e in evidence) / count if count else None,
+                    "unit": "%" if is_retention else "kt", "higher_is_better": True,
+                    "peer_count": len(peer_ids), "coverage_s": round(sum(e["coverage_s"] for e in evidence), 3),
+                    "sample_count": sum(e["sample_count"] for e in evidence),
+                    "matched_legs": [e["leg"] for e in evidence], "leg_evidence": evidence,
+                    "quality": ("reconstructed" if is_retention else "derived") if count else "unavailable",
+                    "formula": formula, "window": "matching completed legs in this retrospective race",
+                    "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+                    "source": (f"detected manoeuvres; full SOG, heading and local TWD source coverage over [-{65 * sample_interval_ms / 1000:g},+{60 * sample_interval_ms / 1000:g}] s"
+                               if is_retention else "historical leg metrics; reconstructed crossings; >=95% valid source seconds")}
+            relevant_parity = parity if parity is not None else (1 if metric_id == "TACK" else 0)
+            expected = sorted({leg["leg"] for leg in boat.get("legs", []) if leg["leg"] % 2 == relevant_parity}
+                              | {e["leg"] for e in evidence})
+            item["excluded_legs"] = [{"leg": number, "reason": (
+                "no other eligible boat has a positive comparison on this exact leg"
+                if (retention[(boat["id"], metric_id)].get(number) if is_retention else _performance_leg(boat, number, metric_id))
+                else _performance_exclusion_reason(boat, number, metric_id, is_retention))}
+                for number in expected if number not in item["matched_legs"]]
+            if not count:
+                item["reason"] = ("boat has no eligible racing window or has a source-state conflict" if not _performance_eligible(boat)
+                                  else "no qualifying detected manoeuvres and other-boat comparison on matching completed legs" if is_retention
+                                  else "no positive, >=95%-covered matching completed leg and eligible other boat")
+            exported.append(item)
+        all_available = all(d["index"] is not None for d in exported)
+        boat["performance"] = {"schema_version": PERFORMANCE_SCHEMA_VERSION, "method_version": PERFORMANCE_METHOD_VERSION,
+                               "baseline_index": 100, "dimensions": exported,
+                               "overall_index": sum(d["index"] for d in exported) / 6 if all_available else None,
+                               "notes": ["Post-race comparison; changing wind and different crossing times are not controlled for.",
+                                         "Index is the mean of per-leg ratios; displayed value and peer mean are arithmetic matched-leg means.",
+                                         "Retention describes qualifying detected events only; the detector requires at least 2.5 kt speed loss.",
+                                         f"Retention coverage is the union of validated {125 * sample_interval_ms / 1000:g} s event source windows within matched completed legs.",
+                                         "Overall index weights all six dimensions equally and requires all six."]}
+        expected = sorted({leg["leg"] for leg in boat.get("legs", [])})
+        matched = sorted({number for dimension in exported[:2] for number in dimension["matched_legs"]})
+        directional_evidence = [entry for dimension in exported[:2] for entry in dimension["leg_evidence"]]
+        exclusions = {entry["leg"]: entry["reason"] for dimension in exported[:2] for entry in dimension["excluded_legs"]}
+        boat["performance"]["scope"] = {"expected_legs": expected, "matched_legs": matched,
+            "expected_leg_count": len(expected), "matched_leg_count": len(matched),
+            "min_peer_count": min((entry["peer_count"] for dimension in exported for entry in dimension["leg_evidence"]), default=0),
+            "covered_s": round(sum(entry["coverage_s"] for entry in directional_evidence), 3),
+            "excluded_legs": [{"leg": number, "reason": exclusions.get(number, "no comparable source-covered leg")}
+                              for number in expected if number not in matched]}
+        if not all_available:
+            boat["performance"]["reason"] = "overall index requires all six dimensions; missing dimensions are not imputed"
+        boat["debrief"] = _build_peer_debrief(boat, boats, sample_interval_ms)
+    return detail
+
+
+def _build_peer_debrief(boat, boats, sample_interval_ms=100):
+    items = []
+    if _performance_eligible(boat):
+        for leg in boat.get("legs", []):
+            number = leg.get("leg")
+            elapsed = leg.get("metrics", {}).get("elapsed_s", {}).get("value")
+            if _performance_leg(boat, number, "sog_mean_kt") is None or not _positive_finite(elapsed):
+                continue
+            peers = []
+            for other in boats:
+                if other["id"] == boat["id"] or not _performance_eligible(other):
+                    continue
+                for candidate in other.get("legs", []):
+                    value = candidate.get("metrics", {}).get("elapsed_s", {}).get("value")
+                    if (candidate.get("leg") == number and _performance_leg(other, number, "sog_mean_kt") is not None
+                            and _positive_finite(value)):
+                        peers.append((other["id"], value))
+            if peers:
+                baseline = sum(value for _, value in peers) / len(peers)
+                deficit = elapsed - baseline
+                if deficit > 0:
+                    items.append({"id": f"{boat['id']}:leg:{number}", "kind": "leg_deficit", "leg": number,
+                                  "title": f"Leg {number}: {deficit:.1f} s longer than peers",
+                                  "detail": f"Observed leg time {elapsed:.1f} s versus other-boats mean {baseline:.1f} s ({len(peers)} peers). Different crossing times and conditions can contribute; this does not identify a cause.",
+                                  "timestamp_ms": leg["end_ms"], "value": deficit, "unit": "s", "quality": "reconstructed",
+                                  "source": "completed-leg crossing timestamps; >=95%-covered eligible boats on the same leg",
+                                  "start_ms": leg["start_ms"], "end_ms": leg["end_ms"],
+                                  "gate_timing_source": "source_timing" if (leg.get("gate") or {}).get("source") == "official" else "reconstructed",
+                                  "peer_count": len(peers), "peer_mean": baseline, "peer_ids": [p for p, _ in peers]})
+        items = sorted(items, key=lambda x: (-x["value"], x["timestamp_ms"], x["id"]))[:3]
+        eligible_events = [event for event in boat.get("manoeuvres", [])
+                           if event.get("quality") == "reconstructed" and _positive_finite(event.get("speed_loss_kt"))
+                           and _covered_event_window(boat, event.get("timestamp"), sample_interval_ms)]
+        for event in sorted(eligible_events, key=lambda e: (-e["speed_loss_kt"], e["timestamp"]))[:2]:
+            items.append({"id": f"{boat['id']}:manoeuvre:{event['type']}:{event['timestamp']}", "kind": "manoeuvre_loss",
+                          "leg": event.get("leg"), "title": f"{event['type'].title()}: {event['speed_loss_kt']:.1f} kt speed reduction",
+                          "detail": "Review the detected entry-to-minimum SOG reduction. This is a speed observation, not an estimate of time or distance lost.",
+                          "timestamp_ms": event["timestamp"], "value": event["speed_loss_kt"], "unit": "kt",
+                          "quality": "reconstructed", "source": "qualifying manoeuvre detector; validated source SOG, heading and local TWD window"})
+    return {"schema_version": PERFORMANCE_SCHEMA_VERSION, "method_version": DEBRIEF_METHOD_VERSION, "items": items,
+            "reason": None if items else "no qualifying peer leg deficit or covered manoeuvre available"}
+
+
 def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat,
                         leg_by_boat, race_id, race_name, race_date, venue):
     sess = ingest_result.session
@@ -435,11 +704,18 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
     result = {"schema_version": SCHEMA_VERSION, "method_version": METHOD_VERSION,
               "race": {"id": race_id, "name": race_name, "date": race_date, "venue": venue,
                        "boat_class": sess.boat_class, "race_type": sess.race_type,
-                       "gun_time_ms": chronology.gun_time, "boat_count": len(ingest_result.boats),
+                       "gun_time_ms": chronology.gun_time, "window_end_ms": chronology.window_end,
+                       "boat_count": len(ingest_result.boats),
                        "result_provenance": "Reconstructed from source leg timings and geometric fallbacks; source classifications are not verified official results."},
               "definitions": definitions, "boats": [], "wind": {}, "pairs": [],
               "limitations": ["No measured target TWA or polar: tactical laylines unavailable.",
                               "Route ratio is a geometric reference, not a feasible tactical route."]}
+    if len(times) > 1:
+        grid_interval = times[1] - times[0]
+        if grid_interval <= 0 or any(b - a != grid_interval for a, b in zip(times, times[1:])):
+            raise ValueError("historical analysis requires a regular, increasing replay grid")
+        if grid_interval != 100:
+            result["race"]["sample_interval_ms"] = grid_interval
     gun = chronology.gun_time
     start_port_code = "RM8"
     start_stbd_code = "RM6"
@@ -668,6 +944,11 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
                                                   "median_spatial_m": round(median(v[0] for v in vals), 2),
                                                   "median_lateral_m": round(median(v[1] for v in vals), 2)}
                                                  for leg, vals in sorted(by_leg.items())]})
+    attach_performance_analysis(result)
+    from pipeline.tactical_insights import attach_tactical_insights
+    attach_tactical_insights(result, getattr(ingest_result.official_wind, "causal_samples", []),
+                            window_end_ms=chronology.window_end,
+                            source_provenance=getattr(ingest_result.official_wind, "source_provenance", None))
     result["event_feed"] = build_event_feed(result)
     return result
 
@@ -775,6 +1056,8 @@ def export_analysis_artifacts(detail, catalog_path="public/data/manifests.json",
     detail_path = os.path.join(analysis_dir, detail["race"]["id"] + ".json")
     with open(detail_path, "w", encoding="utf-8") as f:
         json.dump(detail, f, separators=(",", ":"), allow_nan=False)
+    from scripts.build_report_exports import export_report_files
+    export_report_files(detail, analysis_dir)
     index = build_historical_index(catalog_path, analysis_dir)
     index_path = os.path.join(analysis_dir, "index.json")
     with open(index_path, "w", encoding="utf-8") as f:

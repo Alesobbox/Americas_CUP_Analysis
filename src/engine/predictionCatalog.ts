@@ -151,8 +151,11 @@ export function findExactPreset(presets: PredictionPreset[] | undefined, tws: nu
 
 export function parseCupPrediction(value: unknown): CupPrediction {
   if (!record(value) || !record(value.header) || value.header.schema_version !== 'cup-1' || value.header.boat_class !== 'AC75' || !statuses.includes(value.status as ForecastStatus) || !Array.isArray(value.teams)) invalid('unsupported America’s Cup artifact')
+  if (value.reason !== undefined && typeof value.reason !== 'string') invalid('invalid Cup evidence reason')
+  if (value.unresolved_reasons !== undefined && (!Array.isArray(value.unresolved_reasons) || !value.unresolved_reasons.every(nonempty))) invalid('invalid Cup evidence reasons')
   if (value.teams.length !== 7 || value.teams.some((team) => !record(team) || !nonempty(team.id) || !nonempty(team.name)) || new Set(value.teams.map((team) => team.id)).size !== 7) invalid('the Cup field must include the Defender and all six Challengers')
   const ids = value.teams.map((team) => team.id as string)
+  if (usable(value.status as ForecastStatus) && value.header.method_version === 'cup-ac38-conditional-2' && !record(value.scenario_analysis)) invalid('Cup scenario evidence is required for a usable cup-ac38-conditional-2 publication')
   for (const key of ['scenario_envelope_by_team', 'rule_bounds_by_team']) {
     const bounds = value[key]
     if (bounds === undefined) continue
@@ -165,7 +168,61 @@ export function parseCupPrediction(value: unknown): CupPrediction {
   }
   if (usable(value.status as ForecastStatus) && !record(value.scenario_envelope_by_team) && !record(value.rule_bounds_by_team)) invalid('Cup estimates are missing')
   if (!usable(value.status as ForecastStatus) && ['scenario_envelope_by_team', 'rule_bounds_by_team'].some((key) => record(value[key]) && Object.values(value[key]).some((p) => p !== null))) invalid('unavailable Cup artifact contains estimates')
+  if (value.scenario_analysis !== undefined) validateCupScenarioEvidence(value, ids)
   return value as unknown as CupPrediction
+}
+
+function validateCupScenarioEvidence(value: Record<string, unknown>, ids: string[]) {
+  const evidence = value.scenario_analysis
+  const integer = (n: unknown): n is number => finite(n) && Number.isInteger(n) && n >= 0
+  const counts = (v: unknown): v is Record<string, number> => record(v) && Object.values(v).every(integer)
+  for (const field of ['probabilities', 'win_prob_by_team']) {
+    const headline = value[field]
+    if (!record(headline) || !sameIds(Object.keys(headline), ids) || Object.values(headline).some((number) => number !== null)) invalid('headline Cup probability containers must include every team with null values')
+  }
+  if (!record(evidence) || evidence.schema_version !== 'cup-scenarios-1' || !Array.isArray(evidence.records) || !evidence.records.length || !record(evidence.build_budget) || !record(evidence.model_lineage) || !record(evidence.mapping_provenance) || !record(evidence.simulation_inputs) || !record(evidence.simulation_inputs.mapped_strength) || !record(evidence.extrema_by_team) || !record(evidence.conditioning) || !Object.values(evidence.conditioning).every(nonempty) || !record(evidence.refinement_policy) || !nonempty(evidence.refinement_policy.reason)) invalid('invalid Cup scenario evidence')
+  if (!record(value.header) || (evidence.model_lineage.model_ref ?? null) !== (value.header.model_ref ?? null)) invalid('Cup header/model lineage mismatch')
+  if (evidence.model_lineage.model_ref !== undefined && (!nonempty(evidence.model_lineage.model_ref) || !/^[a-f0-9]{64}$/.test(evidence.model_lineage.model_ref) || evidence.model_lineage.source_manifest_hash !== value.header.source_manifest_hash || !nonempty(evidence.model_lineage.training_before_day) || !/^\d{4}-\d{2}-\d{2}$/.test(evidence.model_lineage.training_before_day) || evidence.model_lineage.training_cutoff_ms !== Date.parse(`${evidence.model_lineage.training_before_day}T00:00:00Z`))) invalid('invalid pinned Cup model lineage')
+  const budget = evidence.build_budget
+  if (!integer(budget.trials_per_scenario) || budget.trials_per_scenario < 1 || !integer(budget.seed) || budget.scenario_count !== evidence.records.length) invalid('invalid Cup scenario budget')
+  const scenarioIds: string[] = []
+  for (const scenario of evidence.records) {
+    if (!record(scenario) || !nonempty(scenario.scenario_id) || !record(scenario.scenario) || !Object.values(scenario.scenario).every(finite) || !integer(scenario.trials) || !integer(scenario.resolved_trials) || !integer(scenario.unresolved_trials) || scenario.trials !== budget.trials_per_scenario || scenario.seed !== budget.seed || scenario.resolved_trials + scenario.unresolved_trials !== scenario.trials) invalid('Cup trial counts do not reconcile')
+    const parameters = scenario.scenario
+    if (!probability(parameters.rho) || !finite(parameters.sigma_multiplier) || parameters.sigma_multiplier < 0 || !finite(parameters.match_concentration) || parameters.match_concentration <= 0 || !finite(parameters.hazard_multiplier) || parameters.hazard_multiplier <= 0 || scenario.scenario_id !== `rho${parameters.rho}_sigma${parameters.sigma_multiplier}_c${parameters.match_concentration}_k${parameters.hazard_multiplier}`) invalid('Cup scenario parameter or ID mismatch')
+    scenarioIds.push(scenario.scenario_id)
+    const n = scenario.trials
+    if (!finite(scenario.resolved_fraction) || !finite(scenario.unresolved_fraction) || Math.abs(scenario.resolved_fraction - scenario.resolved_trials / n) > 1e-12 || Math.abs(scenario.unresolved_fraction - scenario.unresolved_trials / n) > 1e-12) invalid('Cup trial fractions do not reconcile')
+    if (!counts(scenario.resolved_win_counts) || !sameIds(Object.keys(scenario.resolved_win_counts), ids) || Object.values(scenario.resolved_win_counts).reduce((a, b) => a + b, 0) !== scenario.resolved_trials || !counts(scenario.first_unresolved_stage_counts) || Object.values(scenario.first_unresolved_stage_counts).reduce((a, b) => a + b, 0) !== scenario.unresolved_trials || !counts(scenario.overlapping_reason_counts) || Object.values(scenario.overlapping_reason_counts).some((count) => count > n)) invalid('Cup unresolved attribution does not reconcile')
+    if (Object.values(scenario.overlapping_reason_counts).reduce((a, b) => a + b, 0) < scenario.unresolved_trials || scenario.status !== (scenario.unresolved_trials > 0 ? 'rule_bounds' : 'conditional_scenario')) invalid('Cup unresolved reason or status mismatch')
+    if (!record(scenario.rule_bounds) || !sameIds(Object.keys(scenario.rule_bounds), ids) || !record(scenario.probabilities) || !sameIds(Object.keys(scenario.probabilities), ids)) invalid('incomplete Cup scenario field')
+    for (const id of ids) {
+      const bound = scenario.rule_bounds[id]
+      const count = scenario.resolved_win_counts[id]
+      if (!record(bound) || !probability(bound.lower) || !probability(bound.upper) || Math.abs((bound.lower as number) - count / n) > 1e-12 || Math.abs((bound.upper as number) - (count + scenario.unresolved_trials) / n) > 1e-12) invalid('Cup bounds do not reconstruct from counts')
+      if (scenario.unresolved_trials > 0 ? scenario.probabilities[id] !== null : !probability(scenario.probabilities[id]) || Math.abs((scenario.probabilities[id] as number) - count / n) > 1e-12) invalid('unresolved Cup point estimate')
+    }
+    if (!record(scenario.numerical_error) || !finite(scenario.numerical_error.worst_case_95_half_width) || Math.abs(scenario.numerical_error.worst_case_95_half_width - 1.96 * Math.sqrt(.25 / n)) > 1e-12 || !nonempty(scenario.numerical_error.scope) || !scenario.numerical_error.scope.includes('excludes model/rule')) invalid('invalid Cup Monte Carlo precision')
+    if (!nonempty(scenario.input_hash) || !/^[a-f0-9]{64}$/.test(scenario.input_hash) || !record(value.header) || scenario.source_manifest_hash !== value.header.source_manifest_hash || scenario.model_ref !== (evidence.model_lineage.model_ref ?? null)) invalid('Cup scenario lineage mismatch')
+    if (!Array.isArray(scenario.unresolved_reasons) || !scenario.unresolved_reasons.every(nonempty) || !Array.isArray(scenario.assumptions) || !scenario.assumptions.every(nonempty)) invalid('invalid Cup scenario assumptions')
+  }
+  if (new Set(scenarioIds).size !== scenarioIds.length || !scenarioIds.includes(evidence.baseline_scenario_id as string) || !Array.isArray(value.evaluated_scenarios) || JSON.stringify(value.evaluated_scenarios) !== JSON.stringify(scenarioIds)) invalid('Cup baseline or scenario index mismatch')
+  const typed = evidence as unknown as NonNullable<CupPrediction['scenario_analysis']>
+  const baseline = typed.records.find((scenario) => scenario.scenario_id === typed.baseline_scenario_id)!
+  for (const id of ids) {
+    for (const side of ['lower', 'upper'] as const) {
+      const extreme = Math[side === 'lower' ? 'min' : 'max'](...typed.records.map((scenario) => scenario.rule_bounds[id][side]))
+      const extrema = typed.extrema_by_team[id]?.[`${side}_scenario_ids`]
+      const expected = typed.records.filter((scenario) => scenario.rule_bounds[id][side] === extreme).map((scenario) => scenario.scenario_id)
+      const envelope = record(value.scenario_envelope_by_team) ? value.scenario_envelope_by_team[id] : null
+      const base = record(value.rule_bounds_by_team) ? value.rule_bounds_by_team[id] : null
+      if (!record(envelope) || !finite(envelope[side]) || Math.abs(envelope[side] - extreme) > .000050001 || !record(base) || !finite(base[side]) || Math.abs(base[side] - baseline.rule_bounds[id][side]) > .000050001 || JSON.stringify(extrema) !== JSON.stringify(expected)) invalid('Cup envelope or endpoint attribution mismatch')
+    }
+  }
+  const mapping = typed.mapping_provenance.teams
+  if (!Array.isArray(mapping) || !mapping.every(record) || !sameIds(mapping.map((team) => team.team_id), ids) || mapping.some((team) => typeof team.observed !== 'boolean' || (team.observed ? !finite(team.mapped_strength) : team.mapped_strength !== null) || !Array.isArray(team.source_entries) || !team.source_entries.every((entry) => record(entry) && nonempty(entry.entry_id) && finite(entry.effect)))) invalid('Cup missing-history mapping is invalid')
+  const strengths = evidence.simulation_inputs.mapped_strength
+  if (Object.keys(strengths).some((id) => !ids.includes(id)) || Object.values(strengths).some((strength) => !finite(strength)) || mapping.some((team) => team.observed ? strengths[team.team_id] !== team.mapped_strength : team.team_id in strengths)) invalid('Cup mapping disagrees with simulator inputs')
 }
 
 export async function loadPredictionIndex(signal?: AbortSignal) { return parsePredictionIndex(await readJson('/data/predictions/index.json', signal)) }

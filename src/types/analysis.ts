@@ -157,6 +157,134 @@ export interface AnalysisDetailBoat extends AnalysisIndexBoat {
   boundary_periods?: Array<{ start_ms: number; end_ms: number }>
   source_conflicts?: string[]
   source_coverage?: Record<string, { first_ms: number | null; last_ms: number | null; count: number; gaps: Array<[number, number]> }>
+  performance?: BoatPerformance
+  debrief?: TeamDebriefReport
+}
+
+export interface PerformanceLegExclusion { leg: number; reason: string }
+
+export interface PerformancePeerEvidence {
+  id: string
+  team_code: string
+  team_name: string
+  value: number
+  coverage_s: number
+  sample_count: number
+  start_ms: number
+  end_ms: number
+  quality: string
+}
+
+export interface PerformanceLegEvidence {
+  leg: number
+  value: number
+  peer_mean: number
+  index: number
+  peer_count: number
+  peer_ids: string[]
+  coverage_s: number
+  sample_count: number
+  start_ms?: number
+  end_ms?: number
+  quality?: string
+  peers?: PerformancePeerEvidence[]
+  excluded_peers?: Array<{ id: string; team_code: string; reason: string }>
+  events?: Array<{ timestamp_ms: number; entry_speed_kt: number; minimum_speed_kt: number; retention_pct: number; window_start_ms: number; window_end_ms: number }>
+}
+
+export interface PerformanceDimension {
+  id: string
+  label: string
+  index: number | null
+  value: number | null
+  peer_mean: number | null
+  unit: 'kt' | '%'
+  peer_count: number
+  higher_is_better: boolean
+  coverage_s: number
+  sample_count: number
+  matched_legs: number[]
+  leg_evidence?: PerformanceLegEvidence[]
+  excluded_legs?: PerformanceLegExclusion[]
+  quality: string
+  formula: string
+  denominator: string
+  source: string
+  reason?: string
+}
+
+export interface BoatPerformance {
+  schema_version: '1.0'
+  method_version: string
+  overall_index: number | null
+  baseline_index: number
+  notes: string[]
+  reason?: string
+  dimensions: PerformanceDimension[]
+  scope?: {
+    expected_legs: number[]
+    matched_legs: number[]
+    expected_leg_count: number
+    matched_leg_count: number
+    min_peer_count: number
+    covered_s: number
+    excluded_legs: PerformanceLegExclusion[]
+  }
+}
+
+export interface TeamDebriefReport {
+  schema_version: '1.0'
+  method_version: string
+  items: Array<{
+    id: string
+    title: string
+    detail: string
+    timestamp_ms: number
+    value: number
+    unit: string
+    quality: string
+    source: string
+    kind: 'leg_deficit' | 'manoeuvre_loss'
+    leg?: number
+    peer_count?: number
+  }>
+}
+
+export interface TacticalSnapshot {
+  timestamp_ms: number
+  window_start_ms: number
+  window_end_ms: number
+  coverage_s: number
+  sample_count: number
+  quality: 'derived' | 'unavailable'
+  source: string
+  reason?: string
+  direction_change_deg: number | null
+  direction_rate_deg_per_min: number | null
+  speed_change_kt: number | null
+  speed_coverage_s: number
+  speed_sample_count: number
+  speed_quality: 'derived' | 'unavailable'
+  speed_reason: string | null
+  projection_change_deg: number | null
+  projection_reason: string
+  insights: Array<{ id: string; title: string; detail: string; quality: string; source: string; kind: string }>
+}
+
+export interface TacticalInsights {
+  schema_version: '1.0'
+  method_version: string
+  race_id: string
+  source: string
+  snapshot_interval_ms: number
+  max_snapshot_age_ms: number
+  window_s: number
+  projection_horizon_s: number
+  availability_basis: string
+  reason?: string
+  definitions?: Record<string, Omit<MetricDefinition, 'display'>>
+  source_provenance?: Record<string, unknown>
+  snapshots: TacticalSnapshot[]
 }
 
 export interface AnalysisWind {
@@ -202,5 +330,6 @@ export interface AnalysisDetail {
   wind: AnalysisWind
   pairs: AnalysisPair[]
   event_feed?: AnalysisEventFeed
+  tactical_insights?: TacticalInsights
   limitations?: string[]
 }

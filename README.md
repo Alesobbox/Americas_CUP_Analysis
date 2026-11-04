@@ -4,12 +4,15 @@ Replay and historical analysis for 28 sessions: nine Cagliari races and nineteen
 
 ## Dashboard views
 
-- **Replay:** boat and moving-mark tracks, wind, reconstructed events, standings, telemetry, and local race notes.
-- **Analysis:** exported race metrics, definitions, units, coverage, quality, and team history. Python owns historical calculations.
+- **Replay:** boat and moving-mark tracks, wind, playhead-aware Tactical insights, reconstructed events, standings, telemetry, and local race notes.
+- **Analysis:** a white workspace with exported metrics, coverage, team history, interactive circular performance comparisons and a replay-linked Team debrief. Choose a dimension and leg to inspect exact peer evidence. Python owns historical calculations.
 - **Compare:** two explicitly selected boats at the shared playhead.
-- **Reports:** retrospective summaries and downloads for every replay, analysis detail, and archive index.
+- **Reports:** canonical race metrics, summary/performance CSVs and concise race downloads, plus a collapsed searchable technical archive.
+- **Forecast:** experimental race forecasts and gated event/Cup evidence, with separate baseline rule bounds, transfer scenarios and numerical error.
 
 Map mode uses OpenStreetMap with attribution. Offline Grid mode uses a 250 m metric grid without tile requests. True metric scale and enhanced visibility are available in Settings. Unsupported channels explain their unavailability. Reconstructed results and virtual contacts are not official classifications or umpire decisions.
+
+The interface follows the approved Google Store-inspired [design system](docs/design-system.md): a shared light palette, locally hosted DM Sans, a course-first Replay layout, and a searchable race library with lightweight source-course previews. See [implementation and verification](docs/ui_redesign_verification.md). Ingestion refreshes previews automatically; refresh them independently with `.venv/Scripts/python.exe scripts/build_race_previews.py`, then rebuild the download inventory with `.venv/Scripts/python.exe scripts/build_artifact_inventory.py`.
 
 ## Run locally
 
@@ -23,7 +26,9 @@ npm run dev
 
 Stop the development server with Ctrl+C before reinstalling dependencies.
 
-Regenerate replay and historical artifacts with `npm run ingest`. Run frontend tests, production build, Python tests, reconstruction checks, and artifact integrity checks with `npm run verify`. Set `REGATTA_PYTHON` to a Python executable if it is installed outside the default Windows location. With the development server running, `npm run test:browser` checks the dashboard using installed Chrome.
+Regenerate replay and historical artifacts with `npm run ingest`. Refresh the team analytics from existing historical evidence and streamed source wind with `npm run analytics` (replay telemetry is preserved). See [team analytics](docs/team_analytics.md) for formulas and limits. Run frontend tests, production build, Python tests, reconstruction checks, and artifact integrity checks with `npm run verify`. Set `REGATTA_PYTHON` to a Python executable if it is installed outside the default Windows location. With the development server running, `npm run test:browser` checks the dashboard using installed Chrome.
+
+`npm run test:redesign` checks the race library's bounded loading, dialog focus, fullscreen, font loading, and all five workspace layouts down to 320 px. Set `REGATTA_URL` when using a different preview address.
 
 ## Data flow
 

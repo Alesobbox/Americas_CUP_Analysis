@@ -81,7 +81,7 @@ describe('Adversarial Stress Test: Tactical Map Action Toolbar & Clearance (M9 C
     const COMPASS_ROSE_WIDTH = 44
     const COMPASS_RIGHT_EDGE = MARGIN_LEFT + COMPASS_ROSE_WIDTH // 56px
 
-    // Top-Left HUD (Compass + Gap + Dual HUD Glass Card)
+    // Conservative legacy width envelope; the wind-only card is smaller.
     // Left: 12px, Compass: 44px, Gap: 10px, Glass Card: 214px to 240px
     const HUD_CARD_WIDTH_MIN = 214
     const HUD_CARD_WIDTH_MAX = 240
@@ -108,7 +108,7 @@ describe('Adversarial Stress Test: Tactical Map Action Toolbar & Clearance (M9 C
       // The original bug was that zoom controls sat at left: 14px, directly underneath the Compass Rose (left: 12px).
       // Now Toolbar is anchored to right: 12px.
       // Left edge of Toolbar at width W: W - MARGIN_RIGHT - TOOLBAR_WIDTH.
-      const canvasWidths = [600, 694, 804, 950, 1050, 1280, 1440, 1586, 1920, 2560]
+      const canvasWidths = [600, 694, 804, 950, 1050, 1096, 1280, 1440, 1586, 1920, 2560]
 
       for (const w of canvasWidths) {
         const toolbarLeftEdgeWorstCase = w - MARGIN_RIGHT - TOOLBAR_WIDTH_UNCOMPRESSED
@@ -122,7 +122,7 @@ describe('Adversarial Stress Test: Tactical Map Action Toolbar & Clearance (M9 C
     })
 
     it('calculates exact horizontal clearance between full Top-Left HUD and Action Toolbar', () => {
-      // Full HUD includes the Dual HUD card (Wind/Current)
+      // Keep the larger legacy HUD envelope as a conservative clearance bound.
       const results: Array<{
         width: number
         toolbarLeft: number
@@ -131,7 +131,7 @@ describe('Adversarial Stress Test: Tactical Map Action Toolbar & Clearance (M9 C
         clearanceUncompressed: number
       }> = []
 
-      const testWidths = [600, 694, 768, 804, 950, 1050, 1280, 1440, 1586, 1920, 2560]
+      const testWidths = [600, 694, 768, 804, 950, 1050, 1096, 1280, 1440, 1586, 1920, 2560]
 
       for (const w of testWidths) {
         const toolbarLeftCompact = w - MARGIN_RIGHT - TOOLBAR_WIDTH_COMPACT
@@ -176,8 +176,8 @@ describe('Adversarial Stress Test: Tactical Map Action Toolbar & Clearance (M9 C
       const tree = TacticalMapOverlay(createProps({ onViewModeChange }))
       const buttons = findElementsByType(tree, 'button')
 
-      const mapBtn = buttons.find((b) => b.props.children === 'MAP')
-      const gridBtn = buttons.find((b) => b.props.children === 'GRID')
+      const mapBtn = buttons.find((b) => b.props.children === 'Map')
+      const gridBtn = buttons.find((b) => b.props.children === 'Grid')
 
       expect(mapBtn).toBeDefined()
       expect(gridBtn).toBeDefined()
@@ -200,9 +200,9 @@ describe('Adversarial Stress Test: Tactical Map Action Toolbar & Clearance (M9 C
       const tree = TacticalMapOverlay(createProps({ onFollowModeChange, selectedBoatId: 'boat-fra-1' }))
       const buttons = findElementsByType(tree, 'button')
 
-      const courseBtn = buttons.find((b) => b.props.children === 'COURSE')
-      const fleetBtn = buttons.find((b) => b.props.children === 'FLEET')
-      const boatBtn = buttons.find((b) => b.props.children === 'BOAT')
+      const courseBtn = buttons.find((b) => b.props.children === 'Course')
+      const fleetBtn = buttons.find((b) => b.props.children === 'Fleet')
+      const boatBtn = buttons.find((b) => b.props.children === 'Boat')
 
       expect(courseBtn).toBeDefined()
       expect(fleetBtn).toBeDefined()
@@ -309,7 +309,7 @@ describe('Adversarial Stress Test: Tactical Map Action Toolbar & Clearance (M9 C
   describe('3. Edge Cases: BOAT Follow Mode with and without Selected Boat', () => {
     it('disables BOAT button when selectedBoatId is null', () => {
       const treeNull = TacticalMapOverlay(createProps({ selectedBoatId: null }))
-      const boatBtn = findElementsByType(treeNull, 'button').find((b) => b.props.children === 'BOAT')
+      const boatBtn = findElementsByType(treeNull, 'button').find((b) => b.props.children === 'Boat')
 
       expect(boatBtn).toBeDefined()
       expect(boatBtn.props.disabled).toBe(true)
@@ -318,7 +318,7 @@ describe('Adversarial Stress Test: Tactical Map Action Toolbar & Clearance (M9 C
 
     it('disables BOAT button when selectedBoatId is undefined', () => {
       const treeUndefined = TacticalMapOverlay(createProps({ selectedBoatId: undefined }))
-      const boatBtn = findElementsByType(treeUndefined, 'button').find((b) => b.props.children === 'BOAT')
+      const boatBtn = findElementsByType(treeUndefined, 'button').find((b) => b.props.children === 'Boat')
 
       expect(boatBtn).toBeDefined()
       expect(boatBtn.props.disabled).toBe(true)
@@ -327,7 +327,7 @@ describe('Adversarial Stress Test: Tactical Map Action Toolbar & Clearance (M9 C
 
     it('disables BOAT button when selectedBoatId is empty string', () => {
       const treeEmpty = TacticalMapOverlay(createProps({ selectedBoatId: '' }))
-      const boatBtn = findElementsByType(treeEmpty, 'button').find((b) => b.props.children === 'BOAT')
+      const boatBtn = findElementsByType(treeEmpty, 'button').find((b) => b.props.children === 'Boat')
 
       expect(boatBtn).toBeDefined()
       expect(boatBtn.props.disabled).toBe(true)
@@ -335,7 +335,7 @@ describe('Adversarial Stress Test: Tactical Map Action Toolbar & Clearance (M9 C
 
     it('enables BOAT button when a valid selectedBoatId is provided', () => {
       const treeValid = TacticalMapOverlay(createProps({ selectedBoatId: 'boat-fra-1' }))
-      const boatBtn = findElementsByType(treeValid, 'button').find((b) => b.props.children === 'BOAT')
+      const boatBtn = findElementsByType(treeValid, 'button').find((b) => b.props.children === 'Boat')
 
       expect(boatBtn).toBeDefined()
       expect(boatBtn.props.disabled).toBe(false)
@@ -348,7 +348,7 @@ describe('Adversarial Stress Test: Tactical Map Action Toolbar & Clearance (M9 C
 
       for (const st of states) {
         const tree = TacticalMapOverlay(createProps({ selectedBoatId: st }))
-        const boatBtn = findElementsByType(tree, 'button').find((b) => b.props.children === 'BOAT')
+        const boatBtn = findElementsByType(tree, 'button').find((b) => b.props.children === 'Boat')
         expect(boatBtn.props.disabled).toBe(!st)
       }
     })

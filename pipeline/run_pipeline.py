@@ -359,7 +359,9 @@ def main():
             sys.exit(exit_code)
 
     if not args.no_export:
+        from scripts.build_race_previews import write_previews
         from scripts.build_artifact_inventory import build_inventory
+        write_previews()
         build_inventory()
     sys.exit(0)
 

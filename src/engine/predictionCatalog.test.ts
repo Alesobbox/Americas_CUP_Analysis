@@ -19,6 +19,50 @@ function cupFixture(): CupPrediction {
   const ids = ['NZL', 'GBR', 'ITA', 'SUI', 'FRA', 'USA', 'AUS']
   return { header: { schema_version: 'cup-1', boat_class: 'AC75' }, status: 'estimated', teams: ids.map((id) => ({ id, name: id })), scenario_envelope_by_team: Object.fromEntries(ids.map((id) => [id, { lower: 0.01, upper: 0.6 }])), evaluated_scenarios: ['rho0_sigma1', 'rho1_sigma1'] }
 }
+function cupEvidenceFixture(): CupPrediction {
+  const cup = cupFixture()
+  const ids = cup.teams.map((team) => team.id)
+  const modelRef = 'b'.repeat(64), sourceHash = 'a'.repeat(64)
+  cup.header.model_ref = modelRef
+  cup.header.source_manifest_hash = sourceHash
+  cup.header.method_version = 'cup-ac38-conditional-2'
+  cup.probabilities = Object.fromEntries(ids.map((id) => [id, null]))
+  cup.win_prob_by_team = Object.fromEntries(ids.map((id) => [id, null]))
+  cup.unresolved_reasons = ['Synthetic governing-rule effective date missing.', 'Synthetic tie resolution requires clarification.']
+  const records = [
+    { parameters: { rho: .5, sigma_multiplier: 1, match_concentration: 1, hazard_multiplier: 1 }, wins: [20, 10, 10, 5, 5, 5, 5] },
+    { parameters: { rho: 1, sigma_multiplier: 2, match_concentration: 1, hazard_multiplier: 1 }, wins: [10, 10, 10, 10, 10, 10, 10] },
+  ].map(({ parameters, wins }) => {
+    const resolved = wins.reduce((a, b) => a + b, 0), unresolved = 100 - resolved
+    return { scenario_id: `rho${parameters.rho}_sigma${parameters.sigma_multiplier}_c1_k1`, scenario: parameters,
+      trials: 100, seed: 2027, input_hash: 'c'.repeat(64), model_ref: modelRef, source_manifest_hash: sourceHash,
+      status: 'rule_bounds', resolved_trials: resolved, unresolved_trials: unresolved,
+      resolved_fraction: resolved / 100, unresolved_fraction: unresolved / 100,
+      resolved_win_counts: Object.fromEntries(ids.map((id, index) => [id, wins[index]])),
+      first_unresolved_stage_counts: { qualification: unresolved }, overlapping_reason_counts: { 'Synthetic unresolved tie': unresolved },
+      reason_count_policy: 'First-stage counts are exclusive; reasons may overlap.',
+      rule_bounds: Object.fromEntries(ids.map((id, index) => [id, { lower: wins[index] / 100, upper: (wins[index] + unresolved) / 100 }])),
+      probabilities: Object.fromEntries(ids.map((id) => [id, null])),
+      numerical_error: { worst_case_95_half_width: 1.96 * Math.sqrt(.25 / 100), scope: 'Monte Carlo integration only; excludes model/rule uncertainty' },
+      unresolved_reasons: ['Synthetic unresolved tie'], assumptions: ['Synthetic test fixture; no empirical forecast accuracy.'],
+    }
+  })
+  cup.evaluated_scenarios = records.map((scenario) => scenario.scenario_id)
+  cup.rule_bounds_by_team = records[0].rule_bounds
+  cup.scenario_envelope_by_team = Object.fromEntries(ids.map((id) => [id, { lower: Math.min(...records.map((scenario) => scenario.rule_bounds[id].lower)), upper: Math.max(...records.map((scenario) => scenario.rule_bounds[id].upper)) }]))
+  cup.scenario_analysis = { schema_version: 'cup-scenarios-1', baseline_scenario_id: records[0].scenario_id,
+    model_lineage: { model_ref: modelRef, source_manifest_hash: sourceHash, training_before_day: '2026-09-26', training_cutoff_ms: Date.parse('2026-09-26T00:00:00Z') },
+    mapping_provenance: { policy: 'Observed entries averaged; missing history retains prior.', teams: ids.map((id) => ({ team_id: id, observed: id !== 'AUS', source_entries: [], mapped_strength: id === 'AUS' ? null : 0 })) },
+    simulation_inputs: { mapped_strength: Object.fromEntries(ids.filter((id) => id !== 'AUS').map((id) => [id, 0])), rules: {}, pooled_scale: .5, failure_probability: 0, conditional_on_completed_scored_races: true },
+    build_budget: { trials_per_scenario: 100, scenario_count: 2, seed: 2027, profile: 'synthetic', common_random_numbers: true },
+    conditioning: { transfer: 'Loading assumption; no AC75 calibration.', reliability: 'Conditional on completed scored races.', weather: 'No fitted weather response.' }, records,
+    extrema_by_team: Object.fromEntries(ids.map((id) => [id, {
+      lower_scenario_ids: records.filter((scenario) => scenario.rule_bounds[id].lower === cup.scenario_envelope_by_team![id]!.lower).map((scenario) => scenario.scenario_id),
+      upper_scenario_ids: records.filter((scenario) => scenario.rule_bounds[id].upper === cup.scenario_envelope_by_team![id]!.upper).map((scenario) => scenario.scenario_id),
+    }])), refinement_policy: { method: 'conservative_outer_bounds', status: 'retained', reason: 'Synthetic unresolved rule set.' },
+  }
+  return cup
+}
 const replay = { competitors: [{ id: 'a', team_code: 'ITA' }, { id: 'b', team_code: 'GBR' }] } as ReplayManifest
 
 afterEach(() => vi.unstubAllGlobals())
@@ -187,6 +231,76 @@ describe('the three forecast cards', () => {
     expect(html).toContain('not calibrated AC75 confidence intervals')
     expect(html).toContain('AUS')
   })
+  it('reconciles detailed Cup bounds and renders distinct uncertainty layers', () => {
+    const cup = parseCupPrediction(cupEvidenceFixture())
+    const html = renderToStaticMarkup(createElement(CupForecastCard, { prediction: cup, error: null }))
+    expect(html).toContain('Baseline assumptions: rule bounds')
+    expect(html).toContain('All tested assumptions: outer envelope')
+    expect(html).toContain('Selected scenario: rule bounds')
+    expect(html).toContain('aria-label="Cup scenario"')
+    expect(html).toContain('60 resolved · 40 unresolved of 100 trials')
+    expect(html).toContain('Monte Carlo half-width: ±9.80 pp')
+    expect(html).toContain('First unresolved stage')
+    expect(html).toContain('Overlapping reasons')
+    expect(html).toContain('Pinned strength model')
+    expect(html).toContain('training before 2026-09-26')
+    expect(html).toContain('population prior retained')
+    expect(html).toContain('Envelope endpoint attribution')
+    expect(html).toContain('Unresolved evidence')
+    expect(html).toContain('Synthetic governing-rule effective date missing.')
+    expect(html).toContain('Synthetic tie resolution requires clarification.')
+    expect(html).toContain('20.0%–60.0%')
+  })
+  it('requires method-2 Cup evidence while retaining legacy and unavailable compatibility', () => {
+    for (const status of ['available', 'estimated'] as const) {
+      const cup = cupEvidenceFixture()
+      cup.status = status
+      delete cup.scenario_analysis
+      expect(() => parseCupPrediction(cup)).toThrow('scenario evidence is required')
+      cup.probabilities!.NZL = .9
+      expect(() => parseCupPrediction(cup)).toThrow('scenario evidence is required')
+    }
+    const legacy = cupFixture()
+    legacy.header.method_version = 'cup-ac38-conditional-1'
+    expect(parseCupPrediction(legacy)).toBe(legacy)
+    const unavailable: CupPrediction = { ...cupFixture(), header: { ...cupFixture().header, method_version: 'cup-ac38-conditional-2' }, status: 'unavailable', scenario_envelope_by_team: null, rule_bounds_by_team: null }
+    expect(parseCupPrediction(unavailable)).toBe(unavailable)
+  })
+  it('requires complete null headline Cup containers alongside scenario evidence', () => {
+    for (const field of ['probabilities', 'win_prob_by_team'] as const) {
+      for (const mutation of ['point', 'missing-team', 'extra-team', 'missing-container']) {
+        const cup = cupEvidenceFixture()
+        if (mutation === 'point') cup[field]!.NZL = .9
+        if (mutation === 'missing-team') delete cup[field]!.NZL
+        if (mutation === 'extra-team') cup[field]!.INVENTED = null
+        if (mutation === 'missing-container') delete cup[field]
+        expect(() => parseCupPrediction(cup), `${field}/${mutation}`).toThrow('headline Cup probability containers')
+      }
+    }
+  })
+  it('rejects Cup scenario count, baseline, endpoint and missing-prior corruption', () => {
+    for (const mutation of ['count', 'first-stage', 'endpoint', 'point', 'baseline', 'missing', 'model', 'parameters']) {
+      const cup = cupEvidenceFixture()
+      const evidence = cup.scenario_analysis!
+      const scenario = evidence.records[0]
+      if (mutation === 'count') scenario.resolved_trials++
+      if (mutation === 'first-stage') scenario.first_unresolved_stage_counts.qualification++
+      if (mutation === 'endpoint') evidence.extrema_by_team.NZL.lower_scenario_ids = ['invented']
+      if (mutation === 'point') scenario.probabilities.NZL = .5
+      if (mutation === 'baseline') evidence.baseline_scenario_id = 'invented'
+      if (mutation === 'missing') evidence.mapping_provenance.teams.find((team) => team.team_id === 'AUS')!.mapped_strength = 0
+      if (mutation === 'model') cup.header.model_ref = 'd'.repeat(64)
+      if (mutation === 'parameters') scenario.scenario.rho = 1
+      expect(() => parseCupPrediction(cup), mutation).toThrow()
+    }
+  })
+  it('preserves structural Cup ranges when scenario evidence is unavailable', () => {
+    const html = renderToStaticMarkup(createElement(CupForecastCard, { prediction: cupEvidenceFixture(), error: 'Evidence fetch failed.' }))
+    expect(html).toContain('Evidence fetch failed.')
+    expect(html).not.toContain('60 resolved')
+    expect(html).not.toContain('20.0%–60.0%')
+    expect(html).not.toContain('aria-label="Cup scenario"')
+  })
   it('does not display unsupported Cup numbers in an unavailable artifact', () => {
     const cup = cupFixture()
     cup.status = 'unavailable'
@@ -201,8 +315,12 @@ describe('the three forecast cards', () => {
     const html = renderToStaticMarkup(createElement(CupForecastCard, { prediction: parsed, error: null }))
     expect(parsed.teams).toHaveLength(7)
     expect(html).toContain('AC75 evidence unresolved.')
+    expect(html).toContain('Cup probabilities are not ready:')
+    expect(html).toContain('<details><summary>Why this is unavailable</summary>')
+    expect(html).not.toContain('<p role="status" class="forecast-unavailable">AC75 evidence unresolved.')
     expect(html).toContain('AUS')
     expect(html).not.toContain('60.0%')
     expect(() => parseCupPrediction({ ...cup, status: 'estimated' })).toThrow('incomplete field')
+    expect(() => parseCupPrediction({ ...cup, unresolved_reasons: [42] })).toThrow('invalid Cup evidence reasons')
   })
 })

@@ -10,7 +10,13 @@
     "test:watch": "vitest",
     "test:run": "vitest run --test-timeout=90000",
     "test:browser": "node tests/browser/dashboard.mjs",
+    "test:annotations": "node tests/browser/annotations.mjs",
+    "test:redesign": "node tests/browser/redesign.mjs",
+    "test:feedback": "node tests/browser/feedback.mjs",
+    "test:forecast": "node tests/browser/forecast.mjs --real",
     "ingest": "powershell -NoProfile -ExecutionPolicy Bypass -File ./run.ps1 ingest",
+    "analytics": "powershell -NoProfile -ExecutionPolicy Bypass -File ./run.ps1 analytics",
+    "environment": "powershell -NoProfile -ExecutionPolicy Bypass -File ./run.ps1 environment",
     "verify": "powershell -NoProfile -ExecutionPolicy Bypass -File ./run.ps1 verify"
   },
   "dependencies": {

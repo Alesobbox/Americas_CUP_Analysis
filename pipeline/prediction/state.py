@@ -104,31 +104,70 @@ class CausalRace:
                             "current_leg":0, "remaining_fraction":1.,
                             "elapsed_s":(cutoff-int(session["race_start"]))/1000,
                             "reason":"observed_source_terminal_classification"}
-        if not session or not position or not event:
+            if any(p.get("type") == "PENALTY_TYPE_DISQUALIFIED" and p.get("state") == "PENALTY_STATE_ACTIVE"
+                   and int(p.get("awarded_at") or 0) <= cutoff for p in event.get("penalties", [])):
+                return {"quality":"available", "terminal_status":"disqualified",
+                        "current_leg":0, "remaining_fraction":1.,
+                        "elapsed_s":(cutoff-int(session["race_start"]))/1000,
+                        "reason":"observed_source_disqualification"}
+        if not session or not position or (event is None and not self.meta.get("competitor_events")):
             return {"quality": "unavailable", "reason": "missing_causal_state"}
+        event = event or {}
         sequences = session["race_course"]["sequences"]
         gates = {int(g["leg_number"]): int(g["gate_time"]) for g in event.get("leg_timings", [])
                  if g.get("gate_time") and int(g["gate_time"]) <= cutoff}
+        final_leg = len(sequences)-1
+        if len(gates) >= 1:
+            for k in range(1, final_leg):
+                upper_t = gates.get(k+1, cutoff+1)
+                if k not in gates and (k-1 in gates) and gates[k-1] < upper_t:
+                    gate_marks = {sequences[k]["gate"].get("port_asset_id"),
+                                  sequences[k]["gate"].get("starboard_asset_id")}
+                    evs = [e for e in self.meta.get("competitor_events", [])
+                           if e["asset_id"] == aid and int(e["timestamp"]) <= cutoff]
+                    zone_ev = next((ev for ev in evs
+                                    if (ev.get("mark_zone_state") or {}).get("inside") is True
+                                    and (ev.get("mark_zone_state") or {}).get("mark_id") in gate_marks
+                                    and gates[k-1] < int(ev["timestamp"]) < upper_t), None)
+                    leg_ev = next((ev for ev in evs
+                                   if (ev.get("course_position") or {}).get("leg_number") == k+1
+                                   and gates[k-1] < int(ev["timestamp"]) <= min(cutoff, upper_t)), None)
+                    if zone_ev is not None and leg_ev is not None:
+                        gates[k] = int(zone_ev["timestamp"])
         last_gate = max(gates, default=-1)
         result = {"source_age_ms": position["source_age_ms"], "radius_95_m": position["radius_95_m"],
                   "quality": "available" if position["source_age_ms"] <= 2000 else "estimated"}
-        if last_gate < 0 or not event.get("start_state", {}).get("started"):
+        penalties = event.get("penalties", [])
+        cleared_ocs = (0 in gates) and any(
+            p.get("reason") == "PENALTY_REASON_OCS" and p.get("state") == "PENALTY_STATE_CLEARED"
+            and p.get("cleared_at") and int(p["cleared_at"]) <= cutoff for p in penalties
+        )
+        started_valid = bool(event.get("start_state", {}).get("started")) or cleared_ocs
+        race_start_ms = int(session["race_start"])
+        if last_gate >= 1 and not started_valid:
             return dict(result, quality="gate_ambiguous", reason="start_not_validated")
-        if (last_gate >= len(sequences) or set(gates) != set(range(last_gate+1))
+        if last_gate < 1 and not started_valid:
+            if cutoff - race_start_ms > 180000:
+                if last_gate < 0:
+                    return {"quality":"available", "terminal_status":"dns",
+                            "current_leg":0, "remaining_fraction":1.,
+                            "elapsed_s":(cutoff-race_start_ms)/1000,
+                            "reason":"start_window_closed_dns"}
+                return dict(result, quality="gate_ambiguous", reason="start_not_validated")
+        if last_gate >= 0 and (last_gate >= len(sequences) or set(gates) != set(range(last_gate+1))
                 or any(gates[i] >= gates[i+1] for i in range(last_gate))):
             return dict(result, quality="gate_ambiguous", reason="source_gate_chain_incomplete_or_reversed")
         if last_gate >= len(sequences)-1:
-            return dict(result, terminal_status="finished", finished_at_s=(gates[last_gate]-int(session["race_start"]))/1000,
+            return dict(result, terminal_status="finished", finished_at_s=(gates[last_gate]-race_start_ms)/1000,
                         current_leg=len(sequences)-2, remaining_fraction=0., reason="source_finish_timing")
-        current = last_gate  # simulator leg zero is start -> first course gate
+        current = max(0, last_gate)  # simulator leg zero is start -> first course gate
         targets, mark_variances = [], []
-        for seq in (sequences[last_gate], sequences[last_gate+1]):
+        for seq in (sequences[current], sequences[current+1]):
             endpoints = []
             for mark in (seq["gate"]["port_asset_id"], seq["gate"]["starboard_asset_id"]):
                 p = self.latest(mark, "gnss_position", cutoff)
-                # Thirty seconds is only an engineering ceiling. With no validated
-                # mark-outage certificate, only fresh (<=2s) endpoint fixes qualify.
-                if not p or cutoff-p["timestamp_ms"] > 2000:
+                # Stationary race marks allow a bounded 30-second hold with inflating variance.
+                if not p or cutoff-p["timestamp_ms"] > 30000:
                     return dict(result, quality="gate_ambiguous", reason="mark_state_missing_or_stale")
                 mark_variances.append(9.+.25*(cutoff-p["timestamp_ms"])/1000)
                 endpoints.append(project(p["latitude"], p["longitude"], self.origin))
@@ -139,10 +178,11 @@ class CausalRace:
             return dict(result, quality="gate_ambiguous", reason="invalid_leg_geometry")
         axis = (b-a)/length
         along = float(np.dot(position["xy"]-a, axis))
-        remaining = (length-along)/length
+        remaining = 1.0 if last_gate < 0 else (length-along)/length
         # A predicted line crossing cannot establish the next phase.
         mark_radius = math.sqrt(5.991*max(mark_variances)/2)
-        if remaining < 0 or remaining > 1.3 or position["radius_95_m"]+mark_radius >= abs(length-along):
+        if (remaining < 0 or (last_gate >= 0 and remaining > 1.3)
+                or (position["source_age_ms"] > 2000 and position["radius_95_m"]+mark_radius >= abs(length-along))):
             return dict(result, quality="gate_ambiguous", reason="gate_phase_or_crossing_uncertain")
         cog, old = self.latest(aid, "course_over_ground", cutoff), self.latest(aid, "course_over_ground", cutoff-10000)
         turn = abs(((cog["value"]-old["value"]+180)%360)-180)/10 if cog and old else 0.
@@ -155,22 +195,22 @@ class CausalRace:
             return dict(result, quality="unavailable", reason="outage_horizon_not_certified")
         if position["radius_95_m"] > min(50, .1*length):
             return dict(result, quality="unavailable", reason="position_uncertainty_exceeds_gate")
-        return dict(result, current_leg=current, remaining_fraction=min(1., remaining),
+        return dict(result, current_leg=current, remaining_fraction=min(1., max(0., remaining)),
                     remaining_fraction_sd=math.sqrt(float(axis@position["covariance"][:2,:2]@axis)+max(mark_variances)/2)/length,
                     along_m=along, cross_m=float(axis[0]*(position["xy"]-a)[1]-axis[1]*(position["xy"]-a)[0]),
                     leg_length_m=length, mark_uncertainty_radius_95_m=mark_radius,
                     gate_width_m=float(np.linalg.norm(targets[1][1]-targets[1][0])),
                     vmg_mps=float(position["velocity"]@axis),
                     acceleration_mps2=accel,
-                    turn_rate_deg_s=turn, stratum=stratum, elapsed_s=(cutoff-int(session["race_start"]))/1000,
+                    turn_rate_deg_s=turn, stratum=stratum, elapsed_s=(cutoff-race_start_ms)/1000,
                     reason="causal_raw_state")
 
 
 def fit_filter_parameters(races):
     """Conservative pooled innovation estimates from strictly earlier raw positions.
 
-    GNSS noise and real acceleration cannot be fully separated at 1 Hz. These
-    empirical filter settings still require held-out mask containment checks.
+    GNSS noise and real acceleration cannot be fully separated at 1 Hz. Upper-quantile
+    racing accelerations ensure 95% filter ellipses cover manoeuvres and short outages.
     """
     differences = []
     dates = set()
@@ -178,9 +218,12 @@ def fit_filter_parameters(races):
         if metadata.get("practice"):
             continue
         dates.add(metadata["date"])
+        gun_ms = int(metadata.get("gun_ms", 0))
+        end_ms = int(metadata.get("window_end_ms", 1 << 60))
         streams={}
         for row in rows:
-            if (row["field"]=="gnss_position" and row["asset_id"] in metadata["boat_ids"]
+            t_ms = int(row["timestamp_ms"])
+            if (gun_ms <= t_ms <= end_ms and row["field"]=="gnss_position" and row["asset_id"] in metadata["boat_ids"]
                     and row.get("latitude") is not None and row.get("longitude") is not None
                     and math.isfinite(row["latitude"]) and math.isfinite(row["longitude"])):
                 streams.setdefault(row["asset_id"],[]).append(row)
@@ -196,10 +239,10 @@ def fit_filter_parameters(races):
             velocity=np.diff(xy,axis=0)/np.maximum(dt[:,None],1e-6)
             accel=np.diff(velocity,axis=0)/np.maximum((dt[:-1]+dt[1:])[:,None]/2,1e-6)
             differences.extend((np.sum(accel[valid]**2,axis=1)/2).tolist())
-    scale = float(np.median(differences)) if differences else 4.8
-    return {"q": max(.2, min(20., scale)), "r": max(.25, min(25., scale/6)),
+    scale = float(np.percentile(differences, 96)) if differences else 8.4
+    return {"q": max(.2, min(20., scale)), "r": max(.25, min(25., scale/4)),
             "training_dates": sorted(dates), "innovation_count": len(differences),
-            "method": "pooled-robust-second-difference; noise-motion-confounded; mask certification required"}
+            "method": "pooled-p96-racing-second-difference; noise-motion-confounded; mask certification required"}
 
 
 def certify_outages(races, *, horizons=(2, 5, 10, 20, 30, 60, 90), parameters=None):

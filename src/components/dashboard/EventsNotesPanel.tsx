@@ -1,3 +1,4 @@
+import { evidenceText } from '../../utils/evidenceText'
 import { useEffect, useMemo, useState } from 'react'
 import type { AnalysisEvent } from '../../types/analysis'
 import { eventColor, eventType } from './RaceTimelinePanel'
@@ -71,8 +72,8 @@ export function EventsNotesPanel({
           timestamp: event.timestamp_ms as number,
           type: displayType,
           color: eventColor(event.type),
-          title: event.label,
-          detail: `${event.quality} · ${event.source}${event.unavailable_reason ? ` · ${event.unavailable_reason}` : ''}`,
+          title: evidenceText(event.label),
+          detail: evidenceText(`${event.quality} · ${event.source}${event.unavailable_reason ? ` · ${event.unavailable_reason}` : ''}`),
           boatCode: boat?.team_code,
         }
       })

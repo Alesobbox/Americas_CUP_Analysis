@@ -35,7 +35,7 @@ class DashboardSourceContractTests(unittest.TestCase):
         self.assertEqual({path.name for path in data.iterdir() if path.is_file()},
                          {"manifests.json", "artifacts.json"})
         self.assertEqual({path.name for path in data.iterdir() if path.is_dir()},
-                         {"analysis", "replays", "predictions"})
+                         {"analysis", "replays", "predictions", "environment", "presentation"})
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('dev', 'build', 'test', 'ingest', 'verify')]
+    [ValidateSet('dev', 'build', 'test', 'ingest', 'environment', 'analytics', 'verify')]
     [string]$Action = 'dev'
 )
 
@@ -13,10 +13,10 @@ if ([string]::IsNullOrWhiteSpace($pythonTool) -and (Test-Path -LiteralPath (Join
     $pythonTool = Join-Path $PSScriptRoot '.venv\Scripts\python.exe'
 }
 if ([string]::IsNullOrWhiteSpace($pythonTool)) { $pythonTool = Join-Path $pythonRoot 'python.exe' }
-if ($Action -in @('ingest', 'verify') -and -not (Test-Path -LiteralPath $pythonTool)) {
+if ($Action -in @('ingest', 'environment', 'analytics', 'verify') -and -not (Test-Path -LiteralPath $pythonTool)) {
     $pythonCommand = Get-Command python.exe -ErrorAction SilentlyContinue
     if ($pythonCommand) { $pythonTool = $pythonCommand.Source }
-    else { throw 'Python was not found. Set REGATTA_PYTHON to a Python executable before ingest or verify.' }
+    else { throw 'Python was not found. Set REGATTA_PYTHON to a Python executable before ingest, environment, analytics or verify.' }
 }
 
 function Invoke-Checked {
@@ -32,6 +32,8 @@ try {
         'build' { Invoke-Checked -File $npmTool -Arguments @('run', 'build') }
         'test' { Invoke-Checked -File $npmTool -Arguments @('test') }
         'ingest' { Invoke-Checked -File $pythonTool -Arguments @('pipeline/run_pipeline.py') }
+        'environment' { Invoke-Checked -File $pythonTool -Arguments @('-m', 'pipeline.environment') }
+        'analytics' { Invoke-Checked -File $pythonTool -Arguments @('scripts/refresh_team_analytics.py') }
         'verify' {
             Invoke-Checked -File $npmTool -Arguments @('test')
             Invoke-Checked -File $npmTool -Arguments @('run', 'build')
@@ -39,6 +41,8 @@ try {
             Invoke-Checked -File $pythonTool -Arguments @('tests/e2e/test_runner.py', '--tier', 'all')
             Invoke-Checked -File $pythonTool -Arguments @('-m', 'unittest', 'discover', '-s', 'tests', '-p', 'tier5_*.py')
             Invoke-Checked -File $pythonTool -Arguments @('-m', 'pipeline.prediction', 'verify')
+            Invoke-Checked -File $pythonTool -Arguments @('-m', 'pipeline.environment', '--verify')
+            Invoke-Checked -File $pythonTool -Arguments @('scripts/refresh_team_analytics.py', '--verify')
         }
     }
 } finally {

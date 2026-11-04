@@ -45,6 +45,96 @@ def atomic_json(path: Path, value):
             temporary.unlink(missing_ok=True)
 
 
+def validate_cup(value):
+    """Validate additive scenario evidence while accepting earlier cup-1 files."""
+    analysis = value.get("scenario_analysis")
+    if analysis is None:
+        if (value.get("header", {}).get("method_version") == "cup-ac38-conditional-2"
+                and value.get("status") in STATUSES[:2]):
+            raise ValueError("Cup scenario evidence: required for a usable cup-ac38-conditional-2 publication")
+        return
+    def require(condition, message):
+        if not condition:
+            raise ValueError("Cup scenario evidence: " + message)
+    def integer(number):
+        return isinstance(number, int) and not isinstance(number, bool) and number >= 0
+    def probability(number):
+        return isinstance(number, (int, float)) and not isinstance(number, bool) and math.isfinite(number) and 0 <= number <= 1
+    require(isinstance(analysis, dict) and analysis.get("schema_version") == "cup-scenarios-1", "unsupported schema")
+    teams = {team["id"] for team in value["teams"]}
+    for field in ("probabilities", "win_prob_by_team"):
+        headline = value.get(field)
+        require(isinstance(headline, dict) and set(headline) == teams
+                and all(number is None for number in headline.values()),
+                "headline Cup probability containers must include every team with null values")
+    from .cup import CupScenario
+    lineage = analysis["model_lineage"]
+    require(lineage.get("model_ref") == value["header"].get("model_ref"), "header/model lineage mismatch")
+    if lineage.get("model_ref") is not None:
+        require(re.fullmatch(r"[a-f0-9]{64}", lineage["model_ref"]) is not None
+                and lineage.get("source_manifest_hash") == value["header"]["source_manifest_hash"], "invalid pinned model lineage")
+    records = analysis.get("records", [])
+    ids = [record["scenario_id"] for record in records]
+    require(bool(records) and len(set(ids)) == len(ids), "missing or duplicate scenarios")
+    require(ids == value.get("evaluated_scenarios") == value.get("scenarios"), "scenario index mismatch")
+    require(analysis["baseline_scenario_id"] in ids, "baseline absent from grid")
+    budget = analysis["build_budget"]
+    require(integer(budget["trials_per_scenario"]) and budget["trials_per_scenario"] > 0
+            and budget["scenario_count"] == len(records) and integer(budget["seed"]), "invalid build budget")
+    for record in records:
+        scenario = CupScenario(**record["scenario"])
+        scenario.validate()
+        require(scenario.scenario_id == record["scenario_id"], "scenario ID/parameter mismatch")
+        n, resolved, unresolved = record["trials"], record["resolved_trials"], record["unresolved_trials"]
+        require(integer(n) and n > 0 and integer(resolved) and integer(unresolved) and resolved + unresolved == n, "trial counts do not reconcile")
+        require(n == budget["trials_per_scenario"] and record["seed"] == budget["seed"], "scenario budget mismatch")
+        require(abs(record["resolved_fraction"] - resolved / n) < 1e-12
+                and abs(record["unresolved_fraction"] - unresolved / n) < 1e-12, "trial fractions do not reconcile")
+        require(set(record["resolved_win_counts"]) == teams and all(integer(c) for c in record["resolved_win_counts"].values())
+                and sum(record["resolved_win_counts"].values()) == resolved, "resolved wins do not reconcile")
+        first = record["first_unresolved_stage_counts"]
+        require(all(integer(count) and count > 0 for count in first.values()) and sum(first.values()) == unresolved, "first-stage counts are not mutually exclusive")
+        require(all(integer(count) and 0 < count <= n for count in record["overlapping_reason_counts"].values()), "invalid overlapping reason counts")
+        require(sum(record["overlapping_reason_counts"].values()) >= unresolved, "missing unresolved reason attribution")
+        require(record["status"] == ("rule_bounds" if unresolved else "conditional_scenario"), "incorrect scenario status")
+        require(set(record["rule_bounds"]) == teams and set(record["probabilities"]) == teams, "incomplete scenario field")
+        for team in teams:
+            bounds = record["rule_bounds"][team]
+            count = record["resolved_win_counts"][team]
+            require(probability(bounds["lower"]) and probability(bounds["upper"])
+                    and abs(bounds["lower"] - count / n) < 1e-12
+                    and abs(bounds["upper"] - min(1, (count + unresolved) / n)) < 1e-12, "bounds do not reconstruct from counts")
+            require(record["probabilities"][team] is None if unresolved else
+                    probability(record["probabilities"][team]) and abs(record["probabilities"][team] - count / n) < 1e-12,
+                    "unresolved point estimate or invalid probability")
+        numerical = record["numerical_error"]
+        require(abs(numerical["worst_case_95_half_width"] - 1.96 * math.sqrt(.25 / n)) < 1e-12
+                and "excludes model/rule" in numerical["scope"], "invalid Monte Carlo precision")
+        require(re.fullmatch(r"[a-f0-9]{64}", record["input_hash"]) is not None, "invalid scenario input hash")
+        require(content_hash(dict(analysis["simulation_inputs"], scenario=record["scenario"],
+                                  seed=record["seed"], trials=n)) == record["input_hash"], "scenario input hash mismatch")
+        require(record["source_manifest_hash"] == value["header"]["source_manifest_hash"], "scenario source mismatch")
+        require(record.get("model_ref") == analysis["model_lineage"].get("model_ref"), "scenario model mismatch")
+    baseline = next(record for record in records if record["scenario_id"] == analysis["baseline_scenario_id"])
+    for team in teams:
+        for side in ("lower", "upper"):
+            extreme = (min if side == "lower" else max)(record["rule_bounds"][team][side] for record in records)
+            require(value["scenario_envelope_by_team"][team][side] == round(extreme, 4), "envelope does not reconstruct")
+            require(value["rule_bounds_by_team"][team][side] == round(baseline["rule_bounds"][team][side], 4), "baseline bounds do not reconstruct")
+            expected = [record["scenario_id"] for record in records if record["rule_bounds"][team][side] == extreme]
+            require(analysis["extrema_by_team"][team][side + "_scenario_ids"] == expected, "incorrect endpoint attribution")
+    mapping = analysis["mapping_provenance"]["teams"]
+    require({entry["team_id"] for entry in mapping} == teams and len(mapping) == len(teams), "incomplete team mapping")
+    for entry in mapping:
+        require(isinstance(entry["observed"], bool), "invalid observed mapping flag")
+        strength = entry["mapped_strength"]
+        require(isinstance(strength, (int, float)) and math.isfinite(strength) if entry["observed"] else strength is None,
+                "missing history is not an estimated zero")
+        supplied = analysis["simulation_inputs"]["mapped_strength"]
+        require(entry["team_id"] in supplied and strength == supplied[entry["team_id"]] if entry["observed"] else entry["team_id"] not in supplied,
+                "mapping disagrees with simulator missing-history semantics")
+
+
 def validate_race(value):
     h, pre, live = value["header"], value["pre_race"], value["live"]
     boats = h["boat_ids"]
@@ -181,6 +271,7 @@ def verify_public(root: Path, *, index=None):
         raise ValueError("Cup schema, class, field or provenance mismatch")
     if cup_path.stem != content_hash(cup):
         raise ValueError("Cup artifact content hash mismatch")
+    validate_cup(cup)
     raw = sum(p.stat().st_size for p in paths)+len(canonical(index))+cup_path.stat().st_size
     compressed = sum(len(gzip.compress(p.read_bytes(), mtime=0)) for p in paths)
     if raw > 3*1024*1024:

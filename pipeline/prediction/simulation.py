@@ -147,8 +147,31 @@ def _ranks_and_winners(times: np.ndarray, tie_break: np.ndarray) -> tuple[np.nda
     ranks[np.arange(n)[:, None], order] = np.arange(1, boats + 1)
     ranks[~np.isfinite(times)] = boats
     winners = order[:, 0].copy()
-    winners[~np.isfinite(times).any(axis=1)] = -1
+    winners[(~np.isfinite(times)).all(axis=1)] = -1
     return ranks, winners
+
+
+def analytic_plackett_luce_expected_ranks(worth: Sequence[float] | np.ndarray,
+                                          completion_prob: Sequence[float] | np.ndarray) -> np.ndarray:
+    """Exact deterministic expected tied-N ranks under Plackett-Luce order and independent completion.
+
+    expected_rank[i] = N * (1 - s[i]) + s[i] * (1 + sum(s[j] * w[j] / (w[i] + w[j]) for j != i))
+    """
+    w = np.asarray(worth, dtype=float)
+    s = np.asarray(completion_prob, dtype=float)
+    if w.shape != s.shape or w.ndim != 1 or len(w) == 0:
+        raise ValueError("worth and completion_prob must be 1D arrays of the same nonempty length")
+    if np.any(w <= 0) or np.any(~np.isfinite(w)):
+        raise ValueError("Plackett-Luce worth values must be positive and finite")
+    if np.any(s < 0) or np.any(s > 1) or np.any(~np.isfinite(s)):
+        raise ValueError("Completion probabilities must lie in [0, 1]")
+    n = len(w)
+    if n == 1:
+        return np.array([1.0])
+    pairwise = w[None, :] / (w[:, None] + w[None, :])
+    np.fill_diagonal(pairwise, 0.0)
+    rival_ahead = pairwise @ s
+    return n * (1.0 - s) + s * (1.0 + rival_ahead)
 
 
 def simulate_race(model: LegTimeModel, boat_ids: Sequence[str], legs: Sequence[Mapping[str, Any]],
@@ -288,6 +311,8 @@ def simulate_race(model: LegTimeModel, boat_ids: Sequence[str], legs: Sequence[M
     shared_race = race_normal[:, 0] * model.race_sigma
 
     def weather_at(times: np.ndarray) -> np.ndarray:
+        if model.weather_sigma == 0.0:
+            return 0.0
         phase = times[:, None] * omega[None, :]
         return (weather_a * np.cos(phase) + weather_b * np.sin(phase)).sum(axis=1) * model.weather_sigma / math.sqrt(8)
 
@@ -394,7 +419,10 @@ def simulate_order_reference(strength: StrengthModel, boat_ids: Sequence[str],
                              hazard_shape: str = "constant", hazard_multiplier: float = 1.0,
                              known_winner: str | None = None,
                              global_finish_order_resolved: bool = False,
-                             return_samples: bool = True) -> RaceSimulation:
+                             return_samples: bool = True,
+                             state_coefficient: float = 0.25,
+                             parameter_uncertainty: bool = True,
+                             discrimination_scale: float | None = None) -> RaceSimulation:
     """Joint PL complete-order reference with the same audited completion model.
 
     Independent exponential clocks produce a genuine PL order conditional on
@@ -435,16 +463,22 @@ def simulate_order_reference(strength: StrengthModel, boat_ids: Sequence[str],
                          for b in boats])
     lead = progress - progress.mean()
     state_features = dict(zip(boats, lead / np.sqrt(np.maximum(1 - progress, .01)))) if state else None
-    if hasattr(strength, "log_worth"):
-        logits = strength.log_worth(boats, wind_knots, state_features)
+    scale = (discrimination_scale if discrimination_scale is not None
+             else getattr(strength, "discrimination_scale", 1.0))
+    if hasattr(strength, "sample_log_worth") and parameter_uncertainty:
+        logits = strength.sample_log_worth(boats, rng, n, wind_knots, state_features,
+                                           state_coefficient=state_coefficient)
+    elif hasattr(strength, "log_worth"):
+        logits = strength.log_worth(boats, wind_knots, state_features, state_coefficient=state_coefficient)[None, :]
     else:
         # Also accepts the past-fitted conditional PL benchmark.
         nested = {b: {"lead_fraction": float(lead[j]), "remaining_fraction": float(1-progress[j])}
                   for j, b in enumerate(boats)}
         p = strength.predict_win_probabilities(boats, state_features=nested)
-        logits = np.log([max(float(p[b]), 1e-300) for b in boats])
-    worth = np.exp(np.clip(logits - np.max(logits), -700, 0))
-    clocks = rng.exponential(size=(n, len(boats))) / worth[None, :]
+        logits = np.log([max(float(p[b]), 1e-300) for b in boats])[None, :]
+    scaled_logits = logits * scale
+    worth = np.exp(np.clip(scaled_logits - np.max(scaled_logits, axis=1, keepdims=True), -700, 0))
+    clocks = rng.exponential(size=(n, len(boats))) / worth
     assert base.finish_times_s is not None and base.ranks is not None and base.winners is not None
     clocks[~np.isfinite(base.finish_times_s)] = math.inf
     locked = sorted([j for j, b in enumerate(boats)
@@ -464,13 +498,18 @@ def simulate_order_reference(strength: StrengthModel, boat_ids: Sequence[str],
                  for j, b in enumerate(boats)}
     none = (1 - TAIL_WEIGHT) * no_finisher + TAIL_WEIGHT * base.no_finisher_prob
     mixture = rng.random(n) < TAIL_WEIGHT
+    assumptions = [
+        "Pooled ridge PL complete-order reference; identity calibration",
+        "Laplace-posterior strength draws" if parameter_uncertainty else "MAP strength (no parameter uncertainty)",
+        "Nonfinish scored N; sampled complete orders share the completion posterior",
+        "Course-exposure survival conditioning; no predicted travel-time clock",
+        f"Diffusion-lead live term, coefficient {state_coefficient:g}" if state else "Pre-race static strength",
+        f"Calibrated discrimination scale {scale:g}" if scale != 1.0 else "Unit PL dispersion",
+        f"Joint uniform-reference mixture weight {TAIL_WEIGHT:g}",
+    ]
     return RaceSimulation(True, base.status, None, boats, probabilities, float(none), positions,
                           n, seed, 1.96 * math.sqrt(.25/n), conditional_complete,
-                          ["Pooled ridge PL complete-order reference; identity calibration",
-                           "Nonfinish scored N; sampled complete orders share audited completion",
-                           "Course-exposure survival conditioning; no predicted travel-time clock",
-                           "Fixed conservative diffusion-lead live extension" if state else "Pre-race static strength",
-                           f"Joint uniform-reference mixture weight {TAIL_WEIGHT:g}"],
+                          assumptions,
                           np.where(mixture[:, None], base.ranks, ranks) if return_samples else None,
                           None, None,
                           base.failure_course_fractions if return_samples else None,

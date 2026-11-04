@@ -38,14 +38,15 @@ describe('race timeline source events', () => {
     ]
     const html = render(events)
     expect(html).toContain('Gun')
-    expect(html).toContain('Gate 1 reconstructed')
+    expect(html).toContain('Gate 1 calculated')
     expect(html).toContain('source leg timing')
-    expect(html).toContain('reconstructed')
+    expect(html).toContain('calculated')
+    expect(html).not.toContain('reconstructed')
     expect(html).not.toContain('Absent gate')
     expect(html).not.toContain('Outside race')
     expect(html).not.toContain('Future finish hidden')
     expect((html.match(/class="scrubber-tick-dot"/g) ?? [])).toHaveLength(2)
-    expect(html.indexOf('Gun')).toBeLessThan(html.indexOf('Gate 1 reconstructed'))
+    expect(html.indexOf('Gun')).toBeLessThan(html.indexOf('Gate 1 calculated'))
   })
 
   it('filters by exported event type, independent of label text', () => {

@@ -14,7 +14,8 @@ if np is not None:
                                            UniformOrderModel)
     from pipeline.prediction.simulation import (conditional_failure_probability,
                                                 hazard_integral, simulate_order_reference,
-                                                simulate_race)
+                                                simulate_race, _ranks_and_winners,
+                                                analytic_plackett_luce_expected_ranks)
 
 
 @unittest.skipIf(np is None, "Install the locked forecast-core extra to run forecasting tests")
@@ -297,6 +298,130 @@ class PredictionModelTests(unittest.TestCase):
                                conditional_complete=True, n=100, race_time_limit_s=150)
         self.assertEqual(result.no_finisher_prob, 1.0)
         self.assertEqual(result.expected_positions, {"A": 2.0, "B": 2.0})
+
+    def test_ranks_and_winners_partial_nonfinish_and_all_nonfinish(self):
+        """When some boats finish, the fastest is winner. When all DNF, winner is -1."""
+        # Row 0: Boat 0 finishes at 100s, Boat 1 at 120s, Boats 2 & 3 DNF (inf)
+        # Row 1: Boat 1 finishes at 90s, Boat 0 at 110s, Boats 2 & 3 DNF (inf)
+        # Row 2: All 4 boats DNF (inf)
+        times = np.array([
+            [100.0, 120.0, np.inf, np.inf],
+            [110.0, 90.0, np.inf, np.inf],
+            [np.inf, np.inf, np.inf, np.inf]
+        ])
+        tie_break = np.zeros_like(times)
+        ranks, winners = _ranks_and_winners(times, tie_break)
+
+        # Row 0: Winner is Boat 0
+        self.assertEqual(winners[0], 0)
+        np.testing.assert_array_equal(ranks[0], [1, 2, 4, 4])
+        self.assertEqual(sum(ranks[0]), 11)  # ordinary_sum=10 + M*(M-1)/2 = 10 + 1 = 11
+
+        # Row 1: Winner is Boat 1
+        self.assertEqual(winners[1], 1)
+        np.testing.assert_array_equal(ranks[1], [2, 1, 4, 4])
+        self.assertEqual(sum(ranks[1]), 11)
+
+        # Row 2: No finisher (winner = -1)
+        self.assertEqual(winners[2], -1)
+        np.testing.assert_array_equal(ranks[2], [4, 4, 4, 4])
+        self.assertEqual(sum(ranks[2]), 16)  # ordinary_sum=10 + 4*3/2 = 16
+
+    def test_tied_n_rank_sum_identity_exhaustive(self):
+        """realized_rank_sum = ordinary_sum + M*(M-1)/2. Rank sum strictly exceeds ordinary_sum iff M >= 2."""
+        for n in range(2, 9):
+            ordinary_sum = n * (n + 1) // 2
+            for m in range(0, n + 1):
+                # k finishers get ranks 1..k, m nonfinishers get rank n
+                k = n - m
+                ranks = list(range(1, k + 1)) + [n] * m
+                realized_sum = sum(ranks)
+                expected_sum = ordinary_sum + m * (m - 1) // 2
+                self.assertEqual(realized_sum, expected_sum, f"Failed for N={n}, M={m}")
+                if m >= 2:
+                    self.assertGreater(realized_sum, ordinary_sum)
+                else:
+                    self.assertEqual(realized_sum, ordinary_sum)
+
+    def test_analytic_plackett_luce_expected_ranks_properties_and_convergence(self):
+        """Verify exchangeability, permutation invariance, bounds, all-finish, all-nonfinish, and MC convergence."""
+        # 1. Exchangeability
+        worths_eq = np.array([2.0, 2.0, 2.0, 2.0])
+        comp_eq = np.array([0.8, 0.8, 0.8, 0.8])
+        ranks_eq = analytic_plackett_luce_expected_ranks(worths_eq, comp_eq)
+        self.assertTrue(np.allclose(ranks_eq, ranks_eq[0]))
+
+        # 2. All finish case (s_i = 1 for all i): sum must equal N*(N+1)/2
+        worths = np.array([4.0, 2.0, 1.0, 0.5])
+        s_all = np.ones(4)
+        ranks_all = analytic_plackett_luce_expected_ranks(worths, s_all)
+        self.assertAlmostEqual(sum(ranks_all), 10.0)  # 4*5/2 = 10
+        self.assertTrue(ranks_all[0] < ranks_all[1] < ranks_all[2] < ranks_all[3])
+
+        # 3. All nonfinish case (s_i = 0 for all i): all ranks must equal N
+        s_none = np.zeros(4)
+        ranks_none = analytic_plackett_luce_expected_ranks(worths, s_none)
+        np.testing.assert_array_equal(ranks_none, [4.0, 4.0, 4.0, 4.0])
+
+        # 4. Rank bounds [1, N]
+        s_arb = np.array([0.95, 0.70, 0.40, 0.10])
+        ranks_arb = analytic_plackett_luce_expected_ranks(worths, s_arb)
+        self.assertTrue(np.all((ranks_arb >= 1.0) & (ranks_arb <= 4.0)))
+
+        # 5. Permutation invariance
+        perm = [2, 0, 3, 1]
+        ranks_perm = analytic_plackett_luce_expected_ranks(worths[perm], s_arb[perm])
+        np.testing.assert_array_almost_equal(ranks_arb[perm], ranks_perm)
+
+        # 6. Monte Carlo convergence of PL exponential clocks to analytic benchmark
+        n_sim = 200_000
+        rng = np.random.default_rng(2026)
+        clocks = rng.exponential(size=(n_sim, 4)) / worths
+        # Independent completion
+        survived = rng.random(size=(n_sim, 4)) < s_arb
+        clocks[~survived] = np.inf
+        sim_ranks, _ = _ranks_and_winners(clocks, rng.random(clocks.shape))
+        mc_expected = sim_ranks.mean(axis=0)
+        np.testing.assert_allclose(mc_expected, ranks_arb, atol=0.015)
+
+    def test_contrast_subspace_centering_preserves_pairwise_differences(self):
+        """Joint posterior draws centered on contrast subspace preserve contrast variances."""
+        orders = [
+            {"order": ["A", "B", "C"], "order_valid": True, "competitive": True},
+            {"order": ["B", "A", "C"], "order_valid": True, "competitive": True},
+            {"order": ["A", "C", "B"], "order_valid": True, "competitive": True},
+            {"order": ["C", "B", "A"], "order_valid": True, "competitive": True},
+            {"order": ["A", "B", "C"], "order_valid": True, "competitive": True},
+        ]
+        model = StrengthModel.fit(orders, strength_sd=1.2, discrimination_scale=1.0)
+        self.assertEqual(model.boat_order, ["A", "B", "C"])
+        cov = np.asarray(model.covariance)
+        # Contrast variance: Var(beta_0 - beta_1) = cov[0,0] + cov[1,1] - 2*cov[0,1]
+        contrast_var_01 = cov[0, 0] + cov[1, 1] - 2 * cov[0, 1]
+
+        rng = np.random.default_rng(42)
+        draws = model.sample_log_worth(["A", "B", "C"], rng, n=50_000)
+        # Mean across boats for each draw should be zero (identifiable contrast subspace)
+        np.testing.assert_allclose(draws.mean(axis=1), 0.0, atol=1e-10)
+        # Sample contrast variance
+        sample_diff = draws[:, 0] - draws[:, 1]
+        self.assertAlmostEqual(np.var(sample_diff), contrast_var_01, delta=0.03)
+
+    def test_cup_first_to_seven_series_dependence_check(self):
+        """Persistent win prob in {0.5, 0.9} yields ~75.00% series win vs ~93.76% for independent mean 0.7."""
+        def series_win(p):
+            # Best of 13: sum_{k=7}^{13} binom(13, k) p^k (1-p)^{13-k}
+            return sum(math.comb(13, k) * (p**k) * ((1 - p)**(13 - k)) for k in range(7, 14))
+
+        # Persistent probability check
+        w_50 = series_win(0.5)
+        w_90 = series_win(0.9)
+        persistent_series_win = 0.5 * w_50 + 0.5 * w_90
+        independent_series_win = series_win(0.7)
+
+        self.assertAlmostEqual(w_50, 0.5)
+        self.assertAlmostEqual(persistent_series_win, 0.75, delta=0.001)
+        self.assertAlmostEqual(independent_series_win, 0.9376, delta=0.001)
 
 
 if __name__ == "__main__":

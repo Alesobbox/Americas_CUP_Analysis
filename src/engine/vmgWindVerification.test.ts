@@ -257,8 +257,8 @@ describe('M2 Challenger: Wind Flow Field Rendering Math Verification', () => {
 
     drawWindFlowField(mockContext, 900, 600, dummyManifest, 1000, vp)
 
-    // Stroke style must strictly equal rgba(56, 189, 248, 0.10)
-    expect(mockContext.strokeStyle).toBe('rgba(56, 189, 248, 0.10)')
+    // Stroke style must strictly equal rgba(50, 104, 134, 0.1)
+    expect(mockContext.strokeStyle).toBe('rgba(50, 104, 134, 0.1)')
     expect(mockContext.lineWidth).toBe(1.0)
     expect(mockContext.beginPath).toHaveBeenCalled()
     expect(mockContext.stroke).toHaveBeenCalled()

@@ -17,14 +17,16 @@ describe('performance card missing-data cases', () => {
     expect(html).toContain('Unavailable')
   })
 
-  it('does not display NaN as a reading or derive heel from speed', () => {
+  it('keeps invalid readings unavailable, real zeros visible and unsupported channels absent', () => {
     const frame = {
       index: 0, timestamp: replay.chronology.window_start, marks: {},
       boats: { [boat.id]: { sog: NaN, vmg: 0, twa: 0, tws: 0 } },
     } as ReplayFrame
     const html = renderToStaticMarkup(React.createElement(BoatPerformanceCard, { replay, frame, selectedId: boat.id }))
     expect(html).not.toContain('NaN')
-    expect(html).toContain('HEEL')
-    expect(html).toContain('Heel is not a channel in the exported replay')
+    expect(html).not.toContain('HEEL')
+    expect((html.match(/Unavailable/g) ?? [])).toHaveLength(1)
+    expect(html).toContain('0.0 kt')
+    expect(html).toContain('0°')
   })
 })

@@ -1,5 +1,6 @@
 import type { Point, ReplayManifest } from '../../types/replay'
 import { screenToWorld, worldToScreen, type Viewport } from './ViewportMatrix'
+import { COURSE_PALETTE } from './renderPalette'
 
 const strokePath = (context: CanvasRenderingContext2D, viewport: Viewport, points: Array<[number, number]>, close = false) => {
   context.beginPath()
@@ -23,13 +24,13 @@ export function drawStaticCourse(
   context.clearRect(0, 0, width, height)
 
   if (options?.showWaterSurface) {
-    context.fillStyle = '#0a0f18'
+    context.fillStyle = COURSE_PALETTE.water
     context.fillRect(0, 0, width, height)
   }
 
   // Metric 250m grid over the visible world area, including after panning.
   context.save()
-  context.strokeStyle = 'rgba(128, 188, 210, 0.14)'
+  context.strokeStyle = COURSE_PALETTE.grid
   context.lineWidth = 1
   const grid = 250
   const corners = [[0, 0], [width, 0], [width, height], [0, height]].map(
@@ -52,7 +53,7 @@ export function drawStaticCourse(
   const { race, safety } = boundaries
   if (safety && safety.length > 0) {
     strokePath(context, viewport, safety, true)
-    context.strokeStyle = 'rgba(148, 163, 184, 0.55)'
+    context.strokeStyle = COURSE_PALETTE.safety
     context.lineWidth = 1.0
     context.setLineDash([4, 4])
     context.stroke()
@@ -61,9 +62,9 @@ export function drawStaticCourse(
 
   if (race && race.length > 0) {
     strokePath(context, viewport, race, true)
-    context.fillStyle = 'rgba(14, 165, 233, 0.06)'
+    context.fillStyle = COURSE_PALETTE.boundaryFill
     context.fill()
-    context.strokeStyle = 'rgba(56, 189, 248, 0.70)'
+    context.strokeStyle = COURSE_PALETTE.boundary
     context.lineWidth = 1.5
     context.stroke()
   }

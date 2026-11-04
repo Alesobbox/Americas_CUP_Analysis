@@ -1,4 +1,5 @@
 import type { StyleSpecification } from 'maplibre-gl'
+import { COURSE_PALETTE } from './renderPalette'
 
 export interface MapTileConfig {
   enabled: boolean
@@ -29,11 +30,11 @@ export const DEFAULT_MAP_TILE_CONFIG: MapTileConfig = {
   tileSize: 256,
   fallbackMode: 'oceanic-synthetic',
   rasterOpacity: 1,
-  rasterSaturation: 0,
-  rasterContrast: 0,
+  rasterSaturation: -0.55,
+  rasterContrast: -0.08,
   rasterBrightnessMin: 0,
   rasterBrightnessMax: 1,
-  backgroundColor: '#040d1a',
+  backgroundColor: COURSE_PALETTE.water,
 }
 
 /**

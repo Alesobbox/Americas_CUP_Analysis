@@ -80,15 +80,26 @@ describe('TacticalMapOverlay & Action Toolbar Tests (Milestone M9 / R2)', () => 
       expect(html).toContain('map-bottom-scale-bar')
     })
 
-    it('renders the compass rose widget and dual wind/current HUD in top-left', () => {
+    it('renders the compass rose and recorded wind without a permanent current placeholder', () => {
       const props = createProps()
       const html = renderToStaticMarkup(React.createElement(TacticalMapOverlay, props))
       expect(html).toContain('compass-rose-widget')
       expect(html).toContain('dual-hud-glass-card')
       expect(html).toContain('Official wind (replay)')
-      expect(html).toContain('Current')
-      expect(html).toContain('Unavailable')
+      expect(html).not.toContain('>Current<')
+      expect(html).not.toContain('hud-card-v-divider')
+      expect((html.match(/class="hud-metric-cell"/g) ?? [])).toHaveLength(1)
       expect(html).toContain('kt')
+    })
+
+    it('still explains missing supported wind observations without substituting zero', () => {
+      const missingWind = { ...replay, wind: { ...replay.wind, timeline: [] } }
+      const html = renderToStaticMarkup(React.createElement(TacticalMapOverlay, createProps({ replay: missingWind })))
+      expect(html).toContain('Official wind (replay)')
+      expect(html).toContain('Unavailable')
+      expect(html).toContain('No prior source sample')
+      expect(html).not.toContain('0.0 kt')
+      expect(html).not.toContain('>Current<')
     })
 
     it('renders all 6 tools in the top-right toolbar', () => {
@@ -96,16 +107,16 @@ describe('TacticalMapOverlay & Action Toolbar Tests (Milestone M9 / R2)', () => 
       const html = renderToStaticMarkup(React.createElement(TacticalMapOverlay, props))
 
       // 1. View Mode (MAP / GRID)
-      expect(html).toContain('MAP')
-      expect(html).toContain('GRID')
+      expect(html).toContain('Map')
+      expect(html).toContain('Grid')
 
       // 2. Follow Mode (COURSE / FLEET / BOAT)
-      expect(html).toContain('COURSE')
-      expect(html).toContain('FLEET')
-      expect(html).toContain('BOAT')
+      expect(html).toContain('Course')
+      expect(html).toContain('Fleet')
+      expect(html).toContain('Boat')
 
       // 3. Safety Borders
-      expect(html).toContain('BORDERS')
+      expect(html).toContain('Borders')
       expect(html).toContain('tool-indicator-dot')
 
       // 4. Reset View
@@ -124,32 +135,32 @@ describe('TacticalMapOverlay & Action Toolbar Tests (Milestone M9 / R2)', () => 
     it('highlights active viewMode correctly (MAP vs GRID)', () => {
       // viewMode = 'map'
       const htmlMap = renderToStaticMarkup(React.createElement(TacticalMapOverlay, createProps({ viewMode: 'map' })))
-      expect(htmlMap).toMatch(/<button[^>]*class="active"[^>]*>MAP<\/button>/)
-      expect(htmlMap).not.toMatch(/<button[^>]*class="active"[^>]*>GRID<\/button>/)
+      expect(htmlMap).toMatch(/<button[^>]*class="active"[^>]*>Map<\/button>/)
+      expect(htmlMap).not.toMatch(/<button[^>]*class="active"[^>]*>Grid<\/button>/)
 
       // viewMode = 'grid'
       const htmlGrid = renderToStaticMarkup(React.createElement(TacticalMapOverlay, createProps({ viewMode: 'grid' })))
-      expect(htmlGrid).toMatch(/<button[^>]*class="active"[^>]*>GRID<\/button>/)
-      expect(htmlGrid).not.toMatch(/<button[^>]*class="active"[^>]*>MAP<\/button>/)
+      expect(htmlGrid).toMatch(/<button[^>]*class="active"[^>]*>Grid<\/button>/)
+      expect(htmlGrid).not.toMatch(/<button[^>]*class="active"[^>]*>Map<\/button>/)
     })
 
     it('highlights active followMode correctly (COURSE, FLEET, BOAT)', () => {
       const htmlCourse = renderToStaticMarkup(React.createElement(TacticalMapOverlay, createProps({ followMode: 'course' })))
-      expect(htmlCourse).toMatch(/<button[^>]*class="active"[^>]*>COURSE<\/button>/)
+      expect(htmlCourse).toMatch(/<button[^>]*class="active"[^>]*>Course<\/button>/)
 
       const htmlFleet = renderToStaticMarkup(React.createElement(TacticalMapOverlay, createProps({ followMode: 'fleet' })))
-      expect(htmlFleet).toMatch(/<button[^>]*class="active"[^>]*>FLEET<\/button>/)
+      expect(htmlFleet).toMatch(/<button[^>]*class="active"[^>]*>Fleet<\/button>/)
 
       const htmlBoat = renderToStaticMarkup(React.createElement(TacticalMapOverlay, createProps({ followMode: 'boat', selectedBoatId: 'boat-1' })))
-      expect(htmlBoat).toMatch(/<button[^>]*class="active"[^>]*>BOAT<\/button>/)
+      expect(htmlBoat).toMatch(/<button[^>]*class="active"[^>]*>Boat<\/button>/)
     })
 
     it('disables BOAT follow mode button when selectedBoatId is null', () => {
       const htmlNoBoat = renderToStaticMarkup(React.createElement(TacticalMapOverlay, createProps({ selectedBoatId: null })))
-      expect(htmlNoBoat).toMatch(/<button[^>]*disabled=""[^>]*>BOAT<\/button>/)
+      expect(htmlNoBoat).toMatch(/<button[^>]*disabled=""[^>]*>Boat<\/button>/)
 
       const htmlWithBoat = renderToStaticMarkup(React.createElement(TacticalMapOverlay, createProps({ selectedBoatId: 'boat-1' })))
-      expect(htmlWithBoat).not.toMatch(/<button[^>]*disabled=""[^>]*>BOAT<\/button>/)
+      expect(htmlWithBoat).not.toMatch(/<button[^>]*disabled=""[^>]*>Boat<\/button>/)
     })
 
     it('updates BORDERS button active class and aria-pressed based on showSafetyBorders', () => {
@@ -169,8 +180,8 @@ describe('TacticalMapOverlay & Action Toolbar Tests (Milestone M9 / R2)', () => 
       const tree = TacticalMapOverlay(createProps({ onViewModeChange }))
       const buttons = findElementsByType(tree, 'button')
 
-      const mapBtn = buttons.find((b) => b.props.children === 'MAP')
-      const gridBtn = buttons.find((b) => b.props.children === 'GRID')
+      const mapBtn = buttons.find((b) => b.props.children === 'Map')
+      const gridBtn = buttons.find((b) => b.props.children === 'Grid')
 
       expect(mapBtn).toBeDefined()
       expect(gridBtn).toBeDefined()
@@ -187,9 +198,9 @@ describe('TacticalMapOverlay & Action Toolbar Tests (Milestone M9 / R2)', () => 
       const tree = TacticalMapOverlay(createProps({ onFollowModeChange, selectedBoatId: 'boat-1' }))
       const buttons = findElementsByType(tree, 'button')
 
-      const courseBtn = buttons.find((b) => b.props.children === 'COURSE')
-      const fleetBtn = buttons.find((b) => b.props.children === 'FLEET')
-      const boatBtn = buttons.find((b) => b.props.children === 'BOAT')
+      const courseBtn = buttons.find((b) => b.props.children === 'Course')
+      const fleetBtn = buttons.find((b) => b.props.children === 'Fleet')
+      const boatBtn = buttons.find((b) => b.props.children === 'Boat')
 
       expect(courseBtn).toBeDefined()
       expect(fleetBtn).toBeDefined()

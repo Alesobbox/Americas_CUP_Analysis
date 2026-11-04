@@ -148,8 +148,11 @@ class TestWindFlowFieldRenderingMathAdversarial(unittest.TestCase):
 
     def test_low_contrast_opacity_in_source(self):
         """Verifies opacity is low-contrast (0.10) to avoid distracting from fleet hulls."""
-        pattern = r"strokeStyle\s*=\s*'rgba\(56,\s*189,\s*248,\s*0\.10\)'"
-        self.assertRegex(self.content, pattern, "Wind vectors strokeStyle must use 0.10 opacity (rgba(56, 189, 248, 0.10))")
+        self.assertRegex(self.content, r"strokeStyle\s*=\s*COURSE_PALETTE\.airflow")
+        palette = (self.source_file.parent / "renderPalette.ts").read_text(encoding="utf-8")
+        match = re.search(r"airflow:\s*'rgba\(\d+,\s*\d+,\s*\d+,\s*([\d.]+)\)'", palette)
+        self.assertIsNotNone(match, "Wind vectors must have an explicit shared RGBA color")
+        self.assertAlmostEqual(float(match.group(1)), 0.10)
 
     def test_downwind_vector_projection_math(self):
         """Verifies trigonometric projection for True North (0), East (90), South (180), West (270)."""

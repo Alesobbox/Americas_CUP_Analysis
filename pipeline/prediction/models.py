@@ -56,22 +56,36 @@ class StrengthModel:
     wind_center: float = 0.0
     wind_scale: float = 1.0
     n_races: int = 0
-    strength_sd: float = 0.5
+    strength_sd: float = 1.2
     condition_sd: float = 0.25
+    discrimination_scale: float = 1.0
     method: str = "ridge-plackett-luce-1"
+    covariance: list[list[float]] = field(default_factory=list)
+    boat_order: list[str] = field(default_factory=list)
 
     @classmethod
     def fit(cls, rows: Iterable[Mapping[str, Any]], *, condition_effects: bool = False,
-            strength_sd: float = 0.5, condition_sd: float = 0.25) -> "StrengthModel":
-        rows = [dict(r) for r in rows if _competitive(r) and len(r.get("order", [])) >= 2
-                and r.get("order_valid", True) is not False]
-        for row in rows:
+            strength_sd: float = 1.2, condition_sd: float = 0.25,
+            practice_weight: float = 0.0,
+            discrimination_scale: float = 1.8) -> "StrengthModel":
+        valid_rows = []
+        weights = []
+        for r in rows:
+            if len(r.get("order", [])) < 2 or r.get("order_valid", True) is False or r.get("competitive", True) is False:
+                continue
+            is_practice = bool(r.get("practice", False))
+            w = practice_weight if is_practice else 1.0
+            if w > 0:
+                valid_rows.append(dict(r))
+                weights.append(float(w))
+        for row in valid_rows:
             if len(set(row["order"])) != len(row["order"]):
                 raise ValueError("An order cannot contain duplicate entries")
-        boats = sorted({str(b) for r in rows for b in r["order"]})
+        boats = sorted({str(b) for r in valid_rows for b in r["order"]})
         if not boats:
-            return cls(strength_sd=strength_sd, condition_sd=condition_sd)
-        winds = [float(r["wind_knots"]) for r in rows if _positive(r.get("wind_knots"))]
+            return cls(strength_sd=strength_sd, condition_sd=condition_sd,
+                       discrimination_scale=discrimination_scale)
+        winds = [float(r["wind_knots"]) for r in valid_rows if _positive(r.get("wind_knots"))]
         center = float(np.mean(winds)) if winds else 0.0
         scale = max(float(np.std(winds)), 1.0) if winds else 1.0
         n = len(boats)
@@ -81,7 +95,7 @@ class StrengthModel:
         if condition_effects:
             precision[n:] = 1.0 / condition_sd ** 2
         designs = []
-        for row in rows:
+        for row in valid_rows:
             order = [lookup[str(b)] for b in row["order"]]
             wind = ((float(row["wind_knots"]) - center) / scale
                     if _positive(row.get("wind_knots")) else 0.0)
@@ -95,19 +109,19 @@ class StrengthModel:
             value = 0.5 * float(np.dot(precision * beta, beta))
             gradient = precision * beta
             hessian = np.diag(precision)
-            for design in designs:
+            for w, design in zip(weights, designs):
                 for k in range(len(design) - 1):
                     x = design[k:]
                     logits = x @ beta
                     peak = float(np.max(logits))
-                    weights = np.exp(logits - peak)
-                    weights /= weights.sum()
-                    value += peak + math.log(float(np.exp(logits - peak).sum())) - logits[0]
+                    weights_k = np.exp(logits - peak)
+                    weights_k /= weights_k.sum()
+                    value += w * (peak + math.log(float(np.exp(logits - peak).sum())) - logits[0])
                     if derivatives:
-                        mean = weights @ x
-                        gradient += mean - x[0]
+                        mean = weights_k @ x
+                        gradient += w * (mean - x[0])
                         centered = x - mean
-                        hessian += (centered.T * weights) @ centered
+                        hessian += w * ((centered.T * weights_k) @ centered)
             return value, gradient, hessian
 
         beta = np.zeros(dimensions)
@@ -128,9 +142,54 @@ class StrengthModel:
         beta[:n] -= beta[:n].mean()
         if condition_effects:
             beta[n:] -= beta[n:].mean()
+        # Laplace approximation: Gaussian posterior with the MAP Hessian. The
+        # ridge prior makes the Hessian positive definite.
+        covariance = np.linalg.inv(objective(beta)[2])
+        covariance = (covariance + covariance.T) / 2
         return cls(dict(zip(boats, map(float, beta[:n]))),
                    dict(zip(boats, map(float, beta[n:]))) if condition_effects else {},
-                   center, scale, len(rows), strength_sd, condition_sd)
+                   center, scale, len(valid_rows), strength_sd, condition_sd,
+                   discrimination_scale=discrimination_scale,
+                   covariance=covariance.tolist(), boat_order=boats)
+
+    def sample_log_worth(self, boat_ids: Sequence[str], rng: np.random.Generator, n: int,
+                         wind_knots: float | None = None,
+                         state_features: Mapping[str, float] | None = None,
+                         *, state_coefficient: float = 0.25) -> np.ndarray:
+        """Posterior draws of log-worth, shape (n, len(boat_ids)).
+
+        Fitted entries use the Laplace posterior (correlated). Unseen entries
+        draw independently from the ridge prior, so a new boat is uncertain
+        rather than average-with-certainty.
+        """
+        wind = (wind_knots - self.wind_center) / self.wind_scale if wind_knots is not None else 0.0
+        mean = self.log_worth(boat_ids, wind_knots, state_features, state_coefficient=state_coefficient)
+        draws = np.repeat(mean[None, :], n, axis=0)
+        known_indices = {b: i for i, b in enumerate(self.boat_order)}
+        specified = set(self.boat_order) | set(self.effects.keys())
+        m = len(self.boat_order)
+        conditional = bool(self.wind_effects)
+        if self.covariance and m:
+            cov = np.asarray(self.covariance, dtype=float)
+            # Linear map from parameters to the requested fitted entries.
+            columns = [j for j, b in enumerate(boat_ids) if b in known_indices]
+            if columns:
+                design = np.zeros((len(columns), cov.shape[0]))
+                for row, j in enumerate(columns):
+                    design[row, known_indices[boat_ids[j]]] = 1.0
+                    if conditional:
+                        design[row, m + known_indices[boat_ids[j]]] = wind
+                local = design @ cov @ design.T
+                sampled_shifts = rng.multivariate_normal(np.zeros(len(columns)), local, size=n,
+                                                         method="cholesky")
+                if len(columns) > 1:
+                    sampled_shifts -= sampled_shifts.mean(axis=1, keepdims=True)
+                draws[:, columns] += sampled_shifts
+        unseen = [j for j, b in enumerate(boat_ids) if b not in specified]
+        if unseen:
+            sd = math.sqrt(self.strength_sd**2 + (wind * self.condition_sd)**2 if conditional else self.strength_sd**2)
+            draws[:, unseen] += rng.normal(0.0, sd, size=(n, len(unseen)))
+        return draws
 
     def log_worth(self, boat_ids: Sequence[str], wind_knots: float | None = None,
                   state_features: Mapping[str, float] | None = None,
@@ -146,14 +205,15 @@ class StrengthModel:
         if not boat_ids:
             return {}
         logits = self.log_worth(boat_ids, wind_knots, state_features)
-        worth = np.exp(logits - logits.max())
+        scaled = logits * self.discrimination_scale
+        worth = np.exp(scaled - scaled.max())
         return dict(zip(boat_ids, map(float, worth / worth.sum())))
 
     def sample_orders(self, boat_ids: Sequence[str], n: int, seed: int = 42,
                       wind_knots: float | None = None) -> np.ndarray:
         """Rows contain field indices, in finishing order (Gumbel top-k)."""
         rng = np.random.default_rng(seed)
-        scores = self.log_worth(boat_ids, wind_knots) + rng.gumbel(size=(n, len(boat_ids)))
+        scores = self.log_worth(boat_ids, wind_knots) * self.discrimination_scale + rng.gumbel(size=(n, len(boat_ids)))
         return np.argsort(-scores, axis=1, kind="stable")
 
     def to_dict(self) -> dict[str, Any]:
@@ -365,37 +425,61 @@ class ConditionalLogitModel:
 
 @dataclass
 class CompletionModel:
-    """Pooled DNS and exogenous failure posteriors with audited denominators.
+    """Pooled DNS and in-race non-completion posteriors over scheduled entries.
 
-    Contract: ``audited=True``, ``competitive=True``, ``started`` boolean;
-    started records require ``completed=True`` or ``failure_type='exogenous'``
-    for failure ascertainment. Unknown/time-rule DNF records are excluded from
-    that denominator rather than relabelled. Practice contributes no counts.
+    Two ascertainment tiers are accepted and counted separately:
+
+    * ``audited=True`` independent reviews. Started records require
+      ``completed=True`` or ``failure_type='exogenous'``; unknown/time-rule
+      outcomes block availability (no approved censoring treatment).
+    * ``ascertainment='source'`` reconstructions from the same feed. For the
+      first-valid-on-water-finisher target every started non-completion
+      (retired, disqualified or unresolved) removes the boat from the on-water
+      finish, so all of them count as non-completion events. Their cause is not
+      claimed; ``evidence_tier`` reports that the rate is source-reconstructed.
+
+    Practice contributes no counts. A race with an audited record uses it in
+    preference to the source reconstruction (caller responsibility).
     """
 
     dns_events: int = 0
     scheduled_audited: int = 0
     failure_events: int = 0
     starters_ascertained: int = 0
-    prior_alpha: float = 0.5
-    prior_beta: float = 0.5
+    prior_alpha: float = 0.0
+    prior_beta: float = 0.0
     excluded_records: int = 0
     unresolved_audited_starters: int = 0
-    method: str = "pooled-beta-completion-1"
+    source_records: int = 0
+    source_failure_types: dict[str, int] = field(default_factory=dict)
+    method: str = "pooled-beta-completion-2"
+
+    @property
+    def evidence_tier(self) -> str | None:
+        if not self.scheduled_audited:
+            return "bayesian_prior" if (self.prior_alpha > 0 and self.prior_beta > 0) else None
+        if self.source_records == 0:
+            return "independent_audit"
+        return "source_reconstructed" if self.source_records == self.scheduled_audited else "mixed_audit_and_source"
 
     @property
     def available(self) -> bool:
-        return (self.scheduled_audited > 0 and self.starters_ascertained > 0
-                and self.unresolved_audited_starters == 0)
+        if self.unresolved_audited_starters > 0:
+            return False
+        if self.scheduled_audited > 0 and self.starters_ascertained > 0:
+            return True
+        if self.scheduled_audited == 0:
+            return self.prior_alpha > 0 and self.prior_beta > 0
+        return False
 
     @property
     def reason(self) -> str | None:
         if self.unresolved_audited_starters:
             return "Audited starters include unresolved/time-rule failure ascertainment; no approved exposure-censoring treatment"
-        if self.scheduled_audited == 0:
-            return "No audited competitive scheduled-entry denominator"
-        if self.starters_ascertained == 0:
-            return "No audited competitive exogenous-failure denominator"
+        if self.scheduled_audited > 0 and self.starters_ascertained == 0:
+            return "No earlier competitive starter completion denominator"
+        if not self.available:
+            return "No earlier competitive scheduled-entry completion denominator"
         return None
 
     @classmethod
@@ -405,14 +489,23 @@ class CompletionModel:
         model = cls(prior_alpha=0.5 if prior == "jeffreys" else 1.0,
                     prior_beta=0.5 if prior == "jeffreys" else 19.0)
         for record in records:
-            if not _competitive(record) or record.get("audited") is not True or not isinstance(record.get("started"), bool):
+            source = record.get("ascertainment") == "source" and record.get("audited") is not True
+            if (not _competitive(record) or not isinstance(record.get("started"), bool)
+                    or not (source or record.get("audited") is True)):
                 model.excluded_records += 1
                 continue
             model.scheduled_audited += 1
+            if source:
+                model.source_records += 1
             if not record["started"]:
                 model.dns_events += 1
             elif record.get("completed") is True:
                 model.starters_ascertained += 1
+            elif source:
+                cause = str(record.get("failure_type") or "unresolved")
+                model.source_failure_types[cause] = model.source_failure_types.get(cause, 0) + 1
+                model.starters_ascertained += 1
+                model.failure_events += 1
             elif record.get("failure_type") == "exogenous":
                 model.starters_ascertained += 1
                 model.failure_events += 1
@@ -423,13 +516,13 @@ class CompletionModel:
 
     @property
     def dns_mean(self) -> float | None:
-        if not self.scheduled_audited:
+        if not self.available:
             return None
         return (self.dns_events + self.prior_alpha) / (self.scheduled_audited + self.prior_alpha + self.prior_beta)
 
     @property
     def failure_mean(self) -> float | None:
-        if not self.starters_ascertained:
+        if not self.available:
             return None
         return (self.failure_events + self.prior_alpha) / (self.starters_ascertained + self.prior_alpha + self.prior_beta)
 
@@ -444,6 +537,7 @@ class CompletionModel:
 
     def to_dict(self) -> dict[str, Any]:
         return {**asdict(self), "available": self.available, "reason": self.reason,
+                "evidence_tier": self.evidence_tier,
                 "dns_mean": self.dns_mean, "failure_mean": self.failure_mean}
 
     @classmethod

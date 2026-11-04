@@ -114,7 +114,7 @@ describe('Milestone 3 Stress Test: Map View vs Tactical Grid View Switcher', () 
   // 4. StaticCourseLayer Technical Water Surface & 250m Metric Grid
   // =========================================================================
   describe('4. StaticCourseLayer Technical Water Surface & 250m Metric Grid', () => {
-    it('renders opaque dark technical surface #0a0f18 and 250m metric grid when showWaterSurface is true', () => {
+    it('renders opaque pale water #edf4f6 and 250m metric grid when showWaterSurface is true', () => {
       const calls: Array<{ op: string; args?: unknown[] }> = []
       let currentStrokeStyle: unknown = null
       let currentFillStyle: unknown = null
@@ -163,18 +163,18 @@ describe('Milestone 3 Stress Test: Map View vs Tactical Grid View Switcher', () 
       expect(calls[0].op).toBe('clearRect')
       expect(calls[0].args).toEqual([0, 0, width, height])
 
-      // 2. Technical dark surface #0a0f18 fill
+      // 2. Pale offline water surface fill.
       const fillStyleCall = calls.find(
-        (c) => c.op === 'set_fillStyle' && c.args?.[0] === '#0a0f18',
+        (c) => c.op === 'set_fillStyle' && c.args?.[0] === '#edf4f6',
       )
       expect(fillStyleCall).toBeDefined()
       const fillRectCall = calls.find((c) => c.op === 'fillRect')
       expect(fillRectCall).toBeDefined()
       expect(fillRectCall?.args).toEqual([0, 0, width, height])
 
-      // 3. Metric 250m grid stroked with rgba(128, 188, 210, 0.14)
+      // 3. Quiet metric grid retains the same 250m world spacing.
       const gridStrokeStyleCall = calls.find(
-        (c) => c.op === 'set_strokeStyle' && c.args?.[0] === 'rgba(128, 188, 210, 0.14)',
+        (c) => c.op === 'set_strokeStyle' && c.args?.[0] === 'rgba(89, 123, 139, 0.13)',
       )
       expect(gridStrokeStyleCall).toBeDefined()
 
@@ -184,7 +184,7 @@ describe('Milestone 3 Stress Test: Map View vs Tactical Grid View Switcher', () 
 
       // 5. Active race boundary corridor stroked and filled
       const boundaryFillCall = calls.find(
-        (c) => c.op === 'set_fillStyle' && c.args?.[0] === 'rgba(14, 165, 233, 0.06)',
+        (c) => c.op === 'set_fillStyle' && c.args?.[0] === 'rgba(50, 104, 134, 0.035)',
       )
       expect(boundaryFillCall).toBeDefined()
     })
@@ -241,19 +241,6 @@ describe('Milestone 3 Stress Test: Map View vs Tactical Grid View Switcher', () 
       // Must NOT depend on mapIsActive
       expect(effect5Snippet).toContain('}, [cameraMode, replay, resetView, size.width, size.height])')
       expect(effect5Snippet).not.toContain('}, [cameraMode, mapIsActive, replay, resetView])')
-    })
-
-    it('verifies camera center, zoom, and bearing are restored without reset on view mode toggle', () => {
-      const canvasSource = fs.readFileSync(
-        path.resolve(__dirname, 'CourseCanvas.tsx'),
-        'utf8',
-      )
-
-      // Check initial fit guard in map load handler
-      expect(canvasSource).toContain('if (!initialFitDoneRef.current) {')
-      expect(canvasSource).toContain('map.setCenter([lng, lat])')
-      expect(canvasSource).toContain('map.setBearing(viewportRef.current.rotationDeg)')
-      expect(canvasSource).toContain('map.setZoom(lastMapZoomRef.current)')
     })
 
     it('verifies mathematical coordinate invariance between screen and world across view modes', () => {

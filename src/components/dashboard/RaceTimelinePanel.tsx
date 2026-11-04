@@ -1,3 +1,4 @@
+import { evidenceText } from '../../utils/evidenceText'
 import { useMemo, useState } from 'react'
 import type { AnalysisEvent } from '../../types/analysis'
 import type { PlaybackSpeed, ReplayFrame, ReplayManifest } from '../../types/replay'
@@ -101,13 +102,13 @@ export function RaceTimelinePanel({
       })
       .map((event) => ({
         id: event.id,
-        label: event.label,
+        label: evidenceText(event.label),
         timeRight: formatSignedCountdown((event.timestamp_ms as number) - chronology.gun_time),
         timestamp: event.timestamp_ms as number,
         color: eventColor(event.type),
         type: eventType(event.type),
-        source: event.source,
-        quality: event.quality,
+        source: evidenceText(event.source),
+        quality: evidenceText(event.quality),
       }))
       .sort((a, b) => a.timestamp - b.timestamp)
   }, [sourceEvents, chronology.window_start, chronology.window_end, chronology.gun_time, frame.timestamp])
@@ -275,6 +276,7 @@ export function RaceTimelinePanel({
             </div>
           </div>
 
+          <details className="timeline-event-disclosure"><summary>{sourceEvents ? 'Events reached' : 'Event feed unavailable'} <span>{sourceEvents ? timelineEvents.length : '—'}</span><span aria-hidden="true">⌄</span></summary>
           {/* 4-Tab Filter Bar */}
           <div
             className="timeline-filter-strip"
@@ -352,6 +354,7 @@ export function RaceTimelinePanel({
               {activeFilter === 'marks' ? 'Show all events' : 'Filter to marks only'}
             </button>
           </div>
+          </details>
         </div>
       )}
     </aside>

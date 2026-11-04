@@ -3,9 +3,9 @@ import { loadAnalysisDetail } from './engine/analysisCatalog'
 import { loadCatalog, loadReplay, resolveAnalysisReplay, type RaceListing } from './engine/catalog'
 import { ReplayEngine } from './engine/ReplayEngine'
 import { RacePickerModal } from './components/modals/RacePickerModal'
-import { TacticalDashboard, type DashboardView } from './components/dashboard/TacticalDashboard'
+import { TacticalDashboard, type DashboardView, type ReviewInterval } from './components/dashboard/TacticalDashboard'
 import type { AnalysisDetail } from './types/analysis'
-import type { BoatScaleMode, CameraMode, FollowMode, PlaybackSpeed, ReplayFrame, ReplayManifest, TrailColor, TrailLength, ViewMode } from './types/replay'
+import type { BoatScaleMode, CameraMode, FollowMode, PlaybackSpeed, ReplayFrame, ReplayManifest, TrailColor, TrailLength, TrailScope, ViewMode } from './types/replay'
 
 function initialView(params: URLSearchParams): DashboardView {
   const requested = params.get('view') ?? params.get('tab')
@@ -38,15 +38,19 @@ export default function App() {
   const [cameraMode, setCameraMode] = useState<CameraMode>('north')
   const [followMode, setFollowMode] = useState<FollowMode>('course')
   const [viewMode, setViewMode] = useState<ViewMode>(savedViewMode)
-  const [scaleMode, setScaleMode] = useState<BoatScaleMode>('true')
+  const [scaleMode, setScaleMode] = useState<BoatScaleMode>('enhanced')
   const [trailLength, setTrailLength] = useState<TrailLength>('30s')
   const [trailColor, setTrailColor] = useState<TrailColor>('team')
+  const [trailScope, setTrailScope] = useState<TrailScope>('all')
+  const [showVmgLabels, setShowVmgLabels] = useState(true)
+  const [highlightComparison, setHighlightComparison] = useState(false)
   const [showSafetyBorders, setShowSafetyBorders] = useState(false)
   const [resetView, setResetView] = useState(0)
   const [analysisDetail, setAnalysisDetail] = useState<AnalysisDetail | null>(null)
+  const [reviewInterval, setReviewInterval] = useState<ReviewInterval | null>(null)
   const loadController = useRef<AbortController | null>(null)
   const initialSeekDone = useRef(false)
-  const pendingAnalysisSeek = useRef<{ raceId: string; timestamp: number } | null>(null)
+  const pendingAnalysisSeek = useRef<{ raceId: string; timestamp: number; boatId?: string; intervalEnd?: number } | null>(null)
 
   useEffect(() => {
     if (params.has('layout')) {
@@ -94,7 +98,11 @@ export default function App() {
   useEffect(() => {
     if (!engine || !replay) return
     if (pendingAnalysisSeek.current?.raceId === replay.id) {
-      engine.seek(pendingAnalysisSeek.current.timestamp)
+      const pending = pendingAnalysisSeek.current
+      engine.seek(pending.timestamp)
+      if (pending.boatId && replay.competitors.some((boat) => boat.id === pending.boatId)) setSelectedId(pending.boatId)
+      setReviewInterval(pending.boatId && pending.intervalEnd !== undefined && pending.intervalEnd > pending.timestamp
+        ? { raceId: replay.id, boatId: pending.boatId, start_ms: pending.timestamp, end_ms: pending.intervalEnd } : null)
       pendingAnalysisSeek.current = null
     } else if (!initialSeekDone.current) {
       initialSeekDone.current = true
@@ -109,13 +117,15 @@ export default function App() {
     return () => { unsubscribe(); engine.dispose() }
   }, [engine, replay, params])
 
-  const chooseRace = async (race: RaceListing) => {
+  const chooseRace = async (race: RaceListing, preserveAnalysisSeek = false) => {
+    if (!preserveAnalysisSeek) pendingAnalysisSeek.current = null
     setPickerOpen(false)
     if (race.id === currentRace?.id) return
     loadController.current?.abort()
     const controller = new AbortController()
     loadController.current = controller
     setError(null); setFrame(null); setReplay(null); setPlaying(false)
+    setReviewInterval(null)
     try {
       const data = await loadReplay(race, controller.signal)
       if (controller.signal.aborted) return
@@ -123,20 +133,24 @@ export default function App() {
       const boats = [...data.competitors].sort((a, b) => a.team_code.localeCompare(b.team_code))
       setSelectedId(boats[0]?.id ?? null)
       setComparisonId(boats[1]?.id ?? null)
-      setVisibleBoatId(null)
+      setVisibleBoatId(null); setHighlightComparison(false)
     } catch (reason) {
       if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : 'Race data could not be loaded')
     }
   }
-  const openAnalysisReplay = (raceId: string, timestamp?: number) => {
+  const openAnalysisReplay = (raceId: string, timestamp?: number, boatId?: string, intervalEnd?: number) => {
     const target = resolveAnalysisReplay(catalog, currentRace?.id ?? '', raceId, timestamp)
     if (!target) return
     setActiveView('replay')
+    engine?.pause(); setPlaying(false)
     if (target.sameRace) {
       if (target.seekTimestamp !== undefined) engine?.seek(target.seekTimestamp)
+      if (boatId && replay?.competitors.some((boat) => boat.id === boatId)) { setSelectedId(boatId); if (visibleBoatId) setVisibleBoatId(boatId) }
+      setReviewInterval(boatId && target.seekTimestamp !== undefined && Number.isFinite(intervalEnd) && intervalEnd! > target.seekTimestamp
+        ? { raceId, boatId, start_ms: target.seekTimestamp, end_ms: intervalEnd! } : null)
     } else {
-      pendingAnalysisSeek.current = target.seekTimestamp === undefined ? null : { raceId, timestamp: target.seekTimestamp }
-      void chooseRace(target.race)
+      pendingAnalysisSeek.current = target.seekTimestamp === undefined ? null : { raceId, timestamp: target.seekTimestamp, boatId, intervalEnd }
+      void chooseRace(target.race, true)
     }
   }
   useEffect(() => {
@@ -173,7 +187,7 @@ export default function App() {
       onSeek={(time) => engine.seek(time)} onStep={(seconds) => engine.seekBy(seconds)}
       onSpeed={(value) => { engine.setSpeed(value); setSpeed(value) }}
       selectedId={selected.id} onSelectBoat={(id) => { setSelectedId(id); if (visibleBoatId) setVisibleBoatId(id) }}
-      comparisonId={comparisonId} onSelectComparison={setComparisonId}
+      comparisonId={comparisonId} onSelectComparison={(id) => { setComparisonId(id); setHighlightComparison(true) }}
       visibleBoatId={visibleBoatId}
       onVisibleBoatChange={(id) => { setVisibleBoatId(id); if (id) setSelectedId(id) }}
       cameraMode={cameraMode} onCameraModeChange={setCameraMode}
@@ -183,9 +197,13 @@ export default function App() {
       showSafetyBorders={showSafetyBorders} onToggleSafetyBorders={() => setShowSafetyBorders((value) => !value)}
       trailLength={trailLength} onTrailLengthChange={setTrailLength}
       trailColor={trailColor} onTrailColorChange={setTrailColor}
+      trailScope={trailScope} onTrailScopeChange={setTrailScope}
+      showVmgLabels={showVmgLabels} onShowVmgLabelsChange={setShowVmgLabels}
+      highlightComparison={highlightComparison} onHighlightComparisonChange={setHighlightComparison}
       resetView={resetView} onResetView={() => setResetView((value) => value + 1)}
       onSelectRace={chooseRace} onOpenPicker={() => setPickerOpen(true)}
       analysisDetail={analysisDetail} onOpenAnalysisReplay={openAnalysisReplay}
+      reviewInterval={reviewInterval} onClearReview={() => setReviewInterval(null)}
     />
     {pickerOpen && <RacePickerModal races={catalog} currentId={replay.id} onSelect={chooseRace} onClose={() => setPickerOpen(false)} />}
   </main>

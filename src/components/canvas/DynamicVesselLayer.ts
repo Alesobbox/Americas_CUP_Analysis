@@ -1,4 +1,4 @@
-import type { BoatClass, BoatScaleMode, BorderPoint, Competitor, GateSequence, Point, ReplayFrame, ReplayManifest, TrailColor, TrailLength } from '../../types/replay'
+import type { BoatClass, BoatScaleMode, BorderPoint, Competitor, GateSequence, Point, ReplayFrame, ReplayManifest, TrailColor, TrailLength, TrailScope } from '../../types/replay'
 import { worldToScreen, worldVectorToScreen, type Viewport } from './ViewportMatrix'
 import { windAt } from '../../engine/analytics'
 import {
@@ -7,6 +7,8 @@ import {
   transformLocalToWorld,
 } from '../../engine/contactDetector'
 import { computeBoatRenderScale, renderFoilingBoatModel } from './boatModels'
+import { COURSE_PALETTE } from './renderPalette'
+import { trailBoatIds } from './boatPresentation'
 
 const bearingVector = (bearing: number): [number, number] => [
   Math.sin((bearing * Math.PI) / 180),
@@ -63,7 +65,8 @@ export function drawWindFlowField(
   const dy = vy / mag
 
   const spacing = 85
-  const drift = ((timestamp / 1000) * (wind.tws * 0.7)) % spacing
+  // Directional arrows describe the recorded wind without decorative drift.
+  const drift = 0
   const shaftLength = 12 + Math.min(6, wind.tws * 0.35)
   const barbLength = 3.5
   const barbAngle = 0.45
@@ -74,7 +77,7 @@ export function drawWindFlowField(
   const sinPlus = Math.sin(angle + barbAngle)
 
   context.save()
-  context.strokeStyle = 'rgba(56, 189, 248, 0.10)'
+  context.strokeStyle = COURSE_PALETTE.airflow
   context.lineWidth = 1.0
   context.beginPath()
 
@@ -115,15 +118,15 @@ function getMarkScreenPos(code: string, frame: ReplayFrame, replay: ReplayManife
 
 function drawLineBadge(context: CanvasRenderingContext2D, text: string, x: number, y: number, color: string): void {
   context.save()
-  context.font = '700 9px ui-monospace, monospace'
+  context.font = '600 12px "DM Sans", sans-serif'
   const metrics = context.measureText(text)
   const padX = 6
-  const padY = 3
+  const padY = 5
   const badgeW = metrics.width + padX * 2
-  const badgeH = 8 + padY * 2
+  const badgeH = 12 + padY * 2
 
-  context.fillStyle = 'rgba(13, 17, 23, 0.88)'
-  context.strokeStyle = 'rgba(30, 41, 59, 0.90)'
+  context.fillStyle = COURSE_PALETTE.label
+  context.strokeStyle = COURSE_PALETTE.labelBorder
   context.lineWidth = 1
   context.beginPath()
   context.rect(x - badgeW / 2, y - badgeH / 2, badgeW, badgeH)
@@ -169,7 +172,7 @@ export function drawCourseGeometry(
     const topB = getMarkScreenPos(topSequence.starboard_mark, frame, replay, viewport)
     if (startA && startB && topA && topB) {
       context.save()
-      context.strokeStyle = 'rgba(56, 189, 248, 0.22)'
+      context.strokeStyle = COURSE_PALETTE.axis
       context.lineWidth = 1
       context.setLineDash([3, 8])
       context.beginPath()
@@ -198,9 +201,9 @@ export function drawCourseGeometry(
     const type = active?.gate_type
     const label = type === 'START' ? 'START LINE' : type === 'FINISH' ? 'FINISH LINE' :
       type === 'TOP' ? 'WINDWARD GATE' : type === 'BOTTOM' ? 'LEEWARD GATE' : null
-    const color = type === 'START' ? '#e2f8fc' : type === 'FINISH' ? '#34d399' : '#f59e0b'
+    const color = type === 'START' ? COURSE_PALETTE.action : type === 'FINISH' ? COURSE_PALETTE.finish : COURSE_PALETTE.gate
     context.save()
-    context.strokeStyle = active ? color : 'rgba(148, 163, 184, 0.25)'
+    context.strokeStyle = active ? color : COURSE_PALETTE.safety
     context.lineWidth = active ? 2 : 1
     context.setLineDash(active ? [8, 5] : [4, 6])
     context.beginPath()
@@ -276,21 +279,22 @@ export function drawCourseGeometry(
     context.lineWidth = 1.0
     context.stroke()
 
-    // Label pill
-    context.font = '700 10px ui-monospace, monospace'
+    // Neutral labels stay readable independently of each buoy's color.
+    context.font = '500 12px "DM Sans", sans-serif'
     const tw = context.measureText(code).width
     const lx = bx
     const ly = by + 19
-    context.fillStyle = 'rgba(13, 17, 23, 0.85)'
-    context.strokeStyle = 'rgba(30, 41, 59, 0.85)'
+    context.fillStyle = COURSE_PALETTE.label
+    context.strokeStyle = COURSE_PALETTE.labelBorder
     context.lineWidth = 1
     context.beginPath()
-    context.rect(lx - tw / 2 - 4, ly - 10, tw + 8, 14)
+    context.rect(lx - tw / 2 - 5, ly - 10, tw + 10, 20)
     context.fill()
     context.stroke()
 
-    context.fillStyle = '#f8fafc'
+    context.fillStyle = COURSE_PALETTE.ink
     context.textAlign = 'center'
+    context.textBaseline = 'middle'
     context.fillText(code, lx, ly)
     context.restore()
   }
@@ -321,7 +325,7 @@ function drawTrail(
   }
   const stride = Math.max(1, Math.ceil((frame.index - start) / 500))
   context.save()
-  context.lineWidth = 1.35
+  context.lineWidth = 1.6
   context.lineCap = 'round'
 
   for (let index = start; index < frame.index; index += stride) {
@@ -334,11 +338,17 @@ function drawTrail(
         : colorMode === 'vmg'
         ? getVmgTrailColor(Math.abs(data.vmg[index]))
         : colorForValue(data.sog[index], 52)
-    context.strokeStyle = strokeColor
-    context.globalAlpha = 0.18 + (0.48 * (index - start)) / Math.max(1, frame.index - start)
+    const opacity = 0.4 + (0.5 * (index - start)) / Math.max(1, frame.index - start)
     context.beginPath()
     context.moveTo(from[0], from[1])
     context.lineTo(to[0], to[1])
+    // A quiet under-stroke keeps pale team colors legible over water and tiles.
+    context.strokeStyle = COURSE_PALETTE.traceOutline
+    context.globalAlpha = opacity
+    context.lineWidth = 3.2
+    context.stroke()
+    context.strokeStyle = strokeColor
+    context.lineWidth = 1.6
     context.stroke()
   }
   context.restore()
@@ -437,6 +447,7 @@ function drawBoat(
   platformCoords: BorderPoint[],
   keepClearCoords: BorderPoint[],
   scaleMode: BoatScaleMode,
+  drawCallout = true,
 ): void {
   const state = frame.boats[boat.id]
   if (!state) return
@@ -470,7 +481,7 @@ function drawBoat(
   const speedScale = Math.min(38, Math.max(10, state.sog * 0.72))
   const magnitude = Math.hypot(vx, vy) || 1
   context.save()
-  context.strokeStyle = selected ? '#00d2ff' : 'rgba(190, 236, 244, 0.60)'
+  context.strokeStyle = selected ? COURSE_PALETTE.action : 'rgba(95, 99, 104, 0.6)'
   context.lineWidth = selected ? 1.6 : 1.0
   context.beginPath()
   context.moveTo(x, y)
@@ -479,19 +490,19 @@ function drawBoat(
   context.restore()
 
   // 5. Team Code Label & Tactical Callout
-  if (selected) {
+  if (selected && drawCallout) {
     context.save()
     const sogText = `${state.sog.toFixed(1)} kt`
     const vmgText = `${state.vmg.toFixed(1)} kt VMG`
     const metricsText = `${sogText}   |   ${vmgText}`
 
     // Measure required box width to ensure zero clipping
-    context.font = '600 10px Inter, -apple-system, sans-serif'
+    context.font = '500 12px "DM Sans", sans-serif'
     const metricsWidth = context.measureText(metricsText).width
-    const calloutW = Math.max(138, Math.round(metricsWidth + 22))
-    const calloutH = 36
-    const calloutX = x + 18
-    const calloutY = y - 42
+    const calloutW = Math.max(160, Math.round(metricsWidth + 24))
+    const calloutH = 44
+    const calloutX = Math.max(8, Math.min(viewport.width - calloutW - 8, x + 18))
+    const calloutY = Math.max(8, Math.min(viewport.height - calloutH - 8, y - 50))
 
     // Pointer line
     context.strokeStyle = boat.color || '#f97316'
@@ -502,33 +513,33 @@ function drawBoat(
     context.stroke()
 
     // Callout Box
-    context.fillStyle = 'rgba(11, 18, 30, 0.94)'
+    context.fillStyle = COURSE_PALETTE.label
     context.strokeStyle = boat.color || '#f97316'
     context.lineWidth = 1.6
     context.beginPath()
     if (typeof (context as any).roundRect === 'function') {
-      ;(context as any).roundRect(calloutX, calloutY, calloutW, calloutH, 4)
+      ;(context as any).roundRect(calloutX, calloutY, calloutW, calloutH, 8)
     } else {
       context.rect(calloutX, calloutY, calloutW, calloutH)
     }
     context.fill()
     context.stroke()
 
-    // Line 1: Team Code in vibrant team color
-    context.font = '800 11px Inter, -apple-system, sans-serif'
-    context.fillStyle = boat.color || '#f97316'
+    // Team identity remains in the border and hull; text uses readable ink.
+    context.font = '600 12px "DM Sans", sans-serif'
+    context.fillStyle = COURSE_PALETTE.ink
     context.textAlign = 'left'
-    context.fillText(boat.team_code, calloutX + 10, calloutY + 14)
+    context.fillText(boat.team_code, calloutX + 12, calloutY + 17)
 
     // Line 2: SOG & VMG separated by divider
-    context.font = '600 10px Inter, -apple-system, sans-serif'
-    context.fillStyle = '#ffffff'
-    context.fillText(metricsText, calloutX + 10, calloutY + 28)
+    context.font = '500 12px "DM Sans", sans-serif'
+    context.fillStyle = COURSE_PALETTE.secondary
+    context.fillText(metricsText, calloutX + 12, calloutY + 34)
 
     context.restore()
-  } else if (inContact) {
+  } else if (inContact && drawCallout) {
     context.save()
-    context.font = '700 11px ui-monospace, monospace'
+    context.font = '600 12px "DM Sans", sans-serif'
     context.fillStyle = '#ff3b30'
     context.fillText(`${boat.team_code} [CONTACT]`, x + 14, y - 10)
     context.restore()
@@ -549,6 +560,7 @@ export function drawDynamicVessels(
   showSafetyBorders: boolean = false,
   scaleMode: BoatScaleMode = 'true',
   visibleBoatId: string | null = null,
+  presentation: { trailScope?: TrailScope; highlightedIds?: string[]; drawCallouts?: boolean } = {},
 ): void {
   context.clearRect(0, 0, width, height)
 
@@ -577,8 +589,10 @@ export function drawDynamicVessels(
   // 3. Dynamic course geometry (active gates, buoys, axis)
   drawCourseGeometry(context, replay, frame, viewport)
 
-  // 4. Vessel trails
-  displayedBoats.forEach((boat) =>
+  // 4. Trail scope is independent of visible vessel and contact geometry.
+  const highlightedIds = presentation.highlightedIds ?? [selectedId].filter((id): id is string => !!id)
+  const trailIds = new Set(trailBoatIds(displayedBoats.map((boat) => boat.id), presentation.trailScope ?? 'all', highlightedIds))
+  displayedBoats.filter((boat) => trailIds.has(boat.id)).forEach((boat) =>
     drawTrail(context, replay, boat, frame, viewport, trailLength, trailColor),
   )
 
@@ -589,13 +603,14 @@ export function drawDynamicVessels(
       frame,
       boat,
       viewport,
-      boat.id === selectedId,
+      highlightedIds.includes(boat.id),
       boatClass,
       contactBoatIds.has(boat.id),
       showSafetyBorders,
       platformCoords,
       keepClearCoords,
       scaleMode,
+      presentation.drawCallouts ?? true,
     ),
   )
 
@@ -623,12 +638,12 @@ export function drawDynamicVessels(
 
     // Contact Incident Alert Badge
     const alertLabel = `VIRTUAL CONTACT · ${contact.overlapDepthM.toFixed(1)}m`
-    context.font = '700 10px ui-monospace, monospace'
+    context.font = '600 12px "DM Sans", sans-serif'
     const tw = context.measureText(alertLabel).width
     const bw = tw + 14
-    const bh = 18
+    const bh = 24
 
-    context.fillStyle = 'rgba(15, 23, 42, 0.95)'
+    context.fillStyle = COURSE_PALETTE.label
     context.strokeStyle = '#ff3b30'
     context.lineWidth = 1.5
     context.beginPath()
@@ -650,7 +665,7 @@ export function drawDynamicVessels(
   const idA = isMatchRace ? replay.competitors[0].id : selectedId
   const idB = isMatchRace ? replay.competitors[1].id : comparisonId
 
-  if (idA && idB && idA !== idB && frame.boats[idA] && frame.boats[idB] && !visibleBoatId) {
+  if (idA && idB && idA !== idB && frame.boats[idA] && frame.boats[idB] && !visibleBoatId && (isMatchRace || presentation.highlightedIds === undefined || highlightedIds.includes(idB))) {
     const a = frame.boats[idA]
     const b = frame.boats[idB]
     const p1 = worldToScreen(viewport, [a.x, a.y])
@@ -659,7 +674,7 @@ export function drawDynamicVessels(
 
     context.save()
     context.setLineDash([5, 4])
-    context.strokeStyle = isMatchRace ? 'rgba(0, 210, 255, 0.85)' : '#e5f6fa'
+    context.strokeStyle = isMatchRace ? COURSE_PALETTE.action : 'rgba(95, 99, 104, 0.6)'
     context.lineWidth = 1.5
     context.beginPath()
     context.moveTo(...p1)
@@ -670,20 +685,20 @@ export function drawDynamicVessels(
     const midX = (p1[0] + p2[0]) / 2
     const midY = (p1[1] + p2[1]) / 2
     const label = `${Math.round(distM)} m`
-    context.font = '700 11px ui-monospace, monospace'
+    context.font = '500 12px "DM Sans", sans-serif'
     const textWidth = context.measureText(label).width
     const badgeW = textWidth + 16
-    const badgeH = 18
+    const badgeH = 24
 
-    context.fillStyle = 'rgba(7, 18, 36, 0.92)'
-    context.strokeStyle = 'rgba(203, 213, 225, 0.50)'
+    context.fillStyle = COURSE_PALETTE.label
+    context.strokeStyle = COURSE_PALETTE.labelBorder
     context.lineWidth = 1
     context.beginPath()
     context.rect(midX - badgeW / 2, midY - badgeH / 2, badgeW, badgeH)
     context.fill()
     context.stroke()
 
-    context.fillStyle = '#f8fafc'
+    context.fillStyle = COURSE_PALETTE.ink
     context.textAlign = 'center'
     context.textBaseline = 'middle'
     context.fillText(label, midX, midY)

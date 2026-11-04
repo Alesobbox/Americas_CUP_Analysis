@@ -383,6 +383,90 @@ class PredictionPipelineIntegrationTests(unittest.TestCase):
             self.assertIsNone(prefix)
             self.assertIsNone(full)
 
+    def test_mutating_future_telemetry_preserves_earlier_forecasts(self):
+        """Mutating future telemetry after cutoff T must not alter forecasts at or before T."""
+        gun, records = tiny_source("2026-05-22")
+        cutoff = gun + 15000
+        with TemporaryDirectory() as temporary:
+            source = Path(temporary) / "26 05 22 CAG IPR Race 1.jsonl"
+            source.write_text("\n".join(json.dumps(record) for record in records))
+            meta_orig, rows_orig = read_source(source)
+            race_orig = CausalRace(meta_orig, rows_orig)
+            feat_orig = {b: race_orig.features(b, cutoff) for b in ("BOAT_A", "BOAT_B")}
+            pos_orig = {b: race_orig.position(b, cutoff) for b in ("BOAT_A", "BOAT_B")}
+
+            # Mutate telemetry points strictly after cutoff (e.g. at gun + 25000)
+            mutated_records = []
+            for r in records:
+                r_copy = deepcopy(r)
+                if "telemetry" in r_copy:
+                    t = r_copy["telemetry"]["timestamp"]
+                    if t > cutoff:
+                        if "gnss_position" in r_copy["telemetry"]:
+                            r_copy["telemetry"]["gnss_position"]["latitude"] += 0.05
+                            r_copy["telemetry"]["gnss_position"]["longitude"] += 0.05
+                        if "speed_over_ground" in r_copy["telemetry"]:
+                            r_copy["telemetry"]["speed_over_ground"]["value"] = 5.0
+                mutated_records.append(r_copy)
+
+            source_mut = Path(temporary) / "mutated.jsonl"
+            source_mut.write_text("\n".join(json.dumps(record) for record in mutated_records))
+            meta_mut, rows_mut = read_source(source_mut)
+            race_mut = CausalRace(meta_mut, rows_mut)
+            feat_mut = {b: race_mut.features(b, cutoff) for b in ("BOAT_A", "BOAT_B")}
+            pos_mut = {b: race_mut.position(b, cutoff) for b in ("BOAT_A", "BOAT_B")}
+
+            # Verify positions and features at or before cutoff are identical
+            for b in ("BOAT_A", "BOAT_B"):
+                self.assertEqual(feat_orig[b]["current_leg"], feat_mut[b]["current_leg"])
+                self.assertAlmostEqual(feat_orig[b]["remaining_fraction"], feat_mut[b]["remaining_fraction"], places=8)
+                self.assertAlmostEqual(feat_orig[b]["elapsed_s"], feat_mut[b]["elapsed_s"], places=8)
+                self.assertEqual(feat_orig[b]["quality"], feat_mut[b]["quality"])
+                np.testing.assert_array_almost_equal(pos_orig[b]["xy"], pos_mut[b]["xy"])
+                np.testing.assert_array_almost_equal(pos_orig[b]["velocity"], pos_mut[b]["velocity"])
+
+    def test_observation_before_bucket_closure_not_exposed_early(self):
+        """Observations within a 1-second interval are not exposed until the 1-second bucket closes."""
+        gun, records = tiny_source("2026-05-22", session_end=False)
+        session = records[0]
+        # Event at gun + 300 ms belongs to bucket [gun, gun + 1000) which closes at gun + 1000
+        obs = {"telemetry": {"asset_id": "BOAT_A", "timestamp": gun + 300,
+                             "speed_over_ground": {"value": 28.5}}}
+        with TemporaryDirectory() as temporary:
+            source = Path(temporary) / "26 05 22 CAG IPR Race 1.jsonl"
+            source.write_text("\n".join(json.dumps(record) for record in (session, obs)))
+            meta, rows = read_source(source)
+            race = CausalRace(meta, rows)
+
+            # Before bucket closure (cutoff = gun + 500 ms)
+            self.assertIsNone(race.latest("BOAT_A", "speed_over_ground", gun + 500))
+            self.assertIsNone(race.latest("BOAT_A", "speed_over_ground", gun + 999))
+
+            # At and after bucket closure (cutoff >= gun + 1000 ms)
+            at_close = race.latest("BOAT_A", "speed_over_ground", gun + 1000)
+            self.assertIsNotNone(at_close)
+            self.assertEqual(at_close["value"], 28.5)
+
+    def test_certified_terminal_information_only_changes_predictions_when_available(self):
+        """A boat finishing at T_finish must not alter predictions prior to T_finish."""
+        artifact = self.artifact(1)
+        live = artifact["live"]
+        state_times = live["state_timestamps_ms"]
+        # In tiny_source for race index 1 (day 2026-05-23):
+        # BOAT_A finishes at turn (20s) -> finish at 40s (gun + 40000ms).
+        # BOAT_B finishes at 44s (gun + 44000ms).
+        # Check that before gun + 40000ms, BOAT_A is not yet terminal winner with prob=1.0.
+        for i, t in enumerate(state_times):
+            p_a = live["win_prob_by_boat"]["BOAT_A"][i]
+            p_b = live["win_prob_by_boat"]["BOAT_B"][i]
+            gun = artifact["header"]["pre_race_condition_cutoff_ms"] + 6001
+            elapsed_s = (t - gun) / 1000.0
+            if elapsed_s < 40.0:
+                # Before finish, neither boat is a certified 100% winner
+                if p_a is not None and p_b is not None:
+                    self.assertLess(p_a, 1.0, f"BOAT_A should not be deterministic winner at elapsed {elapsed_s}s")
+                    self.assertGreater(p_b, 0.0, f"BOAT_B should not have 0 win prob at elapsed {elapsed_s}s")
+
 
 if __name__ == "__main__":
     unittest.main()

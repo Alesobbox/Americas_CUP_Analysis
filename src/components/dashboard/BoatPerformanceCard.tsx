@@ -140,10 +140,10 @@ export function BoatPerformanceCard({
       ? `${value.toFixed(digits)}${unit}`
       : 'Unavailable'
   const metrics = [
-    { label: 'SOG', value: format(boatState?.sog, 1, ' kt'), points: sparklines.sog, color: '#06b6d4' },
-    { label: 'VMG', value: format(boatState?.vmg, 1, ' kt'), points: sparklines.vmg, color: '#22c55e' },
-    { label: 'TWA', value: format(boatState?.twa, 0, '°'), points: sparklines.twa, color: '#ef4444' },
-    { label: 'TWS', value: format(boatState?.tws, 1, ' kt'), points: sparklines.tws, color: '#06b6d4' },
+    { label: 'SOG', value: format(boatState?.sog, 1, ' kt'), points: sparklines.sog, color: 'var(--telemetry-cyan)' },
+    { label: 'VMG', value: format(boatState?.vmg, 1, ' kt'), points: sparklines.vmg, color: 'var(--telemetry-cyan)' },
+    { label: 'TWA', value: format(boatState?.twa, 0, '°'), points: sparklines.twa, color: 'var(--telemetry-cyan)' },
+    { label: 'TWS', value: format(boatState?.tws, 1, ' kt'), points: sparklines.tws, color: 'var(--telemetry-cyan)' },
   ]
 
   return (
@@ -154,7 +154,7 @@ export function BoatPerformanceCard({
           {renderCountryFlag(selectedBoat.country || selectedBoat.team_code)}
         </div>
         <div className="boat-names-wrap">
-          <strong className="boat-code-strong" style={{ color: selectedBoat.color }}>
+          <strong className="boat-code-strong" style={{ borderLeft: `3px solid ${selectedBoat.color}`, paddingLeft: 8 }}>
             {selectedBoat.team_code}
           </strong>
           <span className="boat-team-span">{selectedBoat.team_name}</span>
@@ -163,7 +163,7 @@ export function BoatPerformanceCard({
 
       <div className="banner-divider" />
 
-      {/* Synchronized replay channels; heel is absent from the exported schema. */}
+      {/* Four synchronized channels from the exported replay. */}
       <div className="banner-kpis-strip">
         {metrics.map((metric) => (
           <div className="banner-kpi-item" key={metric.label}>
@@ -174,11 +174,6 @@ export function BoatPerformanceCard({
             </div>
           </div>
         ))}
-        <div className="banner-kpi-item" title="Heel is not a channel in the exported replay">
-          <div className="kpi-label-line"><span className="kpi-item-title">HEEL</span></div>
-          <div className="kpi-val-sparkline-row"><strong className="kpi-number-val">Unavailable</strong></div>
-          <small>No measured heel channel</small>
-        </div>
       </div>
     </article>
   )

@@ -3,14 +3,15 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from importlib import metadata as packages
 import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
 import sys
 import time
 import numpy as np
-from .contracts import STATUSES, atomic_json, content_hash, validate_race, verify_public
-from .labels import race_labels, leg_rows, load_reviews, before_day
+from .contracts import STATUSES, atomic_json, content_hash, validate_cup, validate_race, verify_public
+from .labels import race_labels, leg_rows, load_reviews, before_day, source_completion_records
 from .models import StrengthModel, CompletionModel, LegTimeModel
 from .source import BUFFER_MS, digest, load_dataset
 from .state import CausalRace, certify_outages, fit_filter_parameters
@@ -46,6 +47,7 @@ def provenance(root, metadata):
 
 
 def prepare(root):
+    print("Verifying dataset archive (28 raw files, 6.87 GB)...", file=sys.stderr, flush=True)
     metadata = metadata_archive(root)
     labels, transitions = [], []
     for meta in metadata:
@@ -61,12 +63,23 @@ def prepare(root):
             and r.get("bucket_closed_at_ms",r["timestamp_ms"])<=known_before_gun),None)
         labels.append(label)
         transitions.extend(leg_rows(meta, rows, label))
-    return metadata, labels, transitions, load_reviews(root,metadata)
+    return metadata, labels, transitions, completion_records(root, metadata, labels)
+
+
+def completion_records(root, metadata, labels):
+    """Independent reviews override; otherwise source reconstructions (tiered)."""
+    reviews = load_reviews(root, metadata)
+    reviewed = {r["race_id"] for r in reviews}
+    by_id = {m["race_id"]: m for m in metadata}
+    source = [r for label in labels if label["race_id"] not in reviewed
+              for r in source_completion_records(by_id[label["race_id"]], label)]
+    return reviews + source
 
 
 def fitted_before(date, labels, transitions, reviews):
-    return (StrengthModel.fit(before_day(labels,date)), LegTimeModel.fit(before_day(transitions,date)),
-            CompletionModel.fit(before_day(reviews,date)))
+    return (StrengthModel.fit(before_day(labels, date), strength_sd=1.2, practice_weight=0.5, discrimination_scale=1.8),
+            LegTimeModel.fit(before_day(transitions, date)),
+            CompletionModel.fit(before_day(reviews, date)))
 
 
 def state_before(root,date,metadata):
@@ -135,8 +148,10 @@ def build_race(root, meta, strength, times, completion, *, manifest_hash, model_
     pre_seed=int(content_hash(meta["race_id"])[:8],16)
     simulation = (simulate_race(times,list(entries.values()),legs_for(meta),completion,n=pre_n,seed=pre_seed)
                   if selected_model=="correlated_mc" else simulate_order_reference(strength,list(entries.values()),completion,n=pre_n,seed=pre_seed))
-    pre = {"status":"estimated" if simulation.available else "unavailable", "reason":simulation.reason,
-           "expected_position_by_boat":{b:simulation.expected_position_by_boat[entries[b]] for b in boats},
+    pre_available = simulation.available and completion.scheduled_audited > 0
+    pre = {"status":"estimated" if pre_available else "unavailable",
+           "reason":None if pre_available else (simulation.reason or "No earlier competitive scheduled-entry completion denominator"),
+           "expected_position_by_boat":{b:(simulation.expected_position_by_boat[entries[b]] if pre_available else None) for b in boats},
            "nonfinish_score":"N"}
     columns = {k:[] for k in ("state_timestamps_ms","published_at_ms","progress_band","no_finisher_prob",
                               "status_code","numerical_error","reason_code")}
@@ -210,7 +225,7 @@ def build_race(root, meta, strength, times, completion, *, manifest_hash, model_
     return artifact
 
 
-def export_archive(root: Path, *, race_id=None, pre_n=100000, live_n=20000):
+def export_archive(root: Path, *, race_id=None, pre_n=100000, live_n=20000, cup_trials=5000, cup_seed=2027):
     started=time.perf_counter()
     metadata, labels, transitions, reviews = prepare(root)
     provenance_doc = provenance(root,metadata)
@@ -228,8 +243,10 @@ def export_archive(root: Path, *, race_id=None, pre_n=100000, live_n=20000):
     selected=[m for m in metadata if not race_id or m["race_id"]==race_id]
     if not selected:
         raise ValueError("No matching dataset race")
+    print(f"Building {len(selected)} race prediction artifact(s)...", file=sys.stderr, flush=True)
     fits={}
-    for meta in sorted(selected,key=lambda x:(x["date"],x["race_id"])):
+    for idx, meta in enumerate(sorted(selected,key=lambda x:(x["date"],x["race_id"])), 1):
+        print(f"  [{idx}/{len(selected)}] Simulating {meta['race_id']}...", file=sys.stderr, flush=True)
         # Audit days keep the candidate frozen before 26 September.
         date=min(meta["date"],"2026-09-26")
         if date not in fits:
@@ -256,10 +273,14 @@ def export_archive(root: Path, *, race_id=None, pre_n=100000, live_n=20000):
         index["races"].append({"race_id":meta["race_id"],"path":relative,
                 "boat_ids":artifact["header"]["boat_ids"],"replay_boat_ids":artifact["header"]["replay_boat_ids"],
                 **{k:artifact["header"][k] for k in ("source_manifest_hash","model_ref","scenario_hash")},"presets":presets})
-    from .cup import public_cup_artifact
-    cup=public_cup_artifact(source_manifest_hash=manifest_hash)
-    index["cup_path"]="cup/"+content_hash(cup)+".json"
-    atomic_json(directory/index["cup_path"],cup)
+    # Select the Cup source explicitly; do not inherit the final loop variable.
+    cup_cutoff = max(fits)
+    cup_model_ref = fits[cup_cutoff][-1]
+    cup_model = json.loads((directory / "models" / (cup_model_ref + ".json")).read_text())
+    cup = _cup_from_pinned_model(root, cup_model_ref, cup_model, manifest_hash,
+                                 trials=cup_trials, seed=cup_seed)
+    index["cup_path"] = "cup/" + content_hash(cup) + ".json"
+    atomic_json(directory / index["cup_path"], cup)
     # Validate the staged index before publication; immutable objects keep the
     # previously published index usable if any preceding step fails.
     verify_public(root,index=index)
@@ -272,6 +293,95 @@ def export_archive(root: Path, *, race_id=None, pre_n=100000, live_n=20000):
     report.update(seconds=round(time.perf_counter()-started,3),unavailable_reason="Audited completion denominator absent" if not reviews else None)
     atomic_json(root/".forecast"/"build_report.json",report)
     return report
+
+
+def _cup_from_pinned_model(root, model_ref, model, manifest_hash, *, trials, seed):
+    from .cup import cup_mapping_provenance, map_ac40_to_cup, public_cup_artifact
+    if content_hash(model) != model_ref or model["source_manifest_hash"] != manifest_hash:
+        raise ValueError("Pinned Cup model/source hash mismatch")
+    cutoff = model["training_before_day"]
+    lineage = {"model_ref": model_ref, "training_before_day": cutoff,
+               "training_cutoff_ms": int(datetime.fromisoformat(cutoff).replace(tzinfo=timezone.utc).timestamp() * 1000),
+               "selection_policy": "Explicit pinned chronological strength model; source outcomes on/after its training-before-day are excluded.",
+               "strength_method": model["strength"]["method"],
+               "source_manifest_hash": manifest_hash}
+    effects = model["strength"]["effects"]
+    cup = public_cup_artifact(source_manifest_hash=manifest_hash,
+        mapped_strength=map_ac40_to_cup(effects), trials=trials, seed=seed,
+        model_lineage=lineage, mapping_provenance=cup_mapping_provenance(effects))
+    cup["header"]["model_ref"] = model_ref
+    cup["header"]["method_version"] = "cup-ac38-conditional-2"
+    cup["build_provenance"] = {"policy": "Reuse the hashed strength model and its original source manifest; record current Cup-generation code separately.",
+        "code_sha256": {str(path): digest(root / path) for path in
+                        ("pipeline/prediction/cup.py", "pipeline/prediction/build.py", "pipeline/prediction/contracts.py")
+                        if (root / path).is_file()}}
+    validate_cup(cup)
+    return cup
+
+
+def build_cup_candidate(root: Path, *, model_ref=None, trials=5000, seed=2027, output_path=None):
+    """Build only a reviewable Cup candidate from an already pinned model.
+
+    Never reads raw telemetry or updates the public index. The unchanged model
+    source manifest remains the model's provenance, not the new generator code.
+    """
+    root = Path(root)
+    directory = root / "public" / "data" / "predictions"
+    index = json.loads((directory / "index.json").read_text())
+    refs = {entry["model_ref"] for entry in index["races"]}
+    if not refs or any(not isinstance(ref, str) or not re.fullmatch(r"[a-f0-9]{64}", ref) for ref in refs):
+        raise ValueError("Active Cup model references must be content hashes")
+    manifest_hash = index["source_manifest_hash"]
+    if not isinstance(manifest_hash, str) or not re.fullmatch(r"[a-f0-9]{64}", manifest_hash):
+        raise ValueError("Invalid pinned Cup source manifest hash")
+    source_manifest = json.loads((directory / "manifests" / (manifest_hash + ".json")).read_text())
+    if content_hash(source_manifest) != manifest_hash:
+        raise ValueError("Pinned Cup source manifest content hash mismatch")
+    if model_ref is not None and model_ref not in refs:
+        raise ValueError("Requested Cup strength model is not pinned by the active forecast index")
+    models = {ref: json.loads((directory / "models" / (ref + ".json")).read_text()) for ref in refs}
+    if model_ref is None:
+        model_ref = max(models, key=lambda ref: (models[ref]["training_before_day"], ref))
+    cup = _cup_from_pinned_model(root, model_ref, models[model_ref], index["source_manifest_hash"], trials=trials, seed=seed)
+    destination = Path(output_path) if output_path is not None else root / ".forecast" / "cup_candidate.json"
+    if destination.resolve().is_relative_to((root / "public").resolve()):
+        raise ValueError("Cup candidate output must stay outside public; use publish_cup_candidate after review")
+    atomic_json(destination, cup)
+    return {"candidate_path": str(destination), "content_hash": content_hash(cup), "model_ref": model_ref,
+            "training_before_day": models[model_ref]["training_before_day"], "trials_per_scenario": trials,
+            "seed": seed, "status": cup["status"]}
+
+
+def publish_cup_candidate(root: Path, candidate_path: Path):
+    """Publish a reviewed candidate with the existing atomic index contract."""
+    root = Path(root)
+    directory = root / "public" / "data" / "predictions"
+    cup = json.loads(Path(candidate_path).read_text())
+    validate_cup(cup)
+    index = json.loads((directory / "index.json").read_text())
+    ref = cup["header"].get("model_ref")
+    if ref not in {entry["model_ref"] for entry in index["races"]}:
+        raise ValueError("Cup candidate model is not in the active forecast index")
+    model = json.loads((directory / "models" / (ref + ".json")).read_text())
+    if (content_hash(model) != ref or model["source_manifest_hash"] != index["source_manifest_hash"]
+            or cup["header"]["source_manifest_hash"] != index["source_manifest_hash"]):
+        raise ValueError("Cup candidate provenance differs from active forecast publication")
+    if cup.get("scenario_analysis"):
+        from .cup import cup_mapping_provenance
+        evidence = cup["scenario_analysis"]
+        lineage = evidence["model_lineage"]
+        expected_cutoff = int(datetime.fromisoformat(model["training_before_day"]).replace(tzinfo=timezone.utc).timestamp() * 1000)
+        if (lineage.get("training_before_day") != model["training_before_day"]
+                or lineage.get("training_cutoff_ms") != expected_cutoff
+                or lineage.get("strength_method") != model["strength"]["method"]
+                or evidence["mapping_provenance"] != cup_mapping_provenance(model["strength"]["effects"])):
+            raise ValueError("Cup candidate model cutoff or mapping differs from the pinned strength model")
+    index["cup_path"] = "cup/" + content_hash(cup) + ".json"
+    atomic_json(directory / index["cup_path"], cup)
+    verify_public(root, index=index)
+    atomic_json(directory / "index.json", index)
+    atomic_json(directory / "cup_2027.json", cup)
+    return {"cup_path": index["cup_path"], "model_ref": ref, "verification": "passed"}
 
 
 def export_pre_race_scenario(root: Path, race_id: str, *, tws_kt: float, direction_offset_deg: float, n=100000):

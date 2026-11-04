@@ -84,7 +84,7 @@ export function RaceStatusLeaderboard({
         {/* Card 3: Start in */}
         <div className="kpi-mini-card">
           <span className="kpi-mini-label">{isPreStart ? 'Start in' : 'Lead Margin'}</span>
-          <strong className="kpi-mini-val timer-val" title="While racing, the time gap is an estimate: progress difference in metres divided by leader speed in m/s. Finished gaps use reconstructed timing.">
+          <strong className="kpi-mini-val timer-val" title="While racing, the time gap is an estimate: progress difference in metres divided by leader speed in m/s. Finished gaps use timing calculated from race telemetry.">
               {isPreStart ? startInStr : leadMargin}
           </strong>
         </div>

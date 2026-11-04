@@ -322,7 +322,7 @@ describe('Challenger M9.2 Adversarial Verification: Camera Continuity & State Sy
       let html = renderToStaticMarkup(
         React.createElement(TacticalMapOverlay, createMockOverlayProps({ viewMode: currentViewMode, onViewModeChange }))
       )
-      expect(html).toMatch(/<button[^>]*class="active"[^>]*>MAP<\/button>/)
+      expect(html).toMatch(/<button[^>]*class="active"[^>]*>Map<\/button>/)
 
       // User triggers grid toggle
       onViewModeChange('grid')
@@ -332,8 +332,8 @@ describe('Challenger M9.2 Adversarial Verification: Camera Continuity & State Sy
       html = renderToStaticMarkup(
         React.createElement(TacticalMapOverlay, createMockOverlayProps({ viewMode: currentViewMode, onViewModeChange }))
       )
-      expect(html).toMatch(/<button[^>]*class="active"[^>]*>GRID<\/button>/)
-      expect(html).not.toMatch(/<button[^>]*class="active"[^>]*>MAP<\/button>/)
+      expect(html).toMatch(/<button[^>]*class="active"[^>]*>Grid<\/button>/)
+      expect(html).not.toMatch(/<button[^>]*class="active"[^>]*>Map<\/button>/)
     })
 
     it('verifies followMode transitions (course -> fleet -> boat)', () => {
@@ -346,21 +346,21 @@ describe('Challenger M9.2 Adversarial Verification: Camera Continuity & State Sy
       let html = renderToStaticMarkup(
         React.createElement(TacticalMapOverlay, createMockOverlayProps({ followMode: currentFollowMode, onFollowModeChange }))
       )
-      expect(html).toMatch(/<button[^>]*class="active"[^>]*>COURSE<\/button>/)
+      expect(html).toMatch(/<button[^>]*class="active"[^>]*>Course<\/button>/)
 
       // 2. Fleet
       onFollowModeChange('fleet')
       html = renderToStaticMarkup(
         React.createElement(TacticalMapOverlay, createMockOverlayProps({ followMode: currentFollowMode, onFollowModeChange }))
       )
-      expect(html).toMatch(/<button[^>]*class="active"[^>]*>FLEET<\/button>/)
+      expect(html).toMatch(/<button[^>]*class="active"[^>]*>Fleet<\/button>/)
 
       // 3. Boat (enabled with boat selected)
       onFollowModeChange('boat')
       html = renderToStaticMarkup(
         React.createElement(TacticalMapOverlay, createMockOverlayProps({ followMode: currentFollowMode, onFollowModeChange, selectedBoatId: 'boat-1' }))
       )
-      expect(html).toMatch(/<button[^>]*class="active"[^>]*>BOAT<\/button>/)
+      expect(html).toMatch(/<button[^>]*class="active"[^>]*>Boat<\/button>/)
     })
 
     it('verifies showSafetyBorders toggle flips boolean state and updates active styling', () => {

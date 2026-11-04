@@ -24,6 +24,7 @@ page.on('console', (message) => { if (message.type() === 'error' && !expectedFai
 const checks = []
 const catalog = JSON.parse(await fs.readFile('public/data/manifests.json', 'utf8')).regattas.flatMap((group) => group.races)
 const readReplay = async (id) => JSON.parse(await fs.readFile('public/data/replays/' + id + '.json', 'utf8'))
+const readAnalysis = async (id) => JSON.parse(await fs.readFile('public/data/analysis/' + id + '.json', 'utf8'))
 const nav = async (name) => page.getByRole('navigation', { name: 'Main Navigation' }).getByRole('button', { name, exact: true }).click()
 const check = async (name, fn) => {
   await fn()
@@ -42,21 +43,34 @@ const load = async (race = 'naples_pr1', extra = '') => {
   await page.getByRole('banner').waitFor()
   await page.locator('.fleet-table tbody tr').first().waitFor()
 }
+const checkTacticalAtPlayhead = async (raceId) => {
+  const analysis = await readAnalysis(raceId)
+  const playhead = Number(await page.getByRole('slider', { name: 'Race playhead' }).getAttribute('aria-valuenow'))
+  const candidate = [...analysis.tactical_insights.snapshots].reverse().find((snapshot) => snapshot.timestamp_ms <= playhead)
+  if (!candidate) await page.getByText(analysis.tactical_insights.reason || 'No recorded tactical window has been reached at this playhead.', { exact: true }).waitFor()
+  else if (playhead - candidate.timestamp_ms > analysis.tactical_insights.max_snapshot_age_ms) await page.getByText('Tactical window is stale at this playhead; no current insight is available.', { exact: true }).waitFor()
+  else await page.waitForFunction((timestamp) => document.querySelector('[aria-label="Tactical insights"]')?.getAttribute('data-as-of') === String(timestamp), candidate.timestamp_ms)
+}
 try {
   if (!process.argv.includes('--capture')) {
     await check('all 28 races load in Grid with complete fleet and event states', async () => {
       for (const race of catalog) {
         await load(race.id)
         assert.equal(await page.locator('.fleet-table tbody tr').count(), race.competitors_count)
+        await checkTacticalAtPlayhead(race.id)
+        assert.equal(await page.getByRole('region', { name: 'Tactical insights', exact: true }).getAttribute('data-race-id'), race.id)
         assert.equal(await page.getByRole('navigation', { name: 'Main Navigation' }).getByRole('button').count(), 5)
         await nav('Analysis')
         await page.getByRole('heading', { name: 'Race metrics', exact: true }).waitFor()
+        await page.getByRole('table', { name: 'Boat performance evidence', exact: true }).waitFor()
+        assert.equal(await page.getByRole('table', { name: 'Boat performance evidence', exact: true }).locator('tbody tr').count(), 6)
+        await page.getByRole('region', { name: 'Team debrief', exact: true }).waitFor()
         await nav('Reports')
-        await page.getByRole('link', { name: 'Download the complete artifact inventory' }).waitFor()
+        await page.getByRole('heading', { name: 'Race exports', exact: true }).waitFor()
       }
     })
   }
-  for (const [width, height] of [[1586, 992], [1280, 720], [390, 844]]) {
+  for (const [width, height] of [[1586, 992], [1280, 720], [1096, 704], [390, 844]]) {
     for (const id of ['naples_pr1', 'naples_mr_final']) {
       await check('interactions ' + id + ' at ' + width + '×' + height, async () => {
         await page.setViewportSize({ width, height })
@@ -89,7 +103,7 @@ try {
         await page.locator('.boat-chip-btn').filter({ hasText: other.team_code }).first().click()
         assert.equal(await page.locator('.boat-code-strong').innerText(), other.team_code)
         assert.equal(await page.locator('canvas[aria-label="Live vessel positions"]').getAttribute('data-visible-boat'), other.id)
-        await page.locator('.header-right-actions .hdr-pill-dropdown-btn').nth(1).click()
+        await page.locator('.boat-visibility-filter .hdr-pill-dropdown-btn').click()
         await page.locator('.hdr-dropdown-popover').getByRole('button', { name: /All Boats/ }).click()
         await page.getByRole('button', { name: 'Settings', exact: true }).click()
         await page.getByLabel('Orientation', { exact: true }).selectOption('course')
@@ -126,7 +140,7 @@ try {
         await page.getByRole('button', { name: 'Toggle fullscreen', exact: true }).click()
         await page.waitForFunction(() => !!document.fullscreenElement)
         await page.getByRole('button', { name: 'Toggle fullscreen', exact: true }).click()
-        await page.getByRole('tab', { name: 'All Events', exact: true }).click()
+        await page.locator('.timeline-event-disclosure').evaluate((element) => { element.open = true }); await page.getByRole('tab', { name: 'All Events', exact: true }).click()
         await page.getByRole('tab', { name: 'Tacks / Gybes', exact: true }).click()
         await page.getByRole('tab', { name: 'Wind Shifts', exact: true }).click()
         await page.getByRole('tab', { name: 'Marks Only', exact: true }).click()
@@ -155,9 +169,15 @@ try {
         await page.getByText('A and B are the same boat.', { exact: false }).waitFor()
         await page.getByLabel('Primary boat A').selectOption(primary.id)
         await page.getByText('SEPARATION', { exact: true }).waitFor()
+        await page.getByRole('heading', { name: 'Tactical insights', exact: true }).waitFor()
         await page.screenshot({ path: path.join(output, id + '-compare-' + width + '.png') })
         await nav('Analysis')
         await page.getByRole('heading', { name: 'Race metrics', exact: true }).waitFor()
+        await page.getByRole('img', { name: /boat performance relative to other boats/ }).waitFor()
+        await page.getByRole('table', { name: 'Boat performance evidence', exact: true }).waitFor()
+        assert.ok(await page.getByText('Shared race chart scale 0–', { exact: false }).count())
+        const analysisDimensions = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth }))
+        assert.ok(analysisDimensions.scroll <= analysisDimensions.width + 1, 'Analytics horizontal overflow at ' + width)
         await page.getByText('Definitions, coverage and provenance', { exact: true }).click()
         await page.getByText('Method version:', { exact: false }).waitFor()
         await page.getByRole('tab', { name: 'Historical view', exact: true }).click()
@@ -165,8 +185,9 @@ try {
         await page.evaluate(() => scrollTo(0, 0))
         await page.screenshot({ path: path.join(output, id + '-analysis-' + width + '.png') })
         await nav('Reports')
-        await page.getByLabel('Artifact scope').selectOption('all')
-        await page.getByRole('link', { name: 'Download the complete artifact inventory' }).waitFor()
+        await page.getByText('Technical data and provenance', { exact: true }).click()
+        await page.getByLabel('Technical data scope').selectOption('all')
+        await page.getByRole('heading', { name: 'Race exports', exact: true }).waitFor()
         await page.screenshot({ path: path.join(output, id + '-reports-' + width + '.png') })
         await nav('Replay')
         await page.getByRole('slider', { name: 'Race playhead' }).press('Home')
@@ -178,6 +199,52 @@ try {
       })
     }
   }
+  await check('tactical insights follow the playhead and debrief links reach their evidence', async () => {
+    await page.setViewportSize({ width: 1586, height: 992 })
+    const analysis = await readAnalysis('naples_pr1')
+    const snapshots = analysis.tactical_insights.snapshots
+    const target = snapshots[Math.min(20, snapshots.length - 1)]
+    await page.goto(base + '/?race=naples_pr1&t=' + target.timestamp_ms)
+    const panel = page.getByRole('region', { name: 'Tactical insights', exact: true })
+    await page.waitForFunction((timestamp) => document.querySelector('[aria-label="Tactical insights"]')?.getAttribute('data-as-of') === String(timestamp), target.timestamp_ms)
+    assert.equal(await panel.locator('.tactical-insight').count(), target.insights.length)
+    for (const insight of target.insights) assert.ok((await panel.innerText()).includes(insight.title))
+    const slider = page.getByRole('slider', { name: 'Race playhead' })
+    await slider.press('ArrowLeft')
+    const previous = [...snapshots].reverse().find((snapshot) => snapshot.timestamp_ms <= target.timestamp_ms - 5000)
+    await page.waitForFunction((timestamp) => document.querySelector('[aria-label="Tactical insights"]')?.getAttribute('data-as-of') === String(timestamp), previous.timestamp_ms)
+    assert.ok(Number(await panel.getAttribute('data-as-of')) <= Number(await slider.getAttribute('aria-valuenow')))
+    await slider.press('Home')
+    await page.getByText('No recorded tactical window has been reached at this playhead.', { exact: true }).waitFor()
+    assert.equal(await panel.locator('.tactical-insight').count(), 0)
+    const reviewBoat = analysis.boats.find((boat) => boat.debrief?.items.length)
+    assert.ok(reviewBoat, 'At least one real review priority must be exposed')
+    await nav('Analysis')
+    await page.getByRole('heading', { name: 'Race metrics', exact: true }).waitFor()
+    await page.locator('.analysis-team-select').filter({ hasText: reviewBoat.team_code }).first().click()
+    const review = page.getByRole('button', { name: 'Review in replay ↗', exact: true }).first()
+    const timestamp = Number(await review.getAttribute('data-review-timestamp'))
+    await review.click()
+    await page.getByRole('slider', { name: 'Race playhead' }).waitFor()
+    assert.equal(Number(await page.getByRole('slider', { name: 'Race playhead' }).getAttribute('aria-valuenow')), timestamp)
+    assert.equal(await page.getByRole('region', { name: 'Team debrief', exact: true }).count(), 0)
+  })
+  await check('future and mismatched tactical windows cannot leak into replay', async () => {
+    const analysis = await readAnalysis('naples_pr1')
+    const synthetic = structuredClone(analysis)
+    synthetic.tactical_insights.snapshots = [{ ...synthetic.tactical_insights.snapshots[0], timestamp_ms: synthetic.race.gun_time_ms + 10000, window_end_ms: synthetic.race.gun_time_ms + 10000, insights: [{ id: 'future', title: 'FUTURE INSIGHT MUST STAY HIDDEN', detail: 'Future test observation', quality: 'derived', source: 'recorded official wind', kind: 'observed_direction' }] }]
+    await page.route('**/data/analysis/naples_pr1.json', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(synthetic) }))
+    await load('naples_pr1')
+    await page.getByText('No recorded tactical window has been reached at this playhead.', { exact: true }).waitFor()
+    assert.equal(await page.getByText('FUTURE INSIGHT MUST STAY HIDDEN', { exact: true }).count(), 0)
+    await page.unroute('**/data/analysis/naples_pr1.json')
+    synthetic.tactical_insights.race_id = 'different-race'
+    await page.route('**/data/analysis/naples_pr1.json', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(synthetic) }))
+    await load('naples_pr1')
+    await page.getByText('Tactical insights are unavailable for this race.', { exact: true }).waitFor()
+    assert.equal(await page.getByText('FUTURE INSIGHT MUST STAY HIDDEN', { exact: true }).count(), 0)
+    await page.unroute('**/data/analysis/naples_pr1.json')
+  })
   await check('detail panels, chart selectors, note buttons and keyboard controls', async () => {
     await page.setViewportSize({ width: 1586, height: 992 })
     await load('naples_pr1')
@@ -196,6 +263,7 @@ try {
     assert.ok(Number(await slider.getAttribute('aria-valuenow')) < replay.chronology.window_end)
     await page.getByTitle('Pause replay (Space)').click()
     await slider.press('End')
+    await page.locator('.timeline-event-disclosure > summary').click()
     await page.getByRole('button', { name: 'Show all events', exact: true }).click()
     await page.locator('.timeline-event-item').first().focus()
     await page.keyboard.press('Enter')
@@ -227,10 +295,10 @@ try {
     await chart.click({ position: { x: 450, y: 30 } })
     assert.notEqual(Number(await slider.getAttribute('aria-valuenow')), before)
     await notes.getByText('QA saved by button', { exact: true }).click()
-    await page.locator('.header-right-actions .hdr-pill-dropdown-btn').first().click()
+    await page.locator('.race-context-actions .hdr-pill-dropdown-btn').first().click()
     await page.keyboard.press('Escape')
     assert.equal(await page.locator('.hdr-dropdown-popover').count(), 0)
-    await page.locator('.header-right-actions .hdr-pill-dropdown-btn').first().click()
+    await page.locator('.race-context-actions .hdr-pill-dropdown-btn').first().click()
     await page.getByRole('button', { name: 'FULL RACE ARCHIVE...' }).click()
     await page.keyboard.press('Escape')
     assert.equal(await page.getByRole('dialog', { name: 'Choose race' }).count(), 0)
@@ -253,14 +321,15 @@ try {
     }
     await nav('Reports')
     const inventory = await (await fetch(base + '/data/artifacts.json')).json()
-    await page.getByLabel('Artifact scope').selectOption('all')
-    assert.equal(await page.locator('.workspace-table-wrap').last().locator('tbody tr').count(), inventory.artifacts.length)
-    await page.getByLabel('Artifact scope').selectOption('global')
-    assert.equal(await page.locator('.workspace-table-wrap').last().locator('tbody tr').count(), inventory.artifacts.filter((item) => !item.race_id).length)
+    await page.getByText('Technical data and provenance', { exact: true }).click()
+        await page.getByLabel('Technical data scope').selectOption('all')
+    assert.equal(await page.getByRole('table', { name: 'Technical downloads', exact: true }).locator('tbody tr').count(), inventory.artifacts.length)
+    await page.getByLabel('Technical data scope').selectOption('catalogs')
+    assert.equal(await page.getByRole('table', { name: 'Technical downloads', exact: true }).locator('tbody tr').count(), inventory.artifacts.filter((item) => item.kind === 'catalog').length)
   })
   await check('race picker resets filter, selection and race-scoped notes', async () => {
     await nav('Replay')
-    await page.locator('.header-right-actions .hdr-pill-dropdown-btn').first().click()
+    await page.locator('.race-context-actions .hdr-pill-dropdown-btn').first().click()
     await page.getByRole('button', { name: 'FULL RACE ARCHIVE...' }).click()
     await page.getByRole('dialog', { name: 'Choose race' }).getByRole('button', { name: /26 05 22 CAG IPR Race 1/ }).click()
     await page.locator('.fleet-table tbody tr').first().waitFor()
@@ -271,7 +340,7 @@ try {
   })
   await check('legacy workbench links open the matching dashboard views', async () => {
     await page.goto(base + '/?race=naples_pr1&layout=workbench&tab=duel&t=gun')
-    await page.getByRole('heading', { name: 'Compare at the shared playhead' }).waitFor()
+    await page.getByRole('heading', { name: 'Side by side.' }).waitFor()
     await page.goto(base + '/?race=naples_pr1&layout=workbench&tab=start&t=gun')
     await page.getByRole('heading', { name: 'Race analysis', exact: true }).waitFor()
   })
@@ -288,7 +357,8 @@ try {
     expectedFailure = true
     await page.route('**/data/analysis/naples_pr1.json', (route) => route.fulfill({ status: 404, body: '{}' }))
     await load('naples_pr1')
-    await page.getByText('Event feed unavailable for this race', { exact: true }).first().waitFor()
+    await page.locator('.timeline-event-disclosure > summary').click(); await page.getByText('Event feed unavailable for this race', { exact: true }).first().waitFor()
+    await page.getByText('Tactical insights are unavailable for this race.', { exact: true }).waitFor()
     await page.unroute('**/data/analysis/naples_pr1.json')
   })
   await check('missing replay has a recoverable load error', async () => {

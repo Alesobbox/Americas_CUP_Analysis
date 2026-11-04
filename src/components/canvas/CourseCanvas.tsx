@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Map as MapLibreMap, setWorkerUrl } from 'maplibre-gl'
 import mapWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import type { BoatScaleMode, CameraMode, FollowMode, Point, ReplayFrame, ReplayManifest, TrailColor, TrailLength, ViewMode } from '../../types/replay'
+import type { BoatScaleMode, CameraMode, FollowMode, Point, ReplayFrame, ReplayManifest, TrailColor, TrailLength, TrailScope, ViewMode } from '../../types/replay'
 import { drawDynamicVessels } from './DynamicVesselLayer'
+import { layoutBoatLabels, type LabelObstacle } from './boatPresentation'
 import { drawStaticCourse } from './StaticCourseLayer'
 import { boundaryAt } from '../../engine/course'
-import { createViewport, fitViewport, fitViewportWithBottomClearance, screenToWorld, type Viewport } from './ViewportMatrix'
+import { createViewport, fitViewport, fitViewportWithBottomClearance, screenToWorld, worldToScreen, type Viewport } from './ViewportMatrix'
 import { createMaritimeMapStyle } from './mapStyle'
 import {
   computeAffineScreenTransform,
@@ -29,6 +30,9 @@ interface CourseCanvasProps {
   showSafetyBorders?: boolean
   viewMode: ViewMode
   scaleMode: BoatScaleMode
+  trailScope?: TrailScope
+  showVmgLabels?: boolean
+  highlightComparison?: boolean
   onSelectBoat: (id: string) => void
   visibleBoatId?: string | null
   zoomInTrigger?: number
@@ -108,6 +112,9 @@ export function CourseCanvas({
   showSafetyBorders = false,
   viewMode,
   scaleMode,
+  trailScope = 'all',
+  showVmgLabels = true,
+  highlightComparison = false,
   onSelectBoat,
   visibleBoatId = null,
   zoomInTrigger,
@@ -132,7 +139,6 @@ export function CourseCanvas({
     viewportRef.current = viewport
   }, [viewport])
   const initialFitDoneRef = useRef(false)
-  const lastMapZoomRef = useRef<number | null>(null)
 
   const boundaries = boundaryAt(replay, frame.timestamp)
   const mapIsActive = viewMode === 'map' && !isFallback
@@ -168,21 +174,19 @@ export function CourseCanvas({
     if (!mapContainer) return
 
     try {
-      const initialCenter = initialFitDoneRef.current
-        ? metricToLngLat(viewportRef.current.center[0], viewportRef.current.center[1], replay.course.origin, replay.course.projection)
+      const cameraOnEntry = initialFitDoneRef.current ? viewportRef.current : null
+      const initialCenter = cameraOnEntry
+        ? metricToLngLat(cameraOnEntry.center[0], cameraOnEntry.center[1], replay.course.origin, replay.course.projection)
         : metricToLngLat(0, 0, replay.course.origin, replay.course.projection)
-      const initialBearing = initialFitDoneRef.current
-        ? viewportRef.current.rotationDeg
+      const initialBearing = cameraOnEntry
+        ? cameraOnEntry.rotationDeg
         : (cameraMode === 'course' ? replay.course.axis_deg : 0)
-      const initialZoom = initialFitDoneRef.current && lastMapZoomRef.current !== null
-        ? lastMapZoomRef.current
-        : 13.2
 
       const map = new MapLibreMap({
         container: mapContainer,
         style: createMaritimeMapStyle(),
         center: initialCenter,
-        zoom: initialZoom,
+        zoom: 13.2,
         bearing: initialBearing,
         pitch: 0,
         attributionControl: false,
@@ -193,6 +197,12 @@ export function CourseCanvas({
       })
 
       mapRef.current = map
+      if (cameraOnEntry) {
+        // Match the actual pixels-per-metre scale, including Grid zoom changes.
+        // A map zoom cached before Grid cannot represent that current camera.
+        const transform = computeAffineScreenTransform((ll) => map.project(ll), replay.course.origin, replay.course.projection)
+        map.setZoom(map.getZoom() + Math.log2(cameraOnEntry.scale / transform.scale))
+      }
       setIsOfflineFallback(false)
 
       const syncCameraFromMap = () => {
@@ -210,8 +220,6 @@ export function CourseCanvas({
             replay.course.projection
           )
           const bearing = map.getBearing()
-          const currentZoom = map.getZoom()
-          lastMapZoomRef.current = currentZoom
           const w = mapContainer.clientWidth || size.width
           const h = mapContainer.clientHeight || size.height
 
@@ -235,24 +243,10 @@ export function CourseCanvas({
 
       map.on('load', () => {
         syncCameraFromMap()
-        if (!initialFitDoneRef.current) {
+        if (!cameraOnEntry && !initialFitDoneRef.current) {
           initialFitDoneRef.current = true
           const fitPoints = boundaries.race.length ? boundaries.race : replay.course.boundaries.race
           fitMapToPoints(map, fitPoints, replay, initialBearing)
-        } else {
-          // Camera continuity: restore position when switching back from grid view
-          const [lng, lat] = metricToLngLat(
-            viewportRef.current.center[0],
-            viewportRef.current.center[1],
-            replay.course.origin,
-            replay.course.projection
-          )
-          map.setCenter([lng, lat])
-          map.setBearing(viewportRef.current.rotationDeg)
-          if (lastMapZoomRef.current !== null) {
-            map.setZoom(lastMapZoomRef.current)
-          }
-          syncCameraFromMap()
         }
       })
 
@@ -400,9 +394,10 @@ export function CourseCanvas({
         showSafetyBorders,
         scaleMode,
         visibleBoatId,
+        { trailScope, highlightedIds: [selectedId, highlightComparison ? comparisonId : null].filter((id): id is string => !!id), drawCallouts: false },
       )
     }
-  }, [comparisonId, frame, replay, scaleMode, selectedId, showSafetyBorders, size.height, size.width, trailColor, trailLength, viewport, visibleBoatId])
+  }, [comparisonId, highlightComparison, trailScope, frame, replay, scaleMode, selectedId, showSafetyBorders, size.height, size.width, trailColor, trailLength, viewport, visibleBoatId])
 
   // 9. Pointer interactions
   const localPoint = (event: React.PointerEvent<HTMLCanvasElement>): [number, number] => {
@@ -457,9 +452,6 @@ export function CourseCanvas({
       setViewport((current) => {
         const factor = event.deltaY < 0 ? 1.20 : 1 / 1.20
         const newScale = Math.min(5.0, Math.max(0.03, current.scale * factor))
-        if (lastMapZoomRef.current !== null && current.scale > 0) {
-          lastMapZoomRef.current = Math.min(18, Math.max(10, lastMapZoomRef.current + Math.log2(newScale / current.scale)))
-        }
         return {
           ...current,
           scale: newScale,
@@ -489,6 +481,33 @@ export function CourseCanvas({
       onSelectBoat(closestId)
     }
   }
+
+
+  const labels = useMemo(() => {
+    const boats = replay.competitors.filter((boat) => !visibleBoatId || boat.id === visibleBoatId)
+    const anchors = boats.flatMap((boat) => {
+      const state = frame.boats[boat.id]
+      if (!state || !Number.isFinite(state.x) || !Number.isFinite(state.y)) return []
+      const [x, y] = worldToScreen(viewport, [state.x, state.y])
+      if (x < -12 || y < -12 || x > size.width + 12 || y > size.height + 12) return []
+      return [{ id: boat.id, x, y, width: showVmgLabels ? 116 : 84, height: 44, priority: boat.id === selectedId ? 0 : highlightComparison && boat.id === comparisonId ? 1 : 2 }]
+    })
+    const courseLabels: LabelObstacle[] = []
+    const markScreen = (id: string): Point | null => {
+      const mark = frame.marks[id]
+      const point = mark ? [mark.x, mark.y] as Point : replay.course.marks[id]?.target
+      return point ? worldToScreen(viewport, point) : null
+    }
+    for (const id of Object.keys(replay.course.marks)) {
+      const point = markScreen(id)
+      if (point) courseLabels.push({ left: point[0] - 28, top: point[1] - 10, width: 56, height: 40 })
+    }
+    for (const gate of replay.course.sequences ?? []) {
+      const port = markScreen(gate.port_mark), starboard = markScreen(gate.starboard_mark)
+      if (port && starboard) courseLabels.push({ left: (port[0] + starboard[0]) / 2 - 68, top: (port[1] + starboard[1]) / 2 - 36, width: 136, height: 28 })
+    }
+    return layoutBoatLabels(anchors, size.width, size.height, courseLabels).map((label) => ({ ...label, boat: replay.competitors.find((boat) => boat.id === label.id)!, state: frame.boats[label.id] }))
+  }, [comparisonId, frame, highlightComparison, replay.competitors, replay.course, selectedId, showVmgLabels, size.height, size.width, viewport, visibleBoatId])
 
 
   return (
@@ -541,6 +560,9 @@ export function CourseCanvas({
       <canvas
         ref={dynamicRef}
         aria-label="Live vessel positions"
+        data-trail-scope={trailScope}
+        data-highlighted-boats={[selectedId, highlightComparison ? comparisonId : null].filter(Boolean).join(",")}
+        data-vmg-labels={showVmgLabels}
         data-viewport={JSON.stringify(viewport)}
         data-visible-boat={visibleBoatId ?? 'all'}
         style={{ position: 'absolute', inset: 0, zIndex: 2, cursor: 'crosshair' }}
@@ -551,6 +573,14 @@ export function CourseCanvas({
         onWheel={wheel}
         onClick={chooseBoat}
       />
+      <div className="course-boat-label-layer" aria-label="Boat labels and VMG">
+        <svg className="course-boat-leaders" viewBox={`0 0 ${size.width} ${size.height}`} aria-hidden="true">{labels.map((label) => <g key={label.id}><line x1={label.x} y1={label.y} x2={Math.max(label.left, Math.min(label.left + label.width, label.x))} y2={Math.max(label.top, Math.min(label.top + label.height, label.y))} /><circle cx={label.x} cy={label.y} r="3" /></g>)}</svg>
+        {labels.map((label) => {
+          const primary = label.id === selectedId, comparison = highlightComparison && label.id === comparisonId && !primary
+          const vmg = Number.isFinite(label.state.vmg) ? `${label.state.vmg >= 0 ? '+' : ''}${label.state.vmg.toFixed(1)} kt` : 'Unavailable'
+          return <button key={label.id} type="button" className={`course-boat-label${comparison ? ' is-comparison' : ''}`} style={{ left: label.left, top: label.top, width: label.width, height: label.height }} aria-label={`${label.boat.team_code}${primary ? ', highlighted A' : comparison ? ', highlighted B' : ''}, VMG ${vmg}`} aria-pressed={primary || comparison} onClick={() => onSelectBoat(label.id)} title={`${label.boat.team_name} · select as boat A`}><span className="course-label-identity"><i style={{ background: label.boat.color }} />{(primary || comparison) && <b>{primary ? 'A' : 'B'}</b>}{label.boat.team_code}</span>{showVmgLabels && <span className="course-label-vmg" title="Signed VMG along the fixed course axis">VMG {vmg}</span>}</button>
+        })}
+      </div>
 
       {/* Visible OpenStreetMap Attribution */}
       {viewMode === 'map' && (isFallback || isOfflineFallback) && <div className="map-source-status" role="status">{isOfflineFallback ? 'Map tiles offline' : 'Map unavailable'} · Grid fallback</div>}

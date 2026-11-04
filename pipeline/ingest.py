@@ -10,6 +10,7 @@ Processes America's Cup AC40 telemetry datasets:
 """
 
 import json
+import hashlib
 import math
 import os
 import time
@@ -284,6 +285,9 @@ class OfficialWindData:
     raw_timeline: List[Dict[str, Any]]
     speed_kt: List[float]
     direction_deg: List[float]
+    # Independent raw measurement times for timestamp-causal diagnostics.
+    causal_samples: List[Dict[str, Any]] = field(default_factory=list)
+    source_provenance: Dict[str, Any] = field(default_factory=dict)
 
 
 
@@ -493,13 +497,15 @@ class IngestionPipeline:
         official_wind_twd: List[Tuple[int, float]] = []
 
         total_lines = 0
+        source_hasher = hashlib.sha256()
         telemetry_lines = 0
         competitor_lines = 0
         session_lines = 0
 
         # 2. Fast single-pass streaming parse
-        with open(self.file_path, "r", encoding="utf-8", buffering=1024 * 1024) as f:
+        with open(self.file_path, "r", encoding="utf-8", newline="", buffering=1024 * 1024) as f:
             for line in f:
+                source_hasher.update(line.encode("utf-8"))
                 total_lines += 1
 
                 # Ultra-fast string screening before json deserialization
@@ -852,6 +858,17 @@ class IngestionPipeline:
             raw_timeline=raw_wind_timeline,
             speed_kt=res_wind_speed,
             direction_deg=res_wind_dir,
+            causal_samples=(
+                [{"timestamp_ms": t, "twd_deg": v} for t, v in official_wind_twd]
+                + [{"timestamp_ms": t, "tws_kt": v * MPS_TO_KNOTS} for t, v in official_wind_tws]
+            ),
+            source_provenance={
+                "source_file": os.path.relpath(os.path.abspath(self.file_path),
+                    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace("\\", "/"),
+                "source_sha256": source_hasher.hexdigest(),
+                "source_size_bytes": file_size_bytes,
+                "official_wind_asset_id": self.official_wind_id,
+            },
         )
 
         total_runtime = time.perf_counter() - start_time
