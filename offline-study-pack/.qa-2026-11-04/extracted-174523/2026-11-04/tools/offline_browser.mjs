@@ -1,0 +1,42 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url);
+const {chromium}=require('playwright');
+const pack=path.resolve('offline-study-pack/2026-11-04');
+const info=JSON.parse(await fs.readFile(path.resolve('offline-study-pack/ZIP_INFO.json'),'utf8'));
+const extracted=info.extracted_pack;
+assert.notEqual(extracted,pack);
+const manifest=JSON.parse(await fs.readFile(path.join(extracted,'PACK_MANIFEST.json'),'utf8'));
+for(const f of manifest.files){const data=await fs.readFile(path.join(extracted,f.path));assert.equal(data.length,f.bytes);assert.equal(createHash('sha256').update(data).digest('hex'),f.sha256)}
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const context=await browser.newContext({viewport:{width:1280,height:900}});
+await context.setOffline(true);
+const network=[];await context.route(/^https?:/,r=>{network.push(r.request().url());return r.abort()});
+const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+const checks=[];
+const pages=['START_HERE.html','01_Repository_Explained.html','02_Field_Guide.html','03_Repository_Atlas.html','04_Workbook.html','04_Answer_Key.html','05_Learning_Routes.html','06_Narration.html','07_Flashcards.html','08_Evidence_Index.html','09_Interactive_Lab.html','source/_SOURCE_INDEX.html','VERIFICATION.html'];
+for(const filename of pages){
+  await page.goto(pathToFileURL(path.join(extracted,filename)).href);
+  assert.ok((await page.locator('body').innerText()).length>300,filename);
+  const images=await page.locator('img').evaluateAll(els=>els.every(i=>i.complete&&i.naturalWidth>0));assert.ok(images,filename);
+  checks.push(filename);
+}
+await page.goto(pathToFileURL(path.join(extracted,'01_Repository_Explained.html')).href);
+await page.locator('#search').fill('unresolved');
+assert.ok(await page.locator('article[hidden]').count()>0);
+assert.match(await page.locator('#search-status').innerText(),/sections match/);
+await page.locator('#search').fill('');
+const source=page.locator('a[href*="source/pipeline/"]').first();await source.click();assert.match(page.url(),/#L\d+/);
+assert.ok(await page.locator(':target').count());
+await page.goto(pathToFileURL(path.join(extracted,'07_Flashcards.html')).href);await page.locator('#show').click();assert.ok(await page.locator('#back').isVisible());await page.locator('#next').click();assert.ok(await page.locator('#back').isHidden());
+await page.goto(pathToFileURL(path.join(extracted,'09_Interactive_Lab.html')).href);await page.locator('#u').focus();await page.keyboard.press('Home');await page.keyboard.press('ArrowRight');assert.match(await page.locator('#sum').innerText(),/Sum lower/);
+await page.goto(pathToFileURL(path.join(extracted,'START_HERE.html')).href);await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1));
+assert.deepEqual(errors,[]);assert.deepEqual(network,[]);
+await browser.close();
+const result={review_date:'2026-11-04',fresh_context:true,network_offline:true,http_requests:network.length,page_errors:errors,html_pages_opened:checks,embedded_images_loaded:true,search_passed:true,source_anchor_navigation_passed:true,flashcards_passed:true,interactive_lab_passed:true,mobile_entry_passed:true,relocated_zip_manifest_files_verified:manifest.files.length,archive_sha256:info.archive_sha256};
+const output=process.env.STUDY_OFFLINE_RESULT||path.join(pack,'verification/offline-browser.json');await fs.writeFile(output,JSON.stringify(result,null,2));
+console.log(JSON.stringify(result));

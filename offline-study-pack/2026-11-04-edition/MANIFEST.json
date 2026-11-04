@@ -1,0 +1,2451 @@
+{
+  "pack_name": "AC40_Regatta_Replay_Offline_Study_Pack_2026-11-04",
+  "review_date": "2026-11-04",
+  "git_head_commit": "6b8482309d178fc31d724f449f706a98f9a1ea2e",
+  "git_branch": "master",
+  "dirty_working_tree": true,
+  "total_files_before_manifest": 488,
+  "uncompressed_bytes_before_manifest": 25608818,
+  "files": [
+    {
+      "path": "01_Repository_Explained.html",
+      "size_bytes": 472136,
+      "sha256": "955d9e20436566c15aa67582766d7456eeba9889b1ed8196d236a4439e456af3"
+    },
+    {
+      "path": "01_Repository_Explained.md",
+      "size_bytes": 243210,
+      "sha256": "4c1ed46cf10c198b08587de2589f8baf4e151ea9d1b06ad2f482d2a0c48e9d0d"
+    },
+    {
+      "path": "01_Repository_Explained.pdf",
+      "size_bytes": 7502596,
+      "sha256": "b04a91381dbe61897b2abaf81734a8c20328056cb5c47b0c6747bd9167af3783"
+    },
+    {
+      "path": "02_Field_Guide.html",
+      "size_bytes": 87499,
+      "sha256": "b0931812b23d47a92177f2ddf99695ddb350228d6ff25d7867e193f70d49a357"
+    },
+    {
+      "path": "02_Field_Guide.md",
+      "size_bytes": 20686,
+      "sha256": "fc79411896b15999f6c2505a41bbda57faf82724e0a285995c59f3c0f478a9a0"
+    },
+    {
+      "path": "02_Field_Guide.pdf",
+      "size_bytes": 735872,
+      "sha256": "3007ebe98257a48a6b7ad58cf57afb75ceb98aec287d43e4156b2956fb8bff2d"
+    },
+    {
+      "path": "03_Repository_Atlas.html",
+      "size_bytes": 195349,
+      "sha256": "9c2ba35f82aa44a22d1d07f178604e6855c1ff2ded63b455911be90a844d1eef"
+    },
+    {
+      "path": "03_Repository_Atlas.md",
+      "size_bytes": 86359,
+      "sha256": "52c22fafce333568ec504ccadc58c3fd0a8689bcaa88e872ddd378b665473e3c"
+    },
+    {
+      "path": "04_Workbook.html",
+      "size_bytes": 88633,
+      "sha256": "672c5b8d0a73743580333da6acc9d790cc5cbf63d4b6ef3744413b2226d2f974"
+    },
+    {
+      "path": "04_Workbook.md",
+      "size_bytes": 36405,
+      "sha256": "6f0bc0d14b5c45cd7a5da4778973c4d8637d79a901a5e8c6a352951dd6896c21"
+    },
+    {
+      "path": "04_Workbook.pdf",
+      "size_bytes": 870510,
+      "sha256": "7a0720e8793e29a18c7c598e4c4a7c43719bfb596aae528dfd2e0eea54b843ae"
+    },
+    {
+      "path": "04_Workbook_Solutions.html",
+      "size_bytes": 107906,
+      "sha256": "d65fc1f5c9bd8be412ca9ad114d5ca649bf27235c1d658a3952d30b460bd4c73"
+    },
+    {
+      "path": "04_Workbook_Solutions.md",
+      "size_bytes": 43799,
+      "sha256": "2d56395fc377b16bd432a48b9c880841b1651cc1b48bd64dae13a435ed18867a"
+    },
+    {
+      "path": "04_Workbook_Solutions.pdf",
+      "size_bytes": 1087464,
+      "sha256": "a3486275120483d8321e2e1123610a51b9caa9eb6f4915c9055e192f38613ad8"
+    },
+    {
+      "path": "PREPARATION_CHECKLIST.md",
+      "size_bytes": 6549,
+      "sha256": "fb41c99ff64b28e8572559c3f796c89e1032f1b50eecaa9c372ba5615956150f"
+    },
+    {
+      "path": "START_HERE.html",
+      "size_bytes": 30532,
+      "sha256": "372c5c07c11b4635bac2ecb657ead6981d1d02d5e4f4353ff9851bb645f0662e"
+    },
+    {
+      "path": "assets/diagrams/fig01_sailing_primer_course.svg",
+      "size_bytes": 9195,
+      "sha256": "0ac2d321673ea3192a525d3c36004d66cb78764b3fb233019403b4f35d0269ee"
+    },
+    {
+      "path": "assets/diagrams/fig02_system_architecture_ownership.svg",
+      "size_bytes": 12670,
+      "sha256": "cba1bb12464cc95fff69a65fe6772dfe7fff23be7aa4357702aa7b8bfac4ae89"
+    },
+    {
+      "path": "assets/diagrams/fig03_evidence_ladder.svg",
+      "size_bytes": 5366,
+      "sha256": "c5a7b602855874a383110cdc6a1efaebdd3b8b7a4c17c408f6d2f411acced0c1"
+    },
+    {
+      "path": "assets/diagrams/fig04_bow_crossing_and_interpolation.svg",
+      "size_bytes": 9195,
+      "sha256": "d60700c45c0316594f27661574611f9eae039c23c6d72ef44124e70d5e155e6f"
+    },
+    {
+      "path": "assets/diagrams/fig05_vmg_and_peer_index_geometry.svg",
+      "size_bytes": 6613,
+      "sha256": "eb262ac925bc5829a3e65262c4aa1d78d2aa651f6dfc40e1c095b7029ff42a49"
+    },
+    {
+      "path": "assets/diagrams/fig06_forecasting_three_targets_and_cup.svg",
+      "size_bytes": 8912,
+      "sha256": "b3a115c53f00b65e72fd1595ab755966c07717533a8fb7ce11e45d94875f9faa"
+    },
+    {
+      "path": "assets/diagrams/fig07_viewport_and_sat_geometry.svg",
+      "size_bytes": 5627,
+      "sha256": "d3b00e81234619dd1f8cf8cd29a1ef8485f67040ac35501d3d67de50a8d820c3"
+    },
+    {
+      "path": "assets/diagrams/fig08_troubleshooting_decision_tree.svg",
+      "size_bytes": 9354,
+      "sha256": "76fb95314ab39082f92892196dd5641fcae2d40a272ca3ef42beb8847d8a8e10"
+    },
+    {
+      "path": "assets/screenshots/01_replay_grid_workspace.png",
+      "size_bytes": 467758,
+      "sha256": "e32eae4f4edb88f5709ef9e093450fe9785a8378e1fee9e0903f1ae720e1c060"
+    },
+    {
+      "path": "assets/screenshots/02_race_library_modal.png",
+      "size_bytes": 348579,
+      "sha256": "a13ffc6a164d31f5d2ad1065526d08111f341db99e974af746d02f5fa8cdb7f2"
+    },
+    {
+      "path": "assets/screenshots/03_analysis_race_report_radar.png",
+      "size_bytes": 270079,
+      "sha256": "200adeda1232bb36dea7194c86d2a32cd96f8f82588cd8640c31fc71a41226e4"
+    },
+    {
+      "path": "assets/screenshots/04_analysis_historical_cohort.png",
+      "size_bytes": 265498,
+      "sha256": "2f9c2cea2b27a8562d75e1abfdc622e0d6d14fec1be648f367ea6d487c5cc17f"
+    },
+    {
+      "path": "assets/screenshots/05_compare_workspace.png",
+      "size_bytes": 284697,
+      "sha256": "ea0818105f88bba265b99f231806975fc8101714eda52a65e598088a5ad5b2ba"
+    },
+    {
+      "path": "assets/screenshots/06_reports_workspace.png",
+      "size_bytes": 324446,
+      "sha256": "b58d85d8ad28f53161263f1bc535d332032eedcac21af0bc8bf01b3b0ee1feef"
+    },
+    {
+      "path": "assets/screenshots/07_forecast_prerace.png",
+      "size_bytes": 330399,
+      "sha256": "d9a543e04b4a3b64a6b0644b44826b253ef57dacc3f64d3ef1da4372253a9041"
+    },
+    {
+      "path": "assets/screenshots/08_forecast_cup_2027_bounds.png",
+      "size_bytes": 327204,
+      "sha256": "1178c2fc2ab4f8acb884ef23a262d8a2efb932e82885c7173ba6b4e82fa377e8"
+    },
+    {
+      "path": "evidence/26_09_22_nap_ipr_pr2_summary.csv",
+      "size_bytes": 30292,
+      "sha256": "0880154f25764ac56e753ffe722a4e50db91161901ed45e292cc9cacf691cc8b"
+    },
+    {
+      "path": "evidence/analysis_index.json",
+      "size_bytes": 1512558,
+      "sha256": "20c69e69eb96f70879d241a05a804e22819f72774202a60efa26fd34c37fdc59"
+    },
+    {
+      "path": "evidence/analysis_snapshot_26_05_23_cag_ipr_race_4.json",
+      "size_bytes": 4270,
+      "sha256": "9c36579495ba5f9f066000f01cb88d8d17bbb8cc694a39eb70f3cbf2425d6009"
+    },
+    {
+      "path": "evidence/analysis_snapshot_26_05_24_cag_ipr_mr_final.json",
+      "size_bytes": 3710,
+      "sha256": "a8e79f35f7fbc9cef98052811e43f07fdfe03f89e4071e5dfa1ac6b374d71b68"
+    },
+    {
+      "path": "evidence/analysis_snapshot_26_09_22_nap_ipr_pr2.json",
+      "size_bytes": 4374,
+      "sha256": "fe8e4805c34c683466fbe2cfe97f53732f2cf61a838a662a4ed4184095e55f10"
+    },
+    {
+      "path": "evidence/analysis_snapshot_26_09_23_nap_ipr_pr1.json",
+      "size_bytes": 4463,
+      "sha256": "ff88d76fc588ff36110e6b8c8e43147bbf791b478cbed21ed5227dd1299ca896"
+    },
+    {
+      "path": "evidence/analysis_snapshot_naples_mr_final.json",
+      "size_bytes": 3703,
+      "sha256": "e0b9507b37057f217b6e2a49166bbc143947c624d7c6c1d0e9ccefd46b248213"
+    },
+    {
+      "path": "evidence/analysis_snapshot_naples_pr1.json",
+      "size_bytes": 4475,
+      "sha256": "d832181e2fc8782296db6ae1f72c163a5da800d93749a2025856e584ba29079e"
+    },
+    {
+      "path": "evidence/analysis_snapshot_overview.json",
+      "size_bytes": 3365,
+      "sha256": "54f8b7f525abecdb498a70cbd5bf8931d427db61a9c80b2acb04118349567d1e"
+    },
+    {
+      "path": "evidence/cup_2027.json",
+      "size_bytes": 28095,
+      "sha256": "e71fa8dc8b66b5a1f79cf34e2f58b1dd53fa1e930e31d785fce116bc565ea55c"
+    },
+    {
+      "path": "evidence/environment_naples_pr1.json",
+      "size_bytes": 2350,
+      "sha256": "70164f4715333d4d7f40d181ade2396803bce83d20ca9d1b14a5535d536fdb2d"
+    },
+    {
+      "path": "evidence/forecast_rules_sources.json",
+      "size_bytes": 2759,
+      "sha256": "eb055645ba08523f9fbd8d5c4a5edec101b707a71a7b69bc2518799ddfaf671d"
+    },
+    {
+      "path": "evidence/manifests.json",
+      "size_bytes": 24717,
+      "sha256": "3a50d6a6c1eb33adbbc327831411230c3ddb9351de22f5acd3cb377242c688d6"
+    },
+    {
+      "path": "evidence/naples_mr_final_performance.csv",
+      "size_bytes": 15943,
+      "sha256": "3a736f2d2f78a18e534c888e07a2e76b188cc032b038cfac55dd27f95fa5bdbc"
+    },
+    {
+      "path": "evidence/naples_mr_final_summary.csv",
+      "size_bytes": 7591,
+      "sha256": "5a5d6de3355321dbf07bc8e5ddc8288c7348cf8c282948c12ed0aa4fb4e16c8f"
+    },
+    {
+      "path": "evidence/naples_pr1_performance.csv",
+      "size_bytes": 78807,
+      "sha256": "b5a2c357b5980d07eb2a8735b552ce8f7e4cd838ae3fb7f8d10f56bdb4f0bf4f"
+    },
+    {
+      "path": "evidence/naples_pr1_replay_bounded_excerpt.json",
+      "size_bytes": 59322,
+      "sha256": "56a234d3635423376512f007b4b07f80a32c874f4dd51c86d4e98a6389dd21a2"
+    },
+    {
+      "path": "evidence/naples_pr1_summary.csv",
+      "size_bytes": 33795,
+      "sha256": "eb94ed08e4273ce46af46cc148642d011cee747dd83ee53b6dc59b9dcb1cdfce"
+    },
+    {
+      "path": "evidence/offline_browser_verification.json",
+      "size_bytes": 3650,
+      "sha256": "00482f746492a58c050035dac6db4d9539fe4b0c85914f6212c999cef6502856"
+    },
+    {
+      "path": "evidence/predictions_index.json",
+      "size_bytes": 99053,
+      "sha256": "4d40084d18c115e0a05937209ac39cb9f9ad4eb1d074c65b2246ec2065581518"
+    },
+    {
+      "path": "evidence/race_previews.json",
+      "size_bytes": 18797,
+      "sha256": "d546f0bc4823e277ca51c4bb7908c5bd32b0354872f0d7c5c591c7bb2b0b33a0"
+    },
+    {
+      "path": "evidence/repository_snapshot_provenance.json",
+      "size_bytes": 85650,
+      "sha256": "17361a3a45a4e3fd5974a7aca80393a6c5a705a86a3c2378b8f1e7a3820c0b83"
+    },
+    {
+      "path": "evidence/scheduled_entry_ledger.json",
+      "size_bytes": 145867,
+      "sha256": "b27a8327c89fe6d66465e7401beff1b1687d4563293d51662aa26b2a723bf594"
+    },
+    {
+      "path": "examples/01_verify_projection_and_bow_crossing.py",
+      "size_bytes": 6030,
+      "sha256": "2fc041a9444d0d2e27cc486b053ae7c2f435482196f028469fc8556ca8fbffde"
+    },
+    {
+      "path": "examples/02_reconcile_performance_index.py",
+      "size_bytes": 4623,
+      "sha256": "b71ee93c2d57a98f01b48eeee0085d31875656b92206a4f97b85e04e79085eb7"
+    },
+    {
+      "path": "examples/03_plackett_luce_and_cup_bounds.py",
+      "size_bytes": 6976,
+      "sha256": "c060d68bf7a6c65972a82f2169bba7b38556e0d14242359ca9c9569b3f947892"
+    },
+    {
+      "path": "examples/05_Interactive_Study_Notebook.html",
+      "size_bytes": 42068,
+      "sha256": "f2b6f5ef28c6e6c5111d4e7f2dbfec8124b2880a9ca68b54c1cf0a7c38434295"
+    },
+    {
+      "path": "examples/05_Interactive_Study_Notebook.ipynb",
+      "size_bytes": 32039,
+      "sha256": "305d72ac323fa8d756f9c851eda65f4f0bc8bdbb1e8945e69c423e9911ffbdd2"
+    },
+    {
+      "path": "examples/interactive_sailing_and_forecast_lab.html",
+      "size_bytes": 13882,
+      "sha256": "3a717f05d9d3538513b57d6d84805c78c6746c5437e3b776a1c8f81e25c8d1e3"
+    },
+    {
+      "path": "offline-dashboard/README_OFFLINE_DASHBOARD.html",
+      "size_bytes": 24800,
+      "sha256": "ef133b72dc41cdd5ec5934a0b3fbe8591e38a2bdcedc618c87952dba018559c2"
+    },
+    {
+      "path": "offline-dashboard/serve_offline_dashboard.py",
+      "size_bytes": 1752,
+      "sha256": "70a9db1c3db630b22609fc8ebca49aab1ab926811eb4077a772f350a03b1ef98"
+    },
+    {
+      "path": "source-companion/index.html",
+      "size_bytes": 91439,
+      "sha256": "c41372baa1677e6f3aa7e0f5bf73df97d6ee93228140bc075a78d810faafb808"
+    },
+    {
+      "path": "source-companion/raw/AGENTS.md",
+      "size_bytes": 1655,
+      "sha256": "30f4c385b537bc633c0fc2b8755f53c115d3bb4064f23e81b7b9ea73128e80f6"
+    },
+    {
+      "path": "source-companion/raw/PROJECT.md",
+      "size_bytes": 4428,
+      "sha256": "e1fa6f62e373e14bf616f66cc0cbb7120c0bca1567e33d50110cb9300c6624f2"
+    },
+    {
+      "path": "source-companion/raw/README.md",
+      "size_bytes": 3699,
+      "sha256": "f38ff38b3548001a8c9d269ce73355cab916e92760dab251a537cce93fed9bd4"
+    },
+    {
+      "path": "source-companion/raw/docs/annotation_revision_plan.md",
+      "size_bytes": 22175,
+      "sha256": "3e6f21da7a24b36c03ee656636a012f175476f6171e3c8fee3966c3b1c4f3af1"
+    },
+    {
+      "path": "source-companion/raw/docs/annotation_revision_verification.md",
+      "size_bytes": 10001,
+      "sha256": "a2cf4dcc0858780de433034ff8050c7cdd3caa67dd941d3919e865a2dcd2af36"
+    },
+    {
+      "path": "source-companion/raw/docs/architecture.md",
+      "size_bytes": 4288,
+      "sha256": "15197ffbe6c1f24302d91301e7c636b445670cba2ea99b038fe9512cd768dd56"
+    },
+    {
+      "path": "source-companion/raw/docs/browser_feedback_verification.md",
+      "size_bytes": 5843,
+      "sha256": "10e182fa3c02cb65882c08d944b06f677b84988f58f27d1537c0dc4415b75582"
+    },
+    {
+      "path": "source-companion/raw/docs/dashboard_contract.md",
+      "size_bytes": 8975,
+      "sha256": "13bf1c5a03dd42f1b794f5e8803fabfa36c44d413fa1efa5b6e8643f257bb3dd"
+    },
+    {
+      "path": "source-companion/raw/docs/dashboard_verification.md",
+      "size_bytes": 5468,
+      "sha256": "ba2ff0080acc04e879c102153a8710150f5bae904203fc2281a36fbfa195e51e"
+    },
+    {
+      "path": "source-companion/raw/docs/data_schema.md",
+      "size_bytes": 7860,
+      "sha256": "72b3c830e38c0acbae6b5d82c32d9b864b46fcfd9dd798d2c66d585c9d3065dc"
+    },
+    {
+      "path": "source-companion/raw/docs/derived_metrics.md",
+      "size_bytes": 2528,
+      "sha256": "658096d86d20784426b30c4b2d2533e82aab145833c22a71f3cecc101d55b55e"
+    },
+    {
+      "path": "source-companion/raw/docs/design-system.md",
+      "size_bytes": 8502,
+      "sha256": "e7fe757d850904b7ecb4c3d4961f414f92dfb3b03a59f4098929c7e5ab677bc7"
+    },
+    {
+      "path": "source-companion/raw/docs/environment_data.md",
+      "size_bytes": 3906,
+      "sha256": "277a54c117b7c4c0d0d64d9bf44254e593cd4282a6191edbce45930b31d35148"
+    },
+    {
+      "path": "source-companion/raw/docs/forecast_rules_sources.json",
+      "size_bytes": 2759,
+      "sha256": "eb055645ba08523f9fbd8d5c4a5edec101b707a71a7b69bc2518799ddfaf671d"
+    },
+    {
+      "path": "source-companion/raw/docs/forecasting_implementation.md",
+      "size_bytes": 22836,
+      "sha256": "cc04c080cddb6eba31847168b860d68d0acfbbf569999992cef12e99ed65a7ea"
+    },
+    {
+      "path": "source-companion/raw/docs/forecasting_research_review.md",
+      "size_bytes": 23353,
+      "sha256": "458ba369b6c04899af3dbc6f8f8399cae560bef04085256a137c5b34b8c149df"
+    },
+    {
+      "path": "source-companion/raw/docs/forecasting_review_resolution.md",
+      "size_bytes": 27287,
+      "sha256": "dcbc436d98d8fc5f9d3fe66238e260cc2c6528218f17ba21b84fc8a42050c631"
+    },
+    {
+      "path": "source-companion/raw/docs/google_store_ui_redesign_plan.md",
+      "size_bytes": 36344,
+      "sha256": "54dbf1c85bb9a7b36b61fc1cc99dca90765a487f4222e7171bb43672e950320b"
+    },
+    {
+      "path": "source-companion/raw/docs/historical_analysis.md",
+      "size_bytes": 15900,
+      "sha256": "c9a771555328a03ca27f0a9282648968f08750aa9b0e27c0e5fdf2a02ef28d75"
+    },
+    {
+      "path": "source-companion/raw/docs/independent_probability_review_prompt.md",
+      "size_bytes": 26619,
+      "sha256": "41744c0bc1e51232148fa0c2647c47f2f03c457a2de88bf5118b86b48453eee8"
+    },
+    {
+      "path": "source-companion/raw/docs/ingesting_new_regattas.md",
+      "size_bytes": 2790,
+      "sha256": "f277d7854c1a3b67b1cf864f1d88144e6fb8d892bf00ad5587e8343a79a52edb"
+    },
+    {
+      "path": "source-companion/raw/docs/probability_execution_plan.md",
+      "size_bytes": 56169,
+      "sha256": "9a42b41de593e425e2042ac97196a702a3112822c05df1832b8a0036aa631c8f"
+    },
+    {
+      "path": "source-companion/raw/docs/reconstruction_math.md",
+      "size_bytes": 2249,
+      "sha256": "3425a0dfef9ecc6f17fa83cca81022299841446fbdbf71c6060f7f700c4c3faa"
+    },
+    {
+      "path": "source-companion/raw/docs/source_audit.md",
+      "size_bytes": 9575,
+      "sha256": "154a2bb940fcc311eacb439707e6a6a3d6eaf19919c65c90dd9b53854c061856"
+    },
+    {
+      "path": "source-companion/raw/docs/team_analytics.md",
+      "size_bytes": 12350,
+      "sha256": "f7babc691374d8c70b30b2f1b890f0012c911e8ff58bf15da6d7888612f66e41"
+    },
+    {
+      "path": "source-companion/raw/docs/team_analytics_plan.md",
+      "size_bytes": 3196,
+      "sha256": "073ec0830cb758c93cc4c00ca6ec13aec6f20478d545683e7851c241fbd0be04"
+    },
+    {
+      "path": "source-companion/raw/docs/ui_redesign_verification.md",
+      "size_bytes": 7532,
+      "sha256": "dfce0bdd592a65415ed930c3cd3f38e695746533d8d8cf559585162eaad1e1ef"
+    },
+    {
+      "path": "source-companion/raw/index.html",
+      "size_bytes": 587,
+      "sha256": "3a72a7c82922df05963ff2b0e8450a8c7dd5ff611adcbb9a4431252fbdeab367"
+    },
+    {
+      "path": "source-companion/raw/package.json",
+      "size_bytes": 1350,
+      "sha256": "bb79fd09a5f9f1501ad38076e917be0d10e922d6e0056609456a93de643ccb9e"
+    },
+    {
+      "path": "source-companion/raw/pipeline/__init__.py",
+      "size_bytes": 98,
+      "sha256": "56adcedd813fafd8a7a854af12fceb96cb0f28ea8c49f0efe745e00cfb081f49"
+    },
+    {
+      "path": "source-companion/raw/pipeline/analytics.py",
+      "size_bytes": 13331,
+      "sha256": "b4b7523f888764ce5fcd921b0b0977e36019430099a3658fa43b7101b6cff8b5"
+    },
+    {
+      "path": "source-companion/raw/pipeline/config.py",
+      "size_bytes": 8856,
+      "sha256": "c64840e7c513d03664b0bef1e498fdf465754901dc4ecd65e9da726aa412c92b"
+    },
+    {
+      "path": "source-companion/raw/pipeline/contact_coalescer.py",
+      "size_bytes": 13581,
+      "sha256": "2bcbc83dbdd295fc6bd2fe84423b7c66a78e363faf9e1de4fd5fb4869cd9c89a"
+    },
+    {
+      "path": "source-companion/raw/pipeline/environment.py",
+      "size_bytes": 19035,
+      "sha256": "083d178e06df3b0d5215d9e5a904808b9950bfb125557788cbbdb04e30e01a0c"
+    },
+    {
+      "path": "source-companion/raw/pipeline/export_replay.py",
+      "size_bytes": 21000,
+      "sha256": "22d1fb8c3a349391a351317fbafceea49c0bc12b1373a6e3ed5f3d50586a5d74"
+    },
+    {
+      "path": "source-companion/raw/pipeline/historical_analysis.py",
+      "size_bytes": 70673,
+      "sha256": "edbffb92c77922f1ee457f5c1ca6d1ec9e7a805d9d86e41fbaab643a082eac05"
+    },
+    {
+      "path": "source-companion/raw/pipeline/identity.py",
+      "size_bytes": 763,
+      "sha256": "acb8de51b2c091bf4e8f82e1e86fafae70a54a60322b406240b5ac0fce58d5cf"
+    },
+    {
+      "path": "source-companion/raw/pipeline/ingest.py",
+      "size_bytes": 37778,
+      "sha256": "3f08cded4b2b039809b7b2f0d55fd7c64cd87f817c2903b8ac52bd1e94e1dd7c"
+    },
+    {
+      "path": "source-companion/raw/pipeline/manoeuvres.py",
+      "size_bytes": 8815,
+      "sha256": "659472f4be406666cc6571024398de93dafe60d21fbe5b7c23976e831ba57bb1"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/__init__.py",
+      "size_bytes": 152,
+      "sha256": "7ae00255be1269b3abe6b90d98c3f0d5bd28bcd861ed75a36ccb64f28d5f4606"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/__main__.py",
+      "size_bytes": 3165,
+      "sha256": "21dc97945c65d256a21cf0d4a1080b3fff6617f5a03fed4476d126ff9103c8e5"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/backtest.py",
+      "size_bytes": 10237,
+      "sha256": "b4d0ff39b87158207ef11f911fd67381460b27a5710b26048cb2b94f818a4908"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/build.py",
+      "size_bytes": 28608,
+      "sha256": "1d9a9640726dff03347306f98463c699d8a876708bfbf89d4f740c33d66601f1"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/contracts.py",
+      "size_bytes": 18252,
+      "sha256": "e1c0a7bc16e5ad0886e5cfc1649cb5ebc04bbd0b5734990de90100a0710661e0"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/cup.py",
+      "size_bytes": 41399,
+      "sha256": "e9748ed4e48c3571192e748122219cb59f92e046ae2b3fe3ccae6945872f423b"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/evaluation.py",
+      "size_bytes": 7847,
+      "sha256": "c6eb7c280b29df8dbf7c534cd9677db071c549a888195d26bbf21c8257f4b5f1"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/labels.py",
+      "size_bytes": 11212,
+      "sha256": "8068858b468a29e2c4e0e67e3dc8b133d77226295a973542a67fb1be1a7257f6"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/models.py",
+      "size_bytes": 43831,
+      "sha256": "86049eb3c98c3c52b3e441fa5d705da29993ced98afc485753a22029f2c8e583"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/simulation.py",
+      "size_bytes": 29905,
+      "sha256": "a222f109b0877dc3aafe451197be57a839b4fb7d47eeea14dbd8cc2cdfe8b0ed"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/source.py",
+      "size_bytes": 12670,
+      "sha256": "4512b6955553772b7abaac900fbd24f800660efe22a465c8df2c33a3593685bc"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/state.py",
+      "size_bytes": 18609,
+      "sha256": "f5657d42e60bfa03222920264f2ef96fca32f3fdaaa04006e16f29542a8944a2"
+    },
+    {
+      "path": "source-companion/raw/pipeline/prediction/weather.py",
+      "size_bytes": 2620,
+      "sha256": "2c7e1353f16c1e3db74d36f313d4d1630b81ac05ef579c490728c4aa6ec2e02b"
+    },
+    {
+      "path": "source-companion/raw/pipeline/projection.py",
+      "size_bytes": 5638,
+      "sha256": "cc854f7ac3d9572c39e90526e18efb32880cf82d0ba72a03f9ac3c6dc59a1c90"
+    },
+    {
+      "path": "source-companion/raw/pipeline/reconstruction.py",
+      "size_bytes": 24849,
+      "sha256": "f0d82209444e0c0cdb7db690ad84741f084ae0f2964a6fb67ac3ebf6b27f77b4"
+    },
+    {
+      "path": "source-companion/raw/pipeline/run_pipeline.py",
+      "size_bytes": 14569,
+      "sha256": "5d3846c497705f3a4b1bc2e9161d945df04bfcebb257cb1c6f566cb0070632ec"
+    },
+    {
+      "path": "source-companion/raw/pipeline/tactical_insights.py",
+      "size_bytes": 11419,
+      "sha256": "aea556291b579da7d3b387733c60757f50e585ea3badc8108a6e85ef43aafffb"
+    },
+    {
+      "path": "source-companion/raw/public/fonts/OFL.txt",
+      "size_bytes": 4482,
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+    },
+    {
+      "path": "source-companion/raw/public/fonts/README.md",
+      "size_bytes": 344,
+      "sha256": "8504f15bb0fec43f3d3fe0be7e1b4cb515c93dd8ebbeb52b51aedda4202a8bb2"
+    },
+    {
+      "path": "source-companion/raw/pyproject.toml",
+      "size_bytes": 364,
+      "sha256": "23aadea66160e23ec2f80b01463893a70eb2de945680467af083a1105a9f6145"
+    },
+    {
+      "path": "source-companion/raw/run.ps1",
+      "size_bytes": 2766,
+      "sha256": "43e3de48e8ece92d014380b2e7cce4a802e578bf2586f10f2ecec0856d23f3ba"
+    },
+    {
+      "path": "source-companion/raw/scripts/analysis_snapshot.py",
+      "size_bytes": 2325,
+      "sha256": "42a082bd822792aabe052224a985e2687823de6cb01ae3f20e30ea73893b0c8f"
+    },
+    {
+      "path": "source-companion/raw/scripts/build_artifact_inventory.py",
+      "size_bytes": 6349,
+      "sha256": "69b2e00a04bb2cda6f91dbc5bb18d823477121763771120a2db373e584ff2daf"
+    },
+    {
+      "path": "source-companion/raw/scripts/build_race_previews.py",
+      "size_bytes": 3631,
+      "sha256": "80ef7af5ce4a7148a939b2d771634f66d98093526d4ed0d45eb3816c8f304452"
+    },
+    {
+      "path": "source-companion/raw/scripts/build_report_exports.py",
+      "size_bytes": 4261,
+      "sha256": "4cecda6fa24cda4bfada788c2b4552b3fb0132d6fd3a00ccea28de0fbf7c9e52"
+    },
+    {
+      "path": "source-companion/raw/scripts/forecastArtifacts.ts",
+      "size_bytes": 3587,
+      "sha256": "383f2c34144225dc615da66d531b1d7037b676fe89da026967581e03ec1c85c9"
+    },
+    {
+      "path": "source-companion/raw/scripts/forecastScenarios.ts",
+      "size_bytes": 13773,
+      "sha256": "7f2f63f7077ca7c806743145b8a99e5f73894ed08866ab932b38bbb8926a2dd0"
+    },
+    {
+      "path": "source-companion/raw/scripts/refresh_team_analytics.py",
+      "size_bytes": 16509,
+      "sha256": "4d6afb83619601bfd6eb04d37609f6fbce8cf32421e04b56c595485af5017387"
+    },
+    {
+      "path": "source-companion/raw/src/App.tsx",
+      "size_bytes": 12277,
+      "sha256": "28852e045ef6b5cc0d6658cbf5706cddd74af7be94c91e4c288b33bbab8fb869"
+    },
+    {
+      "path": "source-companion/raw/src/app.css",
+      "size_bytes": 21155,
+      "sha256": "146b37c35444ac26a18c2091720b0da3f5d040a53e559c6a09dacad71f41a2b9"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/CourseCanvas.tsx",
+      "size_bytes": 22879,
+      "sha256": "d304a18c3b6ad5d9a315e0dcd3806704a40040251472244293e357d2973f513c"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/DynamicVesselLayer.ts",
+      "size_bytes": 25701,
+      "sha256": "ec59aea4450330d3c01f9521c2a2a922c0cd1c029adb7b19cd637817a7dcb93c"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/StaticCourseLayer.ts",
+      "size_bytes": 2455,
+      "sha256": "3f87ebf31e8796f16cfbf9e54aa2f77698fdb4be487fd46d9b1d7cd18ac5f277"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/ViewportMatrix.ts",
+      "size_bytes": 2953,
+      "sha256": "81690c64fec2fcef82091cce9b45920080b67d68cdee80f60f3e6f2b47eb2678"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/boatModels.test.ts",
+      "size_bytes": 11654,
+      "sha256": "29081572bcaa75f4fba6c711982541a48974ac74f38b8d0668a6edb72689def6"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/boatModels.ts",
+      "size_bytes": 10968,
+      "sha256": "a7a30542461c8077ea63db489dcbaa9a68f0a9322c3f737eead0a6e885fa0b56"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/boatPresentation.test.ts",
+      "size_bytes": 2292,
+      "sha256": "a282ec9754dedf808950c8b4397a32a786e4eec90453106a80ca588c3ae22bae"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/boatPresentation.ts",
+      "size_bytes": 4646,
+      "sha256": "4743a4b2d81ba3210b3682ae3c1ce59476eb97aa3038485c14c2b0a0bb024346"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/cameraAdversarial.test.ts",
+      "size_bytes": 18116,
+      "sha256": "fe1d571168db7c322488cfe140cb1c087fa63599c5d019c79d162aef5a12b512"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/cameraStateSyncAdversarial.test.ts",
+      "size_bytes": 17025,
+      "sha256": "ddc89cb9c8b608d553b35d9e7751ee468218026758f5994e949913be2237698d"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/courseGeometry.test.ts",
+      "size_bytes": 4262,
+      "sha256": "1f50a5886ae21f93e9db77681d22976ac8db52ff0ce8b7ccdea506ab2d6300b6"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/foilingGeometryStress.test.ts",
+      "size_bytes": 33787,
+      "sha256": "4e40863c265e9c753c45f731f910dd71449e7144973eff71d61a958ff1daa652"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/mapStyle.ts",
+      "size_bytes": 2807,
+      "sha256": "720da1f988d3c5c74f3e2f81d48d4e9c7ca8734ff493c77d23fd0b1e520a0b4f"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/renderPalette.ts",
+      "size_bytes": 589,
+      "sha256": "84094cdc15ba7a08e1b96c1d53e10decad5c201d0ae50f3b824ddb4136419b46"
+    },
+    {
+      "path": "source-companion/raw/src/components/canvas/viewModeStress.test.ts",
+      "size_bytes": 12522,
+      "sha256": "39ad75ea4ac2c5cde6f2d2c8b57592acfee5854f8e47c8acc0edb6721db8c07a"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/BoatCourseControls.tsx",
+      "size_bytes": 3784,
+      "sha256": "2072501ed69f52fd1a39f48df78138323c16ce787c98bba86ea6eeede077c750"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/BoatPerformanceCard.adversarial.test.ts",
+      "size_bytes": 1546,
+      "sha256": "f1d8859d2445297c43d00793ba05ff2be6ee38fc662f0154cfe8fd790fb34e85"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/BoatPerformanceCard.test.ts",
+      "size_bytes": 2068,
+      "sha256": "50aaa1d4ddb6f8f0ba87985142cf5810ae6a5b9ab1e98d7d9fc6893b9296304f"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/BoatPerformanceCard.tsx",
+      "size_bytes": 7296,
+      "sha256": "84c2062dff792ba03632f7c8d7b786eba3615f4cdf67049a45bc2a657a77354a"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/BoatPerformanceRadar.tsx",
+      "size_bytes": 19610,
+      "sha256": "c1d855982f2def0db797e323f020ac1818e187d251b2ce5918640ec29e8ec0f6"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/BoatVisibilityFilter.tsx",
+      "size_bytes": 1941,
+      "sha256": "86e0a749c9c1faa8a562ba489284d4c42403f2d2b496d60a578030f314ad5ebf"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/EventsNotesPanel.adversarial.test.ts",
+      "size_bytes": 2017,
+      "sha256": "27b2ce26d30be2e21a430e9696f46a4ac83fe804f06d6db1febbd72e3205b079"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/EventsNotesPanel.tsx",
+      "size_bytes": 8100,
+      "sha256": "9bd6e41cecc08a28229588890cf0e8f8f7bbce5aca42c897ec5c022f62c42b6d"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/ForecastWorkspace.tsx",
+      "size_bytes": 28432,
+      "sha256": "a6842cdbb1ee81665eb1e6724f867b5b778c0865d6326594780d8af27b9a8534"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/RaceStatusLeaderboard.tsx",
+      "size_bytes": 7030,
+      "sha256": "b83c63c7f3f592869068cd6e60dd25dd752bc502b611219d71a4df7e3a788c3c"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/RaceTimelinePanel.test.ts",
+      "size_bytes": 3468,
+      "sha256": "d877bdfdf1a359a0da292e4e4c54ca2cc2ed2c2ef74fb820743e09445cc52988"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/RaceTimelinePanel.tsx",
+      "size_bytes": 13224,
+      "sha256": "9e1c50067ce473c9b04c65cda8ddaf61d456a4987e6fa4173d1d14577e06e393"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/ReportsWorkspace.test.ts",
+      "size_bytes": 3435,
+      "sha256": "7d58bd5ace9e39411321bb55535d3ea91de150ebec1b63a3bedd8bbbc91f43c2"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/ReportsWorkspace.tsx",
+      "size_bytes": 10695,
+      "sha256": "5662f6c5d891509a7ec11b38b543a978b2c8c07d8f6fd405ad01f0e1691546cb"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TacticalDashboard.tsx",
+      "size_bytes": 14274,
+      "sha256": "9d3f8f4bc51ec517c1397978c5ee8eea9869840c65941dad0cae802f157e443f"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TacticalHeader.tsx",
+      "size_bytes": 8771,
+      "sha256": "602be68a927b8f1526f02da9174d30517f8efa41594e9f2f9aca4e5800d85f19"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TacticalInsightsPanel.tsx",
+      "size_bytes": 4018,
+      "sha256": "cb217b5e64a4290c9fbaf56199e8aa6939ce1d5008557979f054f36fc739cdd8"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TacticalMapOverlay.adversarial.test.ts",
+      "size_bytes": 17224,
+      "sha256": "385ba8a98f7ea698aa5950c45f5e5a72177360e43e8c7ee8692ef94857fc0ca9"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TacticalMapOverlay.test.ts",
+      "size_bytes": 11885,
+      "sha256": "d8bee63a4754df081b03e515e765013d7f2948be727c54d812286c66cc3e7f67"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TacticalMapOverlay.tsx",
+      "size_bytes": 8821,
+      "sha256": "a3d8a5ab2fbf41e49facf07a326ef4111e418318726817c962e7bd094578a246"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TeamAnalytics.test.ts",
+      "size_bytes": 14755,
+      "sha256": "6181a367741753618d5e963bdc0e32748c3cde7662fbec1d6c4f19d1e8408a4e"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TeamDebrief.tsx",
+      "size_bytes": 1934,
+      "sha256": "b81b41b5e3954d13117140f4cddd997f022882049abb1b43667b7ea933d5d206"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TelemetryWorkspace.adversarial.test.ts",
+      "size_bytes": 17385,
+      "sha256": "28b6fe3a13b6b8fb007e51164766ab0a15e279f305e0652480d4f04de89f9b73"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TelemetryWorkspace.test.ts",
+      "size_bytes": 15799,
+      "sha256": "39e64a33f36a062c36884e4dea8c8bdb509314dfc68e6cf0713c62f96174a051"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TelemetryWorkspace.tsx",
+      "size_bytes": 22798,
+      "sha256": "eaa549ffce4ba64e956b2c55fbb51b2c59b6f3f498a7a4f68d75fced6e669043"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/TelemetryWorkspaceAdversarial.test.ts",
+      "size_bytes": 15064,
+      "sha256": "be5687478eca5c4c5674a1cfe3bbc2c7af6bf991c59f6915bfbde2cae416cf6d"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/adversarial_race_timeline_m10_1.test.ts",
+      "size_bytes": 2528,
+      "sha256": "2f24ac95bcf375e078f7b5f7385e4a507e659e6ec5f055f6daa4ffe7e48c2b3f"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/analysis-light.css",
+      "size_bytes": 9934,
+      "sha256": "8c3c3b2886563335b0731454ec7fc05ebd58cbba303f2643dd4d0653d0b7e6b6"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/boat-course-controls.css",
+      "size_bytes": 3818,
+      "sha256": "e112e66ccce3c81c993a66c7d8a11ac31b593cb7d7c106c0370c7ec87f01a68d"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/cupEvidence.css",
+      "size_bytes": 1307,
+      "sha256": "6f4302ae78cf0caf69c281b2412e4d5fc5ca3fdd62bc350813c703d195b56a19"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/dashboard.css",
+      "size_bytes": 30824,
+      "sha256": "e9fc5081c388883adee2498cd7e3bf973dd3197d840949803d39774873b93807"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/forecast.css",
+      "size_bytes": 7427,
+      "sha256": "5c121a4052a00035bad4f5a92c557d318e2404499eb68db3f183cb8bc0425671"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/performance-radar.css",
+      "size_bytes": 9631,
+      "sha256": "ccba5a63a08cc1c83b8efaa4e33625368f69b82f01e955b5be8ae4e1b36aca71"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/reports.css",
+      "size_bytes": 6110,
+      "sha256": "d4ea91abba1d8c6943ad6acf33ebaca37632cb37a4f104a9207874b7df4e4156"
+    },
+    {
+      "path": "source-companion/raw/src/components/dashboard/workspaces.css",
+      "size_bytes": 8967,
+      "sha256": "b3bf6ebaeeb076cbbab48326fd54ff897480bcb84b5142cf2408e9c5e4d11ffd"
+    },
+    {
+      "path": "source-companion/raw/src/components/modals/AnalysisModal.tsx",
+      "size_bytes": 40134,
+      "sha256": "2a015dd2ce3e0ee067e78ab15e280f465c4a1cdad0cada09bb29775a0c5cb707"
+    },
+    {
+      "path": "source-companion/raw/src/components/modals/RacePickerModal.tsx",
+      "size_bytes": 7888,
+      "sha256": "4d5e5395df26a644856ed884f85d8a29fda57d9b09528f0abc4b12bb90969c25"
+    },
+    {
+      "path": "source-companion/raw/src/components/modals/race-library.css",
+      "size_bytes": 6581,
+      "sha256": "624b84a0a25c54489f57e734113ec3cf958937e0e6db9fbaaa98b4dc28bae930"
+    },
+    {
+      "path": "source-companion/raw/src/components/panels/ComparisonPanel.tsx",
+      "size_bytes": 3511,
+      "sha256": "3cdbc8bafd0f32176cd7540fac3544de5e399d22dd46b907f990172eddee7149"
+    },
+    {
+      "path": "source-companion/raw/src/engine/ReplayEngine.test.ts",
+      "size_bytes": 5706,
+      "sha256": "97875108fe00e64d745ae44f05a11918509c7ae7d3e129ba5cc858e06e413422"
+    },
+    {
+      "path": "source-companion/raw/src/engine/ReplayEngine.ts",
+      "size_bytes": 4888,
+      "sha256": "3edc8b510ef0e3e76dfbae8fa46a8309835f53cf08c0d17ab526bd2a95c2c475"
+    },
+    {
+      "path": "source-companion/raw/src/engine/analysisCatalog.test.ts",
+      "size_bytes": 6926,
+      "sha256": "83bd07e525b26c65b830813bc464070abbc62d5159b53571a2292c7f8ff3ef90"
+    },
+    {
+      "path": "source-companion/raw/src/engine/analysisCatalog.ts",
+      "size_bytes": 10469,
+      "sha256": "25768b3b6f174f1d4fb08e1cd2242c9dedfe494ba807b6c23151e68b936f5059"
+    },
+    {
+      "path": "source-companion/raw/src/engine/analysisNavigation.test.ts",
+      "size_bytes": 1206,
+      "sha256": "cf5cf7e091e7f1bf73855c5e78fe5075fd28f9c98328e30bb12e4260d00dad76"
+    },
+    {
+      "path": "source-companion/raw/src/engine/analytics.test.ts",
+      "size_bytes": 6168,
+      "sha256": "0f8650aef1a66292cf35b73377060fea0289c5b0fefb05b95b537f4be36746b5"
+    },
+    {
+      "path": "source-companion/raw/src/engine/analytics.ts",
+      "size_bytes": 5411,
+      "sha256": "5ba0b7ea1d34d47e2f4a4ff1c4c839c2dd4fdc03dd8f6c634a81baf58cd97409"
+    },
+    {
+      "path": "source-companion/raw/src/engine/catalog.test.ts",
+      "size_bytes": 1091,
+      "sha256": "522481162590bfafe54282d527c201b3a491a6dbae550a67f12d577acdd8096b"
+    },
+    {
+      "path": "source-companion/raw/src/engine/catalog.ts",
+      "size_bytes": 3568,
+      "sha256": "ca0ad98fa627af566cf24848b9b22305c9d0399821d5354584b3debf09e9f0fc"
+    },
+    {
+      "path": "source-companion/raw/src/engine/challengerM4_2.test.ts",
+      "size_bytes": 18350,
+      "sha256": "58e7402848f5795d5069caa7bb350b394def434b3fe72cc509a919a992e096e0"
+    },
+    {
+      "path": "source-companion/raw/src/engine/contactDetector.test.ts",
+      "size_bytes": 7435,
+      "sha256": "825967ace7e1b1be7d419bef7d96b27589bd0e5664820564bac2a387e72335d6"
+    },
+    {
+      "path": "source-companion/raw/src/engine/contactDetector.ts",
+      "size_bytes": 12095,
+      "sha256": "5599513e6af10cb8dbb1e2ed7351a16c8e9de8bfcad8584e0855261535456e49"
+    },
+    {
+      "path": "source-companion/raw/src/engine/contactDetectorStress.test.ts",
+      "size_bytes": 8018,
+      "sha256": "df11ee54e1f23576621363916aecbb12853a68838849a87eab60f0a9f0d29716"
+    },
+    {
+      "path": "source-companion/raw/src/engine/course.test.ts",
+      "size_bytes": 1472,
+      "sha256": "808854078781a6b1e22fc56ec8109214d86e0e7e2d53bffaeb650ed928288a19"
+    },
+    {
+      "path": "source-companion/raw/src/engine/course.ts",
+      "size_bytes": 525,
+      "sha256": "22e7224b6f96f51d0fa4931c229b8e316e9b35074af624d82258895bcd97a991"
+    },
+    {
+      "path": "source-companion/raw/src/engine/dynamicMarksStress.test.ts",
+      "size_bytes": 18168,
+      "sha256": "dc0a29c4caf416f39165ecad3791a197eac32495141a15d743700495c5999fdf"
+    },
+    {
+      "path": "source-companion/raw/src/engine/environment.test.ts",
+      "size_bytes": 7744,
+      "sha256": "d6e93d2c60942596fcd971c3a2ddff742dfab0d742d81b37fd81f27dc8a6a4b9"
+    },
+    {
+      "path": "source-companion/raw/src/engine/environment.ts",
+      "size_bytes": 7280,
+      "sha256": "08a4bc30060e962e152b66e46f4b0a5bc90a0eddb5d3b4ac2a9b594fba57e4ad"
+    },
+    {
+      "path": "source-companion/raw/src/engine/forecastArtifactRouting.test.ts",
+      "size_bytes": 7654,
+      "sha256": "01dd4dddb70e07e2219e0698ba60dd6fe915ace9b6bcb78e3e659caa98599b11"
+    },
+    {
+      "path": "source-companion/raw/src/engine/forecastScenarioService.test.ts",
+      "size_bytes": 8524,
+      "sha256": "d6b47d5839c99425da228019eaf2b8e77e9f975aa6145cb829e3dfa912a3e553"
+    },
+    {
+      "path": "source-companion/raw/src/engine/forecastScenarios.test.ts",
+      "size_bytes": 2424,
+      "sha256": "bdf695426c27c7faa8118790596ae99f7b9db0f65fb3ceb5a5ccb3453fb16e54"
+    },
+    {
+      "path": "source-companion/raw/src/engine/forecastScenarios.ts",
+      "size_bytes": 3004,
+      "sha256": "5d96161cdb6a481a7bedf4608ba5e9ec18e106414328e1e3eb75ca9e452947c6"
+    },
+    {
+      "path": "source-companion/raw/src/engine/interpolate.test.ts",
+      "size_bytes": 425,
+      "sha256": "24bacb06cfaeb82efc6902be92f59e28c99ecbb2215b56fe402da8b741c54a83"
+    },
+    {
+      "path": "source-companion/raw/src/engine/interpolate.ts",
+      "size_bytes": 1235,
+      "sha256": "36e7ace2130f7a4fbc6c5b446ed449f43ffd298308708f6508247a26b4515828"
+    },
+    {
+      "path": "source-companion/raw/src/engine/predictionCatalog.test.ts",
+      "size_bytes": 23320,
+      "sha256": "a10cb700d3d7e98bfccb51f472e19f4066e1a686736881512c82fd073af23901"
+    },
+    {
+      "path": "source-companion/raw/src/engine/predictionCatalog.ts",
+      "size_bytes": 23022,
+      "sha256": "e4f163b3166b80b9c7deef9b84d60f6788f37b5c194fdeb478791c57911599b1"
+    },
+    {
+      "path": "source-companion/raw/src/engine/vmgWindVerification.test.ts",
+      "size_bytes": 12371,
+      "sha256": "e8ada25518330cce3a1e496d3f493672baf221f6e13933e68259ddaa06375a1c"
+    },
+    {
+      "path": "source-companion/raw/src/index.css",
+      "size_bytes": 4903,
+      "sha256": "34a3285430a3ffac98e00a521159a7955715d1252b2c8bc1259fb553e98ae414"
+    },
+    {
+      "path": "source-companion/raw/src/main.tsx",
+      "size_bytes": 232,
+      "sha256": "e9e644d4f2c138e07c973bc48712989c8d44972ad1b3092fa817c340c2e3c7be"
+    },
+    {
+      "path": "source-companion/raw/src/types/analysis.ts",
+      "size_bytes": 8817,
+      "sha256": "41a3363ee6b14e4d9acfdfdb81551194ba6a17af9265dcd03635d8cbcbf2cba7"
+    },
+    {
+      "path": "source-companion/raw/src/types/prediction.ts",
+      "size_bytes": 4749,
+      "sha256": "198bb204a556a8954af812bf0bbd80f86daa732b3ef802dad0fcd0fa0a0fc201"
+    },
+    {
+      "path": "source-companion/raw/src/types/replay.ts",
+      "size_bytes": 4504,
+      "sha256": "c24446fc886b7cb4f00863e261d9acfe4bde50191d1ec7a3eb59d7c370f3b7f4"
+    },
+    {
+      "path": "source-companion/raw/src/utils/evidenceText.test.ts",
+      "size_bytes": 826,
+      "sha256": "b2749a3d9e0ecdf050487e99c37ef6e46a37b8beea0a95916b71420a0b22e5ca"
+    },
+    {
+      "path": "source-companion/raw/src/utils/evidenceText.ts",
+      "size_bytes": 436,
+      "sha256": "830188ad96a5744d0845d10bbe05f42bf910498d027a1372d7687afc51e03066"
+    },
+    {
+      "path": "source-companion/raw/src/utils/geoProjection.test.ts",
+      "size_bytes": 7697,
+      "sha256": "b261c5e80074f652737b55caf34f7ba5a1bd697d231e41914262b20f1b01d126"
+    },
+    {
+      "path": "source-companion/raw/src/utils/geoProjection.ts",
+      "size_bytes": 4874,
+      "sha256": "bfee5979a3df0ac69d83894fb58fafbda99e27f7f1af261b5cd83f1ff1d81dc1"
+    },
+    {
+      "path": "source-companion/raw/src/utils/geoProjectionStress.test.ts",
+      "size_bytes": 14121,
+      "sha256": "329921869c450fe19bf202775b64c3e27db9a232093331c92e2f0982efec3b76"
+    },
+    {
+      "path": "source-companion/raw/src/vite-env.d.ts",
+      "size_bytes": 38,
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "source-companion/raw/tests/__init__.py",
+      "size_bytes": 25,
+      "sha256": "bd6d00be0f24e7a0cf54fffa608db2df1d2dfd8fc6ddff127995cdf65685a388"
+    },
+    {
+      "path": "source-companion/raw/tests/adversarial_sat_stress_harness.py",
+      "size_bytes": 8235,
+      "sha256": "45fcb64c4237b76207b7944651c8ebf2820ca43d660124846f11f62da93ef4d0"
+    },
+    {
+      "path": "source-companion/raw/tests/browser/annotations.mjs",
+      "size_bytes": 29962,
+      "sha256": "26685bcff9885b3225c3ece33fcd7e6a9c50798305c24f07bae4115a1fd9a89d"
+    },
+    {
+      "path": "source-companion/raw/tests/browser/dashboard.mjs",
+      "size_bytes": 31602,
+      "sha256": "d8f0862ba9288c3b1be0a7a8f2624781dc82066395de9a623a420f1a5b3a131f"
+    },
+    {
+      "path": "source-companion/raw/tests/browser/feedback.mjs",
+      "size_bytes": 8304,
+      "sha256": "f7d18def80b3ef27e36d95ff4f0bf451a9781b3b61df3e0cf76c7ee9fe1be75d"
+    },
+    {
+      "path": "source-companion/raw/tests/browser/forecast.mjs",
+      "size_bytes": 34164,
+      "sha256": "18cf55ef25b9823ec83171a5e639d1bcb0af08cc0d49b67191b87f53453b1ad7"
+    },
+    {
+      "path": "source-companion/raw/tests/browser/redesign.mjs",
+      "size_bytes": 6686,
+      "sha256": "5472a722c5fa8cdb2555ff7db434c1382e2169e2c9b4f537fd0afac3aca647a5"
+    },
+    {
+      "path": "source-companion/raw/tests/e2e/__init__.py",
+      "size_bytes": 112,
+      "sha256": "62bcaa0edcf1d2814badedb99f7f999d7735f397b27193c58f9945cfa82b9e3e"
+    },
+    {
+      "path": "source-companion/raw/tests/e2e/e2e_types.py",
+      "size_bytes": 14595,
+      "sha256": "16277f68bac727ee9aed71d422e20e7dcdb88e167484055a548f0d4744692169"
+    },
+    {
+      "path": "source-companion/raw/tests/e2e/test_runner.py",
+      "size_bytes": 4723,
+      "sha256": "8fa462252f587496dcf9479368124a22c8e365600d23064700b780ce73f216c8"
+    },
+    {
+      "path": "source-companion/raw/tests/e2e/tier1_features_test.py",
+      "size_bytes": 35238,
+      "sha256": "621250cf3f105d25400cb25aaedc1041ca8f65801fed663c44430a83747de92b"
+    },
+    {
+      "path": "source-companion/raw/tests/e2e/tier2_boundaries_test.py",
+      "size_bytes": 13126,
+      "sha256": "e818e87977c91f511fb40020a10c908dfb570cc230db7ea98ed49761ca285d76"
+    },
+    {
+      "path": "source-companion/raw/tests/e2e/tier3_pairwise_test.py",
+      "size_bytes": 10990,
+      "sha256": "a4f68d29d1ec212d903eb7d56bd4d3b73f463a5558e8e5c5841f50d4c613a2c8"
+    },
+    {
+      "path": "source-companion/raw/tests/e2e/tier4_workloads_test.py",
+      "size_bytes": 15649,
+      "sha256": "05f9e7c332aa16b65c4bf50df5b579e19fe749b9df5f48900f16f06b12ffb82d"
+    },
+    {
+      "path": "source-companion/raw/tests/stress/stress_ingest.py",
+      "size_bytes": 17605,
+      "sha256": "182f526934293919edaad14730e042c7a0de5f47f0ed776099d763c60c99d101"
+    },
+    {
+      "path": "source-companion/raw/tests/tier5_integrity.py",
+      "size_bytes": 9270,
+      "sha256": "5236fde88105dd2d3b1d4228b59a7517dcb7d2072f70cebb39f02c9f4aa34f45"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/__init__.py",
+      "size_bytes": 59,
+      "sha256": "6d69971faa7c073eb329034bee559de95256b7df91e404c7b5e0ca17b5ba0259"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_analytics.py",
+      "size_bytes": 7158,
+      "sha256": "ac16b8e895e507cffe9fbf295414f4defa2b3795c63cf2ed038c416d8c870f09"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_contact_coalescer.py",
+      "size_bytes": 4330,
+      "sha256": "40bc5e4fc3b9951ecf4ec7e7d4a2cedfa8fcb5b9be74acfe4239f2aac4715f8a"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_dashboard_contract.py",
+      "size_bytes": 1844,
+      "sha256": "9de8e764e63ff6fedce8557c9bd3dc6c0f7d5855e49ba0d4d2737d9c58a89251"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_dashboard_identity.py",
+      "size_bytes": 964,
+      "sha256": "8f08aa8b7ebef6d3f74746d7f9bffaf89c28cddc7655327bb185c5e024cfc3bc"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_environment.py",
+      "size_bytes": 10744,
+      "sha256": "e3fa72e7f99064544bf3c132ccc74e25bac3e81dd778d8bf60a30176d624db09"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_historical_analysis.py",
+      "size_bytes": 24621,
+      "sha256": "b4eda50a8d0d9f33a100fd802b120da03a88fd45cbcec087bd7091ab903e0072"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_ingest.py",
+      "size_bytes": 13455,
+      "sha256": "8d5bee34b16f70876fff191b746adff4bd1c96c30c4656bc9195ba728c4520f9"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_m2_adversarial.py",
+      "size_bytes": 20506,
+      "sha256": "478f001aa3122b79b1fdac33861d2353ade9d76f50106a0b60f680ad53f9f969"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_manoeuvres.py",
+      "size_bytes": 5955,
+      "sha256": "8eb60bf42e7217ee63541fcdfd5eb9f0b91794528ccb434ac84b7a9921338e06"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_performance_analysis.py",
+      "size_bytes": 19042,
+      "sha256": "17080d760040f3560c68a82c828d84807c231e88bfb1a494f0b3f925578583c5"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_prediction_atomic.py",
+      "size_bytes": 2230,
+      "sha256": "729c99e2223e19fe6500c6cc707ecc7885255c1b1aff6e81b1eace6b7a98371b"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_prediction_cup.py",
+      "size_bytes": 18996,
+      "sha256": "a8c114347430fb13819f7a832ffe08a08a5381c1e3673bbb7b7c0c5b1c017ed4"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_prediction_evaluation.py",
+      "size_bytes": 10709,
+      "sha256": "df63b4742392edd793e73fd3e51d130a8d3de3473133fcd106812eac9b88db3a"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_prediction_models.py",
+      "size_bytes": 25969,
+      "sha256": "b17513c1a7ec6a6b2aafae9afa8e52620c03d079fc50f0dbf78de5c8a8f877d3"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_prediction_pipeline.py",
+      "size_bytes": 27473,
+      "sha256": "a801bfded91b641d1b2a710b785072236bf5c80077d9a3f724208f1f4acdf8c1"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_prediction_state.py",
+      "size_bytes": 17805,
+      "sha256": "451ea890b6729ef2c20ae9be7f647c1ecb50b93ab8e767099a8edf0ed1afbe17"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_projection.py",
+      "size_bytes": 7019,
+      "sha256": "8a0b6780aef199b4389405564b5cfc881f0cf0b6c8ab3d14a21a77699d94a82f"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_projection_adversarial.py",
+      "size_bytes": 16778,
+      "sha256": "44b18e1334d1855975e6a3674402a1982443b8afded48b2e01c689b4afc3d159"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_race_previews.py",
+      "size_bytes": 3367,
+      "sha256": "f9c2140c7763278c204a386d28f3602c9d8eb80f1e305b953cfc1cca31f1ea12"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_reconstruction.py",
+      "size_bytes": 8781,
+      "sha256": "201e4fe8327b5a5d2f84e6c565f28b1035d83b53e7dcc74c83d5b491fa8f095c"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_report_exports.py",
+      "size_bytes": 2657,
+      "sha256": "ff02ce560f89265db2eed8949f3d57f610c338792643163668f497ef8812f91d"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_report_inventory.py",
+      "size_bytes": 3252,
+      "sha256": "abd2a47851bcc83f77415cc25567196c6503134f245d6b89e5195ff0abaa6298"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_review_adversarial.py",
+      "size_bytes": 7596,
+      "sha256": "8772aa4d9412d78f32e15df700ddad61286ffb84dc71dfabadc23d12fe07ec0e"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_sat_adversarial_stress.py",
+      "size_bytes": 18890,
+      "sha256": "16dc97ea81bbd08ffa8be453063b2e632379534b7e11fc5cfb1610e68c481495"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_tactical_insights.py",
+      "size_bytes": 11341,
+      "sha256": "82c9836a374735616ccba92b24443efa35a2832089ea28c0dea9525f92463e79"
+    },
+    {
+      "path": "source-companion/raw/tests/unit/test_vmg_wind_adversarial.py",
+      "size_bytes": 9337,
+      "sha256": "ea74d54a066e2591311dbfd4a42c1b2534462d2070d6f10bc902c07c35a884c8"
+    },
+    {
+      "path": "source-companion/raw/tests/verify_boundary_corridor.py",
+      "size_bytes": 8701,
+      "sha256": "cf2cf6b952d5de0d8bf93d3a810aa3e37b0161377b82854bf661e38a40f0011c"
+    },
+    {
+      "path": "source-companion/raw/tsconfig.app.json",
+      "size_bytes": 735,
+      "sha256": "8ad1a485c39fcb221bdbef4ec34f2d7c8b6b47c2f115c139e465de82548223b9"
+    },
+    {
+      "path": "source-companion/raw/tsconfig.json",
+      "size_bytes": 119,
+      "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808"
+    },
+    {
+      "path": "source-companion/raw/tsconfig.node.json",
+      "size_bytes": 393,
+      "sha256": "62e382d75e04b4191764975b88168fe23c3837fda41c5088e8fbb53337469544"
+    },
+    {
+      "path": "source-companion/raw/vite.config.ts",
+      "size_bytes": 751,
+      "sha256": "2fb613edf7b0f984f822d949193121c878ffd4dabe26d5f2ca1678ce5ba15e08"
+    },
+    {
+      "path": "source-companion/view/AGENTS.md.html",
+      "size_bytes": 5080,
+      "sha256": "edb9a1fea1e00001dba93f3014e5afdaa88bf6498889614c111f746149b1ca73"
+    },
+    {
+      "path": "source-companion/view/PROJECT.md.html",
+      "size_bytes": 9690,
+      "sha256": "13cc8d3fd3e95f4926e07f48e1d8b7bdc8b03d589d5041497337682b93824ec7"
+    },
+    {
+      "path": "source-companion/view/README.md.html",
+      "size_bytes": 10128,
+      "sha256": "9edb142ebc07da94eaaeb35fffd003b17a46af411d9b0444b724d4b506bd7080"
+    },
+    {
+      "path": "source-companion/view/docs/annotation_revision_plan.md.html",
+      "size_bytes": 37766,
+      "sha256": "c921c14d6921910f28af04f8dd885a8003ff7a3d3d9b19e3a2b32ef8d42f00fe"
+    },
+    {
+      "path": "source-companion/view/docs/annotation_revision_verification.md.html",
+      "size_bytes": 19389,
+      "sha256": "8c94c6b52f60f74a6a25527da32edd9bd8d47d0702ee00ac22d56ad8d3619564"
+    },
+    {
+      "path": "source-companion/view/docs/architecture.md.html",
+      "size_bytes": 9301,
+      "sha256": "ac7b4c37a3b73a526160309cca76e738e2aff1c0a94e4c57f687286465b102c5"
+    },
+    {
+      "path": "source-companion/view/docs/browser_feedback_verification.md.html",
+      "size_bytes": 12163,
+      "sha256": "a3b4fd6f648ee704d85ecda707ecf76ae9d6bb7d44e279f556ca4724e22034b0"
+    },
+    {
+      "path": "source-companion/view/docs/dashboard_contract.md.html",
+      "size_bytes": 16532,
+      "sha256": "09bfd244c82f0554305e72b35a8776403101418c66d0ebccd30b54f4e8b1c6a8"
+    },
+    {
+      "path": "source-companion/view/docs/dashboard_verification.md.html",
+      "size_bytes": 13245,
+      "sha256": "6bf16f2001a859dc8cbebb1bb2c6d7a22ae1d9b1bcb8808e65fa4a4eed5f8378"
+    },
+    {
+      "path": "source-companion/view/docs/data_schema.md.html",
+      "size_bytes": 15886,
+      "sha256": "ac57151968300b99733041fec907821a538ac1aca6e21de609d640447917db1a"
+    },
+    {
+      "path": "source-companion/view/docs/derived_metrics.md.html",
+      "size_bytes": 7078,
+      "sha256": "8991eabc71a56501738882293df0dbc541500ba27cb27592695b2422560958e9"
+    },
+    {
+      "path": "source-companion/view/docs/design-system.md.html",
+      "size_bytes": 17435,
+      "sha256": "51fbb66fb698c91c56b55dffda131ae3802da059914ac6b3fd06e35c00c1662d"
+    },
+    {
+      "path": "source-companion/view/docs/environment_data.md.html",
+      "size_bytes": 12264,
+      "sha256": "bc6c95d56bb611233b29e440127b9c064bc6aec15f9a2b0cbdebdff23db79fbd"
+    },
+    {
+      "path": "source-companion/view/docs/forecast_rules_sources.json.html",
+      "size_bytes": 11868,
+      "sha256": "0dae4f51c16734c56160d04282951e874f06263cc5bcf3d1057282a47438737b"
+    },
+    {
+      "path": "source-companion/view/docs/forecasting_implementation.md.html",
+      "size_bytes": 37902,
+      "sha256": "1043c7c4ef489914f406957325649f1010de9953776f26c76bafe0e7a9368028"
+    },
+    {
+      "path": "source-companion/view/docs/forecasting_research_review.md.html",
+      "size_bytes": 40463,
+      "sha256": "3ac2bc8f10adcba04c25b3081e20eb2f2408ff0b64beedb0163cded24a108d6d"
+    },
+    {
+      "path": "source-companion/view/docs/forecasting_review_resolution.md.html",
+      "size_bytes": 46478,
+      "sha256": "20a84eda33d11e16da5a54b6afa7b57de51b349ec2ab7897d3b56f86697f54f8"
+    },
+    {
+      "path": "source-companion/view/docs/google_store_ui_redesign_plan.md.html",
+      "size_bytes": 66840,
+      "sha256": "d9c9cb87a448f71a8fb9649813099007795829b8365d0317d5badbf93fcd5d04"
+    },
+    {
+      "path": "source-companion/view/docs/historical_analysis.md.html",
+      "size_bytes": 23848,
+      "sha256": "12dc2b9030800b341ba73929c4671fee4c0b069cbd63810d5feb6aa6ad1d547b"
+    },
+    {
+      "path": "source-companion/view/docs/independent_probability_review_prompt.md.html",
+      "size_bytes": 48426,
+      "sha256": "91e11c2ef4e4e97b51b3c62e0a7ce920e810abc21a25bf7c57dc350335830fef"
+    },
+    {
+      "path": "source-companion/view/docs/ingesting_new_regattas.md.html",
+      "size_bytes": 7763,
+      "sha256": "42a54dbf81cdf2787fc418dfa5a62a2594d7801447ecf699e6370a1a13545ab5"
+    },
+    {
+      "path": "source-companion/view/docs/probability_execution_plan.md.html",
+      "size_bytes": 81913,
+      "sha256": "6e0a8517e18e388d14e32e71feb541d1f4ea2a9a5d4d260f0298b75bd0a69c45"
+    },
+    {
+      "path": "source-companion/view/docs/reconstruction_math.md.html",
+      "size_bytes": 7053,
+      "sha256": "5384f172240388e6cde5c2e80471c95b86a4d6d6ec6b8620da4fc5b6ff67a649"
+    },
+    {
+      "path": "source-companion/view/docs/source_audit.md.html",
+      "size_bytes": 16514,
+      "sha256": "9b97bd4be62b020d0967ed749aba9d25e4ccf02a6bd916eee3e71d35a0954505"
+    },
+    {
+      "path": "source-companion/view/docs/team_analytics.md.html",
+      "size_bytes": 21210,
+      "sha256": "6a45f773d4df22b8dba1038ade680718052f3b7a30efcab83a2102be8c8a8e36"
+    },
+    {
+      "path": "source-companion/view/docs/team_analytics_plan.md.html",
+      "size_bytes": 7608,
+      "sha256": "0f268626cc3ba122bfeb2f27149f3cf387ad5c1a41bef684bcd21ea2066d8f5f"
+    },
+    {
+      "path": "source-companion/view/docs/ui_redesign_verification.md.html",
+      "size_bytes": 17269,
+      "sha256": "e2dde62ab615a1e7652d4b52f0fbb07f693c19890acdfc19fb2ec07a0813162f"
+    },
+    {
+      "path": "source-companion/view/index.html.html",
+      "size_bytes": 4848,
+      "sha256": "b3c94a8aca14eb68f6a66cae0ddf250448b39aa513b5e7a6e3d5222661a178c5"
+    },
+    {
+      "path": "source-companion/view/package.json.html",
+      "size_bytes": 7529,
+      "sha256": "aa0d65f32096914bb9e537de6ea0f44cefc418652bf92b72d25281cdeb5cb133"
+    },
+    {
+      "path": "source-companion/view/pipeline/__init__.py.html",
+      "size_bytes": 3150,
+      "sha256": "c626060bb70a1df78e1cc4a38f87a2f0a0ca688ff24ff5b3e9bd378311eb230e"
+    },
+    {
+      "path": "source-companion/view/pipeline/analytics.py.html",
+      "size_bytes": 44154,
+      "sha256": "b4af75618596bc1a203c4ee5f305a33e5f8473068282801d56d06b66f5906728"
+    },
+    {
+      "path": "source-companion/view/pipeline/config.py.html",
+      "size_bytes": 34815,
+      "sha256": "4ccc913d5fc0d09f06f52408dd84b48624fcacc39079f198bc83c4c2fb93bc1d"
+    },
+    {
+      "path": "source-companion/view/pipeline/contact_coalescer.py.html",
+      "size_bytes": 49432,
+      "sha256": "c06baf6fb56d58787d33c1c351051fdc13718cbc389044f8b5f5a186c4f3c75a"
+    },
+    {
+      "path": "source-companion/view/pipeline/environment.py.html",
+      "size_bytes": 53928,
+      "sha256": "7676914e8972e0425b964c88c092ae71c5d1bd030fdcfcaff898ac410afbffe7"
+    },
+    {
+      "path": "source-companion/view/pipeline/export_replay.py.html",
+      "size_bytes": 68735,
+      "sha256": "fe44446e458586c3813301d21fac216c4ea8299a077937d91d00358da14a1f9e"
+    },
+    {
+      "path": "source-companion/view/pipeline/historical_analysis.py.html",
+      "size_bytes": 171895,
+      "sha256": "1e75b5692828a8252f2c4825bc88246d03c2ad8206c1528759770042723a9ed8"
+    },
+    {
+      "path": "source-companion/view/pipeline/identity.py.html",
+      "size_bytes": 4723,
+      "sha256": "d82e02ed5d3aa5fb1cf06123071666477262d364f916507902e81fdd0b9b0d11"
+    },
+    {
+      "path": "source-companion/view/pipeline/ingest.py.html",
+      "size_bytes": 117670,
+      "sha256": "8d351e43ed0271ff6e60408c92483be0bb919170c5c53ba04d2b847b948dbaec"
+    },
+    {
+      "path": "source-companion/view/pipeline/manoeuvres.py.html",
+      "size_bytes": 29803,
+      "sha256": "c59777e75661752c31d2d132ba60f2ec8722d6e7931c6e793fc70abceed4cb1b"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/__init__.py.html",
+      "size_bytes": 3248,
+      "sha256": "fa207948acf92764947c30b8251f616bb39e9614e7a483fdb86769c874bb3ea4"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/__main__.py.html",
+      "size_bytes": 10930,
+      "sha256": "41ccd2e34444f584f8f124884b712720dec88ac9d70eebfd2e4bad8e62d71519"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/backtest.py.html",
+      "size_bytes": 26071,
+      "sha256": "b719d8d90b9d5ae8102378572fe786bb7c1d50a940e02cc9c832d8dadba300fa"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/build.py.html",
+      "size_bytes": 72136,
+      "sha256": "d451250435e5af8cd61c499f930427e495cc2fd564fa4aa8bbcecf23a7e748d3"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/contracts.py.html",
+      "size_bytes": 47230,
+      "sha256": "e6436452560fb1be51e6f8fa57d8f430e3ff05b2eadb95c11dc68812a2ed93bd"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/cup.py.html",
+      "size_bytes": 102610,
+      "sha256": "4ea2c6dafb516fe775c4c5e1823d931fd116c8216867a1f73cb2c44f4279217f"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/evaluation.py.html",
+      "size_bytes": 22038,
+      "sha256": "04807f2dbaf45a36b85bacc2a68b8213fed95c1d353f19bdc388d7ca931b9ad9"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/labels.py.html",
+      "size_bytes": 31621,
+      "sha256": "ea966c9eb8a253039af3a77a16b07f3e64c060a575041bb8fd738939897bf6a6"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/models.py.html",
+      "size_bytes": 118211,
+      "sha256": "c1c4dd6939e540d4ff8938521eded739efbbd539476c725c430317353fc5b991"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/simulation.py.html",
+      "size_bytes": 75653,
+      "sha256": "7d64458563fec40e6c86ccfcc2abbcb49e17c8645aca6f94607072a6cb76532a"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/source.py.html",
+      "size_bytes": 36295,
+      "sha256": "91c49e1d5dabf47a6a83594667307483d0b25e146046efb301443fe7dfb3de0e"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/state.py.html",
+      "size_bytes": 49036,
+      "sha256": "914c3227bdd4f99eb5bd96f318df3e1d3b92b1184c3a285eab8ae812bf8210f4"
+    },
+    {
+      "path": "source-companion/view/pipeline/prediction/weather.py.html",
+      "size_bytes": 9855,
+      "sha256": "779a30e949fa34502422ad1f51ce7da19d78c2357466065bd6c5520e257517f2"
+    },
+    {
+      "path": "source-companion/view/pipeline/projection.py.html",
+      "size_bytes": 22933,
+      "sha256": "0951f3f0a893140e1a7328c8cf5d74996ef937894483d0cb4cd9bff75faddd70"
+    },
+    {
+      "path": "source-companion/view/pipeline/reconstruction.py.html",
+      "size_bytes": 78290,
+      "sha256": "0edb1e372395e95e363449382d2f475e817f4606123d8309d5fee2f151414f73"
+    },
+    {
+      "path": "source-companion/view/pipeline/run_pipeline.py.html",
+      "size_bytes": 48823,
+      "sha256": "3976e1e61f46b313017b1e17ad79c44052b19caeb2b8f0d3ff3a266efcf169e7"
+    },
+    {
+      "path": "source-companion/view/pipeline/tactical_insights.py.html",
+      "size_bytes": 30954,
+      "sha256": "3d6dfc3a261866f5a7a4c3b002b454c21744d6c26bcd53cedacbd4ba6f8850e5"
+    },
+    {
+      "path": "source-companion/view/public/fonts/OFL.txt.html",
+      "size_bytes": 14471,
+      "sha256": "b284ca35ef5edff1c7c0e46fe7beed6f213b27ec27b513867386fb383f3e93b0"
+    },
+    {
+      "path": "source-companion/view/public/fonts/README.md.html",
+      "size_bytes": 3663,
+      "sha256": "8c962bb74c4c1c9c13c289c206abd194726b9488e5ef6af550f817c792b8f853"
+    },
+    {
+      "path": "source-companion/view/pyproject.toml.html",
+      "size_bytes": 4230,
+      "sha256": "500fe86722852e3030e6c5002c9f0633e04b5ea954ff61c0a5a035dc74e021fe"
+    },
+    {
+      "path": "source-companion/view/run.ps1.html",
+      "size_bytes": 10015,
+      "sha256": "3a4ce117591c4b0389205dbe47d8e9b91ef8bab3b0ed2b550e830047238d551d"
+    },
+    {
+      "path": "source-companion/view/scripts/analysis_snapshot.py.html",
+      "size_bytes": 8970,
+      "sha256": "a5ec638031b4115c4c0710518a114f11e092a5781ed5b39c8e95151e1dd5350a"
+    },
+    {
+      "path": "source-companion/view/scripts/build_artifact_inventory.py.html",
+      "size_bytes": 18110,
+      "sha256": "149e9581a2b7175badcdedb3f99b8e26acc394ecb97d9d177fd7687b141ce4bf"
+    },
+    {
+      "path": "source-companion/view/scripts/build_race_previews.py.html",
+      "size_bytes": 12874,
+      "sha256": "ce1eeb080b4f846739c2d7de12835470d3631df964085701fdf8934df8bbf1e3"
+    },
+    {
+      "path": "source-companion/view/scripts/build_report_exports.py.html",
+      "size_bytes": 14589,
+      "sha256": "7a80ff3ad5c76b930d22693c39840515f138169588792a5b607de76f07baf3cb"
+    },
+    {
+      "path": "source-companion/view/scripts/forecastArtifacts.ts.html",
+      "size_bytes": 13006,
+      "sha256": "dac6dfe7e6478e68dbaefc165324e2e607d3bc44154297f7a7df9f451782c179"
+    },
+    {
+      "path": "source-companion/view/scripts/forecastScenarios.ts.html",
+      "size_bytes": 33993,
+      "sha256": "9ec5133f63690e9d3f98488f930dfe71306c7ea6a4d084b376be73cc8ae5a821"
+    },
+    {
+      "path": "source-companion/view/scripts/refresh_team_analytics.py.html",
+      "size_bytes": 43466,
+      "sha256": "d4443351b57562ac1065c095c5c626a18d9ea6c39991cba6e8f711f0a03dfbc9"
+    },
+    {
+      "path": "source-companion/view/src/App.tsx.html",
+      "size_bytes": 32990,
+      "sha256": "fd2716a6cb7c5f9918473ed8f350d985c54cc502a466cc83e3e108408bfa61b2"
+    },
+    {
+      "path": "source-companion/view/src/app.css.html",
+      "size_bytes": 115221,
+      "sha256": "071709c76db4411d7e0e1ba9197e81450adb78a6c0094189531bf249f4147924"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/CourseCanvas.tsx.html",
+      "size_bytes": 75750,
+      "sha256": "d7a655b69c9d652de2639895ad3d65f1b0ac21fb67e7d7728a1df948684f586b"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/DynamicVesselLayer.ts.html",
+      "size_bytes": 87037,
+      "sha256": "b843af9f970a1c6b1e08b60fc33e4affe11824c57ff8568a6fba4d6b58d66c0e"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/StaticCourseLayer.ts.html",
+      "size_bytes": 11151,
+      "sha256": "6e7966690e38f2d81481a53af1355637a6db893b7e720c015bd7c2c1859adfc8"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/ViewportMatrix.ts.html",
+      "size_bytes": 9568,
+      "sha256": "a14671a79817b2413580431566e20c95bc68792e65ab4202e345cf9eb7871ace"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/boatModels.test.ts.html",
+      "size_bytes": 37150,
+      "sha256": "c36cbf67889e2ae1bb6ae462158f647f7a4f673de841cef8b05988573e614dac"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/boatModels.ts.html",
+      "size_bytes": 45273,
+      "sha256": "15583924fc21c3217f19b81df70bdef446e7fa834274e62b7b9db29c30fbaeff"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/boatPresentation.test.ts.html",
+      "size_bytes": 8307,
+      "sha256": "881904a829eeb166575af41fd64a0da7abd56e171e59c9d70eff6a4f10f29756"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/boatPresentation.ts.html",
+      "size_bytes": 12784,
+      "sha256": "eb067fc6c7e72c76f0b230411f9be0b56b1b5a603790a038fe3558e6f2ba8a8a"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/cameraAdversarial.test.ts.html",
+      "size_bytes": 57393,
+      "sha256": "9d293e0005c53c0f4e036294c62a87aae3c2c283972858b1cb94a9decc6a792c"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/cameraStateSyncAdversarial.test.ts.html",
+      "size_bytes": 58784,
+      "sha256": "36986846a550afdeda6cfa0c2aa0ed31c21efb556968b39014022e137eeeb20f"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/courseGeometry.test.ts.html",
+      "size_bytes": 13983,
+      "sha256": "841e87395bab13ac8cdd31506af824f859cecd20493822fe58ef03b87b582e50"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/foilingGeometryStress.test.ts.html",
+      "size_bytes": 101683,
+      "sha256": "9c38701ec1efb4d60447d255eff58047ff481eec7cccf80243d53a5b97c0838d"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/mapStyle.ts.html",
+      "size_bytes": 13303,
+      "sha256": "70e1cc7c56caa032a5dad4cdfad44b308366fa79bade2934721b0491a1efc42f"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/renderPalette.ts.html",
+      "size_bytes": 4968,
+      "sha256": "b680a5886419c08765bfe3c1b6e1add6aaee93b27db4920db5fd08cf9181059c"
+    },
+    {
+      "path": "source-companion/view/src/components/canvas/viewModeStress.test.ts.html",
+      "size_bytes": 39649,
+      "sha256": "be67898b80a58366d610b4f1065b0846057dcf2cae40be66fe612b1cd1591d41"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/BoatCourseControls.tsx.html",
+      "size_bytes": 9424,
+      "sha256": "0c1c45243e8ad1626fe10153ed30cf66c843efc16d65c81e42bb7ae4bb7431b5"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/BoatPerformanceCard.adversarial.test.ts.html",
+      "size_bytes": 7136,
+      "sha256": "492aefd0b3a8f6ad6fac147a4bf7d3d564d3c14523a881475e6e18ebb4bcc70a"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/BoatPerformanceCard.test.ts.html",
+      "size_bytes": 8373,
+      "sha256": "bf05ed01afb9abde2cf3f56068e49eca5f0e8f365afa31d1dcdea7ac1ab905bc"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/BoatPerformanceCard.tsx.html",
+      "size_bytes": 26867,
+      "sha256": "a7808ca2976fa4ca26fd0dab6df14f4fb4a84b3a713fff16e47e20c96464f3a1"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/BoatPerformanceRadar.tsx.html",
+      "size_bytes": 35835,
+      "sha256": "67abd03abda873d765274d5b880a03c7198d7d06106bb196d80f6c7cc2f51aa7"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/BoatVisibilityFilter.tsx.html",
+      "size_bytes": 6604,
+      "sha256": "bb83a812bb8bf015cd5338b3f2a8d734208679930a5b1bdb9ee652aa76588e7a"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/EventsNotesPanel.adversarial.test.ts.html",
+      "size_bytes": 8606,
+      "sha256": "43034358351fae1c3e031938aab61c9d7ed17033ff83819454ccd7e3ba14e772"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/EventsNotesPanel.tsx.html",
+      "size_bytes": 29610,
+      "sha256": "b262fe9d254626709cc323888598ca23890afb5c5cbdfd34683e041873eb8e36"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/ForecastWorkspace.tsx.html",
+      "size_bytes": 54317,
+      "sha256": "2b3fd0844b6119b9b27b1e30f1f59710d82aa8a51ce400470842414a4f4a44d4"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/RaceStatusLeaderboard.tsx.html",
+      "size_bytes": 25495,
+      "sha256": "03abb044d5aec5a8f2bcdb9d65887cb5000507e9837d635b4bfeda04a2b4edf8"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/RaceTimelinePanel.test.ts.html",
+      "size_bytes": 11899,
+      "sha256": "3b59f01919892ef9b7d875efdc25d09d6d93a0d7692b53efc21f4db3f24f15cb"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/RaceTimelinePanel.tsx.html",
+      "size_bytes": 47255,
+      "sha256": "8671dbbc65e25c3583c7f018507f15df12d5ab693483f0fa6119f867bb59bd99"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/ReportsWorkspace.test.ts.html",
+      "size_bytes": 9568,
+      "sha256": "e40efdf3eeeb914b4c567353244012e375c0f9805a68a2738da65f8c42556016"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/ReportsWorkspace.tsx.html",
+      "size_bytes": 22800,
+      "sha256": "3ccad9e75d45f5d5d63d456144abdde5e9785f880265daa58eb89565e7899715"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TacticalDashboard.tsx.html",
+      "size_bytes": 28863,
+      "sha256": "68b5f339d34104fbc88a76817ea2b4ec472299dfd8aed2a1933caccaf6c7218b"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TacticalHeader.tsx.html",
+      "size_bytes": 18822,
+      "sha256": "8f4b4a63a5bc4dba110d8072b33b13e76c44635eeefaf149c7c2c356fd5a669f"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TacticalInsightsPanel.tsx.html",
+      "size_bytes": 10962,
+      "sha256": "fc24ea08e152a10c7e8f3506e98958cef3577e9860de406fa70557f87214df6f"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TacticalMapOverlay.adversarial.test.ts.html",
+      "size_bytes": 54625,
+      "sha256": "eb29161a497356635d88a25bd1e395443bed737067a18730fd924cd102c8e066"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TacticalMapOverlay.test.ts.html",
+      "size_bytes": 40372,
+      "sha256": "235b94744cebd0d4f92e1c38e59fc795b8ba839ac88d7834cd60b3952c585eed"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TacticalMapOverlay.tsx.html",
+      "size_bytes": 31900,
+      "sha256": "cba2bf6f0c4474d9e8b66f0d791f13a5f3f8d0b3a761e3739c8c3c94268e2713"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TeamAnalytics.test.ts.html",
+      "size_bytes": 35203,
+      "sha256": "e37c5373403bf24380ff8911aa0251f1b4ba6f8a413be2d2bd473d05b8e512ec"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TeamDebrief.tsx.html",
+      "size_bytes": 6808,
+      "sha256": "4c23abc571dcb288468571c8fcc6a664d20e82904c93a9c0439bdf716ba79c94"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TelemetryWorkspace.adversarial.test.ts.html",
+      "size_bytes": 59133,
+      "sha256": "f85b25f9fe7ce10d64c25fe769c38f0969cdcf548b43dd423e436559b1318176"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TelemetryWorkspace.test.ts.html",
+      "size_bytes": 55483,
+      "sha256": "b6c291de7bbcd111184e92af9b6e16ab636b03c259c26ecbc88c8a5fec3f904d"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TelemetryWorkspace.tsx.html",
+      "size_bytes": 78161,
+      "sha256": "1b138b4cee9e7c075d1273a689cbcde591b75e84780a1920dab8afd0ed79e59d"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/TelemetryWorkspaceAdversarial.test.ts.html",
+      "size_bytes": 47427,
+      "sha256": "8750221f99880d1bf876cebf09090c0401967d7c492595dae94262db821007e0"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/adversarial_race_timeline_m10_1.test.ts.html",
+      "size_bytes": 9407,
+      "sha256": "e0a898e4016cf8af1f406a7c7d687ba4edab6430534688a429f0a904f7876a83"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/analysis-light.css.html",
+      "size_bytes": 26186,
+      "sha256": "9e418b16df076c1d60cc3cda76d4c7ffcd5469fc84136380a429debfa8cac593"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/boat-course-controls.css.html",
+      "size_bytes": 9576,
+      "sha256": "53beb2ef4a73dfd4e73fd14a89cbc15b79251c621a9f57b5c7c52992a43623aa"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/cupEvidence.css.html",
+      "size_bytes": 5390,
+      "sha256": "9b249a59c2edbafab522fc693ab8f98e73b638f787488e717cb9eb9146796591"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/dashboard.css.html",
+      "size_bytes": 61566,
+      "sha256": "f910b4451ed7e405be364e890bae598c994d48b1e080ce3b1f8389937953afbe"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/forecast.css.html",
+      "size_bytes": 16131,
+      "sha256": "1254c499c6475c22489977fa36fc298e747f86894fe19e01a6dc3fd1f8c1abea"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/performance-radar.css.html",
+      "size_bytes": 19915,
+      "sha256": "5b69d669b0cd08c1e213fd61fe468cce86a075075aa91c2979b7b1390f84cf68"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/reports.css.html",
+      "size_bytes": 13712,
+      "sha256": "bec83245d50481079f11997395337872e58ca0ba69fbdecdd37c69b43347873d"
+    },
+    {
+      "path": "source-companion/view/src/components/dashboard/workspaces.css.html",
+      "size_bytes": 19075,
+      "sha256": "06a7cfafa950118cb37f66a7900997bb64db7b35287b4b8c8cbe6b7e1e59887f"
+    },
+    {
+      "path": "source-companion/view/src/components/modals/AnalysisModal.tsx.html",
+      "size_bytes": 78555,
+      "sha256": "1a8d5fbf30104e3cc2660276202b50cf4a8814aedd7ef3e9719dbb346f8f090c"
+    },
+    {
+      "path": "source-companion/view/src/components/modals/RacePickerModal.tsx.html",
+      "size_bytes": 19675,
+      "sha256": "8b0ff768ae70034becf3e60a521afd320611676ee08c4a2b3a230b48afa89944"
+    },
+    {
+      "path": "source-companion/view/src/components/modals/race-library.css.html",
+      "size_bytes": 14973,
+      "sha256": "2781941de12658fa1c5322fb1e8c651eba599968ad4d2f18d6f83d831bf75e56"
+    },
+    {
+      "path": "source-companion/view/src/components/panels/ComparisonPanel.tsx.html",
+      "size_bytes": 8934,
+      "sha256": "6c5da7a5d8a6fde379ccdaf25dddc3cb504d381fb3e32de52e1626fde80c2bf5"
+    },
+    {
+      "path": "source-companion/view/src/engine/ReplayEngine.test.ts.html",
+      "size_bytes": 22458,
+      "sha256": "bff7d9e5c8f498b659f5a4a3c0016a90feea13ff705925190dcc574902fa97a3"
+    },
+    {
+      "path": "source-companion/view/src/engine/ReplayEngine.ts.html",
+      "size_bytes": 14552,
+      "sha256": "b1b448eaa292c4480942d63e13a406ccde86916d9ee2f485c0a5d4e0b7da1daf"
+    },
+    {
+      "path": "source-companion/view/src/engine/analysisCatalog.test.ts.html",
+      "size_bytes": 16093,
+      "sha256": "1191b81bd644d7dc8a6c95ff3461e96ddd3309f7743cf0072503d0c3d63f9eca"
+    },
+    {
+      "path": "source-companion/view/src/engine/analysisCatalog.ts.html",
+      "size_bytes": 23283,
+      "sha256": "7e4f86c27f731568fc7c207f786c324bcb1c316070c85fbd12c4432d5186b06b"
+    },
+    {
+      "path": "source-companion/view/src/engine/analysisNavigation.test.ts.html",
+      "size_bytes": 6185,
+      "sha256": "48f1fe8949c3d71d7cea67fc05855dc65ed4a9a345877625de3e6ec92ed7b186"
+    },
+    {
+      "path": "source-companion/view/src/engine/analytics.test.ts.html",
+      "size_bytes": 19319,
+      "sha256": "0fb3d0932e45c7664f6a8f14e7c7837f4d0d95a7237006f0c917929186084256"
+    },
+    {
+      "path": "source-companion/view/src/engine/analytics.ts.html",
+      "size_bytes": 16970,
+      "sha256": "e8ab81f3a6b9932305699b6c5b99623c097e2e0851d28bf7768f4fb96510fe92"
+    },
+    {
+      "path": "source-companion/view/src/engine/catalog.test.ts.html",
+      "size_bytes": 5524,
+      "sha256": "3ed0a11a8a096f826b29ddc3c12071a03da33fb0138a4d555517eda068ec84e6"
+    },
+    {
+      "path": "source-companion/view/src/engine/catalog.ts.html",
+      "size_bytes": 11070,
+      "sha256": "5c044b87bf477438c414a0af22b1cd187be8a24722da6a54d438d38cdfdf9d88"
+    },
+    {
+      "path": "source-companion/view/src/engine/challengerM4_2.test.ts.html",
+      "size_bytes": 55043,
+      "sha256": "1e62ccfc1fcb2e0238008c70ef53484fcc693aeb4588edfe466794743bf6bc24"
+    },
+    {
+      "path": "source-companion/view/src/engine/contactDetector.test.ts.html",
+      "size_bytes": 25863,
+      "sha256": "0621472ec4950f20ee43dc6f0b05072b5646338ae63e5a2697d3556a5768cacc"
+    },
+    {
+      "path": "source-companion/view/src/engine/contactDetector.ts.html",
+      "size_bytes": 47277,
+      "sha256": "39ceb99f7810aac126ea76bf75158df23ab3bce6a4f2e113b84e258ac5a86b5a"
+    },
+    {
+      "path": "source-companion/view/src/engine/contactDetectorStress.test.ts.html",
+      "size_bytes": 26717,
+      "sha256": "dbf31148f7fbf6c7b909fc2228f97a6806efc331d52e4c2b692766f4d5845235"
+    },
+    {
+      "path": "source-companion/view/src/engine/course.test.ts.html",
+      "size_bytes": 6354,
+      "sha256": "2b35b3cd63905ed116eefc60885d40dcac1b8691ceba85bcceeea0a36ffff1ee"
+    },
+    {
+      "path": "source-companion/view/src/engine/course.ts.html",
+      "size_bytes": 4455,
+      "sha256": "448641fb51a9692a81d8cfe63e254a0e0c62321fbfe3d845f821a909a3a70095"
+    },
+    {
+      "path": "source-companion/view/src/engine/dynamicMarksStress.test.ts.html",
+      "size_bytes": 58334,
+      "sha256": "6d753070f62b36fb2e816edc2f494b075eeb11301b8f47b367e937fd19a896c9"
+    },
+    {
+      "path": "source-companion/view/src/engine/environment.test.ts.html",
+      "size_bytes": 21105,
+      "sha256": "6fe1c8b21b31a88c5fc0e0332a6e4b988e0e3602cefa2eb1667b4a8d87da0d4b"
+    },
+    {
+      "path": "source-companion/view/src/engine/environment.ts.html",
+      "size_bytes": 18973,
+      "sha256": "1d90a316d13acb69fe81330791351f0210ece2db74f53294f795ae1ca9f8ec74"
+    },
+    {
+      "path": "source-companion/view/src/engine/forecastArtifactRouting.test.ts.html",
+      "size_bytes": 23271,
+      "sha256": "7bc5fc6d6ff4adb5f79866405200a31dfe0a6d479d271716df557011af36b853"
+    },
+    {
+      "path": "source-companion/view/src/engine/forecastScenarioService.test.ts.html",
+      "size_bytes": 23131,
+      "sha256": "126e45089e24836af2ca6337406857505cf4d5917662134785325d08dc33d0e3"
+    },
+    {
+      "path": "source-companion/view/src/engine/forecastScenarios.test.ts.html",
+      "size_bytes": 8435,
+      "sha256": "073189318d98b599f78ccccc27dc25a4065e405aadb707edb5cc9363769f89b1"
+    },
+    {
+      "path": "source-companion/view/src/engine/forecastScenarios.ts.html",
+      "size_bytes": 9547,
+      "sha256": "b539d568795fa3506f874adbb53b165474350e47010a6ff3b178e35eecc62638"
+    },
+    {
+      "path": "source-companion/view/src/engine/interpolate.test.ts.html",
+      "size_bytes": 3907,
+      "sha256": "ddf650f6cad2945445db610703891fc2252d2dbef4f50a24a1f74d22ce0f4a12"
+    },
+    {
+      "path": "source-companion/view/src/engine/interpolate.ts.html",
+      "size_bytes": 5339,
+      "sha256": "6bb08ff4f658452e720e306d7b5ff3516dd648ce030674a4f02e99b81f1731f9"
+    },
+    {
+      "path": "source-companion/view/src/engine/predictionCatalog.test.ts.html",
+      "size_bytes": 55561,
+      "sha256": "2dd0623ba7283469ed9380b0a33e07cd885365672766c34c59919b05dea4a401"
+    },
+    {
+      "path": "source-companion/view/src/engine/predictionCatalog.ts.html",
+      "size_bytes": 46018,
+      "sha256": "03ca5b7fdd4268a1bff500404df5eae549bfca901aee8b3ca169fbedc6b62941"
+    },
+    {
+      "path": "source-companion/view/src/engine/vmgWindVerification.test.ts.html",
+      "size_bytes": 41206,
+      "sha256": "288235be7837d1b31436c0091b847038e1ca714ae0cf3c979d09be31f94639d4"
+    },
+    {
+      "path": "source-companion/view/src/index.css.html",
+      "size_bytes": 24443,
+      "sha256": "ebda58ce8c8353af640727ef8c99d041ccd8b587e37579fd451a578f78838cc3"
+    },
+    {
+      "path": "source-companion/view/src/main.tsx.html",
+      "size_bytes": 3590,
+      "sha256": "00c5f324b2fb33111db4b6dd7b7a861f71700f7ee1b87e47bcdc2991f5cfbcd9"
+    },
+    {
+      "path": "source-companion/view/src/types/analysis.ts.html",
+      "size_bytes": 38496,
+      "sha256": "d74effda8709c215153a23741bf2af85b1177dd9ddc604da3d58658925737800"
+    },
+    {
+      "path": "source-companion/view/src/types/prediction.ts.html",
+      "size_bytes": 16679,
+      "sha256": "63e6d140c441ccd79e627bc1c67476ff77ea7cacfb41c68b00269970911da9c9"
+    },
+    {
+      "path": "source-companion/view/src/types/replay.ts.html",
+      "size_bytes": 24032,
+      "sha256": "27c70b7049eff3765c4f3933b0f951f8125d5306904eb95c637d5c344944f357"
+    },
+    {
+      "path": "source-companion/view/src/utils/evidenceText.test.ts.html",
+      "size_bytes": 4859,
+      "sha256": "ff2aa54cebc28f6f12d2681de5c16d34ed6a472a6a488fb97c21bf41074e8d2c"
+    },
+    {
+      "path": "source-companion/view/src/utils/evidenceText.ts.html",
+      "size_bytes": 3775,
+      "sha256": "38c2b39f918908c781fa07a0b17a0c4d60a59a0b0197a6a42765a9ea7fd73933"
+    },
+    {
+      "path": "source-companion/view/src/utils/geoProjection.test.ts.html",
+      "size_bytes": 27089,
+      "sha256": "f858ee21268b3f7d598a1f32a59b0c7936a3fa5201c466e29384ce71d5a8ca07"
+    },
+    {
+      "path": "source-companion/view/src/utils/geoProjection.ts.html",
+      "size_bytes": 22005,
+      "sha256": "378acc6671fcc87aaaef4d6e7ed36d85b3995808906c0313f469fca0b780d83e"
+    },
+    {
+      "path": "source-companion/view/src/utils/geoProjectionStress.test.ts.html",
+      "size_bytes": 45770,
+      "sha256": "013b80e4f49e9299c1cfd722440bd2caf6b1d21f5bbca7971be4392e75872519"
+    },
+    {
+      "path": "source-companion/view/src/vite-env.d.ts.html",
+      "size_bytes": 2898,
+      "sha256": "df77233fb14ea52cdd72e5be75229b60fa357cde97a4fab33e27736a8dff6bac"
+    },
+    {
+      "path": "source-companion/view/tests/__init__.py.html",
+      "size_bytes": 2869,
+      "sha256": "f934add2d285ecf06587501e1e72faa77231e151dfb4ef5f0bb46e4c073a66ea"
+    },
+    {
+      "path": "source-companion/view/tests/adversarial_sat_stress_harness.py.html",
+      "size_bytes": 28445,
+      "sha256": "684269f3ffa3d7d3691e8d8f5fb5aa3ce9a98c329285e276a2043119336a828d"
+    },
+    {
+      "path": "source-companion/view/tests/browser/annotations.mjs.html",
+      "size_bytes": 69353,
+      "sha256": "d780976ca6f0861cdec4a618e8545e48d3176a5d4d07ef2bda7725a71960ae57"
+    },
+    {
+      "path": "source-companion/view/tests/browser/dashboard.mjs.html",
+      "size_bytes": 73611,
+      "sha256": "47439d310941edb21ddfdf85bea2e0317a9bd3958ed2ac3f2346b5c913ea68b7"
+    },
+    {
+      "path": "source-companion/view/tests/browser/feedback.mjs.html",
+      "size_bytes": 21609,
+      "sha256": "aaa10bcf0053e5fe50d2bc820ab995acf37902589b59d41f80bdf230ba828405"
+    },
+    {
+      "path": "source-companion/view/tests/browser/forecast.mjs.html",
+      "size_bytes": 77860,
+      "sha256": "5252598472d79e7eb7638f62a322719d81d9af96f4a9df6598d16bb8b1dfd759"
+    },
+    {
+      "path": "source-companion/view/tests/browser/redesign.mjs.html",
+      "size_bytes": 18753,
+      "sha256": "4d0b65e6111d3f01053ee2106d345e344f2638674712357edf8be0863b7379ec"
+    },
+    {
+      "path": "source-companion/view/tests/e2e/__init__.py.html",
+      "size_bytes": 3238,
+      "sha256": "6abfc0d9d6fa056cbeb6bd6f0d5a78b93e4bac01cbe1ca30e1de54e9bd00c572"
+    },
+    {
+      "path": "source-companion/view/tests/e2e/e2e_types.py.html",
+      "size_bytes": 54816,
+      "sha256": "aa9830cc8f87e5de53b1fd247f21a546cc870cd1d71ad3ab365b838d93c7afb8"
+    },
+    {
+      "path": "source-companion/view/tests/e2e/test_runner.py.html",
+      "size_bytes": 20754,
+      "sha256": "92c6824fa2acbdc034eb089e7a905b5e4f27a07cde20d6cfd175f4bfb1fa4179"
+    },
+    {
+      "path": "source-companion/view/tests/e2e/tier1_features_test.py.html",
+      "size_bytes": 105897,
+      "sha256": "3814c614c3e08f028598f7d0ce95a6865eabc48379e9561de9f0fafb6a766545"
+    },
+    {
+      "path": "source-companion/view/tests/e2e/tier2_boundaries_test.py.html",
+      "size_bytes": 41111,
+      "sha256": "8f27a07f448041ce9f16acadac17ac14d2ce2f24e1b0051f908b3e95201a446e"
+    },
+    {
+      "path": "source-companion/view/tests/e2e/tier3_pairwise_test.py.html",
+      "size_bytes": 36941,
+      "sha256": "6ff3fdb88356541fda60086cd68f0ded4cd6fa6a14415ef4518d98255ac83ecf"
+    },
+    {
+      "path": "source-companion/view/tests/e2e/tier4_workloads_test.py.html",
+      "size_bytes": 48219,
+      "sha256": "7f60147a73d0cc9ecb2ceb3d3810a558fff33abcc35c65572045ada341dc0c51"
+    },
+    {
+      "path": "source-companion/view/tests/stress/stress_ingest.py.html",
+      "size_bytes": 55524,
+      "sha256": "6decb3a1cdbe22f9a50cda9d197650551498feb879d8d0661622207132a95a06"
+    },
+    {
+      "path": "source-companion/view/tests/tier5_integrity.py.html",
+      "size_bytes": 25739,
+      "sha256": "3133c05c0679576a49619215b34f706d2223a03f68e1bef490f6acf18dff7f51"
+    },
+    {
+      "path": "source-companion/view/tests/unit/__init__.py.html",
+      "size_bytes": 2957,
+      "sha256": "6eb97634db85e5387d0dcd09bba50f29c6c7840ac3d5cb1a653a0288b46077d8"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_analytics.py.html",
+      "size_bytes": 25264,
+      "sha256": "781af3f2a693506332a11a1940766f6fe4ca14eafcdd941cbec095ad717ab2e2"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_contact_coalescer.py.html",
+      "size_bytes": 16192,
+      "sha256": "22120db533326753fa74be7218d6378ac418ca0794ccc7d4ce646a8f643d8ccf"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_dashboard_contract.py.html",
+      "size_bytes": 8255,
+      "sha256": "b43332bedf88908d96cc9c660a5ad9ebb5f33070150105279823f772a90a4e8c"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_dashboard_identity.py.html",
+      "size_bytes": 5457,
+      "sha256": "33c81331a9b2a60708282d740286e1226f07933607d00b3542d7dccf7cdae2dd"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_environment.py.html",
+      "size_bytes": 31393,
+      "sha256": "064f7e43c00ffdb464fb68bb27ad836a686f831a55f4ca59abd5ffda051faa89"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_historical_analysis.py.html",
+      "size_bytes": 69055,
+      "sha256": "a35a78b4b608dd5db14af9cc0578de2ec07a5fcf10190d54be7744a4575d22df"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_ingest.py.html",
+      "size_bytes": 41950,
+      "sha256": "2b340e815a767403ea3b8297ade99576fd4a0f85e77df010ce3cd94c16d83fe2"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_m2_adversarial.py.html",
+      "size_bytes": 64627,
+      "sha256": "2c9417ccfed592fff9323a4397c9291f8d45be0bb1bebc5385d0c0de10224ddc"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_manoeuvres.py.html",
+      "size_bytes": 21647,
+      "sha256": "b15e48dc6539454429ed2a3b2ca373cefed771d8f5e6717b057a4ba7cff98e7f"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_performance_analysis.py.html",
+      "size_bytes": 52926,
+      "sha256": "fa0403434d5995eb336cd7951363c90b8b6a4857a17cb4849882e0e3024ae530"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_prediction_atomic.py.html",
+      "size_bytes": 8574,
+      "sha256": "acfbfdb67af5042fd9995aa1d7665c75e37757a366abc4b5662cffb4694a6a61"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_prediction_cup.py.html",
+      "size_bytes": 50148,
+      "sha256": "296e2f8a9f55029ae9707b2f0541b528031dda036da82d684dec713a27aed789"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_prediction_evaluation.py.html",
+      "size_bytes": 29722,
+      "sha256": "0058f8f49b8064048f50e318687c169b8237845cc6c5d50c583fb6f299aea1be"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_prediction_models.py.html",
+      "size_bytes": 66154,
+      "sha256": "89021f03aeca6f071c3467f30b319b5a6a418932b6da51530d101006678b8a3b"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_prediction_pipeline.py.html",
+      "size_bytes": 72254,
+      "sha256": "2700bbc4e6ff3bbb0a1f04db46a8c994c7bdf3d2d233069fbf099977586617fb"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_prediction_state.py.html",
+      "size_bytes": 50672,
+      "sha256": "350abea7fc5014c6b5cc03b789319ec575d68ddb06ca02fcd4fcefc26e7a37f6"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_projection.py.html",
+      "size_bytes": 24572,
+      "sha256": "02c23c0dea4939f26fb29782c0a63099caf5647d269736c1240e6d2fb741b79e"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_projection_adversarial.py.html",
+      "size_bytes": 54830,
+      "sha256": "ccdd35f96b8882ac06b8db43f08ffa902e4a6519dd3ad2604ead156fae19dea0"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_race_previews.py.html",
+      "size_bytes": 11863,
+      "sha256": "7ca40245b7f314ddfe781b07ef03ebb0341472babba040260333dc0470f1d213"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_reconstruction.py.html",
+      "size_bytes": 28787,
+      "sha256": "bfd2c774b3519dbdea762bcc71ae1a919e5cfd76e2fde67beb549caa60e14fb2"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_report_exports.py.html",
+      "size_bytes": 8671,
+      "sha256": "3c8e0e3e9ad6f8cb5a3de79e693fd9f5980480474fa216bcae0a05a0122bea7f"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_report_inventory.py.html",
+      "size_bytes": 11046,
+      "sha256": "3c59264971cc6eae88d49d4968b5c1ace073c2e8fe448beb50c615b626d92643"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_review_adversarial.py.html",
+      "size_bytes": 24469,
+      "sha256": "dd87ad157d59bf67d3133907dc0ec8433f79d91d609320109e8284d7dd814f08"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_sat_adversarial_stress.py.html",
+      "size_bytes": 57152,
+      "sha256": "292ec7d62ea8740ba7e570e6611c117f63c4815e88abd4dd3a803f0ee576d658"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_tactical_insights.py.html",
+      "size_bytes": 32126,
+      "sha256": "9a1b89cd35191f7e65bf4c7bc99225c31baac33e8170e850adbd311dfe5e026e"
+    },
+    {
+      "path": "source-companion/view/tests/unit/test_vmg_wind_adversarial.py.html",
+      "size_bytes": 30273,
+      "sha256": "95dbf34387d11ba29cbc875ff8ad9131b90e4b518210e26aaecba46a02b6c826"
+    },
+    {
+      "path": "source-companion/view/tests/verify_boundary_corridor.py.html",
+      "size_bytes": 30611,
+      "sha256": "d06a3e5d8dada87119434a259e7b560f3c35add70328567fd8d9e099abb7127a"
+    },
+    {
+      "path": "source-companion/view/tsconfig.app.json.html",
+      "size_bytes": 5760,
+      "sha256": "b0aca65242dcb49c15f64c9f8fe45addd9ae70b3296d6fc6f7ad01b61bfc88f3"
+    },
+    {
+      "path": "source-companion/view/tsconfig.json.html",
+      "size_bytes": 3453,
+      "sha256": "f806812fcde95437d8da4a3a6e43db56b8c82a428ca0d6e301922662f2608720"
+    },
+    {
+      "path": "source-companion/view/tsconfig.node.json.html",
+      "size_bytes": 4491,
+      "sha256": "c6e5a8639913514a15857ef96a7b120965dab62bffb2dd36486bc03f37a0204c"
+    },
+    {
+      "path": "source-companion/view/vite.config.ts.html",
+      "size_bytes": 4971,
+      "sha256": "c6bacb4694efc142851076efd167fafb6309249aacd72b8f693949c2cdc2f441"
+    },
+    {
+      "path": "study-materials/05_Study_Routes_and_Questions.html",
+      "size_bytes": 40038,
+      "sha256": "9fb763acd83897b53e8333eeaf98454201d276b8cd5bd5834b06ec332d992dee"
+    },
+    {
+      "path": "study-materials/05_Study_Routes_and_Questions.md",
+      "size_bytes": 16330,
+      "sha256": "892e4bbc21bd4faa88b83ea1a57563466edabac0a705f57c5cb9c50f108d5dd1"
+    },
+    {
+      "path": "study-materials/06_Audio_Narration_Script.html",
+      "size_bytes": 33772,
+      "sha256": "0e7604d66bde8f1d33c10adf5257e2c7c5208564e0e4d34c42c0aaa6e6f68db7"
+    },
+    {
+      "path": "study-materials/06_Audio_Narration_Script.md",
+      "size_bytes": 13075,
+      "sha256": "fdbf863f99cc556d357e2924d711c34f9826f5dc027c1f5baf892dc0f106d44f"
+    },
+    {
+      "path": "study-materials/flashcards.csv",
+      "size_bytes": 26677,
+      "sha256": "e0477aa170d39918de18913cafdcb47d9ec3bd973705760f4b96fe6151cbd802"
+    },
+    {
+      "path": "study-materials/flashcards_viewer.html",
+      "size_bytes": 37967,
+      "sha256": "09aeed63a0aa74064321a7ce9dea6dfd8238712adc77a96d23c306ba286e2c40"
+    }
+  ]
+}

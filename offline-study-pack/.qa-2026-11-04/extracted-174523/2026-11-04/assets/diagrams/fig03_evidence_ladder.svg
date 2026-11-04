@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 560" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <rect width="920" height="560" fill="#f8fafc" rx="10" stroke="#cbd5e1"/>
+  <text x="28" y="34" font-size="18" font-weight="700" fill="#0f172a">Figure 2.2 — The Six-Rung Epistemic Evidence Ladder</text>
+  <text x="28" y="54" font-size="12.5" fill="#475569">Ordering repository quantities from direct raw observations (bottom) to uncalibrated assumptions and unavailable values (top).</text>
+
+  <!-- Rung 6 (Top): Unavailable / Uncalibrated / Assumptions -->
+  <rect x="40" y="72" width="840" height="68" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="56" y="94" font-size="13" font-weight="700" fill="#991b1b">Rung 6 — Unavailable Channels, Unresolved Rules &amp; Structural Assumptions (Epistemic Ceiling)</text>
+  <text x="56" y="113" font-size="11.5" fill="#7f1d1d">• Absent sensors: Heel, Pitch, Leeway, Foil Ride Height, Water Current, Polar Targets, Official Umpire Rulings, Independent Official Results (0/28).</text>
+  <text x="56" y="129" font-size="11.5" fill="#7f1d1d">• Uncalibrated assumptions: AC40→AC75 transfer loading ρ ∈ {0, 0.5, 1}; RRSAC 102.1 6-Challenger seeding tie (34.46% unresolved); 5-min wind projection (0/3,455 pass).</text>
+
+  <!-- Rung 5: Probabilistic & Reanalysis Models -->
+  <rect x="40" y="152" width="840" height="68" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.8"/>
+  <text x="56" y="174" font-size="13" font-weight="700" fill="#92400e">Rung 5 — Statistical, State-Space &amp; External Reanalysis Model Estimates</text>
+  <text x="56" y="193" font-size="11.5" fill="#78350f">• Forecasting: Constant-velocity Kalman state (x, y, vx, vy) during short gaps; Plackett–Luce skills θ_i (σ=1.2, κ=1.8); Correlated MC leg times; Beta-Binomial completion.</text>
+  <text x="56" y="209" font-size="11.5" fill="#78350f">• Environment context: Open-Meteo hourly 2m air temp, wave height, SST (`environment-1`, grid model estimates, never used as causal pre-race weather).</text>
+
+  <!-- Rung 4: Reconstructed Events & Peer-Relative Indexes -->
+  <rect x="40" y="232" width="840" height="68" rx="6" fill="#fefce8" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="56" y="254" font-size="13" font-weight="700" fill="#854d0e">Rung 4 — Geometric Reconstructions, Heuristic Detections &amp; Peer-Relative Indexes (`reconstructed` / `performance-1`)</text>
+  <text x="56" y="273" font-size="11.5" fill="#713f12">• Bow (+12.963 m) segment gate/start crossings; monotonic `progress_m`; reconstructed finish ranks &amp; elapsed times; continuous progress time-gap estimate (Δp / v_leader).</text>
+  <text x="56" y="289" font-size="11.5" fill="#713f12">• Manoeuvre detector tacks/gybes (ΔSOG ≥ 2.5 kt); SAT virtual contact overlaps (`virtual_contact_incidents`); matched-leg self-excluding peer indexes (100 = peer mean).</text>
+
+  <!-- Rung 3: Coverage-Validated Derived Historical Metrics -->
+  <rect x="40" y="312" width="840" height="68" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+  <text x="56" y="334" font-size="13" font-weight="700" fill="#1e40af">Rung 3 — Coverage-Gated Historical Metrics &amp; Trailing Wind Summaries (`derived` / `partial` / `tactical-1`)</text>
+  <text x="56" y="353" font-size="11.5" fill="#1e3a8a">• Historical scalars (`historical-2`): leg-directed course VMG, wind VMG, sailed distance, route ratio, boundary exposure — gated at ≥95% valid source coverage &amp; no gap &gt; 2.0 s.</text>
+  <text x="56" y="369" font-size="11.5" fill="#1e3a8a">• Tactical wind (`tactical-1`): 120 s trailing window on raw official wind (≥60 samples, ≤2.0 s age, OLS slope in deg/min).</text>
+
+  <!-- Rung 2: Synchronized 100 ms Grid & Coordinate Projection -->
+  <rect x="40" y="392" width="840" height="68" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+  <text x="56" y="414" font-size="13" font-weight="700" fill="#166534">Rung 2 — Deterministic Coordinate Transforms &amp; 100 ms Grid Resampling</text>
+  <text x="56" y="433" font-size="11.5" fill="#14532d">• Local equirectangular curvature projection (WGS84 lat/lon → metres x, y via k_lat, k_lon, verified vs Haversine); speed conversion m/s × (3600/1852) → knots.</text>
+  <text x="56" y="449" font-size="11.5" fill="#14532d">• 10 Hz replay grid: linear scalar/position interpolation &amp; shortest-arc circular angle interpolation (with held endpoints before first / after last sample in replay).</text>
+
+  <!-- Rung 1 (Bottom): Raw Telemetry & Session Records -->
+  <rect x="40" y="472" width="840" height="68" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2.2"/>
+  <text x="56" y="494" font-size="13" font-weight="700" fill="#065f46">Rung 1 — Direct Source Telemetry &amp; Session Metadata (`measured` / `source_timing`)</text>
+  <text x="56" y="513" font-size="11.5" fill="#064e3b">• Raw JSONL records: ~20 Hz GNSS (latitude, longitude) &amp; heading; ~4–5 Hz SOG, COG, boat TWD/TWS; ~1 Hz official wind asset TWD/TWS; mark GNSS tracks.</text>
+  <text x="56" y="529" font-size="11.5" fill="#064e3b">• Session boundaries, gun timestamp, sequence mark IDs, and competitor state snapshots (source leg timings, penalties, start_state flags).</text>
+</svg>

@@ -2,11 +2,11 @@
   "schemaVersion": "1",
   "cliVersion": "0.20.0",
   "version": "0.20.0",
-  "score": 41,
-  "label": "Critical",
+  "score": 86,
+  "label": "Healthy",
   "scoreable": true,
   "coverage": {
-    "supportedFiles": 7,
+    "supportedFiles": 12,
     "unsupportedFiles": 0,
     "dominantUnsupported": null,
     "scoreable": true
@@ -15,7 +15,7 @@
     "format": {
       "issues": 0,
       "skipped": false,
-      "elapsed": 1985.2913000000003,
+      "elapsed": 518.7899,
       "missingTools": [
         "ruff"
       ]
@@ -23,7 +23,7 @@
     "lint": {
       "issues": 0,
       "skipped": false,
-      "elapsed": 1999.0246000000002,
+      "elapsed": 521.2888000000003,
       "missingTools": [
         "ruff"
       ]
@@ -31,17 +31,17 @@
     "code-quality": {
       "issues": 1,
       "skipped": false,
-      "elapsed": 1500.0115999999998
+      "elapsed": 325.17830000000004
     },
     "ai-slop": {
-      "issues": 22,
+      "issues": 5,
       "skipped": false,
-      "elapsed": 1461.9882000000002
+      "elapsed": 305.02239999999983
     },
     "security": {
       "issues": 1,
       "skipped": false,
-      "elapsed": 505.10570000000007
+      "elapsed": 87.18219999999974
     }
   },
   "engineDefinitions": {
@@ -96,13 +96,13 @@
       "forceFixable": false
     },
     {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
+      "filePath": "tools/finish_editions.py",
       "engine": "ai-slop",
       "rule": "ai-slop/unused-import",
       "severity": "warning",
-      "message": "Imported symbol 'shutil' is never used",
+      "message": "Imported symbol 'Path' is never used",
       "help": "Remove unused imports to keep the code clean",
-      "line": 3,
+      "line": 2,
       "column": 0,
       "category": "AI Slop",
       "fixable": true,
@@ -120,85 +120,13 @@
       "forceFixable": false
     },
     {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
+      "filePath": "tools/verify_pack.py",
       "engine": "ai-slop",
-      "rule": "ai-slop/unused-import",
+      "rule": "ai-slop/python-mutable-default",
       "severity": "warning",
-      "message": "Imported symbol 'TA_LEFT' is never used",
-      "help": "Remove unused imports to keep the code clean",
-      "line": 9,
-      "column": 0,
-      "category": "AI Slop",
-      "fixable": true,
-      "assessment": {
-        "kind": "ai-slop-indicator",
-        "confidence": "medium",
-        "label": "AI-slop indicators"
-      },
-      "scoreImpact": {
-        "tier": "mechanical",
-        "multiplier": 0.5,
-        "cap": 16,
-        "rationale": "Unused imports are mechanical cleanup."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/unused-import",
-      "severity": "warning",
-      "message": "Imported symbol 'Preformatted' is never used",
-      "help": "Remove unused imports to keep the code clean",
-      "line": 12,
-      "column": 0,
-      "category": "AI Slop",
-      "fixable": true,
-      "assessment": {
-        "kind": "ai-slop-indicator",
-        "confidence": "medium",
-        "label": "AI-slop indicators"
-      },
-      "scoreImpact": {
-        "tier": "mechanical",
-        "multiplier": 0.5,
-        "cap": 16,
-        "rationale": "Unused imports are mechanical cleanup."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/concept_lab.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/unused-import",
-      "severity": "warning",
-      "message": "Imported symbol 'random' is never used",
-      "help": "Remove unused imports to keep the code clean",
-      "line": 4,
-      "column": 0,
-      "category": "AI Slop",
-      "fixable": true,
-      "assessment": {
-        "kind": "ai-slop-indicator",
-        "confidence": "medium",
-        "label": "AI-slop indicators"
-      },
-      "scoreImpact": {
-        "tier": "mechanical",
-        "multiplier": 0.5,
-        "cap": 16,
-        "rationale": "Unused imports are mechanical cleanup."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/author_learning.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/python-print-debug",
-      "severity": "warning",
-      "message": "`print()` in production code — usually a leftover debug statement.",
-      "help": "Use the project's logger (`logging.getLogger(__name__).info(...)`). If this file is genuinely a CLI entry point (typer/click/argparse), it's safe to ignore — but rename to `__main__.py` or move under `scripts/` so the rule skips it next time.",
-      "line": 188,
+      "message": "Mutable default argument `links=[]`. The default is shared across all calls — bugs that look like state-leakage.",
+      "help": "Use `None` as the default and create the mutable value inside the body: `def f(items=None): items = items if items is not None else []`. Standard Python idiom; anything else is the AI agent shortcutting.",
+      "line": 14,
       "column": 1,
       "category": "AI Slop",
       "fixable": false,
@@ -208,21 +136,44 @@
         "label": "AI-slop indicators"
       },
       "scoreImpact": {
-        "tier": "style",
-        "multiplier": 0.5,
+        "tier": "strict",
+        "multiplier": 1,
+        "rationale": "Mutable defaults are a high-confidence Python behavior bug."
+      },
+      "forceFixable": false
+    },
+    {
+      "filePath": "tools/verify_pack.py",
+      "engine": "ai-slop",
+      "rule": "ai-slop/python-range-len-loop",
+      "severity": "info",
+      "message": "`range(len(doc))` loop — usually a hand-rolled iteration pattern.",
+      "help": "Prefer direct iteration (`for item in items`) or `enumerate(items)` when the index is needed. Keeping index plumbing out of the loop reduces checkpoint-to-checkpoint bloat.",
+      "line": 46,
+      "column": 1,
+      "category": "AI Slop",
+      "fixable": false,
+      "assessment": {
+        "kind": "ai-slop-indicator",
+        "confidence": "medium",
+        "label": "AI-slop indicators"
+      },
+      "scoreImpact": {
+        "tier": "advisory",
+        "multiplier": 0.25,
         "cap": 8,
-        "rationale": "Debug print output is cleanup unless it leaks sensitive data."
+        "rationale": "Index loops are style/readability signals and often not harmful."
       },
       "forceFixable": false
     },
     {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
+      "filePath": "tools/verify_pack.py",
       "engine": "ai-slop",
-      "rule": "ai-slop/python-repetitive-dispatch",
+      "rule": "ai-slop/python-chained-dict-get",
       "severity": "warning",
-      "message": "5 repeated branches dispatch on `kind`.",
-      "help": "Use a table, set membership, or handler map when branches share the same shape. SlopCodeBench highlights these selector ladders as code that keeps growing instead of absorbing new cases cleanly.",
-      "line": 81,
+      "message": "Chained `.get(..., {})` defaults hide missing-data cases.",
+      "help": "Normalize the input at the boundary, use a typed object, or split the lookup into explicit steps. Empty-dict fallback chains are a common agent shortcut that becomes brittle as schemas evolve.",
+      "line": 34,
       "column": 1,
       "category": "AI Slop",
       "fixable": false,
@@ -235,84 +186,12 @@
         "tier": "maintainability",
         "multiplier": 0.75,
         "cap": 24,
-        "rationale": "Repetitive dispatch ladders create maintainability debt."
+        "rationale": "Chained dict fallback hides shape assumptions and deserves review."
       },
       "forceFixable": false
     },
     {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/python-repetitive-dispatch",
-      "severity": "warning",
-      "message": "4 repeated branches dispatch on `kind`.",
-      "help": "Use a table, set membership, or handler map when branches share the same shape. SlopCodeBench highlights these selector ladders as code that keeps growing instead of absorbing new cases cleanly.",
-      "line": 82,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "ai-slop-indicator",
-        "confidence": "medium",
-        "label": "AI-slop indicators"
-      },
-      "scoreImpact": {
-        "tier": "maintainability",
-        "multiplier": 0.75,
-        "cap": 24,
-        "rationale": "Repetitive dispatch ladders create maintainability debt."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/python-repetitive-dispatch",
-      "severity": "warning",
-      "message": "6 repeated branches dispatch on `kind`.",
-      "help": "Use a table, set membership, or handler map when branches share the same shape. SlopCodeBench highlights these selector ladders as code that keeps growing instead of absorbing new cases cleanly.",
-      "line": 148,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "ai-slop-indicator",
-        "confidence": "medium",
-        "label": "AI-slop indicators"
-      },
-      "scoreImpact": {
-        "tier": "maintainability",
-        "multiplier": 0.75,
-        "cap": 24,
-        "rationale": "Repetitive dispatch ladders create maintainability debt."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/python-repetitive-dispatch",
-      "severity": "warning",
-      "message": "5 repeated branches dispatch on `kind`.",
-      "help": "Use a table, set membership, or handler map when branches share the same shape. SlopCodeBench highlights these selector ladders as code that keeps growing instead of absorbing new cases cleanly.",
-      "line": 149,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "ai-slop-indicator",
-        "confidence": "medium",
-        "label": "AI-slop indicators"
-      },
-      "scoreImpact": {
-        "tier": "maintainability",
-        "multiplier": 0.75,
-        "cap": 24,
-        "rationale": "Repetitive dispatch ladders create maintainability debt."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
+      "filePath": "tools/build_pack.py",
       "engine": "ai-slop",
       "rule": "ai-slop/python-repetitive-dispatch",
       "severity": "warning",
@@ -332,284 +211,6 @@
         "multiplier": 0.75,
         "cap": 24,
         "rationale": "Repetitive dispatch ladders create maintainability debt."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/collect_evidence.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/python-print-debug",
-      "severity": "warning",
-      "message": "`print()` in production code — usually a leftover debug statement.",
-      "help": "Use the project's logger (`logging.getLogger(__name__).info(...)`). If this file is genuinely a CLI entry point (typer/click/argparse), it's safe to ignore — but rename to `__main__.py` or move under `scripts/` so the rule skips it next time.",
-      "line": 34,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "ai-slop-indicator",
-        "confidence": "medium",
-        "label": "AI-slop indicators"
-      },
-      "scoreImpact": {
-        "tier": "style",
-        "multiplier": 0.5,
-        "cap": 8,
-        "rationale": "Debug print output is cleanup unless it leaks sensitive data."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/freeze_snapshot.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/python-print-debug",
-      "severity": "warning",
-      "message": "`print()` in production code — usually a leftover debug statement.",
-      "help": "Use the project's logger (`logging.getLogger(__name__).info(...)`). If this file is genuinely a CLI entry point (typer/click/argparse), it's safe to ignore — but rename to `__main__.py` or move under `scripts/` so the rule skips it next time.",
-      "line": 39,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "ai-slop-indicator",
-        "confidence": "medium",
-        "label": "AI-slop indicators"
-      },
-      "scoreImpact": {
-        "tier": "style",
-        "multiplier": 0.5,
-        "cap": 8,
-        "rationale": "Debug print output is cleanup unless it leaks sensitive data."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/hallucinated-import",
-      "severity": "error",
-      "message": "Imports \"reportlab\" but it's not declared in requirements files, pyproject.toml, or Pipfile and isn't Python stdlib",
-      "help": "Most often this is an LLM hallucinating a plausible-sounding package name. Either add the package to your manifest, or correct the import. If your runtime provides it, list it under imports.provided in .aislop/config.yml.",
-      "line": 6,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "confirmed-defect",
-        "confidence": "high",
-        "label": "confirmed defects"
-      },
-      "scoreImpact": {
-        "tier": "strict",
-        "multiplier": 1,
-        "rationale": "Imports missing from the manifest are high-confidence install/runtime failures."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/hallucinated-import",
-      "severity": "error",
-      "message": "Imports \"reportlab\" but it's not declared in requirements files, pyproject.toml, or Pipfile and isn't Python stdlib",
-      "help": "Most often this is an LLM hallucinating a plausible-sounding package name. Either add the package to your manifest, or correct the import. If your runtime provides it, list it under imports.provided in .aislop/config.yml.",
-      "line": 7,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "confirmed-defect",
-        "confidence": "high",
-        "label": "confirmed defects"
-      },
-      "scoreImpact": {
-        "tier": "strict",
-        "multiplier": 1,
-        "rationale": "Imports missing from the manifest are high-confidence install/runtime failures."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/hallucinated-import",
-      "severity": "error",
-      "message": "Imports \"reportlab\" but it's not declared in requirements files, pyproject.toml, or Pipfile and isn't Python stdlib",
-      "help": "Most often this is an LLM hallucinating a plausible-sounding package name. Either add the package to your manifest, or correct the import. If your runtime provides it, list it under imports.provided in .aislop/config.yml.",
-      "line": 8,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "confirmed-defect",
-        "confidence": "high",
-        "label": "confirmed defects"
-      },
-      "scoreImpact": {
-        "tier": "strict",
-        "multiplier": 1,
-        "rationale": "Imports missing from the manifest are high-confidence install/runtime failures."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/hallucinated-import",
-      "severity": "error",
-      "message": "Imports \"reportlab\" but it's not declared in requirements files, pyproject.toml, or Pipfile and isn't Python stdlib",
-      "help": "Most often this is an LLM hallucinating a plausible-sounding package name. Either add the package to your manifest, or correct the import. If your runtime provides it, list it under imports.provided in .aislop/config.yml.",
-      "line": 9,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "confirmed-defect",
-        "confidence": "high",
-        "label": "confirmed defects"
-      },
-      "scoreImpact": {
-        "tier": "strict",
-        "multiplier": 1,
-        "rationale": "Imports missing from the manifest are high-confidence install/runtime failures."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/hallucinated-import",
-      "severity": "error",
-      "message": "Imports \"reportlab\" but it's not declared in requirements files, pyproject.toml, or Pipfile and isn't Python stdlib",
-      "help": "Most often this is an LLM hallucinating a plausible-sounding package name. Either add the package to your manifest, or correct the import. If your runtime provides it, list it under imports.provided in .aislop/config.yml.",
-      "line": 10,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "confirmed-defect",
-        "confidence": "high",
-        "label": "confirmed defects"
-      },
-      "scoreImpact": {
-        "tier": "strict",
-        "multiplier": 1,
-        "rationale": "Imports missing from the manifest are high-confidence install/runtime failures."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/hallucinated-import",
-      "severity": "error",
-      "message": "Imports \"reportlab\" but it's not declared in requirements files, pyproject.toml, or Pipfile and isn't Python stdlib",
-      "help": "Most often this is an LLM hallucinating a plausible-sounding package name. Either add the package to your manifest, or correct the import. If your runtime provides it, list it under imports.provided in .aislop/config.yml.",
-      "line": 11,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "confirmed-defect",
-        "confidence": "high",
-        "label": "confirmed defects"
-      },
-      "scoreImpact": {
-        "tier": "strict",
-        "multiplier": 1,
-        "rationale": "Imports missing from the manifest are high-confidence install/runtime failures."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/hallucinated-import",
-      "severity": "error",
-      "message": "Imports \"reportlab\" but it's not declared in requirements files, pyproject.toml, or Pipfile and isn't Python stdlib",
-      "help": "Most often this is an LLM hallucinating a plausible-sounding package name. Either add the package to your manifest, or correct the import. If your runtime provides it, list it under imports.provided in .aislop/config.yml.",
-      "line": 12,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "confirmed-defect",
-        "confidence": "high",
-        "label": "confirmed defects"
-      },
-      "scoreImpact": {
-        "tier": "strict",
-        "multiplier": 1,
-        "rationale": "Imports missing from the manifest are high-confidence install/runtime failures."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/build_pack.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/hallucinated-import",
-      "severity": "error",
-      "message": "Imports \"reportlab\" but it's not declared in requirements files, pyproject.toml, or Pipfile and isn't Python stdlib",
-      "help": "Most often this is an LLM hallucinating a plausible-sounding package name. Either add the package to your manifest, or correct the import. If your runtime provides it, list it under imports.provided in .aislop/config.yml.",
-      "line": 13,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "confirmed-defect",
-        "confidence": "high",
-        "label": "confirmed defects"
-      },
-      "scoreImpact": {
-        "tier": "strict",
-        "multiplier": 1,
-        "rationale": "Imports missing from the manifest are high-confidence install/runtime failures."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/capture_dashboard.mjs",
-      "engine": "ai-slop",
-      "rule": "ai-slop/hallucinated-import",
-      "severity": "error",
-      "message": "Imports \"C:\" but it's not declared in package.json",
-      "help": "Most often this is an LLM hallucinating a plausible-sounding package name. Either add the package to your manifest, or correct the import. If your runtime provides it, list it under imports.provided in .aislop/config.yml.",
-      "line": 5,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "confirmed-defect",
-        "confidence": "high",
-        "label": "confirmed defects"
-      },
-      "scoreImpact": {
-        "tier": "strict",
-        "multiplier": 1,
-        "rationale": "Imports missing from the manifest are high-confidence install/runtime failures."
-      },
-      "forceFixable": false
-    },
-    {
-      "filePath": "offline-study-pack/2026-11-04/tools/create_visuals.py",
-      "engine": "ai-slop",
-      "rule": "ai-slop/hallucinated-import",
-      "severity": "error",
-      "message": "Imports \"PIL\" but it's not declared in requirements files, pyproject.toml, or Pipfile and isn't Python stdlib",
-      "help": "Most often this is an LLM hallucinating a plausible-sounding package name. Either add the package to your manifest, or correct the import. If your runtime provides it, list it under imports.provided in .aislop/config.yml.",
-      "line": 9,
-      "column": 1,
-      "category": "AI Slop",
-      "fixable": false,
-      "assessment": {
-        "kind": "confirmed-defect",
-        "confidence": "high",
-        "label": "confirmed defects"
-      },
-      "scoreImpact": {
-        "tier": "strict",
-        "multiplier": 1,
-        "rationale": "Imports missing from the manifest are high-confidence install/runtime failures."
       },
       "forceFixable": false
     },
@@ -643,20 +244,11 @@
       {
         "kind": "ai-slop-indicator",
         "label": "AI-slop indicators",
-        "count": 12,
+        "count": 5,
         "errors": 0,
-        "warnings": 12,
-        "info": 0,
-        "fixable": 4
-      },
-      {
-        "kind": "confirmed-defect",
-        "label": "confirmed defects",
-        "count": 10,
-        "errors": 10,
-        "warnings": 0,
-        "info": 0,
-        "fixable": 0
+        "warnings": 4,
+        "info": 1,
+        "fixable": 1
       },
       {
         "kind": "style-policy",
@@ -678,22 +270,22 @@
       }
     ],
     "byKind": {
-      "confirmed-defect": 10,
+      "confirmed-defect": 0,
       "conservative-security": 1,
       "style-policy": 1,
-      "ai-slop-indicator": 12
+      "ai-slop-indicator": 5
     },
     "byConfidence": {
-      "high": 10,
-      "medium": 14,
+      "high": 0,
+      "medium": 7,
       "low": 0
     }
   },
   "summary": {
-    "errors": 10,
-    "warnings": 12,
-    "fixable": 4,
-    "files": 7,
-    "elapsed": "2.0s"
+    "errors": 0,
+    "warnings": 4,
+    "fixable": 1,
+    "files": 12,
+    "elapsed": "527ms"
   }
 }

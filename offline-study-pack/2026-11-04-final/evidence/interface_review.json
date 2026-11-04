@@ -1,0 +1,14 @@
+{
+  "review_date": "2026-11-04",
+  "scope": "UI, browser geometry, catalogs, local scenario service, Reports and representative tests",
+  "source_material": "Current local working-tree files, not Git HEAD alone",
+  "findings": [
+    {"kind":"documentation_discrepancy", "claim":"Selected-race analysis detail is fetched by App after replay selection, including while Replay is open; Analysis also has a panel-specific cache.", "evidence":["src/App.tsx:87-94","src/components/modals/AnalysisModal.tsx:270-298","docs/architecture.md:5-7"]},
+    {"kind":"active_contract", "claim":"UI historical metric display uses Python exports; per-leg scope selects exported evidence rather than recomputing indexes.", "evidence":["src/components/dashboard/BoatPerformanceRadar.tsx:18-25","src/components/dashboard/ReportsWorkspace.tsx:43-69"]},
+    {"kind":"active_contract", "claim":"Exact scenario input, same-origin localhost service, 750 ms polling, workspace lock with publisher child ownership and immutable path validation are implemented.", "evidence":["src/engine/forecastScenarios.ts:20-42","scripts/forecastScenarios.ts:24-78","scripts/forecastScenarios.ts:91-127","scripts/forecastScenarios.ts:141-196"]},
+    {"kind":"test_quality", "claim":"Some camera tests inspect source strings or restate wiring; executable service tests, real byte hash tests and browser interaction checks provide stronger complementary evidence.", "evidence":["src/components/canvas/cameraStateSyncAdversarial.test.ts:72-92","src/engine/forecastArtifactRouting.test.ts:59-143","src/engine/forecastScenarioService.test.ts:36-140"]}
+  ],
+  "tests_run_by_this_reviewer": [],
+  "test_note": "Parent agent records new verification runs. Counts in dated documentation are historical claims, not reruns by this reviewer.",
+  "online_research": false
+}

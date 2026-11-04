@@ -1,0 +1,11 @@
+{
+  "dist": {
+    "files": 514,
+    "bytes": 266118514
+  },
+  "public/data": {
+    "files": 506,
+    "bytes": 263706323
+  },
+  "optional_dashboard_policy": "Measured but not included: copy a prepared build separately only after testing a local HTTP server. Grid needs no tiles; new forecasts need a prepared Python backend/dataset. Core study pack is standalone."
+}

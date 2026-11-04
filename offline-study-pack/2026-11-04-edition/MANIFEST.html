@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>09 — Study Pack File Manifest &amp; SHA-256 Provenance — AC40 Regatta Replay Offline Study Pack</title>
+  <style>
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --ink-muted: #475569;
+  --accent: #0284c7;
+  --accent-dark: #0369a1;
+  --border: #cbd5e1;
+  --code-bg: #f1f5f9;
+  --callout-bg: #f0f9ff;
+  --warn-bg: #fffbeb;
+  --warn-border: #f59e0b;
+  --danger-bg: #fef2f2;
+  --danger-border: #ef4444;
+  --ok-bg: #f0fdf4;
+  --ok-border: #16a34a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.62;
+  font-size: 10.5pt;
+}
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 310px;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 20px 16px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+  border-right: 1px solid #1e293b;
+}
+.sidebar h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #38bdf8;
+  margin: 0 0 8px 0;
+}
+.sidebar .pack-meta {
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.search-box {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #f8fafc;
+  font-size: 12.5px;
+  margin-bottom: 10px;
+}
+.search-status {
+  font-size: 11px;
+  color: #38bdf8;
+  margin-bottom: 10px;
+  min-height: 16px;
+}
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 12px;
+}
+.nav-links li { margin-bottom: 5px; }
+.nav-links a {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 12.5px;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.nav-links a:hover, .nav-links a.active {
+  background: #1e293b;
+  color: #38bdf8;
+}
+.toc-container ul {
+  list-style: none;
+  padding-left: 10px;
+  margin: 4px 0;
+}
+.toc-container > ul { padding-left: 0; }
+.toc-container li { margin: 4px 0; }
+.toc-container a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 1.35;
+  display: block;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.toc-container a:hover {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+}
+.main-content {
+  flex: 1;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 36px 48px 64px 48px;
+  background: var(--surface);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  font-weight: 700;
+  line-height: 1.25;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 3px solid #0284c7;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+h2 {
+  font-size: 16.5pt;
+  border-bottom: 1.5px solid #cbd5e1;
+  padding-bottom: 6px;
+  margin-top: 34px;
+  page-break-after: avoid;
+}
+h3 {
+  font-size: 12.8pt;
+  color: #0369a1;
+  margin-top: 22px;
+  page-break-after: avoid;
+}
+h4 {
+  font-size: 11pt;
+  color: #1e293b;
+  margin-top: 16px;
+  page-break-after: avoid;
+}
+p, li {
+  text-align: left;
+}
+code {
+  font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+}
+pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 14px 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 9pt;
+  line-height: 1.45;
+  border: 1px solid #1e293b;
+  break-inside: avoid;
+}
+pre code {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 9.2pt;
+  break-inside: avoid;
+}
+th, td {
+  border: 1px solid #cbd5e1;
+  padding: 7px 9px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background: #f1f5f9;
+  font-weight: 700;
+  color: #0f172a;
+}
+tr:nth-child(even) td {
+  background: #f8fafc;
+}
+blockquote {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--accent);
+  background: var(--callout-bg);
+  border-radius: 0 6px 6px 0;
+  break-inside: avoid;
+}
+blockquote p:first-child { margin-top: 0; }
+blockquote p:last-child { margin-bottom: 0; }
+.diagram-figure, .screenshot-figure {
+  margin: 20px 0;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  text-align: center;
+  break-inside: avoid;
+}
+.diagram-figure .svg-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.screenshot-figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+figcaption {
+  margin-top: 8px;
+  font-size: 9pt;
+  color: #475569;
+  font-weight: 600;
+}
+/* Mathematical typography */
+.math-inline {
+  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", Georgia, serif;
+  font-size: 1.03em;
+  white-space: nowrap;
+}
+.math-block {
+  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", Georgia, serif;
+  font-size: 1.08em;
+  margin: 14px 0;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3.5px solid #0369a1;
+  border-radius: 6px;
+  overflow-x: auto;
+  text-align: center;
+  break-inside: avoid;
+}
+.m-frac {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 3px;
+  font-size: 0.92em;
+}
+.m-num {
+  border-bottom: 1.2px solid currentColor;
+  padding: 0 3px 1px 3px;
+  line-height: 1.15;
+}
+.m-den {
+  padding: 1px 3px 0 3px;
+  line-height: 1.15;
+}
+.m-sqrt {
+  display: inline-flex;
+  align-items: baseline;
+}
+.m-sqrt-body {
+  border-top: 1.1px solid currentColor;
+  padding: 0 2px;
+}
+.m-over {
+  border-top: 1.1px solid currentColor;
+  padding-top: 1px;
+}
+.m-text, .m-rm {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-style: normal;
+  font-size: 0.92em;
+}
+.m-aligned {
+  display: inline-block;
+  text-align: left;
+}
+.m-align-row {
+  margin: 3px 0;
+}
+.m-cases {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+.m-brace {
+  font-size: 2.2em;
+  font-weight: 300;
+  padding-right: 4px;
+}
+.m-cases-table {
+  margin: 0;
+  border: none;
+  width: auto;
+}
+.m-cases-table td {
+  border: none !important;
+  background: transparent !important;
+  padding: 2px 8px;
+}
+.chapter-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #f8fafc;
+  padding: 18px 22px;
+  border-radius: 8px;
+  margin-top: 36px;
+  margin-bottom: 18px;
+  page-break-before: always;
+  break-before: page;
+}
+.chapter-banner.first-banner {
+  page-break-before: avoid;
+  break-before: avoid;
+}
+.chapter-banner h2 {
+  color: #f8fafc;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font-size: 18pt;
+}
+.chapter-banner .part-kicker {
+  color: #38bdf8;
+  font-size: 9.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.pedagogy-box {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  background: #f8fafc;
+  break-inside: avoid;
+}
+.pedagogy-box.objectives {
+  border-left: 4px solid #0284c7;
+  background: #f0f9ff;
+}
+.pedagogy-box.worked-example {
+  border-left: 4px solid #16a34a;
+  background: #f0fdf4;
+}
+.pedagogy-box.failure-mode {
+  border-left: 4px solid #f59e0b;
+  background: #fffbeb;
+}
+.pedagogy-box.mistakes {
+  border-left: 4px solid #ef4444;
+  background: #fef2f2;
+}
+.pedagogy-box.selftest {
+  border-left: 4px solid #7c3aed;
+  background: #f5f3ff;
+}
+mark.search-hit {
+  background: #fde047;
+  color: #0f172a;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+.inline-toc-box {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-left: 4px solid #0284c7;
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin: 16px 0 24px 0;
+}
+.inline-toc-box h2 {
+  margin: 0 0 8px 0;
+  font-size: 13pt;
+  border-bottom: 1px solid #cbd5e1;
+  padding-bottom: 4px;
+}
+.inline-toc-box ul {
+  columns: 2;
+  column-gap: 24px;
+  padding-left: 18px;
+  margin: 4px 0;
+}
+.inline-toc-box ul ul {
+  columns: 1;
+}
+.inline-toc-box li {
+  margin: 2px 0;
+  font-size: 8.8pt;
+  break-inside: avoid;
+}
+.inline-toc-box a {
+  color: #0369a1;
+  text-decoration: none;
+}
+
+@media print {
+  h1:not(:first-of-type) { page-break-before: always; break-before: page; }
+  body {
+    background: #ffffff;
+    font-size: 9.8pt;
+    line-height: 1.52;
+  }
+  .sidebar, .no-print {
+    display: none !important;
+  }
+  .app-shell {
+    display: block;
+  }
+  .main-content {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+  a {
+    color: #0369a1;
+    text-decoration: none;
+  }
+  h2, h3, h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  table, pre, blockquote, .diagram-figure, .screenshot-figure, .pedagogy-box, .math-block {
+    break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar no-print">
+      <h2>AC40 Study Pack</h2>
+      <div class="pack-meta">
+        Snapshot: <code>2026-11-04</code><br/>
+        Commit: <code>f956f8a14feb</code> (dirty)<br/>
+        100% Offline Edition (<code>file://</code> ready)
+      </div>
+      <input id="offline-search" class="search-box" type="search" placeholder="Search this document..." aria-label="Search this document" />
+      <div id="search-status" class="search-status"></div>
+      <h2>Pack Navigation</h2>
+      <ul class="nav-links">
+        <li><a href="./START_HERE.html">★ Start Here & Checklist</a></li>
+<li><a href="./01_Repository_Explained.html">01. Main Textbook</a></li>
+<li><a href="./02_Field_Guide.html">02. Field Guide</a></li>
+<li><a href="./03_Repository_Atlas.html">03. Repository Atlas & Glossary</a></li>
+<li><a href="./04_Workbook.html">04. Workbook (Exercises)</a></li>
+<li><a href="./04_Workbook_Solutions.html">04b. Workbook Solutions</a></li>
+<li><a href="./study-materials/05_Study_Routes_and_Questions.html">05. Study Routes & Open Questions</a></li>
+<li><a href="./study-materials/flashcards_viewer.html">05b. Interactive Flashcards</a></li>
+<li><a href="./study-materials/06_Audio_Narration_Script.html">06. Audio Narration Script</a></li>
+<li><a href="./examples/interactive_sailing_and_forecast_lab.html">07. Interactive Math & Forecast Lab</a></li>
+<li><a href="./examples/05_Interactive_Study_Notebook.html">07b. Rendered Study Notebook</a></li>
+<li><a href="./source-companion/index.html">08. Source Companion (209 Files)</a></li>
+<li><a href="./MANIFEST.html">09. Pack Manifest & SHA-256</a></li>
+      </ul>
+      <h2>Contents</h2>
+      <div class="toc-container">
+        <div class="toc">
+<ul>
+<li><a href="#offline-study-pack-manifest-cryptographic-provenance-2026-11-04">Offline Study Pack Manifest &amp; Cryptographic Provenance (2026-11-04)</a><ul>
+<li><a href="#primary-study-pack-deliverables-diagrams-evidence-examples">Primary Study Pack Deliverables, Diagrams, Evidence &amp; Examples</a></li>
+<li><a href="#source-companion-summary-source-companion">Source Companion Summary (source-companion/)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+      </div>
+    </aside>
+    <main class="main-content">
+      <h1 id="offline-study-pack-manifest-cryptographic-provenance-2026-11-04">Offline Study Pack Manifest &amp; Cryptographic Provenance (<code>2026-11-04</code>)</h1>
+<nav class="inline-toc-box" aria-label="Table of Contents"><h2>Table of Contents</h2><div class="toc">
+<ul>
+<li><a href="#offline-study-pack-manifest-cryptographic-provenance-2026-11-04">Offline Study Pack Manifest &amp; Cryptographic Provenance (2026-11-04)</a><ul>
+<li><a href="#primary-study-pack-deliverables-diagrams-evidence-examples">Primary Study Pack Deliverables, Diagrams, Evidence &amp; Examples</a></li>
+<li><a href="#source-companion-summary-source-companion">Source Companion Summary (source-companion/)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+<ul>
+<li><strong>Pack Directory</strong>: <code>offline-study-pack/2026-11-04-edition/</code></li>
+<li><strong>Snapshot Date</strong>: <code>2026-11-04</code></li>
+<li><strong>Git Base Commit (<code>HEAD</code>)</strong>: <code>6b8482309d178fc31d724f449f706a98f9a1ea2e</code> (<code>master</code>)</li>
+<li><strong>Dirty Working-Tree Files</strong>: <code>0</code> modified/untracked first-party files (recorded with per-file SHA-256 digests in <a href="evidence/repository_snapshot_provenance.json"><code>evidence/repository_snapshot_provenance.json</code></a>)</li>
+<li><strong>Total Included Pack Files (excluding manifest/zip)</strong>: <strong><code>488</code></strong> files (<strong><code>25,608,818</code> bytes</strong> / <code>24.42 MiB</code> uncompressed)</li>
+</ul>
+<h2 id="primary-study-pack-deliverables-diagrams-evidence-examples">Primary Study Pack Deliverables, Diagrams, Evidence &amp; Examples</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Relative Path</th>
+<th>Size (Bytes)</th>
+<th>SHA-256 Digest</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="01_Repository_Explained.html"><code>01_Repository_Explained.html</code></a></td>
+<td><code>472,136</code></td>
+<td><code>955d9e20436566c15aa67582766d7456eeba9889b1ed8196d236a4439e456af3</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="01_Repository_Explained.md"><code>01_Repository_Explained.md</code></a></td>
+<td><code>243,210</code></td>
+<td><code>4c1ed46cf10c198b08587de2589f8baf4e151ea9d1b06ad2f482d2a0c48e9d0d</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="01_Repository_Explained.pdf"><code>01_Repository_Explained.pdf</code></a></td>
+<td><code>7,502,596</code></td>
+<td><code>b04a91381dbe61897b2abaf81734a8c20328056cb5c47b0c6747bd9167af3783</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="02_Field_Guide.html"><code>02_Field_Guide.html</code></a></td>
+<td><code>87,499</code></td>
+<td><code>b0931812b23d47a92177f2ddf99695ddb350228d6ff25d7867e193f70d49a357</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="02_Field_Guide.md"><code>02_Field_Guide.md</code></a></td>
+<td><code>20,686</code></td>
+<td><code>fc79411896b15999f6c2505a41bbda57faf82724e0a285995c59f3c0f478a9a0</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="02_Field_Guide.pdf"><code>02_Field_Guide.pdf</code></a></td>
+<td><code>735,872</code></td>
+<td><code>3007ebe98257a48a6b7ad58cf57afb75ceb98aec287d43e4156b2956fb8bff2d</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="03_Repository_Atlas.html"><code>03_Repository_Atlas.html</code></a></td>
+<td><code>195,349</code></td>
+<td><code>9c2ba35f82aa44a22d1d07f178604e6855c1ff2ded63b455911be90a844d1eef</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="03_Repository_Atlas.md"><code>03_Repository_Atlas.md</code></a></td>
+<td><code>86,359</code></td>
+<td><code>52c22fafce333568ec504ccadc58c3fd0a8689bcaa88e872ddd378b665473e3c</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="04_Workbook.html"><code>04_Workbook.html</code></a></td>
+<td><code>88,633</code></td>
+<td><code>672c5b8d0a73743580333da6acc9d790cc5cbf63d4b6ef3744413b2226d2f974</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="04_Workbook.md"><code>04_Workbook.md</code></a></td>
+<td><code>36,405</code></td>
+<td><code>6f0bc0d14b5c45cd7a5da4778973c4d8637d79a901a5e8c6a352951dd6896c21</code></td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="04_Workbook.pdf"><code>04_Workbook.pdf</code></a></td>
+<td><code>870,510</code></td>
+<td><code>7a0720e8793e29a18c7c598e4c4a7c43719bfb596aae528dfd2e0eea54b843ae</code></td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="04_Workbook_Solutions.html"><code>04_Workbook_Solutions.html</code></a></td>
+<td><code>107,906</code></td>
+<td><code>d65fc1f5c9bd8be412ca9ad114d5ca649bf27235c1d658a3952d30b460bd4c73</code></td>
+</tr>
+<tr>
+<td>13</td>
+<td><a href="04_Workbook_Solutions.md"><code>04_Workbook_Solutions.md</code></a></td>
+<td><code>43,799</code></td>
+<td><code>2d56395fc377b16bd432a48b9c880841b1651cc1b48bd64dae13a435ed18867a</code></td>
+</tr>
+<tr>
+<td>14</td>
+<td><a href="04_Workbook_Solutions.pdf"><code>04_Workbook_Solutions.pdf</code></a></td>
+<td><code>1,087,464</code></td>
+<td><code>a3486275120483d8321e2e1123610a51b9caa9eb6f4915c9055e192f38613ad8</code></td>
+</tr>
+<tr>
+<td>15</td>
+<td><a href="PREPARATION_CHECKLIST.md"><code>PREPARATION_CHECKLIST.md</code></a></td>
+<td><code>6,549</code></td>
+<td><code>fb41c99ff64b28e8572559c3f796c89e1032f1b50eecaa9c372ba5615956150f</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td><a href="START_HERE.html"><code>START_HERE.html</code></a></td>
+<td><code>30,532</code></td>
+<td><code>372c5c07c11b4635bac2ecb657ead6981d1d02d5e4f4353ff9851bb645f0662e</code></td>
+</tr>
+<tr>
+<td>17</td>
+<td><a href="assets/diagrams/fig01_sailing_primer_course.svg"><code>assets/diagrams/fig01_sailing_primer_course.svg</code></a></td>
+<td><code>9,195</code></td>
+<td><code>0ac2d321673ea3192a525d3c36004d66cb78764b3fb233019403b4f35d0269ee</code></td>
+</tr>
+<tr>
+<td>18</td>
+<td><a href="assets/diagrams/fig02_system_architecture_ownership.svg"><code>assets/diagrams/fig02_system_architecture_ownership.svg</code></a></td>
+<td><code>12,670</code></td>
+<td><code>cba1bb12464cc95fff69a65fe6772dfe7fff23be7aa4357702aa7b8bfac4ae89</code></td>
+</tr>
+<tr>
+<td>19</td>
+<td><a href="assets/diagrams/fig03_evidence_ladder.svg"><code>assets/diagrams/fig03_evidence_ladder.svg</code></a></td>
+<td><code>5,366</code></td>
+<td><code>c5a7b602855874a383110cdc6a1efaebdd3b8b7a4c17c408f6d2f411acced0c1</code></td>
+</tr>
+<tr>
+<td>20</td>
+<td><a href="assets/diagrams/fig04_bow_crossing_and_interpolation.svg"><code>assets/diagrams/fig04_bow_crossing_and_interpolation.svg</code></a></td>
+<td><code>9,195</code></td>
+<td><code>d60700c45c0316594f27661574611f9eae039c23c6d72ef44124e70d5e155e6f</code></td>
+</tr>
+<tr>
+<td>21</td>
+<td><a href="assets/diagrams/fig05_vmg_and_peer_index_geometry.svg"><code>assets/diagrams/fig05_vmg_and_peer_index_geometry.svg</code></a></td>
+<td><code>6,613</code></td>
+<td><code>eb262ac925bc5829a3e65262c4aa1d78d2aa651f6dfc40e1c095b7029ff42a49</code></td>
+</tr>
+<tr>
+<td>22</td>
+<td><a href="assets/diagrams/fig06_forecasting_three_targets_and_cup.svg"><code>assets/diagrams/fig06_forecasting_three_targets_and_cup.svg</code></a></td>
+<td><code>8,912</code></td>
+<td><code>b3a115c53f00b65e72fd1595ab755966c07717533a8fb7ce11e45d94875f9faa</code></td>
+</tr>
+<tr>
+<td>23</td>
+<td><a href="assets/diagrams/fig07_viewport_and_sat_geometry.svg"><code>assets/diagrams/fig07_viewport_and_sat_geometry.svg</code></a></td>
+<td><code>5,627</code></td>
+<td><code>d3b00e81234619dd1f8cf8cd29a1ef8485f67040ac35501d3d67de50a8d820c3</code></td>
+</tr>
+<tr>
+<td>24</td>
+<td><a href="assets/diagrams/fig08_troubleshooting_decision_tree.svg"><code>assets/diagrams/fig08_troubleshooting_decision_tree.svg</code></a></td>
+<td><code>9,354</code></td>
+<td><code>76fb95314ab39082f92892196dd5641fcae2d40a272ca3ef42beb8847d8a8e10</code></td>
+</tr>
+<tr>
+<td>25</td>
+<td><a href="assets/screenshots/01_replay_grid_workspace.png"><code>assets/screenshots/01_replay_grid_workspace.png</code></a></td>
+<td><code>467,758</code></td>
+<td><code>e32eae4f4edb88f5709ef9e093450fe9785a8378e1fee9e0903f1ae720e1c060</code></td>
+</tr>
+<tr>
+<td>26</td>
+<td><a href="assets/screenshots/02_race_library_modal.png"><code>assets/screenshots/02_race_library_modal.png</code></a></td>
+<td><code>348,579</code></td>
+<td><code>a13ffc6a164d31f5d2ad1065526d08111f341db99e974af746d02f5fa8cdb7f2</code></td>
+</tr>
+<tr>
+<td>27</td>
+<td><a href="assets/screenshots/03_analysis_race_report_radar.png"><code>assets/screenshots/03_analysis_race_report_radar.png</code></a></td>
+<td><code>270,079</code></td>
+<td><code>200adeda1232bb36dea7194c86d2a32cd96f8f82588cd8640c31fc71a41226e4</code></td>
+</tr>
+<tr>
+<td>28</td>
+<td><a href="assets/screenshots/04_analysis_historical_cohort.png"><code>assets/screenshots/04_analysis_historical_cohort.png</code></a></td>
+<td><code>265,498</code></td>
+<td><code>2f9c2cea2b27a8562d75e1abfdc622e0d6d14fec1be648f367ea6d487c5cc17f</code></td>
+</tr>
+<tr>
+<td>29</td>
+<td><a href="assets/screenshots/05_compare_workspace.png"><code>assets/screenshots/05_compare_workspace.png</code></a></td>
+<td><code>284,697</code></td>
+<td><code>ea0818105f88bba265b99f231806975fc8101714eda52a65e598088a5ad5b2ba</code></td>
+</tr>
+<tr>
+<td>30</td>
+<td><a href="assets/screenshots/06_reports_workspace.png"><code>assets/screenshots/06_reports_workspace.png</code></a></td>
+<td><code>324,446</code></td>
+<td><code>b58d85d8ad28f53161263f1bc535d332032eedcac21af0bc8bf01b3b0ee1feef</code></td>
+</tr>
+<tr>
+<td>31</td>
+<td><a href="assets/screenshots/07_forecast_prerace.png"><code>assets/screenshots/07_forecast_prerace.png</code></a></td>
+<td><code>330,399</code></td>
+<td><code>d9a543e04b4a3b64a6b0644b44826b253ef57dacc3f64d3ef1da4372253a9041</code></td>
+</tr>
+<tr>
+<td>32</td>
+<td><a href="assets/screenshots/08_forecast_cup_2027_bounds.png"><code>assets/screenshots/08_forecast_cup_2027_bounds.png</code></a></td>
+<td><code>327,204</code></td>
+<td><code>1178c2fc2ab4f8acb884ef23a262d8a2efb932e82885c7173ba6b4e82fa377e8</code></td>
+</tr>
+<tr>
+<td>33</td>
+<td><a href="evidence/26_09_22_nap_ipr_pr2_summary.csv"><code>evidence/26_09_22_nap_ipr_pr2_summary.csv</code></a></td>
+<td><code>30,292</code></td>
+<td><code>0880154f25764ac56e753ffe722a4e50db91161901ed45e292cc9cacf691cc8b</code></td>
+</tr>
+<tr>
+<td>34</td>
+<td><a href="evidence/analysis_index.json"><code>evidence/analysis_index.json</code></a></td>
+<td><code>1,512,558</code></td>
+<td><code>20c69e69eb96f70879d241a05a804e22819f72774202a60efa26fd34c37fdc59</code></td>
+</tr>
+<tr>
+<td>35</td>
+<td><a href="evidence/analysis_snapshot_26_05_23_cag_ipr_race_4.json"><code>evidence/analysis_snapshot_26_05_23_cag_ipr_race_4.json</code></a></td>
+<td><code>4,270</code></td>
+<td><code>9c36579495ba5f9f066000f01cb88d8d17bbb8cc694a39eb70f3cbf2425d6009</code></td>
+</tr>
+<tr>
+<td>36</td>
+<td><a href="evidence/analysis_snapshot_26_05_24_cag_ipr_mr_final.json"><code>evidence/analysis_snapshot_26_05_24_cag_ipr_mr_final.json</code></a></td>
+<td><code>3,710</code></td>
+<td><code>a8e79f35f7fbc9cef98052811e43f07fdfe03f89e4071e5dfa1ac6b374d71b68</code></td>
+</tr>
+<tr>
+<td>37</td>
+<td><a href="evidence/analysis_snapshot_26_09_22_nap_ipr_pr2.json"><code>evidence/analysis_snapshot_26_09_22_nap_ipr_pr2.json</code></a></td>
+<td><code>4,374</code></td>
+<td><code>fe8e4805c34c683466fbe2cfe97f53732f2cf61a838a662a4ed4184095e55f10</code></td>
+</tr>
+<tr>
+<td>38</td>
+<td><a href="evidence/analysis_snapshot_26_09_23_nap_ipr_pr1.json"><code>evidence/analysis_snapshot_26_09_23_nap_ipr_pr1.json</code></a></td>
+<td><code>4,463</code></td>
+<td><code>ff88d76fc588ff36110e6b8c8e43147bbf791b478cbed21ed5227dd1299ca896</code></td>
+</tr>
+<tr>
+<td>39</td>
+<td><a href="evidence/analysis_snapshot_naples_mr_final.json"><code>evidence/analysis_snapshot_naples_mr_final.json</code></a></td>
+<td><code>3,703</code></td>
+<td><code>e0b9507b37057f217b6e2a49166bbc143947c624d7c6c1d0e9ccefd46b248213</code></td>
+</tr>
+<tr>
+<td>40</td>
+<td><a href="evidence/analysis_snapshot_naples_pr1.json"><code>evidence/analysis_snapshot_naples_pr1.json</code></a></td>
+<td><code>4,475</code></td>
+<td><code>d832181e2fc8782296db6ae1f72c163a5da800d93749a2025856e584ba29079e</code></td>
+</tr>
+<tr>
+<td>41</td>
+<td><a href="evidence/analysis_snapshot_overview.json"><code>evidence/analysis_snapshot_overview.json</code></a></td>
+<td><code>3,365</code></td>
+<td><code>54f8b7f525abecdb498a70cbd5bf8931d427db61a9c80b2acb04118349567d1e</code></td>
+</tr>
+<tr>
+<td>42</td>
+<td><a href="evidence/cup_2027.json"><code>evidence/cup_2027.json</code></a></td>
+<td><code>28,095</code></td>
+<td><code>e71fa8dc8b66b5a1f79cf34e2f58b1dd53fa1e930e31d785fce116bc565ea55c</code></td>
+</tr>
+<tr>
+<td>43</td>
+<td><a href="evidence/environment_naples_pr1.json"><code>evidence/environment_naples_pr1.json</code></a></td>
+<td><code>2,350</code></td>
+<td><code>70164f4715333d4d7f40d181ade2396803bce83d20ca9d1b14a5535d536fdb2d</code></td>
+</tr>
+<tr>
+<td>44</td>
+<td><a href="evidence/forecast_rules_sources.json"><code>evidence/forecast_rules_sources.json</code></a></td>
+<td><code>2,759</code></td>
+<td><code>eb055645ba08523f9fbd8d5c4a5edec101b707a71a7b69bc2518799ddfaf671d</code></td>
+</tr>
+<tr>
+<td>45</td>
+<td><a href="evidence/manifests.json"><code>evidence/manifests.json</code></a></td>
+<td><code>24,717</code></td>
+<td><code>3a50d6a6c1eb33adbbc327831411230c3ddb9351de22f5acd3cb377242c688d6</code></td>
+</tr>
+<tr>
+<td>46</td>
+<td><a href="evidence/naples_mr_final_performance.csv"><code>evidence/naples_mr_final_performance.csv</code></a></td>
+<td><code>15,943</code></td>
+<td><code>3a736f2d2f78a18e534c888e07a2e76b188cc032b038cfac55dd27f95fa5bdbc</code></td>
+</tr>
+<tr>
+<td>47</td>
+<td><a href="evidence/naples_mr_final_summary.csv"><code>evidence/naples_mr_final_summary.csv</code></a></td>
+<td><code>7,591</code></td>
+<td><code>5a5d6de3355321dbf07bc8e5ddc8288c7348cf8c282948c12ed0aa4fb4e16c8f</code></td>
+</tr>
+<tr>
+<td>48</td>
+<td><a href="evidence/naples_pr1_performance.csv"><code>evidence/naples_pr1_performance.csv</code></a></td>
+<td><code>78,807</code></td>
+<td><code>b5a2c357b5980d07eb2a8735b552ce8f7e4cd838ae3fb7f8d10f56bdb4f0bf4f</code></td>
+</tr>
+<tr>
+<td>49</td>
+<td><a href="evidence/naples_pr1_replay_bounded_excerpt.json"><code>evidence/naples_pr1_replay_bounded_excerpt.json</code></a></td>
+<td><code>59,322</code></td>
+<td><code>56a234d3635423376512f007b4b07f80a32c874f4dd51c86d4e98a6389dd21a2</code></td>
+</tr>
+<tr>
+<td>50</td>
+<td><a href="evidence/naples_pr1_summary.csv"><code>evidence/naples_pr1_summary.csv</code></a></td>
+<td><code>33,795</code></td>
+<td><code>eb94ed08e4273ce46af46cc148642d011cee747dd83ee53b6dc59b9dcb1cdfce</code></td>
+</tr>
+<tr>
+<td>51</td>
+<td><a href="evidence/offline_browser_verification.json"><code>evidence/offline_browser_verification.json</code></a></td>
+<td><code>3,650</code></td>
+<td><code>00482f746492a58c050035dac6db4d9539fe4b0c85914f6212c999cef6502856</code></td>
+</tr>
+<tr>
+<td>52</td>
+<td><a href="evidence/predictions_index.json"><code>evidence/predictions_index.json</code></a></td>
+<td><code>99,053</code></td>
+<td><code>4d40084d18c115e0a05937209ac39cb9f9ad4eb1d074c65b2246ec2065581518</code></td>
+</tr>
+<tr>
+<td>53</td>
+<td><a href="evidence/race_previews.json"><code>evidence/race_previews.json</code></a></td>
+<td><code>18,797</code></td>
+<td><code>d546f0bc4823e277ca51c4bb7908c5bd32b0354872f0d7c5c591c7bb2b0b33a0</code></td>
+</tr>
+<tr>
+<td>54</td>
+<td><a href="evidence/repository_snapshot_provenance.json"><code>evidence/repository_snapshot_provenance.json</code></a></td>
+<td><code>85,650</code></td>
+<td><code>17361a3a45a4e3fd5974a7aca80393a6c5a705a86a3c2378b8f1e7a3820c0b83</code></td>
+</tr>
+<tr>
+<td>55</td>
+<td><a href="evidence/scheduled_entry_ledger.json"><code>evidence/scheduled_entry_ledger.json</code></a></td>
+<td><code>145,867</code></td>
+<td><code>b27a8327c89fe6d66465e7401beff1b1687d4563293d51662aa26b2a723bf594</code></td>
+</tr>
+<tr>
+<td>56</td>
+<td><a href="examples/01_verify_projection_and_bow_crossing.py"><code>examples/01_verify_projection_and_bow_crossing.py</code></a></td>
+<td><code>6,030</code></td>
+<td><code>2fc041a9444d0d2e27cc486b053ae7c2f435482196f028469fc8556ca8fbffde</code></td>
+</tr>
+<tr>
+<td>57</td>
+<td><a href="examples/02_reconcile_performance_index.py"><code>examples/02_reconcile_performance_index.py</code></a></td>
+<td><code>4,623</code></td>
+<td><code>b71ee93c2d57a98f01b48eeee0085d31875656b92206a4f97b85e04e79085eb7</code></td>
+</tr>
+<tr>
+<td>58</td>
+<td><a href="examples/03_plackett_luce_and_cup_bounds.py"><code>examples/03_plackett_luce_and_cup_bounds.py</code></a></td>
+<td><code>6,976</code></td>
+<td><code>c060d68bf7a6c65972a82f2169bba7b38556e0d14242359ca9c9569b3f947892</code></td>
+</tr>
+<tr>
+<td>59</td>
+<td><a href="examples/05_Interactive_Study_Notebook.html"><code>examples/05_Interactive_Study_Notebook.html</code></a></td>
+<td><code>42,068</code></td>
+<td><code>f2b6f5ef28c6e6c5111d4e7f2dbfec8124b2880a9ca68b54c1cf0a7c38434295</code></td>
+</tr>
+<tr>
+<td>60</td>
+<td><a href="examples/05_Interactive_Study_Notebook.ipynb"><code>examples/05_Interactive_Study_Notebook.ipynb</code></a></td>
+<td><code>32,039</code></td>
+<td><code>305d72ac323fa8d756f9c851eda65f4f0bc8bdbb1e8945e69c423e9911ffbdd2</code></td>
+</tr>
+<tr>
+<td>61</td>
+<td><a href="examples/interactive_sailing_and_forecast_lab.html"><code>examples/interactive_sailing_and_forecast_lab.html</code></a></td>
+<td><code>13,882</code></td>
+<td><code>3a717f05d9d3538513b57d6d84805c78c6746c5437e3b776a1c8f81e25c8d1e3</code></td>
+</tr>
+<tr>
+<td>62</td>
+<td><a href="study-materials/05_Study_Routes_and_Questions.html"><code>study-materials/05_Study_Routes_and_Questions.html</code></a></td>
+<td><code>40,038</code></td>
+<td><code>9fb763acd83897b53e8333eeaf98454201d276b8cd5bd5834b06ec332d992dee</code></td>
+</tr>
+<tr>
+<td>63</td>
+<td><a href="study-materials/05_Study_Routes_and_Questions.md"><code>study-materials/05_Study_Routes_and_Questions.md</code></a></td>
+<td><code>16,330</code></td>
+<td><code>892e4bbc21bd4faa88b83ea1a57563466edabac0a705f57c5cb9c50f108d5dd1</code></td>
+</tr>
+<tr>
+<td>64</td>
+<td><a href="study-materials/06_Audio_Narration_Script.html"><code>study-materials/06_Audio_Narration_Script.html</code></a></td>
+<td><code>33,772</code></td>
+<td><code>0e7604d66bde8f1d33c10adf5257e2c7c5208564e0e4d34c42c0aaa6e6f68db7</code></td>
+</tr>
+<tr>
+<td>65</td>
+<td><a href="study-materials/06_Audio_Narration_Script.md"><code>study-materials/06_Audio_Narration_Script.md</code></a></td>
+<td><code>13,075</code></td>
+<td><code>fdbf863f99cc556d357e2924d711c34f9826f5dc027c1f5baf892dc0f106d44f</code></td>
+</tr>
+<tr>
+<td>66</td>
+<td><a href="study-materials/flashcards.csv"><code>study-materials/flashcards.csv</code></a></td>
+<td><code>26,677</code></td>
+<td><code>e0477aa170d39918de18913cafdcb47d9ec3bd973705760f4b96fe6151cbd802</code></td>
+</tr>
+<tr>
+<td>67</td>
+<td><a href="study-materials/flashcards_viewer.html"><code>study-materials/flashcards_viewer.html</code></a></td>
+<td><code>37,967</code></td>
+<td><code>09aeed63a0aa74064321a7ce9dea6dfd8238712adc77a96d23c306ba286e2c40</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="source-companion-summary-source-companion">Source Companion Summary (<code>source-companion/</code>)</h2>
+<ul>
+<li><strong>Included First-Party Source Files</strong>: <strong><code>209</code></strong> raw files (<code>source-companion/raw/</code>) + <strong><code>209</code></strong> line-anchored HTML viewers (<code>source-companion/view/*.html</code>) + index (<a href="source-companion/index.html"><code>source-companion/index.html</code></a>).</li>
+<li>Every file's exact byte size and SHA-256 digest is recorded in <a href="MANIFEST.json"><code>MANIFEST.json</code></a> and <a href="evidence/repository_snapshot_provenance.json"><code>evidence/repository_snapshot_provenance.json</code></a>.</li>
+</ul>
+    </main>
+  </div>
+  <script>
+(function() {
+  const input = document.getElementById('offline-search');
+  const status = document.getElementById('search-status');
+  const main = document.querySelector('.main-content');
+  if (!input || !main) return;
+
+  function clearHighlights() {
+    const marks = main.querySelectorAll('mark.search-hit');
+    marks.forEach(m => {
+      const parent = m.parentNode;
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    });
+  }
+
+  input.addEventListener('input', function() {
+    clearHighlights();
+    const q = input.value.trim();
+    if (q.length < 2) {
+      status.textContent = '';
+      return;
+    }
+    const regex = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    let count = 0;
+    let firstHit = null;
+    const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const tag = node.parentNode && node.parentNode.tagName;
+        if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
+        return regex.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+      }
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const frag = document.createDocumentFragment();
+      let lastIdx = 0;
+      node.nodeValue.replace(regex, (match, p1, offset) => {
+        if (offset > lastIdx) {
+          frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIdx, offset)));
+        }
+        const mark = document.createElement('mark');
+        mark.className = 'search-hit';
+        mark.textContent = match;
+        if (!firstHit) firstHit = mark;
+        count++;
+        frag.appendChild(mark);
+        lastIdx = offset + match.length;
+      });
+      if (lastIdx < node.nodeValue.length) {
+        frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIdx)));
+      }
+      node.parentNode.replaceChild(frag, node);
+    });
+    status.textContent = count + ' match' + (count === 1 ? '' : 'es') + ' found';
+    if (firstHit) firstHit.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+})();
+</script>
+</body>
+</html>

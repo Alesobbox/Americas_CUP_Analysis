@@ -1,0 +1,109 @@
+{
+  "verified_at": "2026-11-04",
+  "extracted_from_zip": true,
+  "network_blocked": true,
+  "blocked_external_requests_count": 0,
+  "page_exceptions_count": 0,
+  "pages_verified": [
+    {
+      "page": "START_HERE.html",
+      "title": "START HERE — Offline Study Pack Entry Point & Preparation Checklist — AC40 Regatta Replay Offline Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0
+    },
+    {
+      "page": "01_Repository_Explained.html",
+      "title": "01 — The AC40 & AC75 Regatta Replay, Analytics & Forecasting Repository Explained — AC40 Regatta Replay Offline Study Pack",
+      "imagesTotal": 8,
+      "brokenImages": [],
+      "inlineSvgs": 7,
+      "interactiveSearchStatus": "24 matches found"
+    },
+    {
+      "page": "02_Field_Guide.html",
+      "title": "02 — Quick-Reference Field Guide & Troubleshooting Tree — AC40 Regatta Replay Offline Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 3
+    },
+    {
+      "page": "03_Repository_Atlas.html",
+      "title": "03 — Repository Atlas & Cross-Domain Glossary — AC40 Regatta Replay Offline Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0
+    },
+    {
+      "page": "04_Workbook.html",
+      "title": "04 — Worked Examples & 36 Exercises Workbook — AC40 Regatta Replay Offline Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0
+    },
+    {
+      "page": "04_Workbook_Solutions.html",
+      "title": "04b — Workbook Solutions & Mathematical Derivations — AC40 Regatta Replay Offline Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0
+    },
+    {
+      "page": "study-materials/05_Study_Routes_and_Questions.html",
+      "title": "05 — Study Routes & Unresolved Questions — AC40 Regatta Replay Offline Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0
+    },
+    {
+      "page": "study-materials/flashcards_viewer.html",
+      "title": "Offline Flashcards Viewer (64 Cards) — AC40 Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0,
+      "hasFlashcardsLoaded": true
+    },
+    {
+      "page": "study-materials/06_Audio_Narration_Script.html",
+      "title": "06 — Audio Narration & Oral Defense Script — AC40 Regatta Replay Offline Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0
+    },
+    {
+      "page": "examples/interactive_sailing_and_forecast_lab.html",
+      "title": "Interactive Sailing Geometry & Forecast Lab — AC40 Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0
+    },
+    {
+      "page": "examples/05_Interactive_Study_Notebook.html",
+      "title": "05 — Interactive Study Notebook (Pre-Rendered) — AC40 Regatta Replay Offline Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0
+    },
+    {
+      "page": "source-companion/index.html",
+      "title": "Source Companion Index — AC40 Regatta Replay Offline Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0
+    },
+    {
+      "page": "source-companion/view/pipeline/historical_analysis.py.html",
+      "title": "pipeline/historical_analysis.py — Offline Source Companion",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0
+    },
+    {
+      "page": "MANIFEST.html",
+      "title": "09 — Study Pack File Manifest & SHA-256 Provenance — AC40 Regatta Replay Offline Study Pack",
+      "imagesTotal": 0,
+      "brokenImages": [],
+      "inlineSvgs": 0
+    }
+  ]
+}

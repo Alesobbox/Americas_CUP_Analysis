@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PROJECT.md — Offline Source Companion</title>
+<style>
+    :root {
+      --bg: #f8fafc; --surface: #ffffff; --border: #e2e8f0;
+      --text: #0f172a; --muted: #475569; --accent: #1a73e8;
+      --code-bg: #f1f5f9; --line-num: #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .breadcrumbs { font-size: 14px; font-weight: 600; }
+    .breadcrumbs a { color: var(--accent); text-decoration: none; }
+    .breadcrumbs a:hover { text-decoration: underline; }
+    .meta { font-size: 12px; color: var(--muted); display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .badge { padding: 2px 8px; border-radius: 999px; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+    .badge.clean { background: #dcfce7; color: #166534; }
+    .badge.modified { background: #fef3c7; color: #92400e; }
+    .badge.untracked { background: #dbeafe; color: #1e40af; }
+    main { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
+    .code-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 12.5px; }
+    .code-table tr:target { background: #fef9c3; }
+    .code-table td { padding: 1px 10px; vertical-align: top; }
+    .ln { width: 56px; text-align: right; color: var(--line-num); user-select: none; border-right: 1px solid var(--border); background: var(--code-bg); }
+    .ln a { color: inherit; text-decoration: none; display: block; }
+    .ln a:hover { color: var(--accent); }
+    .lc { white-space: pre-wrap; word-break: break-word; }
+    </style>
+</head>
+<body>
+<header>
+  <div class="breadcrumbs">
+    <a href="../../START_HERE.html">Study Pack</a> /
+    <a href="../index.html">Source Companion</a> /
+    <span>PROJECT.md</span>
+  </div>
+  <div class="meta">
+    <span class="badge clean">clean</span>
+    <span>33 lines</span>
+    <span>4,428 bytes</span>
+    <span>SHA-256: <code>e1fa6f62e373e14b…</code></span>
+    <a href="../raw/PROJECT.md" style="color:var(--accent);font-weight:600;">Raw File</a>
+  </div>
+</header>
+<main>
+  <table class="code-table">
+    <tbody>
+      <tr id="L1"><td class="ln"><a href="#L1">1</a></td><td class="lc"># AC40 replay dashboard</td></tr><tr id="L2"><td class="ln"><a href="#L2">2</a></td><td class="lc"></td></tr><tr id="L3"><td class="ln"><a href="#L3">3</a></td><td class="lc">The dashboard has five views: Replay, Analysis, Compare, Reports, and Forecast. It exposes 28 source sessions: nine Cagliari races and nineteen Naples races, containing 224 replayed boat-races.</td></tr><tr id="L4"><td class="ln"><a href="#L4">4</a></td><td class="lc"></td></tr><tr id="L5"><td class="ln"><a href="#L5">5</a></td><td class="lc">## Runtime and data flow</td></tr><tr id="L6"><td class="ln"><a href="#L6">6</a></td><td class="lc"></td></tr><tr id="L7"><td class="ln"><a href="#L7">7</a></td><td class="lc">- `src/main.tsx` mounts `App.tsx`, which owns race, playhead, primary boat, comparison boat, and visibility state.</td></tr><tr id="L8"><td class="ln"><a href="#L8">8</a></td><td class="lc">- `src/components/dashboard/` contains the dashboard controls. `canvas/` renders boats, marks, boundaries, and trails. `panels/ComparisonPanel.tsx` compares boats at the shared playhead. `modals/` provides race selection and historical analysis.</td></tr><tr id="L9"><td class="ln"><a href="#L9">9</a></td><td class="lc">- `src/engine/` loads data, interpolates replay frames, and calculates instantaneous replay geometry.</td></tr><tr id="L10"><td class="ln"><a href="#L10">10</a></td><td class="lc">- `pipeline/run_pipeline.py` streams `Data/*.jsonl`, reconstructs events, and exports replay and historical artifacts.</td></tr><tr id="L11"><td class="ln"><a href="#L11">11</a></td><td class="lc">- `pipeline/historical_analysis.py` owns historical formulas, units, availability rules, coverage, and event feeds. The browser reads its metrics.</td></tr><tr id="L12"><td class="ln"><a href="#L12">12</a></td><td class="lc">- `scripts/build_artifact_inventory.py` publishes replay, analysis, and index downloads in Reports.</td></tr><tr id="L13"><td class="ln"><a href="#L13">13</a></td><td class="lc">- `pipeline/environment.py` acquires historical model estimates for the header&#x27;s sea height and temperatures, with source hashes and hourly availability. These provide replay context separately from the recorded wind and forecasting inputs. See [environment data](docs/environment_data.md).</td></tr><tr id="L14"><td class="ln"><a href="#L14">14</a></td><td class="lc">- `scripts/analysis_snapshot.py` provides a bounded archive overview without printing telemetry arrays.</td></tr><tr id="L15"><td class="ln"><a href="#L15">15</a></td><td class="lc">- `pipeline/prediction/` builds causal raw-data features, audited completion, joint ranking references, correlated Monte Carlo candidates and the AC38 tournament adapter. Forecast consumes immutable, content-addressed static JSON; it never fits a model in TypeScript. See [forecast implementation and evidence gates](docs/forecasting_implementation.md).</td></tr><tr id="L16"><td class="ln"><a href="#L16">16</a></td><td class="lc"></td></tr><tr id="L17"><td class="ln"><a href="#L17">17</a></td><td class="lc">Source measurements, interpolation, reconstructed results, estimated continuous gaps, and unavailable channels remain distinguishable. Source session assets determine boat identity and course marks. Map mode uses OpenStreetMap with attribution; Grid mode makes no tile requests. Virtual contacts describe geometric overlaps rather than official rulings.</td></tr><tr id="L18"><td class="ln"><a href="#L18">18</a></td><td class="lc"></td></tr><tr id="L19"><td class="ln"><a href="#L19">19</a></td><td class="lc">Historical analysis uses schema `2.0` and method `historical-2`. Event feeds retain their separate schema `1.0` and method `event-feed-1`. Replay compatibility is unchanged.</td></tr><tr id="L20"><td class="ln"><a href="#L20">20</a></td><td class="lc"></td></tr><tr id="L21"><td class="ln"><a href="#L21">21</a></td><td class="lc">## Interface and race previews</td></tr><tr id="L22"><td class="ln"><a href="#L22">22</a></td><td class="lc"></td></tr><tr id="L23"><td class="ln"><a href="#L23">23</a></td><td class="lc">The current interface follows the approved [Google Store-inspired redesign](docs/google_store_ui_redesign_plan.md): a shared light palette, self-hosted DM Sans, a course-first Replay with playback below, distinct workspaces, and a visual race library. [Design-system rules](docs/design-system.md) own visual decisions; [redesign verification](docs/ui_redesign_verification.md) records implementation evidence.</td></tr><tr id="L24"><td class="ln"><a href="#L24">24</a></td><td class="lc"></td></tr><tr id="L25"><td class="ln"><a href="#L25">25</a></td><td class="lc">The library loads the optional `public/data/presentation/race_previews.json` (`1.0`, `course-preview-1`) rather than every replay. It contains north-up static course schematics, replayed boat counts, class/type, and source hashes; it does not contain tracks or historical metrics. After regenerating replay/analysis artifacts, refresh it with `.venv/Scripts/python.exe scripts/build_race_previews.py`. Missing previews retain a usable text-first race catalog.</td></tr><tr id="L26"><td class="ln"><a href="#L26">26</a></td><td class="lc"></td></tr><tr id="L27"><td class="ln"><a href="#L27">27</a></td><td class="lc">## Verification</td></tr><tr id="L28"><td class="ln"><a href="#L28">28</a></td><td class="lc"></td></tr><tr id="L29"><td class="ln"><a href="#L29">29</a></td><td class="lc">Run focused tests, then `run.ps1 verify`. Run `npm run test:browser` against a local server for browser interactions. See [dashboard behavior](docs/dashboard_contract.md), [architecture](docs/architecture.md), [historical formulas](docs/historical_analysis.md), [source audit](docs/source_audit.md), and [ingestion](docs/ingesting_new_regattas.md).</td></tr><tr id="L30"><td class="ln"><a href="#L30">30</a></td><td class="lc"></td></tr><tr id="L31"><td class="ln"><a href="#L31">31</a></td><td class="lc">Team analytics adds playhead-aware Tactical insights in Replay/Compare and a peer-relative Boat performance radar plus replay-linked Team debrief in Analysis, within the existing design. Python exports all new calculations as optional versioned extensions of historical details. Refresh them with `npm run analytics`; see [team analytics](docs/team_analytics.md).</td></tr><tr id="L32"><td class="ln"><a href="#L32">32</a></td><td class="lc"></td></tr><tr id="L33"><td class="ln"><a href="#L33">33</a></td><td class="lc">The annotation revision adds white Analysis, axis/leg performance evidence with interval review, canonical Reports and CSVs, a collapsed technical archive, and inspectable Cup uncertainty. See [revision verification](docs/annotation_revision_verification.md). For evidence-only refreshes, use `.venv/Scripts/python.exe scripts/refresh_team_analytics.py --performance-only` without reading raw telemetry.</td></tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

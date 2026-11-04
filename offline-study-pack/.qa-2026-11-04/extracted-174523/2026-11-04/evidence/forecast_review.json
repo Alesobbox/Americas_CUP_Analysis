@@ -1,0 +1,286 @@
+{
+  "scope": "Current forecast source and immutable publication review on 2026-11-04; no rebuilding or external rule verification",
+  "source_evidence_hashes": {
+    ".forecast/backtest.json": "3e737d189cd58a6a64b004ebe40b6e1c199d68aeccbffeea7dbff993143784c2",
+    "docs/forecasting_implementation.md": "cc04c080cddb6eba31847168b860d68d0acfbbf569999992cef12e99ed65a7ea",
+    "pipeline/prediction/state.py": "f5657d42e60bfa03222920264f2ef96fca32f3fdaaa04006e16f29542a8944a2",
+    "pipeline/prediction/models.py": "86049eb3c98c3c52b3e441fa5d705da29993ced98afc485753a22029f2c8e583",
+    "pipeline/prediction/simulation.py": "a222f109b0877dc3aafe451197be57a839b4fb7d47eeea14dbd8cc2cdfe8b0ed",
+    "pipeline/prediction/build.py": "1d9a9640726dff03347306f98463c699d8a876708bfbf89d4f740c33d66601f1"
+  },
+  "cup_path": "cup/5cae98e1c3856cd6885831d0b876d6ae048d0d005d5fc373ab7d0651a8f9a6b5.json",
+  "cup_baseline": {
+    "assumptions": [
+      "AC40-informed transfer stress test; not a calibrated AC75 forecast.",
+      "Team capability is drawn once and persists across the entire tournament.",
+      "Australia and every unmapped entrant receive a population prior.",
+      "Rank-only races, conditional on completed scored races without unrepresented timing stoppages.",
+      "Configured weather slopes are scenario assumptions; no AC75 weather response is fitted."
+    ],
+    "first_unresolved_stage_counts": {
+      "round_robin_challengers": 1723
+    },
+    "input_hash": "9d6ce47a4d681aa0e5acde547fb687760366961aa0b4851feb4f876de703d100",
+    "model_ref": "dd9a31a7834ae1e9d8c0c082b437e0c6542302bed171b0d8e5e45f9c6b3940da",
+    "numerical_error": {
+      "scope": "Monte Carlo integration only; excludes model/rule uncertainty",
+      "worst_case_95_half_width": 0.013859292911256331
+    },
+    "overlapping_reason_counts": {
+      "round_robin_challengers: official tie resolution is unresolved; outer bounds retain the entire tied path.": 1723
+    },
+    "probabilities": {
+      "ALINGHI": null,
+      "ARC_USA": null,
+      "AUSTRALIA": null,
+      "ETNZ": null,
+      "GB1": null,
+      "LA_ROCHE_POSAY": null,
+      "LUNA_ROSSA": null
+    },
+    "reason_count_policy": "First-stage counts are mutually exclusive; reason counts may overlap and must not be added.",
+    "resolved_fraction": 0.6554,
+    "resolved_trials": 3277,
+    "resolved_win_counts": {
+      "ALINGHI": 67,
+      "ARC_USA": 540,
+      "AUSTRALIA": 404,
+      "ETNZ": 843,
+      "GB1": 167,
+      "LA_ROCHE_POSAY": 426,
+      "LUNA_ROSSA": 830
+    },
+    "rule_bounds": {
+      "ALINGHI": {
+        "lower": 0.0134,
+        "upper": 0.358
+      },
+      "ARC_USA": {
+        "lower": 0.108,
+        "upper": 0.4526
+      },
+      "AUSTRALIA": {
+        "lower": 0.0808,
+        "upper": 0.4254
+      },
+      "ETNZ": {
+        "lower": 0.1686,
+        "upper": 0.5132
+      },
+      "GB1": {
+        "lower": 0.0334,
+        "upper": 0.378
+      },
+      "LA_ROCHE_POSAY": {
+        "lower": 0.0852,
+        "upper": 0.4298
+      },
+      "LUNA_ROSSA": {
+        "lower": 0.166,
+        "upper": 0.5106
+      }
+    },
+    "scenario": {
+      "hazard_multiplier": 1.0,
+      "match_concentration": 1.0,
+      "rho": 0.5,
+      "sigma_multiplier": 1
+    },
+    "scenario_id": "rho0.5_sigma1_c1_k1",
+    "seed": 2027,
+    "source_manifest_hash": "48292ed9d318228bbcef4a92a81ec5f603c3cfa4f7f14c750a948172e378ed2c",
+    "status": "rule_bounds",
+    "trials": 5000,
+    "unresolved_fraction": 0.3446,
+    "unresolved_reasons": [
+      "round_robin_challengers: official tie resolution is unresolved; outer bounds retain the entire tied path."
+    ],
+    "unresolved_trials": 1723
+  },
+  "cases": [
+    {
+      "race_id": "26_09_22_nap_ipr_pr2",
+      "file": "races/26_09_22_nap_ipr_pr2_32594a2857e406368e8ff4abce0268dc05417fdbf451d0f444493a71015ed5c5.json",
+      "pre": {
+        "expected_position_by_boat": {
+          "0890cbf9-fc5e-4187-8eee-0bf59e9f05e4": 6.545099488190193,
+          "126368d2-98e9-4c3e-97ce-fb047d40ab0e": 5.048339179190192,
+          "130ac4af-df5a-4568-af62-9d9395df9e9e": 4.2621278081901925,
+          "42e39310-fef5-4c5d-b099-a599aad5ddbb": 5.8534286621901925,
+          "4f5369cd-0fa3-4241-afd2-00f356898e22": 4.016582365190192,
+          "80d4cda4-17f5-4bcf-b7fd-5fc0f39f3d60": 5.438690140190192,
+          "ed5d37be-52fa-4902-b190-757027017085": 6.866187376190192,
+          "f535f0dc-a45b-4668-ae07-bd52e0cdd947": 2.824261609190192,
+          "f7a7d97a-040e-4ad5-af0f-ae6ff7b51cea": 4.505883430190192
+        },
+        "nonfinish_score": "N",
+        "reason": null,
+        "status": "estimated"
+      },
+      "live_status_counts": {
+        "unavailable": 21,
+        "gate_ambiguous": 100
+      },
+      "first_usable_checkpoint": null
+    },
+    {
+      "race_id": "naples_pr1",
+      "file": "races/naples_pr1_9f83c469cda9355746ec500135d3ccf6836737604750233ccd38d980f68a2097.json",
+      "pre": {
+        "expected_position_by_boat": {
+          "0890cbf9-fc5e-4187-8eee-0bf59e9f05e4": 6.349419061018937,
+          "126368d2-98e9-4c3e-97ce-fb047d40ab0e": 5.048789137018937,
+          "130ac4af-df5a-4568-af62-9d9395df9e9e": 4.375816441018936,
+          "42e39310-fef5-4c5d-b099-a599aad5ddbb": 5.722941715018937,
+          "4f5369cd-0fa3-4241-afd2-00f356898e22": 4.151188906018937,
+          "80d4cda4-17f5-4bcf-b7fd-5fc0f39f3d60": 5.370306982018937,
+          "ed5d37be-52fa-4902-b190-757027017085": 6.613452655018937,
+          "f535f0dc-a45b-4668-ae07-bd52e0cdd947": 3.1243116040189367,
+          "f7a7d97a-040e-4ad5-af0f-ae6ff7b51cea": 4.605183502018936
+        },
+        "nonfinish_score": "N",
+        "reason": null,
+        "status": "estimated"
+      },
+      "live_status_counts": {
+        "estimated": 84,
+        "gate_ambiguous": 114
+      },
+      "first_usable_checkpoint": {
+        "no_finisher_prob": 0.0,
+        "numerical_error": 0.00693,
+        "position_uncertainty_summary_by_boat": {
+          "0890cbf9-fc5e-4187-8eee-0bf59e9f05e4": 3.2,
+          "126368d2-98e9-4c3e-97ce-fb047d40ab0e": 3.3,
+          "130ac4af-df5a-4568-af62-9d9395df9e9e": 3.3,
+          "42e39310-fef5-4c5d-b099-a599aad5ddbb": 3.3,
+          "4f5369cd-0fa3-4241-afd2-00f356898e22": 3.3,
+          "80d4cda4-17f5-4bcf-b7fd-5fc0f39f3d60": 3.2,
+          "ed5d37be-52fa-4902-b190-757027017085": 3.3,
+          "f535f0dc-a45b-4668-ae07-bd52e0cdd947": 3.3,
+          "f7a7d97a-040e-4ad5-af0f-ae6ff7b51cea": 3.3
+        },
+        "progress_band": 0.0,
+        "published_at_ms": 1790079006000,
+        "quality_code_by_boat": {
+          "0890cbf9-fc5e-4187-8eee-0bf59e9f05e4": 0,
+          "126368d2-98e9-4c3e-97ce-fb047d40ab0e": 0,
+          "130ac4af-df5a-4568-af62-9d9395df9e9e": 0,
+          "42e39310-fef5-4c5d-b099-a599aad5ddbb": 0,
+          "4f5369cd-0fa3-4241-afd2-00f356898e22": 0,
+          "80d4cda4-17f5-4bcf-b7fd-5fc0f39f3d60": 0,
+          "ed5d37be-52fa-4902-b190-757027017085": 0,
+          "f535f0dc-a45b-4668-ae07-bd52e0cdd947": 0,
+          "f7a7d97a-040e-4ad5-af0f-ae6ff7b51cea": 0
+        },
+        "reason_code": "experimental_joint_reference; identity_calibration",
+        "source_age_ms_by_boat": {
+          "0890cbf9-fc5e-4187-8eee-0bf59e9f05e4": 24,
+          "126368d2-98e9-4c3e-97ce-fb047d40ab0e": 48,
+          "130ac4af-df5a-4568-af62-9d9395df9e9e": 50,
+          "42e39310-fef5-4c5d-b099-a599aad5ddbb": 50,
+          "4f5369cd-0fa3-4241-afd2-00f356898e22": 50,
+          "80d4cda4-17f5-4bcf-b7fd-5fc0f39f3d60": 20,
+          "ed5d37be-52fa-4902-b190-757027017085": 50,
+          "f535f0dc-a45b-4668-ae07-bd52e0cdd947": 50,
+          "f7a7d97a-040e-4ad5-af0f-ae6ff7b51cea": 50
+        },
+        "state_timestamps_ms": 1790079000000,
+        "status_code": 1,
+        "win_prob_by_boat": {
+          "0890cbf9-fc5e-4187-8eee-0bf59e9f05e4": 0.019309,
+          "126368d2-98e9-4c3e-97ce-fb047d40ab0e": 0.080503,
+          "130ac4af-df5a-4568-af62-9d9395df9e9e": 0.138697,
+          "42e39310-fef5-4c5d-b099-a599aad5ddbb": 0.038307,
+          "4f5369cd-0fa3-4241-afd2-00f356898e22": 0.165395,
+          "80d4cda4-17f5-4bcf-b7fd-5fc0f39f3d60": 0.056355,
+          "ed5d37be-52fa-4902-b190-757027017085": 0.01396,
+          "f535f0dc-a45b-4668-ae07-bd52e0cdd947": 0.374824,
+          "f7a7d97a-040e-4ad5-af0f-ae6ff7b51cea": 0.11265
+        }
+      }
+    },
+    {
+      "race_id": "naples_mr_final",
+      "file": "races/naples_mr_final_04e374dba595cc66053bdb342f91e0805637cef6339d4da86ad3aef8b80ec04d.json",
+      "pre": {
+        "expected_position_by_boat": {
+          "130ac4af-df5a-4568-af62-9d9395df9e9e": 1.3850819029576436,
+          "f7a7d97a-040e-4ad5-af0f-ae6ff7b51cea": 1.6226181469576435
+        },
+        "nonfinish_score": "N",
+        "reason": null,
+        "status": "estimated"
+      },
+      "live_status_counts": {
+        "estimated": 133,
+        "unavailable": 3
+      },
+      "first_usable_checkpoint": {
+        "no_finisher_prob": 0.00115,
+        "numerical_error": 0.00693,
+        "position_uncertainty_summary_by_boat": {
+          "130ac4af-df5a-4568-af62-9d9395df9e9e": 3.3,
+          "f7a7d97a-040e-4ad5-af0f-ae6ff7b51cea": 3.3
+        },
+        "progress_band": 0.0,
+        "published_at_ms": 1790518806000,
+        "quality_code_by_boat": {
+          "130ac4af-df5a-4568-af62-9d9395df9e9e": 0,
+          "f7a7d97a-040e-4ad5-af0f-ae6ff7b51cea": 0
+        },
+        "reason_code": "experimental_joint_reference; identity_calibration",
+        "source_age_ms_by_boat": {
+          "130ac4af-df5a-4568-af62-9d9395df9e9e": 50,
+          "f7a7d97a-040e-4ad5-af0f-ae6ff7b51cea": 50
+        },
+        "state_timestamps_ms": 1790518800000,
+        "status_code": 1,
+        "win_prob_by_boat": {
+          "130ac4af-df5a-4568-af62-9d9395df9e9e": 0.636036,
+          "f7a7d97a-040e-4ad5-af0f-ae6ff7b51cea": 0.362814
+        }
+      }
+    }
+  ],
+  "live_status_counts": {
+    "unavailable": 1239,
+    "estimated": 2500,
+    "gate_ambiguous": 330
+  },
+  "selected_model": "correlated_mc",
+  "completion": {
+    "available": true,
+    "dns_events": 4,
+    "dns_mean": 0.054878048780487805,
+    "evidence_tier": "source_reconstructed",
+    "excluded_records": 0,
+    "failure_events": 2,
+    "failure_mean": 0.03205128205128205,
+    "method": "pooled-beta-completion-2",
+    "prior_alpha": 0.5,
+    "prior_beta": 0.5,
+    "reason": null,
+    "scheduled_audited": 81,
+    "source_failure_types": {
+      "disqualified": 1,
+      "unresolved": 1
+    },
+    "source_records": 81,
+    "starters_ascertained": 77,
+    "unresolved_audited_starters": 0
+  },
+  "training_before_day": "2026-09-26",
+  "discrepancies": [
+    "Docs older ablation scores differ from current .forecast/backtest.json; current audit is seven races/two days, 33.97% live Brier reduction versus paired PL reference",
+    "Docs says mark cap two seconds, current state.py lines169-172 uses30000ms and inflating variance",
+    "Docs says Cup unavailable in older section; current conditional-2 artifact publishes scenario/rule bounds and retains null unconditional probabilities",
+    "Fields named scheduled_audited/reviewed may contain source-reconstructed completion, not independent audits; current cards identify tier",
+    "Custom pre-race scenarios explicitly use zero-effect PL reference, while current baseline race cards select correlated_mc"
+  ],
+  "numeric_examples": {
+    "persistent_series_mix": 0.7499503572568,
+    "redrawn_series_mix": 0.9376247882008,
+    "audit_brier_relative_reduction": 0.33971051092466475
+  }
+}

@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <rect width="960" height="500" fill="#f8fafc" rx="10" stroke="#cbd5e1"/>
+  <text x="24" y="34" font-size="18" font-weight="700" fill="#0f172a">Figure 4.1 — Matched-Leg Self-Excluding Peer Baseline &amp; Mean-of-Ratios Arithmetic</text>
+  <text x="24" y="54" font-size="12.5" fill="#475569">Exact reconciliation of `performance-1` on `naples_pr1` ITA G (`downwind_vmg`), showing why Index ≠ 100 × (Mean Value / Mean Peer).</text>
+
+  <!-- Left: Matched-Leg Peer Construction -->
+  <rect x="24" y="72" width="440" height="404" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="42" y="98" font-size="14" font-weight="700" fill="#0f172a">1. Self-Excluding Matched-Leg Baseline Rules</text>
+
+  <rect x="42" y="114" width="404" height="74" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="54" y="134" font-size="12" font-weight="700" fill="#1e40af">Step 1: Boat &amp; Leg Eligibility Filter</text>
+  <text x="54" y="152" font-size="11" fill="#1e3a8a">• Exclude boats with OCS, RET, DNS, no start, or `start_state` conflict (e.g. USA, GBR B).</text>
+  <text x="54" y="168" font-size="11" fill="#1e3a8a">• DNF boats CAN contribute completed legs where quality = `derived` (coverage ≥ 95%).</text>
+
+  <rect x="42" y="200" width="404" height="82" rx="6" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="54" y="220" font-size="12" font-weight="700" fill="#166534">Step 2: Per-Leg Self-Excluding Peer Mean (Leg ℓ)</text>
+  <text x="54" y="238" font-size="11" fill="#14532d">• For subject boat i on leg ℓ, peer set P_{i,ℓ} = { j ≠ i : j is eligible on exact leg ℓ }.</text>
+  <text x="54" y="254" font-size="11" fill="#14532d">• Equal-weight peer mean:  μ_{i,ℓ} = (1 / |P_{i,ℓ}|) · Σ_{j ∈ P_{i,ℓ}} x_{j,ℓ}</text>
+  <text x="54" y="270" font-size="11" font-weight="700" fill="#166534">• Leg Index:  I_{i,ℓ} = 100 · (x_{i,ℓ} / μ_{i,ℓ})</text>
+
+  <rect x="42" y="294" width="404" height="82" rx="6" fill="#faf5ff" stroke="#c4b5fd"/>
+  <text x="54" y="314" font-size="12" font-weight="700" fill="#5b21b6">Step 3: Equal-Weight Aggregation Across Matched Legs L_i</text>
+  <text x="54" y="332" font-size="11" fill="#4c1d95">• Dimension Index:  I_i = (1 / |L_i|) · Σ_{ℓ ∈ L_i} I_{i,ℓ}  (Mean of per-leg ratios)</text>
+  <text x="54" y="348" font-size="11" fill="#4c1d95">• Exported `value` = (1 / |L_i|) Σ x_{i,ℓ} ;  `peer_mean` = (1 / |L_i|) Σ μ_{i,ℓ}</text>
+  <text x="54" y="364" font-size="11" font-weight="700" fill="#6d28d9">• Overall Index = Mean of 6 dimensions ONLY if all 6 are available.</text>
+
+  <rect x="42" y="388" width="404" height="72" rx="6" fill="#fffbeb" stroke="#fcd34d"/>
+  <text x="54" y="408" font-size="11.5" font-weight="700" fill="#92400e">Why Self-Exclusion Changes the Baseline per Boat:</text>
+  <text x="54" y="425" font-size="11" fill="#78350f">If boat A is faster than boat B on Leg 1, then A's peer set excludes A (making</text>
+  <text x="54" y="440" font-size="11" fill="#78350f">A's peer mean lower), while B's peer set includes A (making B's peer mean higher).</text>
+
+  <!-- Right: Real Numerical Example from naples_pr1 ITA G -->
+  <rect x="484" y="72" width="452" height="404" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="502" y="98" font-size="14" font-weight="700" fill="#0f172a">2. Real Repository Proof: `naples_pr1` · Boat `ITA G` · `downwind_vmg`</text>
+
+  <!-- Table header -->
+  <rect x="502" y="114" width="416" height="28" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="512" y="132" font-size="11" font-weight="700" fill="#0f172a">Quantity</text>
+  <text x="655" y="132" font-size="11" font-weight="700" fill="#0f172a">Leg 2 (Downwind)</text>
+  <text x="785" y="132" font-size="11" font-weight="700" fill="#0f172a">Leg 4 (Downwind)</text>
+
+  <!-- Row 1 -->
+  <rect x="502" y="142" width="416" height="28" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="512" y="160" font-size="11" fill="#334155">ITA G Course VMG (x_{i,ℓ})</text>
+  <text x="655" y="160" font-size="11" font-weight="600" fill="#0f172a">23.1536 kt</text>
+  <text x="785" y="160" font-size="11" font-weight="600" fill="#0f172a">20.0680 kt</text>
+
+  <!-- Row 2 -->
+  <rect x="502" y="170" width="416" height="28" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="512" y="188" font-size="11" fill="#334155">Other-Boats Mean (μ_{i,ℓ})</text>
+  <text x="655" y="188" font-size="11" fill="#334155">18.2277 kt (6 peers)</text>
+  <text x="785" y="188" font-size="11" fill="#334155">21.5994 kt (4 peers*)</text>
+
+  <!-- Row 3 -->
+  <rect x="502" y="198" width="416" height="30" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="512" y="217" font-size="11" font-weight="700" fill="#1e40af">Per-Leg Index (100 · x / μ)</text>
+  <text x="655" y="217" font-size="11.5" font-weight="700" fill="#1d4ed8">127.0241</text>
+  <text x="785" y="217" font-size="11.5" font-weight="700" fill="#1d4ed8">92.9101</text>
+
+  <text x="502" y="246" font-size="10.5" fill="#64748b">*On Leg 4, NZL G (74.6s gap) and NZL B (13.9s gap) drop below 95% coverage and are excluded as peers.</text>
+
+  <!-- Comparison Box -->
+  <rect x="502" y="262" width="416" height="96" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="514" y="282" font-size="12" font-weight="700" fill="#166534">Exported Dimension Index (Mean of Per-Leg Ratios):</text>
+  <text x="514" y="302" font-size="12" font-family="Consolas, monospace" fill="#14532d">index = (127.0241 + 92.9101) / 2 = 109.9671  (rounds to 110.0)</text>
+  <text x="514" y="324" font-size="11" fill="#14532d">Exported `value` = (23.1536 + 20.0680) / 2 = 21.6108 kt</text>
+  <text x="514" y="342" font-size="11" fill="#14532d">Exported `peer_mean` = (18.2277 + 21.5994) / 2 = 19.9136 kt</text>
+
+  <rect x="502" y="370" width="416" height="90" rx="6" fill="#fef2f2" stroke="#dc2626"/>
+  <text x="514" y="390" font-size="12" font-weight="700" fill="#991b1b">Common Trap (Ratio of Aggregate Means ≠ Dimension Index):</text>
+  <text x="514" y="410" font-size="11.5" font-family="Consolas, monospace" fill="#7f1d1d">100 × (21.6108 / 19.9136) = 108.5228  (or 108.0853 unrounded) ≠ 109.9671</text>
+  <text x="514" y="430" font-size="11" fill="#7f1d1d">Because E[X / Y] ≠ E[X] / E[Y] when denominator μ_{i,ℓ} varies across legs!</text>
+  <text x="514" y="446" font-size="11" font-weight="600" fill="#991b1b">The UI never recomputes `100 * value / peer_mean`; it reads `index` directly.</text>
+</svg>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>src/components/dashboard/TeamDebrief.tsx — Offline Source Companion</title>
+<style>
+    :root {
+      --bg: #f8fafc; --surface: #ffffff; --border: #e2e8f0;
+      --text: #0f172a; --muted: #475569; --accent: #1a73e8;
+      --code-bg: #f1f5f9; --line-num: #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .breadcrumbs { font-size: 14px; font-weight: 600; }
+    .breadcrumbs a { color: var(--accent); text-decoration: none; }
+    .breadcrumbs a:hover { text-decoration: underline; }
+    .meta { font-size: 12px; color: var(--muted); display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .badge { padding: 2px 8px; border-radius: 999px; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+    .badge.clean { background: #dcfce7; color: #166534; }
+    .badge.modified { background: #fef3c7; color: #92400e; }
+    .badge.untracked { background: #dbeafe; color: #1e40af; }
+    main { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
+    .code-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 12.5px; }
+    .code-table tr:target { background: #fef9c3; }
+    .code-table td { padding: 1px 10px; vertical-align: top; }
+    .ln { width: 56px; text-align: right; color: var(--line-num); user-select: none; border-right: 1px solid var(--border); background: var(--code-bg); }
+    .ln a { color: inherit; text-decoration: none; display: block; }
+    .ln a:hover { color: var(--accent); }
+    .lc { white-space: pre-wrap; word-break: break-word; }
+    </style>
+</head>
+<body>
+<header>
+  <div class="breadcrumbs">
+    <a href="../../../../../START_HERE.html">Study Pack</a> /
+    <a href="../../../../index.html">Source Companion</a> /
+    <span>src/components/dashboard/TeamDebrief.tsx</span>
+  </div>
+  <div class="meta">
+    <span class="badge clean">clean</span>
+    <span>21 lines</span>
+    <span>1,934 bytes</span>
+    <span>SHA-256: <code>b81b41b5e3954d13…</code></span>
+    <a href="../../../../raw/src/components/dashboard/TeamDebrief.tsx" style="color:var(--accent);font-weight:600;">Raw File</a>
+  </div>
+</header>
+<main>
+  <table class="code-table">
+    <tbody>
+      <tr id="L1"><td class="ln"><a href="#L1">1</a></td><td class="lc">import { evidenceText } from &#x27;../../utils/evidenceText&#x27;</td></tr><tr id="L2"><td class="ln"><a href="#L2">2</a></td><td class="lc">import type { AnalysisDetailBoat } from &#x27;../../types/analysis&#x27;</td></tr><tr id="L3"><td class="ln"><a href="#L3">3</a></td><td class="lc"></td></tr><tr id="L4"><td class="ln"><a href="#L4">4</a></td><td class="lc">export function TeamDebrief({ boat, raceId, replayAvailable, onOpenReplay }: {</td></tr><tr id="L5"><td class="ln"><a href="#L5">5</a></td><td class="lc">  boat: AnalysisDetailBoat</td></tr><tr id="L6"><td class="ln"><a href="#L6">6</a></td><td class="lc">  raceId: string</td></tr><tr id="L7"><td class="ln"><a href="#L7">7</a></td><td class="lc">  replayAvailable: boolean</td></tr><tr id="L8"><td class="ln"><a href="#L8">8</a></td><td class="lc">  onOpenReplay: (raceId: string, timestamp?: number) =&gt; void</td></tr><tr id="L9"><td class="ln"><a href="#L9">9</a></td><td class="lc">}) {</td></tr><tr id="L10"><td class="ln"><a href="#L10">10</a></td><td class="lc">  return &lt;section className=&quot;analysis-section team-debrief&quot; aria-label=&quot;Team debrief&quot;&gt;</td></tr><tr id="L11"><td class="ln"><a href="#L11">11</a></td><td class="lc">    &lt;div className=&quot;analysis-section-heading&quot;&gt;&lt;h4&gt;Team debrief&lt;/h4&gt;&lt;span&gt;Evidence-linked review queue&lt;/span&gt;&lt;/div&gt;</td></tr><tr id="L12"><td class="ln"><a href="#L12">12</a></td><td class="lc">    &lt;p className=&quot;analysis-inline-facts&quot;&gt;Retrospective review priorities from recorded performance. Each item opens the supporting replay moment.&lt;/p&gt;</td></tr><tr id="L13"><td class="ln"><a href="#L13">13</a></td><td class="lc">    {!boat.debrief &amp;&amp; &lt;p className=&quot;analysis-empty&quot;&gt;Team debrief is unavailable in this export.&lt;/p&gt;}</td></tr><tr id="L14"><td class="ln"><a href="#L14">14</a></td><td class="lc">    {boat.debrief &amp;&amp; !boat.debrief.items.length &amp;&amp; &lt;p className=&quot;analysis-empty&quot;&gt;No supported review priorities were exported for this boat.&lt;/p&gt;}</td></tr><tr id="L15"><td class="ln"><a href="#L15">15</a></td><td class="lc">    &lt;div className=&quot;debrief-items&quot;&gt;{boat.debrief?.items.map((item) =&gt; &lt;article className=&quot;debrief-item&quot; key={item.id}&gt;</td></tr><tr id="L16"><td class="ln"><a href="#L16">16</a></td><td class="lc">      &lt;div className=&quot;analysis-section-heading&quot;&gt;&lt;h5&gt;{evidenceText(item.title)}&lt;/h5&gt;&lt;strong&gt;{item.value.toFixed(1)} {item.unit}&lt;/strong&gt;&lt;/div&gt;&lt;p&gt;{evidenceText(item.detail)}&lt;/p&gt;&lt;small&gt;{evidenceText(item.quality)} · {evidenceText(item.source)}{item.peer_count === undefined ? &#x27;&#x27; : ` · ${item.peer_count} peers`} · {new Date(item.timestamp_ms).toISOString().slice(11, 19)} UTC&lt;/small&gt;</td></tr><tr id="L17"><td class="ln"><a href="#L17">17</a></td><td class="lc">      &lt;button type=&quot;button&quot; className=&quot;analysis-replay-link&quot; disabled={!replayAvailable} onClick={() =&gt; onOpenReplay(raceId, item.timestamp_ms)} data-review-timestamp={item.timestamp_ms}&gt;{replayAvailable ? &#x27;Review in replay ↗&#x27; : &#x27;Replay unavailable&#x27;}&lt;/button&gt;</td></tr><tr id="L18"><td class="ln"><a href="#L18">18</a></td><td class="lc">    &lt;/article&gt;)}&lt;/div&gt;</td></tr><tr id="L19"><td class="ln"><a href="#L19">19</a></td><td class="lc">    {boat.debrief &amp;&amp; &lt;small className=&quot;analysis-micro-note&quot;&gt;Method: {boat.debrief.method_version}. Priorities identify observations for review; they do not establish the cause of a loss.&lt;/small&gt;}</td></tr><tr id="L20"><td class="ln"><a href="#L20">20</a></td><td class="lc">  &lt;/section&gt;</td></tr><tr id="L21"><td class="ln"><a href="#L21">21</a></td><td class="lc">}</td></tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

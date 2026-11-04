@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>05 — Study Routes, Reading Order &amp; Unresolved Questions — AC40 Regatta Replay Offline Study Pack</title>
+  <style>
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --ink-muted: #475569;
+  --accent: #0284c7;
+  --accent-dark: #0369a1;
+  --border: #cbd5e1;
+  --code-bg: #f1f5f9;
+  --callout-bg: #f0f9ff;
+  --warn-bg: #fffbeb;
+  --warn-border: #f59e0b;
+  --danger-bg: #fef2f2;
+  --danger-border: #ef4444;
+  --ok-bg: #f0fdf4;
+  --ok-border: #16a34a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.62;
+  font-size: 10.5pt;
+}
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 310px;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 20px 16px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+  border-right: 1px solid #1e293b;
+}
+.sidebar h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #38bdf8;
+  margin: 0 0 8px 0;
+}
+.sidebar .pack-meta {
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.search-box {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #f8fafc;
+  font-size: 12.5px;
+  margin-bottom: 10px;
+}
+.search-status {
+  font-size: 11px;
+  color: #38bdf8;
+  margin-bottom: 10px;
+  min-height: 16px;
+}
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 12px;
+}
+.nav-links li { margin-bottom: 5px; }
+.nav-links a {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 12.5px;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.nav-links a:hover, .nav-links a.active {
+  background: #1e293b;
+  color: #38bdf8;
+}
+.toc-container ul {
+  list-style: none;
+  padding-left: 10px;
+  margin: 4px 0;
+}
+.toc-container > ul { padding-left: 0; }
+.toc-container li { margin: 4px 0; }
+.toc-container a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 1.35;
+  display: block;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.toc-container a:hover {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+}
+.main-content {
+  flex: 1;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 36px 48px 64px 48px;
+  background: var(--surface);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  font-weight: 700;
+  line-height: 1.25;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 3px solid #0284c7;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+h2 {
+  font-size: 16.5pt;
+  border-bottom: 1.5px solid #cbd5e1;
+  padding-bottom: 6px;
+  margin-top: 34px;
+  page-break-after: avoid;
+}
+h3 {
+  font-size: 12.8pt;
+  color: #0369a1;
+  margin-top: 22px;
+  page-break-after: avoid;
+}
+h4 {
+  font-size: 11pt;
+  color: #1e293b;
+  margin-top: 16px;
+  page-break-after: avoid;
+}
+p, li {
+  text-align: left;
+}
+code {
+  font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+}
+pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 14px 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 9pt;
+  line-height: 1.45;
+  border: 1px solid #1e293b;
+  break-inside: avoid;
+}
+pre code {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 9.2pt;
+  break-inside: avoid;
+}
+th, td {
+  border: 1px solid #cbd5e1;
+  padding: 7px 9px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background: #f1f5f9;
+  font-weight: 700;
+  color: #0f172a;
+}
+tr:nth-child(even) td {
+  background: #f8fafc;
+}
+blockquote {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--accent);
+  background: var(--callout-bg);
+  border-radius: 0 6px 6px 0;
+  break-inside: avoid;
+}
+blockquote p:first-child { margin-top: 0; }
+blockquote p:last-child { margin-bottom: 0; }
+.diagram-figure, .screenshot-figure {
+  margin: 20px 0;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  text-align: center;
+  break-inside: avoid;
+}
+.diagram-figure .svg-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.screenshot-figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+figcaption {
+  margin-top: 8px;
+  font-size: 9pt;
+  color: #475569;
+  font-weight: 600;
+}
+/* Mathematical typography */
+.math-inline {
+  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", Georgia, serif;
+  font-size: 1.03em;
+  white-space: nowrap;
+}
+.math-block {
+  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", Georgia, serif;
+  font-size: 1.08em;
+  margin: 14px 0;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3.5px solid #0369a1;
+  border-radius: 6px;
+  overflow-x: auto;
+  text-align: center;
+  break-inside: avoid;
+}
+.m-frac {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 3px;
+  font-size: 0.92em;
+}
+.m-num {
+  border-bottom: 1.2px solid currentColor;
+  padding: 0 3px 1px 3px;
+  line-height: 1.15;
+}
+.m-den {
+  padding: 1px 3px 0 3px;
+  line-height: 1.15;
+}
+.m-sqrt {
+  display: inline-flex;
+  align-items: baseline;
+}
+.m-sqrt-body {
+  border-top: 1.1px solid currentColor;
+  padding: 0 2px;
+}
+.m-over {
+  border-top: 1.1px solid currentColor;
+  padding-top: 1px;
+}
+.m-text, .m-rm {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-style: normal;
+  font-size: 0.92em;
+}
+.m-aligned {
+  display: inline-block;
+  text-align: left;
+}
+.m-align-row {
+  margin: 3px 0;
+}
+.m-cases {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+.m-brace {
+  font-size: 2.2em;
+  font-weight: 300;
+  padding-right: 4px;
+}
+.m-cases-table {
+  margin: 0;
+  border: none;
+  width: auto;
+}
+.m-cases-table td {
+  border: none !important;
+  background: transparent !important;
+  padding: 2px 8px;
+}
+.chapter-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #f8fafc;
+  padding: 18px 22px;
+  border-radius: 8px;
+  margin-top: 36px;
+  margin-bottom: 18px;
+  page-break-before: always;
+  break-before: page;
+}
+.chapter-banner.first-banner {
+  page-break-before: avoid;
+  break-before: avoid;
+}
+.chapter-banner h2 {
+  color: #f8fafc;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font-size: 18pt;
+}
+.chapter-banner .part-kicker {
+  color: #38bdf8;
+  font-size: 9.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.pedagogy-box {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  background: #f8fafc;
+  break-inside: avoid;
+}
+.pedagogy-box.objectives {
+  border-left: 4px solid #0284c7;
+  background: #f0f9ff;
+}
+.pedagogy-box.worked-example {
+  border-left: 4px solid #16a34a;
+  background: #f0fdf4;
+}
+.pedagogy-box.failure-mode {
+  border-left: 4px solid #f59e0b;
+  background: #fffbeb;
+}
+.pedagogy-box.mistakes {
+  border-left: 4px solid #ef4444;
+  background: #fef2f2;
+}
+.pedagogy-box.selftest {
+  border-left: 4px solid #7c3aed;
+  background: #f5f3ff;
+}
+mark.search-hit {
+  background: #fde047;
+  color: #0f172a;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+@media print {
+  body {
+    background: #ffffff;
+    font-size: 9.8pt;
+    line-height: 1.52;
+  }
+  .sidebar, .no-print {
+    display: none !important;
+  }
+  .app-shell {
+    display: block;
+  }
+  .main-content {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+  a {
+    color: #0369a1;
+    text-decoration: none;
+  }
+  h2, h3, h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  table, pre, blockquote, .diagram-figure, .screenshot-figure, .pedagogy-box, .math-block {
+    break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar no-print">
+      <h2>AC40 Study Pack</h2>
+      <div class="pack-meta">
+        Snapshot: <code>2026-11-04</code><br/>
+        Commit: <code>f956f8a14feb</code> (dirty)<br/>
+        100% Offline Edition (<code>file://</code> ready)
+      </div>
+      <input id="offline-search" class="search-box" type="search" placeholder="Search this document..." aria-label="Search this document" />
+      <div id="search-status" class="search-status"></div>
+      <h2>Pack Navigation</h2>
+      <ul class="nav-links">
+        <li><a href="../START_HERE.html">★ Start Here & Checklist</a></li>
+<li><a href="../01_Repository_Explained.html">01. Main Textbook</a></li>
+<li><a href="../02_Field_Guide.html">02. Field Guide</a></li>
+<li><a href="../03_Repository_Atlas.html">03. Repository Atlas & Glossary</a></li>
+<li><a href="../04_Workbook.html">04. Workbook (Exercises)</a></li>
+<li><a href="../04_Workbook_Solutions.html">04b. Workbook Solutions</a></li>
+<li><a href="../study-materials/05_Study_Routes_and_Questions.html">05. Study Routes & Open Questions</a></li>
+<li><a href="../study-materials/flashcards_viewer.html">05b. Interactive Flashcards</a></li>
+<li><a href="../study-materials/06_Audio_Narration_Script.html">06. Audio Narration Script</a></li>
+<li><a href="../examples/interactive_sailing_and_forecast_lab.html">07. Interactive Math & Forecast Lab</a></li>
+<li><a href="../examples/05_Interactive_Study_Notebook.html">07b. Rendered Study Notebook</a></li>
+<li><a href="../source-companion/index.html">08. Source Companion (209 Files)</a></li>
+<li><a href="../MANIFEST.html">09. Pack Manifest & SHA-256</a></li>
+      </ul>
+      <h2>Contents</h2>
+      <div class="toc-container">
+        <div class="toc">
+<ul>
+<li><a href="#1-the-one-hour-orientation-route-60-minutes">1. The One-Hour Orientation Route (60 Minutes)</a></li>
+<li><a href="#2-the-one-day-conceptual-review-route-68-hours">2. The One-Day Conceptual Review Route (6–8 Hours)</a></li>
+<li><a href="#3-the-three-day-deeper-study-route-mountain-mastery-track">3. The Three-Day Deeper Study Route (Mountain Mastery Track)</a><ul>
+<li><a href="#day-1-physical-telemetry-computational-geometry-reconstruction-audits">Day 1 — Physical Telemetry, Computational Geometry &amp; Reconstruction Audits</a></li>
+<li><a href="#day-2-historical-cohort-analytics-causal-probability-models-tournament-simulation">Day 2 — Historical Cohort Analytics, Causal Probability Models &amp; Tournament Simulation</a></li>
+<li><a href="#day-3-frontend-architecture-verification-engineering-weaknesses-next-experiments">Day 3 — Frontend Architecture, Verification Engineering, Weaknesses &amp; Next Experiments</a></li>
+</ul>
+</li>
+<li><a href="#4-dependency-aware-source-reading-order">4. Dependency-Aware Source Reading Order</a></li>
+<li><a href="#5-fifteen-unresolved-questions-worth-thinking-about-on-the-trip">5. Fifteen Unresolved Questions Worth Thinking About on the Trip</a></li>
+</ul>
+</div>
+
+      </div>
+    </aside>
+    <main class="main-content">
+      <h1 id="05-study-routes-dependency-aware-reading-order-unresolved-trip-questions">05 — Study Routes, Dependency-Aware Reading Order &amp; Unresolved Trip Questions</h1>
+<p><strong>Repository</strong>: <code>2D_regatta_replay</code> | <strong>Snapshot</strong>: <code>2026-11-04</code> | <strong>Offline Location</strong>: <code>study-materials/05_Study_Routes_and_Questions.html</code></p>
+<blockquote>
+<p><strong>How to Use These Routes in the Mountains</strong>: Whether you have a single hour on the train, a full day at a cabin table, or three uninterrupted days in the mountains, follow the structured tracks below. Every reference points to a local file in this pack that works without internet access.</p>
+</blockquote>
+<hr />
+<h2 id="1-the-one-hour-orientation-route-60-minutes">1. The One-Hour Orientation Route (60 Minutes)</h2>
+<p><strong>Goal</strong>: Understand what the system does, where the Python/TypeScript boundary sits, what data actually exists in the 28-race archive, and why the three forecasting targets behave differently.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Time Block</th>
+<th style="text-align: left;">Activity</th>
+<th style="text-align: left;">Local Pack Files to Open</th>
+<th style="text-align: left;">Key Takeaway to Verify</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>00:00 – 00:15</strong></td>
+<td style="text-align: left;"><strong>System on One Page &amp; Ownership</strong></td>
+<td style="text-align: left;"><a href="../02_Field_Guide.pdf"><code>02_Field_Guide.pdf</code></a> (Sections 1–2) &amp; <code>fig02_system_architecture_ownership.svg</code></td>
+<td style="text-align: left;">Python owns historical metrics (<code>historical-2</code>, <code>performance-1</code>) and forecasts (<code>prediction-1</code>, <code>cup-1</code>); TypeScript owns 60 fps display interpolation and live pairwise geometry.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>00:15 – 00:30</strong></td>
+<td style="text-align: left;"><strong>Problem, Sailing Primer &amp; Archive Reality</strong></td>
+<td style="text-align: left;"><a href="../01_Repository_Explained.pdf"><code>01_Repository_Explained.pdf</code></a> (Parts I &amp; II) + <code>fig01_sailing_primer_course.svg</code> &amp; <code>fig03_evidence_ladder.svg</code></td>
+<td style="text-align: left;">28 sessions across 9 race days (<code>6.87 GB</code>), <code>224</code> replayed vs <code>227</code> scheduled boat-races, and <code>0</code> official race-committee result sheets (<code>official_order_verified = False</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>00:30 – 00:45</strong></td>
+<td style="text-align: left;"><strong>Three Forecasting Targets &amp; Rule Bounds</strong></td>
+<td style="text-align: left;"><a href="../02_Field_Guide.pdf"><code>02_Field_Guide.pdf</code></a> (Section 4) + <code>fig06_forecasting_three_targets_and_cup.svg</code> + Screenshot <code>08_forecast_cup_2027_bounds.png</code></td>
+<td style="text-align: left;">Why pre-race sums exceed <span class="math-inline">K(K+1)/2</span> (tied-<span class="math-inline">N</span>), why live checkpoints have <span class="math-inline">+6<span class="m-text">s</span></span> publication delay, and why 2027 Cup point probabilities are <code>null</code> (<code>34.46%</code> RRSAC 102.1 ties).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>00:45 – 01:00</strong></td>
+<td style="text-align: left;"><strong>Interactive Sandbox &amp; Oral Rehearsal</strong></td>
+<td style="text-align: left;"><a href="../examples/interactive_sailing_and_forecast_lab.html"><code>examples/interactive_sailing_and_forecast_lab.html</code></a> + <a href="../04_Workbook.pdf"><code>04_Workbook.pdf</code></a> (Question 36)</td>
+<td style="text-align: left;">Test wind-referenced vs mark-referenced VMG and practice the 4-part oral defense (Explain, Critique, Defend, Improve).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-the-one-day-conceptual-review-route-68-hours">2. The One-Day Conceptual Review Route (6–8 Hours)</h2>
+<p><strong>Goal</strong>: Master the end-to-end mathematical pipeline from raw <code>.jsonl</code> telemetry to 10 Hz replay reconstruction, peer-normalized historical radar indices, causal forecasting, and UI rendering.</p>
+<ol>
+<li><strong>Session 1 (90 min) — Raw Archive, Projection &amp; Replay Reconstruction</strong>:
+   - Read <strong>Parts I, II, and III</strong> of <a href="../01_Repository_Explained.pdf"><code>01_Repository_Explained.pdf</code></a>.
+   - Inspect <a href="../source-companion/view/pipeline/ingest.py.html#L444"><code>pipeline/ingest.py</code></a>, <a href="../source-companion/view/pipeline/projection.py.html#L20"><code>pipeline/projection.py</code></a>, <a href="../source-companion/view/pipeline/synchronize.py.html#L19"><code>pipeline/synchronize.py</code></a>, and <a href="../source-companion/view/pipeline/reconstruction.py.html#L39"><code>pipeline/reconstruction.py</code></a> in the offline Source Companion.
+   - Run or read <a href="../examples/01_verify_projection_and_bow_crossing.py"><code>examples/01_verify_projection_and_bow_crossing.py</code></a> and solve <strong>Questions 1–4, 7–8</strong> in <a href="../04_Workbook.pdf"><code>04_Workbook.pdf</code></a>.</li>
+<li><strong>Session 2 (90 min) — Historical Metrics, Peer Radar &amp; Tactical Wind Slope</strong>:
+   - Read <strong>Part IV</strong> of <a href="../01_Repository_Explained.pdf"><code>01_Repository_Explained.pdf</code></a>.
+   - Inspect <a href="../source-companion/view/pipeline/historical_analysis.py.html#L580"><code>pipeline/historical_analysis.py</code></a> (<code>_boat_performance</code>, <code>_event_analysis</code>) and <a href="../source-companion/view/pipeline/tactical_insights.py.html#L178"><code>pipeline/tactical_insights.py</code></a>.
+   - Run or read <a href="../examples/02_reconcile_performance_index.py"><code>examples/02_reconcile_performance_index.py</code></a> and solve <strong>Questions 13–17, 34</strong> in <a href="../04_Workbook.pdf"><code>04_Workbook.pdf</code></a>.</li>
+<li><strong>Session 3 (120 min) — Causal State Estimation, Plackett–Luce, Correlated MC &amp; AC38 Cup Bounds</strong>:
+   - Read <strong>Part V</strong> of <a href="../01_Repository_Explained.pdf"><code>01_Repository_Explained.pdf</code></a>.
+   - Inspect <a href="../source-companion/view/pipeline/prediction/state.py.html#L1"><code>pipeline/prediction/state.py</code></a>, <a href="../source-companion/view/pipeline/prediction/models.py.html#L1"><code>models.py</code></a>, <a href="../source-companion/view/pipeline/prediction/simulation.py.html#L1"><code>simulation.py</code></a>, and <a href="../source-companion/view/pipeline/prediction/cup.py.html#L1"><code>cup.py</code></a>.
+   - Run or read <a href="../examples/03_plackett_luce_and_cup_bounds.py"><code>examples/03_plackett_luce_and_cup_bounds.py</code></a> and solve <strong>Questions 18–21, 25–33</strong> in <a href="../04_Workbook.pdf"><code>04_Workbook.pdf</code></a>.</li>
+<li><strong>Session 4 (90 min) — Frontend Engine, Verification &amp; Case Studies</strong>:
+   - Read <strong>Parts VI, VII, VIII, and IX (Case Studies 1–3)</strong> of <a href="../01_Repository_Explained.pdf"><code>01_Repository_Explained.pdf</code></a>.
+   - Drill 30+ cards in <a href="flashcards_viewer.html"><code>study-materials/flashcards_viewer.html</code></a>.</li>
+</ol>
+<hr />
+<h2 id="3-the-three-day-deeper-study-route-mountain-mastery-track">3. The Three-Day Deeper Study Route (Mountain Mastery Track)</h2>
+<h3 id="day-1-physical-telemetry-computational-geometry-reconstruction-audits">Day 1 — Physical Telemetry, Computational Geometry &amp; Reconstruction Audits</h3>
+<ul>
+<li><strong>Morning</strong>: Deep reading of Parts I–III of <code>01_Repository_Explained.pdf</code> alongside <code>docs/source_audit.md</code>, <code>docs/data_schema.md</code>, and <code>docs/reconstruction_math.md</code> in <code>source-companion/</code>.</li>
+<li><strong>Afternoon</strong>: Trace every line of <code>pipeline/ingest.py</code>, <code>pipeline/projection.py</code>, <code>pipeline/synchronize.py</code>, <code>pipeline/reconstruction.py</code>, <code>pipeline/manoeuvres.py</code>, and <code>pipeline/analytics.py</code>. Verify the 6 code-vs-doc discrepancies (such as <code>reconstruction.py:L228</code> <code>comp.get("started")</code>, <code>manoeuvres.py:L57</code> <code>2.5 kt</code> vs <code>3.0 kt</code> docstring, and <code>90%</code> vs <code>95%</code> recovery thresholds).</li>
+<li><strong>Evening</strong>: Complete Workbook Tier I (Q1–Q12) and Case Study 1 (<code>naples_pr1</code>).</li>
+</ul>
+<h3 id="day-2-historical-cohort-analytics-causal-probability-models-tournament-simulation">Day 2 — Historical Cohort Analytics, Causal Probability Models &amp; Tournament Simulation</h3>
+<ul>
+<li><strong>Morning</strong>: Deep reading of Parts IV &amp; V of <code>01_Repository_Explained.pdf</code> alongside <code>pipeline/historical_analysis.py</code> (<code>1,654</code> lines) and <code>pipeline/tactical_insights.py</code> (<code>369</code> lines). Reconcile <code>evidence/naples_pr1_performance.csv</code> and <code>evidence/naples_mr_final_performance.csv</code> by hand.</li>
+<li><strong>Afternoon</strong>: Trace <code>pipeline/prediction/{contracts,labels,state,models,simulation,cup,evaluation,build}.py</code>. Work through the mathematical proofs of the Tied-<span class="math-inline">N</span> Rank Sum Identity, Contrast Subspace Covariance, Zero-Information Boundary Identity, Persistent vs Independent Series Win Probability (<code>75.00%</code> vs <code>93.76%</code>), and RRSAC 102.1 Rule Bounds (<code>[lower, upper]</code>).</li>
+<li><strong>Evening</strong>: Complete Workbook Tier II (Q13–Q24) and Tier III derivations (Q25–Q33), plus Case Studies 2 (<code>naples_mr_final</code>) and 3 (<code>26_09_22_nap_ipr_pr2</code> &amp; <code>26_09_23_nap_ipr_pr1</code>).</li>
+</ul>
+<h3 id="day-3-frontend-architecture-verification-engineering-weaknesses-next-experiments">Day 3 — Frontend Architecture, Verification Engineering, Weaknesses &amp; Next Experiments</h3>
+<ul>
+<li><strong>Morning</strong>: Deep reading of Parts VI, VII, and VIII of <code>01_Repository_Explained.pdf</code>. Trace <code>src/App.tsx</code>, <code>src/engine/{ReplayEngine,interpolate,analytics,contactDetector,analysisCatalog,predictionCatalog}.ts</code>, <code>src/components/canvas/{CourseCanvas,ViewportMatrix,boatModels,boatPresentation}.ts(x)</code>, and <code>scripts/forecastScenarios.ts</code>.</li>
+<li><strong>Afternoon</strong>: Review the 828 deterministic tests (<code>tests/unit/</code>, <code>tests/e2e/test_runner.py</code>, <code>tests/tier5_integrity.py</code>, <code>src/**/__tests__/</code>) and the 5 falsifiable research experiments in Part VIII.</li>
+<li><strong>Evening</strong>: Complete all 64 flashcards in <code>flashcards_viewer.html</code>, read aloud or rehearse with <code>06_Audio_Narration_Script.md</code>, and draft your own architecture improvement plan using Section 5 below.</li>
+</ul>
+<hr />
+<h2 id="4-dependency-aware-source-reading-order">4. Dependency-Aware Source Reading Order</h2>
+<p>Because modules build on upstream data contracts, read the first-party codebase in this exact topological order (all clickable in <a href="../source-companion/index.html"><code>source-companion/index.html</code></a>):</p>
+<ol>
+<li><strong>Level 0 — Contracts &amp; Constants</strong>:
+   <code>PROJECT.md</code> <span class="math-inline">→</span> <code>AGENTS.md</code> <span class="math-inline">→</span> <code>pipeline/config.py</code> <span class="math-inline">→</span> <code>src/types/replay.ts</code> <span class="math-inline">→</span> <code>src/types/analysis.ts</code> <span class="math-inline">→</span> <code>src/types/prediction.ts</code>.</li>
+<li><strong>Level 1 — Ingestion, Projection &amp; Synchronization</strong>:
+   <code>pipeline/projection.py</code> <span class="math-inline">→</span> <code>pipeline/ingest.py</code> <span class="math-inline">→</span> <code>pipeline/synchronize.py</code>.</li>
+<li><strong>Level 2 — Event Reconstruction &amp; Geometry</strong>:
+   <code>pipeline/reconstruction.py</code> <span class="math-inline">→</span> <code>pipeline/manoeuvres.py</code> <span class="math-inline">→</span> <code>pipeline/analytics.py</code> <span class="math-inline">→</span> <code>pipeline/export_replay.py</code> <span class="math-inline">→</span> <code>pipeline/canonical_tables.py</code>.</li>
+<li><strong>Level 3 — Historical &amp; Tactical Analytics</strong>:
+   <code>pipeline/tactical_insights.py</code> <span class="math-inline">→</span> <code>pipeline/historical_analysis.py</code> <span class="math-inline">→</span> <code>pipeline/environment.py</code> <span class="math-inline">→</span> <code>scripts/analysis_snapshot.py</code>.</li>
+<li><strong>Level 4 — Causal Forecasting &amp; AC38 Cup Simulation</strong>:
+   <code>pipeline/prediction/contracts.py</code> <span class="math-inline">→</span> <code>pipeline/prediction/labels.py</code> <span class="math-inline">→</span> <code>pipeline/prediction/state.py</code> <span class="math-inline">→</span> <code>pipeline/prediction/models.py</code> <span class="math-inline">→</span> <code>pipeline/prediction/simulation.py</code> <span class="math-inline">→</span> <code>pipeline/prediction/cup.py</code> <span class="math-inline">→</span> <code>pipeline/prediction/evaluation.py</code> <span class="math-inline">→</span> <code>pipeline/prediction/build.py</code>.</li>
+<li><strong>Level 5 — Frontend Engine &amp; Catalogs</strong>:
+   <code>src/engine/interpolate.ts</code> <span class="math-inline">→</span> <code>src/engine/ReplayEngine.ts</code> <span class="math-inline">→</span> <code>src/engine/analytics.ts</code> <span class="math-inline">→</span> <code>src/engine/contactDetector.ts</code> <span class="math-inline">→</span> <code>src/engine/manifest.ts</code> <span class="math-inline">→</span> <code>src/engine/analysisCatalog.ts</code> <span class="math-inline">→</span> <code>src/engine/predictionCatalog.ts</code>.</li>
+<li><strong>Level 6 — Canvas, Workspaces &amp; Middleware</strong>:
+   <code>src/components/canvas/ViewportMatrix.ts</code> <span class="math-inline">→</span> <code>src/components/canvas/boatModels.ts</code> <span class="math-inline">→</span> <code>src/components/canvas/boatPresentation.ts</code> <span class="math-inline">→</span> <code>src/components/canvas/CourseCanvas.tsx</code> <span class="math-inline">→</span> <code>src/App.tsx</code> <span class="math-inline">→</span> <code>src/components/dashboard/{BoatPerformanceCard,ForecastWorkspace,ReportsWorkspace}.tsx</code> <span class="math-inline">→</span> <code>scripts/forecastScenarios.ts</code>.</li>
+<li><strong>Level 7 — End-to-End Integrity Verification</strong>:
+   <code>tests/tier5_integrity.py</code> <span class="math-inline">→</span> <code>tests/e2e/test_runner.py</code> <span class="math-inline">→</span> <code>tests/unit/test_prediction.py</code>.</li>
+</ol>
+<hr />
+<h2 id="5-fifteen-unresolved-questions-worth-thinking-about-on-the-trip">5. Fifteen Unresolved Questions Worth Thinking About on the Trip</h2>
+<ol>
+<li><strong>Two-Hull Syndicate Collapse (<code>GBR B/G</code>, <code>ITA B/G</code>, <code>NZL B/G</code>)</strong>: In 2026 AC40 racing, three syndicates sailed two boats simultaneously (often splitting into an "A/Senior" crew and a "Youth/Women/Development" crew), and <code>cup.py</code> maps them to 2027 AC75 team strength by taking the unweighted arithmetic mean <span class="math-inline">(β&#770;<sub>B</sub> + β&#770;<sub>G</sub>)/2</span>. Would taking the <strong>maximum</strong> of the two hulls (or weighting by senior helmsman roster) better reflect single-boat AC75 capability?</li>
+<li><strong>Equal-Leg vs Time/Distance-Weighted Peer Indices</strong>: <code>performance-1</code> computes a dimension's race index as the unweighted mean of per-leg indices <span class="math-inline"><span class="m-frac"><span class="m-num">1</span><span class="m-den">|L|</span></span>∑_\ell I<sub>b,\ell</sub></span>. If Leg 1 is a 240-second beat and Leg 5 is a shortened 80-second beat to the finish, should leg indices be weighted by leg distance or duration?</li>
+<li><strong>Resolving the <code>USA</code> Start Conflict (<code>pipeline/reconstruction.py:L228</code>)</strong>: If we fix <code>comp.get("start_state", {}).get("started")</code> in <code>reconstruction.py</code> so <code>USA</code> in <code>naples_pr1</code> is classified as <code>DNS</code>/<code>OCS</code> instead of <code>RANK_4</code>, how should the replay UI visually distinguish a boat that physically sailed all 4 legs on the water (practice shadow sailing) from a legal competitor?</li>
+<li><strong>Monotonic Gate-Time Filtering (<code>26_09_22_nap_ipr_pr2</code>)</strong>: In <code>historical_analysis.py</code>, when a source <code>leg_timings</code> timestamp is non-monotonic (like <code>USA</code> Leg 3 in <code>pr2</code>), the current code rejects Leg 3 but uses Leg 3's backward timestamp as Leg 4's start time, causing Leg 2 and Leg 4 to overlap by <code>171.9 s</code>. Should <code>_leg_entry_for_boat</code> enforce <span class="math-inline"><span class="m-text">start<sub>m</sub>s</span>_\ell = max<sub>k < \ell</sub>(<span class="m-text">end<sub>m</sub>s</span><sub>k</sub>)</span> or fall back to reconstructed bow crossings whenever source <code>leg_timings</code> violate monotonicity?</li>
+<li><strong>Tactical Wind Projection Gates (<code>0 / 3,455</code> Active)</strong>: All 7 projection gates in <code>tactical_insights.py</code> are well-motivated individually, but their conjunction suppresses 100% of 5-minute projections across all 28 races. Is a linear OLS trend over 120 s fundamentally the wrong functional form for oscillating Mediterranean sea-breeze shifts (where a damped sinusoid / AR(2) spectral peak might capture phase rather than linear drift)?</li>
+<li><strong>Pre-Race Wind Speed Conditioning</strong>: Currently, <code>export_pre_race_scenario</code> uses the static <code>joint_pl_reference</code> model so expected positions are invariant to <code>tws_kt</code>. Since <code>LegTimeModel</code> already includes a log-TWS slope <span class="math-inline">β<sub><span class="m-text">tws</span></sub></span>, under what conditions would team-specific wind-speed interactions <span class="math-inline">β<sub><span class="m-text">tws</span>, i</sub></span> become statistically identifiable without overfitting 9 race days?</li>
+<li><strong>Practice vs Competitive Weighting (<span class="math-inline">w = 0.5</span>)</strong>: <code>StrengthModel</code> weights practice fleet races at <span class="math-inline">w = 0.5</span> relative to competitive fleet races (<span class="math-inline">w = 1.0</span>). In practice races, leading boats frequently peel off early on Leg 3 or Leg 4 to save equipment. Does <span class="math-inline">w = 0.5</span> still allow intentional practice peel-offs to bias completion and leg-time models downward for top teams?</li>
+<li><strong>RRSAC 102.1 Tie-Break Sensitivity</strong>: In <code>cup_2027.json</code>, <code>34.46%</code> of baseline trials are unresolved because any tie in 6-race fleet points or 6-Challenger Round Robin standings halts exact point attribution. What if we separate <strong>non-pivot ties</strong> (e.g., a tie between 5th and 6th seed that only swaps Repechage 1 lane assignment) from <strong>pivot ties</strong> (a tie across the 3rd/4th direct-semifinal cutoff)? How much of the <code>34.46 pp</code> width would collapse without inventing any tie-break rule?</li>
+<li><strong>Manoeuvre Entry/Exit Window Asymmetry</strong>: <code>ManoeuvreDetector</code> defines entry speed over <span class="math-inline">[-6.5<span class="m-text">s</span>, -2.5<span class="m-text">s</span>]</span> before peak turn rate, whereas <code>historical_analysis.py</code> measures recovery up to <span class="math-inline">+15.0<span class="m-text">s</span></span> at a <span class="math-inline">95%</span> threshold. When a boat tacks immediately into a wind header or mark-rounding bear-away, its optimal post-tack target speed changes — how can recovery metrics normalize for target polar speed rather than pre-tack entry speed?</li>
+<li><strong>GNSS Attitude vs Heading-Only Bow Projection</strong>: <code>_bow_point</code> projects the <span class="math-inline">+12.963<span class="m-text">m</span></span> bowsprit in 2D using <code>heading</code> (<span class="math-inline">ψ</span>) assuming zero pitch and heel. During high-speed foiling or a splashdown bow-down pitch of <span class="math-inline">8^∘</span>, how many centimetres does the horizontal projection of the bowsprit foreshorten, and could that affect photo-finish gate calls?</li>
+<li><strong>Kalman Filter Turn-Rate Switching</strong>: <code>CVKalmanFilter</code> uses a constant-velocity model where acceleration noise <span class="math-inline">q</span> is isotropic. During an <span class="math-inline">18^∘/<span class="m-text">s</span></span> foiling gybe, the boat experiences strong centripetal acceleration orthogonal to velocity. Would an Interacting Multiple Model (IMM) filter combining Constant-Velocity and Constant-Turn-Rate (CTRV) improve 10–30 s outage containment during manoeuvres?</li>
+<li><strong>Separating Tactical Flyers from Boat Speed in <code>LegTimeModel</code></strong>: In live simulation, <code>LegTimeModel</code> models remaining leg time as a function of scalar <code>progress_m</code> remaining. Two boats at the same <code>progress_m</code> — one in the center of the course and one on the extreme layline — have identical distance to go, but the layline boat must sail extra tacks/distance (<code>cos(TWA)</code> penalty). How can cross-track distance from the gate centerline be incorporated into effective remaining distance?</li>
+<li><strong>Spatial Wind Field Non-Uniformity</strong>: <code>windAt</code> and <code>tactical_insights.py</code> treat wind on the course at timestamp <span class="math-inline">t</span> as a single spatially uniform vector <span class="math-inline">(<span class="m-text">TWD</span>(t), <span class="m-text">TWS</span>(t))</span>. Since all 9 AC40s log onboard <code>twd</code> and <code>tws</code> simultaneously across a <span class="math-inline">2<span class="m-text">km</span> × 1<span class="m-text">km</span></span> box, could we reconstruct a 2D spatial wind-pressure gradient across the course?</li>
+<li><strong>Client-Side Bundle vs Lazy Data Architecture</strong>: As the archive grows from 28 races to 100+ races in 2027, <code>public/data/analysis/index.json</code> (<code>2.1 MB</code>) and <code>.forecast/</code> artifacts will scale linearly. Where should pagination or IndexedDB caching be introduced in <code>analysisCatalog.ts</code> and <code>predictionCatalog.ts</code>?</li>
+<li><strong>Epistemic Honesty as a Design Pattern</strong>: Most sports analytics dashboards hide missing data behind imputed numbers and forced <span class="math-inline">100%</span> bar charts. This repository does the opposite — surfacing <code>conflict</code>, <code>low_coverage</code>, <code>gate_ambiguous</code>, and <code>[lower, upper]</code> rule bounds as first-class UI elements. Where else in quantitative engineering should this "refuse to fabricate precision" architecture be applied?</li>
+</ol>
+    </main>
+  </div>
+  <script>
+(function() {
+  const input = document.getElementById('offline-search');
+  const status = document.getElementById('search-status');
+  const main = document.querySelector('.main-content');
+  if (!input || !main) return;
+
+  function clearHighlights() {
+    const marks = main.querySelectorAll('mark.search-hit');
+    marks.forEach(m => {
+      const parent = m.parentNode;
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    });
+  }
+
+  input.addEventListener('input', function() {
+    clearHighlights();
+    const q = input.value.trim();
+    if (q.length < 2) {
+      status.textContent = '';
+      return;
+    }
+    const regex = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    let count = 0;
+    let firstHit = null;
+    const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const tag = node.parentNode && node.parentNode.tagName;
+        if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
+        return regex.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+      }
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const frag = document.createDocumentFragment();
+      let lastIdx = 0;
+      node.nodeValue.replace(regex, (match, p1, offset) => {
+        if (offset > lastIdx) {
+          frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIdx, offset)));
+        }
+        const mark = document.createElement('mark');
+        mark.className = 'search-hit';
+        mark.textContent = match;
+        if (!firstHit) firstHit = mark;
+        count++;
+        frag.appendChild(mark);
+        lastIdx = offset + match.length;
+      });
+      if (lastIdx < node.nodeValue.length) {
+        frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIdx)));
+      }
+      node.parentNode.replaceChild(frag, node);
+    });
+    status.textContent = count + ' match' + (count === 1 ? '' : 'es') + ' found';
+    if (firstHit) firstHit.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+})();
+</script>
+</body>
+</html>

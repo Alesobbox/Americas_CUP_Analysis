@@ -1,0 +1,364 @@
+{
+  "schemaVersion": "1",
+  "cliVersion": "0.20.0",
+  "version": "0.20.0",
+  "score": 75,
+  "label": "Healthy",
+  "scoreable": true,
+  "coverage": {
+    "supportedFiles": 7,
+    "unsupportedFiles": 0,
+    "dominantUnsupported": null,
+    "scoreable": true
+  },
+  "engines": {
+    "format": {
+      "issues": 0,
+      "skipped": false,
+      "elapsed": 597.9014999999999,
+      "missingTools": [
+        "ruff"
+      ]
+    },
+    "lint": {
+      "issues": 0,
+      "skipped": false,
+      "elapsed": 601.0284000000001,
+      "missingTools": [
+        "ruff"
+      ]
+    },
+    "code-quality": {
+      "issues": 1,
+      "skipped": false,
+      "elapsed": 403.5195999999996
+    },
+    "ai-slop": {
+      "issues": 8,
+      "skipped": false,
+      "elapsed": 386.2858000000001
+    },
+    "security": {
+      "issues": 1,
+      "skipped": false,
+      "elapsed": 133.44660000000022
+    }
+  },
+  "engineDefinitions": {
+    "format": {
+      "label": "Formatting",
+      "description": "Whitespace, indentation, line wrapping, and import ordering"
+    },
+    "lint": {
+      "label": "Linting",
+      "description": "Static analysis for likely bugs and bad patterns"
+    },
+    "code-quality": {
+      "label": "Code Quality",
+      "description": "Complexity limits, dead code detection, and duplication checks"
+    },
+    "ai-slop": {
+      "label": "AI Slop",
+      "description": "Narrative comments, dead patterns, unsafe type casts, TODO stubs, generic names"
+    },
+    "architecture": {
+      "label": "Architecture",
+      "description": "Project-specific import and layering rules"
+    },
+    "security": {
+      "label": "Security",
+      "description": "Secret leaks, risky APIs, and dependency vulnerabilities"
+    }
+  },
+  "diagnostics": [
+    {
+      "filePath": "package.json",
+      "engine": "code-quality",
+      "rule": "knip/skipped",
+      "severity": "info",
+      "message": "Unused code check skipped: Knip is not set up in this project",
+      "help": "Unused files, exports and dependencies were not checked. Add a knip config file (for example knip.json) or add knip to devDependencies to enable the check, or set quality.knip: always to run it without that setup.",
+      "line": 0,
+      "column": 0,
+      "category": "Dead Code",
+      "fixable": false,
+      "assessment": {
+        "kind": "style-policy",
+        "confidence": "medium",
+        "label": "style/policy"
+      },
+      "scoreImpact": {
+        "tier": "advisory",
+        "multiplier": 0.25,
+        "cap": 8,
+        "rationale": "A skipped unused code check is visibility loss, not evidence of dead code."
+      },
+      "forceFixable": false
+    },
+    {
+      "filePath": "tools/build_pack.py",
+      "engine": "ai-slop",
+      "rule": "ai-slop/unused-import",
+      "severity": "warning",
+      "message": "Imported symbol 'shutil' is never used",
+      "help": "Remove unused imports to keep the code clean",
+      "line": 3,
+      "column": 0,
+      "category": "AI Slop",
+      "fixable": true,
+      "assessment": {
+        "kind": "ai-slop-indicator",
+        "confidence": "medium",
+        "label": "AI-slop indicators"
+      },
+      "scoreImpact": {
+        "tier": "mechanical",
+        "multiplier": 0.5,
+        "cap": 16,
+        "rationale": "Unused imports are mechanical cleanup."
+      },
+      "forceFixable": false
+    },
+    {
+      "filePath": "tools/build_pack.py",
+      "engine": "ai-slop",
+      "rule": "ai-slop/unused-import",
+      "severity": "warning",
+      "message": "Imported symbol 'TA_LEFT' is never used",
+      "help": "Remove unused imports to keep the code clean",
+      "line": 9,
+      "column": 0,
+      "category": "AI Slop",
+      "fixable": true,
+      "assessment": {
+        "kind": "ai-slop-indicator",
+        "confidence": "medium",
+        "label": "AI-slop indicators"
+      },
+      "scoreImpact": {
+        "tier": "mechanical",
+        "multiplier": 0.5,
+        "cap": 16,
+        "rationale": "Unused imports are mechanical cleanup."
+      },
+      "forceFixable": false
+    },
+    {
+      "filePath": "tools/build_pack.py",
+      "engine": "ai-slop",
+      "rule": "ai-slop/unused-import",
+      "severity": "warning",
+      "message": "Imported symbol 'Preformatted' is never used",
+      "help": "Remove unused imports to keep the code clean",
+      "line": 12,
+      "column": 0,
+      "category": "AI Slop",
+      "fixable": true,
+      "assessment": {
+        "kind": "ai-slop-indicator",
+        "confidence": "medium",
+        "label": "AI-slop indicators"
+      },
+      "scoreImpact": {
+        "tier": "mechanical",
+        "multiplier": 0.5,
+        "cap": 16,
+        "rationale": "Unused imports are mechanical cleanup."
+      },
+      "forceFixable": false
+    },
+    {
+      "filePath": "tools/build_pack.py",
+      "engine": "ai-slop",
+      "rule": "ai-slop/python-repetitive-dispatch",
+      "severity": "warning",
+      "message": "5 repeated branches dispatch on `kind`.",
+      "help": "Use a table, set membership, or handler map when branches share the same shape. SlopCodeBench highlights these selector ladders as code that keeps growing instead of absorbing new cases cleanly.",
+      "line": 81,
+      "column": 1,
+      "category": "AI Slop",
+      "fixable": false,
+      "assessment": {
+        "kind": "ai-slop-indicator",
+        "confidence": "medium",
+        "label": "AI-slop indicators"
+      },
+      "scoreImpact": {
+        "tier": "maintainability",
+        "multiplier": 0.75,
+        "cap": 24,
+        "rationale": "Repetitive dispatch ladders create maintainability debt."
+      },
+      "forceFixable": false
+    },
+    {
+      "filePath": "tools/build_pack.py",
+      "engine": "ai-slop",
+      "rule": "ai-slop/python-repetitive-dispatch",
+      "severity": "warning",
+      "message": "4 repeated branches dispatch on `kind`.",
+      "help": "Use a table, set membership, or handler map when branches share the same shape. SlopCodeBench highlights these selector ladders as code that keeps growing instead of absorbing new cases cleanly.",
+      "line": 82,
+      "column": 1,
+      "category": "AI Slop",
+      "fixable": false,
+      "assessment": {
+        "kind": "ai-slop-indicator",
+        "confidence": "medium",
+        "label": "AI-slop indicators"
+      },
+      "scoreImpact": {
+        "tier": "maintainability",
+        "multiplier": 0.75,
+        "cap": 24,
+        "rationale": "Repetitive dispatch ladders create maintainability debt."
+      },
+      "forceFixable": false
+    },
+    {
+      "filePath": "tools/build_pack.py",
+      "engine": "ai-slop",
+      "rule": "ai-slop/python-repetitive-dispatch",
+      "severity": "warning",
+      "message": "6 repeated branches dispatch on `kind`.",
+      "help": "Use a table, set membership, or handler map when branches share the same shape. SlopCodeBench highlights these selector ladders as code that keeps growing instead of absorbing new cases cleanly.",
+      "line": 148,
+      "column": 1,
+      "category": "AI Slop",
+      "fixable": false,
+      "assessment": {
+        "kind": "ai-slop-indicator",
+        "confidence": "medium",
+        "label": "AI-slop indicators"
+      },
+      "scoreImpact": {
+        "tier": "maintainability",
+        "multiplier": 0.75,
+        "cap": 24,
+        "rationale": "Repetitive dispatch ladders create maintainability debt."
+      },
+      "forceFixable": false
+    },
+    {
+      "filePath": "tools/build_pack.py",
+      "engine": "ai-slop",
+      "rule": "ai-slop/python-repetitive-dispatch",
+      "severity": "warning",
+      "message": "5 repeated branches dispatch on `kind`.",
+      "help": "Use a table, set membership, or handler map when branches share the same shape. SlopCodeBench highlights these selector ladders as code that keeps growing instead of absorbing new cases cleanly.",
+      "line": 149,
+      "column": 1,
+      "category": "AI Slop",
+      "fixable": false,
+      "assessment": {
+        "kind": "ai-slop-indicator",
+        "confidence": "medium",
+        "label": "AI-slop indicators"
+      },
+      "scoreImpact": {
+        "tier": "maintainability",
+        "multiplier": 0.75,
+        "cap": 24,
+        "rationale": "Repetitive dispatch ladders create maintainability debt."
+      },
+      "forceFixable": false
+    },
+    {
+      "filePath": "tools/build_pack.py",
+      "engine": "ai-slop",
+      "rule": "ai-slop/python-repetitive-dispatch",
+      "severity": "warning",
+      "message": "4 repeated branches dispatch on `kind`.",
+      "help": "Use a table, set membership, or handler map when branches share the same shape. SlopCodeBench highlights these selector ladders as code that keeps growing instead of absorbing new cases cleanly.",
+      "line": 150,
+      "column": 1,
+      "category": "AI Slop",
+      "fixable": false,
+      "assessment": {
+        "kind": "ai-slop-indicator",
+        "confidence": "medium",
+        "label": "AI-slop indicators"
+      },
+      "scoreImpact": {
+        "tier": "maintainability",
+        "multiplier": 0.75,
+        "cap": 24,
+        "rationale": "Repetitive dispatch ladders create maintainability debt."
+      },
+      "forceFixable": false
+    },
+    {
+      "filePath": "package.json",
+      "engine": "security",
+      "rule": "security/dependency-audit-skipped",
+      "severity": "info",
+      "message": "Dependency audit did not complete (npm audit)",
+      "help": "Failed to run npm audit: Failed to run npm: spawn npm ENOENT",
+      "line": 0,
+      "column": 0,
+      "category": "Security",
+      "fixable": false,
+      "assessment": {
+        "kind": "conservative-security",
+        "confidence": "medium",
+        "label": "conservative security"
+      },
+      "scoreImpact": {
+        "tier": "advisory",
+        "multiplier": 0.25,
+        "cap": 8,
+        "rationale": "An unavailable audit is visibility loss, not evidence of a vulnerability."
+      },
+      "forceFixable": false
+    }
+  ],
+  "findingAssessment": {
+    "rows": [
+      {
+        "kind": "ai-slop-indicator",
+        "label": "AI-slop indicators",
+        "count": 8,
+        "errors": 0,
+        "warnings": 8,
+        "info": 0,
+        "fixable": 3
+      },
+      {
+        "kind": "style-policy",
+        "label": "style/policy",
+        "count": 1,
+        "errors": 0,
+        "warnings": 0,
+        "info": 1,
+        "fixable": 0
+      },
+      {
+        "kind": "conservative-security",
+        "label": "conservative security",
+        "count": 1,
+        "errors": 0,
+        "warnings": 0,
+        "info": 1,
+        "fixable": 0
+      }
+    ],
+    "byKind": {
+      "confirmed-defect": 0,
+      "conservative-security": 1,
+      "style-policy": 1,
+      "ai-slop-indicator": 8
+    },
+    "byConfidence": {
+      "high": 0,
+      "medium": 10,
+      "low": 0
+    }
+  },
+  "summary": {
+    "errors": 0,
+    "warnings": 8,
+    "fixable": 3,
+    "files": 7,
+    "elapsed": "609ms"
+  }
+}

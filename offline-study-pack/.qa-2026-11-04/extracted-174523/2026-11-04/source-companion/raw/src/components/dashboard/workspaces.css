@@ -1,0 +1,93 @@
+/* Shared workspace structure; individual workspaces own their content styling. */
+.dashboard-workspace { background: var(--bg-surface); color: var(--text-primary); margin: 24px 32px 48px; padding: 0; min-width: 0; line-height: 1.5; }
+.dashboard-workspace h2 { font-size: 30px; font-weight: 500; letter-spacing: -.8px; margin: 0 0 10px; line-height: 1.2; }
+.dashboard-workspace p { color: var(--text-secondary); font-size: 14px; }
+.dashboard-workspace select { color: var(--text-primary); background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 10px 12px; font: inherit; max-width: 100%; min-height: 42px; }
+.dashboard-workspace label { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
+.dashboard-workspace a { color: var(--telemetry-cyan); }
+.dashboard-workspace details { border-top: 1px solid var(--border-subtle); margin-top: 18px; padding-top: 14px; }
+.dashboard-workspace summary { cursor: pointer; font-weight: 500; min-height: 32px; }
+.workspace-table-wrap { overflow: auto; max-width: 100%; margin: 20px 0; }
+.workspace-table-wrap table { border-collapse: collapse; width: 100%; font-size: 14px; white-space: nowrap; }
+.workspace-table-wrap th, .workspace-table-wrap td { text-align: left; padding: 14px 12px; border-bottom: 1px solid var(--border-subtle); font-variant-numeric: tabular-nums; }
+.workspace-table-wrap th { color: var(--text-secondary); font-weight: 500; }
+.workspace-table-wrap tr[aria-selected=true] { background: var(--bg-active); }
+.workspace-table-wrap button[aria-pressed=true] { border-color: var(--telemetry-cyan); background: var(--bg-active); }
+.workspace-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.workspace-kicker { font-size: 12px; color: var(--text-secondary); margin: 0 0 10px; }
+.dashboard-secondary-layout { display: block; max-width: 1280px; margin: auto; }
+.dashboard-inline-analysis { position: static; width: auto; max-width: none; max-height: none; margin: 24px 32px; overflow: visible; }
+.artifact-path { display: block; font-size: 12px; color: var(--text-secondary); overflow-wrap: anywhere; }
+.app-shell { height: auto; min-height: 100dvh; overflow: visible; }
+.dashboard-settings { width: min(560px, calc(100vw - 32px)); max-height: 88dvh; overflow: auto; margin: auto; padding: 28px; background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 24px; box-shadow: 0 16px 60px #20212426; }
+.dashboard-settings h2 { font-size: 24px; }
+.dashboard-settings .workspace-heading button { width: 40px; height: 40px; font-size: 24px; border-radius: 50%; background: var(--bg-card); }
+.dashboard-settings > label { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 16px; margin: 18px 0; font-size: 14px; }
+.dashboard-settings > label:has(input[type=checkbox]) { display: flex; }
+.dashboard-settings input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--telemetry-cyan); }
+.dashboard-settings p { font-size: 12px; line-height: 1.6; }
+.review-interval { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 16px 20px; margin: 0 32px 20px; color: var(--text-primary); background: var(--bg-active); border-radius: 12px; font-size: 12px; }
+.review-interval button { color: var(--telemetry-cyan); padding: 8px; min-height: 36px; }
+.tactical-insights-panel.dashboard-workspace { margin: 0 32px 48px; padding: 24px 0 0; border-top: 1px solid var(--border-subtle); }
+.tactical-insights-panel.embedded { border-top: 1px solid var(--border-subtle); margin: 28px 0 0; padding-top: 24px; }
+.tactical-insights-panel h2 { font-size: 20px; letter-spacing: -.4px; margin: 0; }
+.insight-status { color: var(--text-secondary); font-size: 11px; }
+.tactical-insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 24px; margin: 20px 0; }
+.tactical-insight { min-width: 0; padding: 0 0 0 16px; border-left: 2px solid var(--border-subtle); }
+.tactical-insight h3 { font-size: 16px; font-weight: 500; margin: 0 0 8px; }
+.tactical-insight p { margin: 0 0 10px; font-size: 14px; }
+.tactical-insight small, .insight-evidence, .insight-provenance p { font-size: 12px; color: var(--text-secondary); overflow-wrap: anywhere; }
+.insight-unavailable { font-size: 14px; }
+.insight-provenance summary { font-size: 13px; }
+.compare-introduction { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; margin-bottom: 32px; }
+.compare-introduction h2 { font-size: 40px; letter-spacing: -1.4px; }
+.compare-introduction p { margin: 6px 0; }
+.compare-panel { color: var(--text-primary); background: var(--bg-surface); padding: 0; margin: 0 0 28px; border: 0; }
+.compare-pickers { padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; margin-bottom: 28px; }
+.compare-pickers > .compare-boat-identity { flex-direction: row; display: flex; align-items: center; position: relative; min-width: 0; gap: 16px; padding: 20px 24px; border-radius: 16px; background: var(--bg-card); }
+.compare-boat-identity .compare-boat-letter { font-size: 28px; font-weight: 500; color: var(--text-secondary); }
+.compare-boat-identity label { display: grid; gap: 8px; margin: 0; flex: 1; min-width: 0; font-size: 12px; color: var(--text-secondary); }
+.compare-boat-identity select { width: 100%; font-size: 14px; }
+.compare-boat-identity > i { position: absolute; height: 3px; bottom: 0; left: 24px; right: 24px; border-radius: 3px; }
+.compare-values { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; margin-bottom: 32px; }
+.compare-values th, .compare-values td { padding: 16px; border-bottom: 1px solid var(--border-subtle); text-align: center; }
+.compare-values thead th { font-size: 12px; color: var(--text-secondary); font-weight: 400; }
+.compare-values tbody td { font-size: 24px; font-weight: 500; letter-spacing: -.5px; }
+.compare-values tbody th { font-size: 14px; font-weight: 500; }
+.compare-values small { display: block; font-size: 12px; font-weight: 400; color: var(--text-secondary); margin-top: 3px; }
+.compare-values td:last-child { font-size: 16px; color: var(--text-secondary); }
+.pairwise-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pairwise-heading h3 { font-size: 18px; font-weight: 500; margin: 0; }
+.pairwise-heading span { font-size: 12px; color: var(--text-secondary); }
+.comparison-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; background: transparent; margin: 20px 0; }
+.compare-panel .comparison-grid > div { display: grid; gap: 8px; padding: 0; background: transparent; border: 0; min-width: 0; }
+.comparison-grid dt { font-size: 11px; color: var(--text-secondary); letter-spacing: 0; }
+.comparison-grid dd { margin: 0; font-size: 24px; font-weight: 500; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.comparison-grid dd small { margin-left: 5px; font-size: 12px; font-weight: 400; color: var(--text-secondary); }
+.compare-panel .micro-note, .comparison-context { font-family: var(--font-ui); font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+.compare-workspace > .race-timeline-panel-card { border-top: 1px solid var(--border-subtle); margin: 24px 0; }
+.comparison-empty { padding: 24px; background: var(--bg-card); border-radius: 12px; }
+@media (max-width: 1399px) { .dashboard-workspace { margin-left: 24px; margin-right: 24px; } .tactical-insights-panel.dashboard-workspace { margin-left: 24px; margin-right: 24px; } }
+@media (max-width: 767px) {
+  .dashboard-workspace { margin: 20px 16px 32px; }
+  .dashboard-workspace h2 { font-size: 26px; }
+  .dashboard-inline-analysis { margin: 16px; width: auto; }
+  .tactical-insights-panel.dashboard-workspace { margin: 0 16px 32px; }
+  .tactical-insights-panel .workspace-heading { flex-wrap: wrap; gap: 8px; }
+  .tactical-insight-grid { gap: 20px; }
+  .compare-introduction { margin-bottom: 24px; }
+  .compare-introduction h2 { font-size: 32px; }
+  .compare-pickers { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .compare-pickers > .compare-boat-identity { flex-direction: row; padding: 16px; gap: 12px; }
+  .compare-values th, .compare-values td { padding: 12px 5px; }
+  .compare-values tbody td { font-size: 20px; }
+  .compare-values td:last-child { font-size: 14px; }
+  .comparison-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .comparison-grid dt { font-size: 10px; }
+  .pairwise-heading { flex-wrap: wrap; }
+  .review-interval { margin: 0 16px 16px; }
+  .dashboard-settings { padding: 20px; }
+  .dashboard-settings > label { grid-template-columns: 1fr; gap: 6px; }
+  .workspace-table-wrap th, .workspace-table-wrap td { padding: 12px 8px; }
+}
+@media (pointer: coarse) { .tactical-dashboard-root button, .tactical-dashboard-root summary { min-height: 44px; } .dashboard-workspace select { font-size: 16px; } }

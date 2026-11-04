@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>src/components/dashboard/TacticalInsightsPanel.tsx — Offline Source Companion</title>
+<style>
+    :root {
+      --bg: #f8fafc; --surface: #ffffff; --border: #e2e8f0;
+      --text: #0f172a; --muted: #475569; --accent: #1a73e8;
+      --code-bg: #f1f5f9; --line-num: #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .breadcrumbs { font-size: 14px; font-weight: 600; }
+    .breadcrumbs a { color: var(--accent); text-decoration: none; }
+    .breadcrumbs a:hover { text-decoration: underline; }
+    .meta { font-size: 12px; color: var(--muted); display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .badge { padding: 2px 8px; border-radius: 999px; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+    .badge.clean { background: #dcfce7; color: #166534; }
+    .badge.modified { background: #fef3c7; color: #92400e; }
+    .badge.untracked { background: #dbeafe; color: #1e40af; }
+    main { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
+    .code-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 12.5px; }
+    .code-table tr:target { background: #fef9c3; }
+    .code-table td { padding: 1px 10px; vertical-align: top; }
+    .ln { width: 56px; text-align: right; color: var(--line-num); user-select: none; border-right: 1px solid var(--border); background: var(--code-bg); }
+    .ln a { color: inherit; text-decoration: none; display: block; }
+    .ln a:hover { color: var(--accent); }
+    .lc { white-space: pre-wrap; word-break: break-word; }
+    </style>
+</head>
+<body>
+<header>
+  <div class="breadcrumbs">
+    <a href="../../../../../START_HERE.html">Study Pack</a> /
+    <a href="../../../../index.html">Source Companion</a> /
+    <span>src/components/dashboard/TacticalInsightsPanel.tsx</span>
+  </div>
+  <div class="meta">
+    <span class="badge clean">clean</span>
+    <span>45 lines</span>
+    <span>4,018 bytes</span>
+    <span>SHA-256: <code>cb217b5e64a4290c…</code></span>
+    <a href="../../../../raw/src/components/dashboard/TacticalInsightsPanel.tsx" style="color:var(--accent);font-weight:600;">Raw File</a>
+  </div>
+</header>
+<main>
+  <table class="code-table">
+    <tbody>
+      <tr id="L1"><td class="ln"><a href="#L1">1</a></td><td class="lc">import { evidenceText } from &#x27;../../utils/evidenceText&#x27;</td></tr><tr id="L2"><td class="ln"><a href="#L2">2</a></td><td class="lc">import type { AnalysisDetail, TacticalInsights, TacticalSnapshot } from &#x27;../../types/analysis&#x27;</td></tr><tr id="L3"><td class="ln"><a href="#L3">3</a></td><td class="lc"></td></tr><tr id="L4"><td class="ln"><a href="#L4">4</a></td><td class="lc">export function selectTacticalSnapshot(series: TacticalInsights | undefined, raceId: string, playhead: number): { snapshot: TacticalSnapshot | null; reason?: string } {</td></tr><tr id="L5"><td class="ln"><a href="#L5">5</a></td><td class="lc">  if (!series || series.race_id !== raceId) return { snapshot: null, reason: &#x27;Tactical insights are unavailable for this race.&#x27; }</td></tr><tr id="L6"><td class="ln"><a href="#L6">6</a></td><td class="lc">  if (!Number.isFinite(playhead)) return { snapshot: null, reason: &#x27;Replay time is unavailable.&#x27; }</td></tr><tr id="L7"><td class="ln"><a href="#L7">7</a></td><td class="lc">  if (!series.snapshots.length &amp;&amp; series.reason) return { snapshot: null, reason: series.reason }</td></tr><tr id="L8"><td class="ln"><a href="#L8">8</a></td><td class="lc">  let low = 0, high = series.snapshots.length - 1, selected = -1</td></tr><tr id="L9"><td class="ln"><a href="#L9">9</a></td><td class="lc">  while (low &lt;= high) {</td></tr><tr id="L10"><td class="ln"><a href="#L10">10</a></td><td class="lc">    const middle = Math.floor((low + high) / 2)</td></tr><tr id="L11"><td class="ln"><a href="#L11">11</a></td><td class="lc">    if (series.snapshots[middle].timestamp_ms &lt;= playhead) { selected = middle; low = middle + 1 }</td></tr><tr id="L12"><td class="ln"><a href="#L12">12</a></td><td class="lc">    else high = middle - 1</td></tr><tr id="L13"><td class="ln"><a href="#L13">13</a></td><td class="lc">  }</td></tr><tr id="L14"><td class="ln"><a href="#L14">14</a></td><td class="lc">  if (selected &lt; 0) return { snapshot: null, reason: &#x27;No recorded tactical window has been reached at this playhead.&#x27; }</td></tr><tr id="L15"><td class="ln"><a href="#L15">15</a></td><td class="lc">  const snapshot = series.snapshots[selected]</td></tr><tr id="L16"><td class="ln"><a href="#L16">16</a></td><td class="lc">  if (playhead - snapshot.timestamp_ms &gt; series.max_snapshot_age_ms || snapshot.window_end_ms &gt; playhead) {</td></tr><tr id="L17"><td class="ln"><a href="#L17">17</a></td><td class="lc">    return { snapshot: null, reason: &#x27;Tactical window is stale at this playhead; no current insight is available.&#x27; }</td></tr><tr id="L18"><td class="ln"><a href="#L18">18</a></td><td class="lc">  }</td></tr><tr id="L19"><td class="ln"><a href="#L19">19</a></td><td class="lc">  return { snapshot }</td></tr><tr id="L20"><td class="ln"><a href="#L20">20</a></td><td class="lc">}</td></tr><tr id="L21"><td class="ln"><a href="#L21">21</a></td><td class="lc"></td></tr><tr id="L22"><td class="ln"><a href="#L22">22</a></td><td class="lc">export function TacticalInsightsPanel({ detail, raceId, playhead, embedded = false }: {</td></tr><tr id="L23"><td class="ln"><a href="#L23">23</a></td><td class="lc">  detail: AnalysisDetail | null</td></tr><tr id="L24"><td class="ln"><a href="#L24">24</a></td><td class="lc">  raceId: string</td></tr><tr id="L25"><td class="ln"><a href="#L25">25</a></td><td class="lc">  playhead: number</td></tr><tr id="L26"><td class="ln"><a href="#L26">26</a></td><td class="lc">  embedded?: boolean</td></tr><tr id="L27"><td class="ln"><a href="#L27">27</a></td><td class="lc">}) {</td></tr><tr id="L28"><td class="ln"><a href="#L28">28</a></td><td class="lc">  const series = detail?.race.id === raceId ? detail.tactical_insights : undefined</td></tr><tr id="L29"><td class="ln"><a href="#L29">29</a></td><td class="lc">  const { snapshot, reason } = selectTacticalSnapshot(series, raceId, playhead)</td></tr><tr id="L30"><td class="ln"><a href="#L30">30</a></td><td class="lc">  return &lt;section className={`tactical-insights-panel${embedded ? &#x27; embedded&#x27; : &#x27; dashboard-workspace&#x27;}`} aria-label=&quot;Tactical insights&quot; data-race-id={raceId} data-as-of={snapshot?.timestamp_ms ?? &#x27;&#x27;}&gt;</td></tr><tr id="L31"><td class="ln"><a href="#L31">31</a></td><td class="lc">    &lt;div className=&quot;workspace-heading&quot;&gt;&lt;h2&gt;Tactical insights&lt;/h2&gt;&lt;span className=&quot;insight-status&quot;&gt;RECORDED WIND&lt;/span&gt;&lt;/div&gt;</td></tr><tr id="L32"><td class="ln"><a href="#L32">32</a></td><td class="lc">    {!snapshot &amp;&amp; &lt;p className=&quot;insight-unavailable&quot;&gt;{evidenceText(reason)}&lt;/p&gt;}</td></tr><tr id="L33"><td class="ln"><a href="#L33">33</a></td><td class="lc">    {snapshot &amp;&amp; &lt;&gt;</td></tr><tr id="L34"><td class="ln"><a href="#L34">34</a></td><td class="lc">      &lt;p className=&quot;insight-evidence&quot;&gt;As of {new Date(snapshot.timestamp_ms).toISOString().slice(11, 19)} UTC · direction window: {snapshot.coverage_s.toFixed(0)} s covered · {snapshot.sample_count} direction samples · {evidenceText(snapshot.quality)}&lt;/p&gt;</td></tr><tr id="L35"><td class="ln"><a href="#L35">35</a></td><td class="lc">      {snapshot.reason &amp;&amp; &lt;p className=&quot;insight-unavailable&quot;&gt;{evidenceText(snapshot.reason)}&lt;/p&gt;}</td></tr><tr id="L36"><td class="ln"><a href="#L36">36</a></td><td class="lc">      &lt;p className=&quot;insight-evidence&quot;&gt;Speed window: {snapshot.speed_coverage_s.toFixed(0)} s covered · {snapshot.speed_sample_count} speed samples · {evidenceText(snapshot.speed_quality)}&lt;/p&gt;</td></tr><tr id="L37"><td class="ln"><a href="#L37">37</a></td><td class="lc">      {snapshot.speed_reason &amp;&amp; &lt;p className=&quot;insight-unavailable&quot;&gt;{evidenceText(snapshot.speed_reason)}&lt;/p&gt;}</td></tr><tr id="L38"><td class="ln"><a href="#L38">38</a></td><td class="lc">      &lt;div className=&quot;tactical-insight-grid&quot;&gt;{snapshot.insights.map((insight) =&gt; &lt;article className=&quot;tactical-insight&quot; key={insight.id} data-insight-kind={insight.kind}&gt;</td></tr><tr id="L39"><td class="ln"><a href="#L39">39</a></td><td class="lc">        &lt;h3&gt;{evidenceText(insight.title)}&lt;/h3&gt;&lt;p&gt;{evidenceText(insight.detail)}&lt;/p&gt;&lt;small&gt;{evidenceText(insight.quality)} · {evidenceText(insight.source)}&lt;/small&gt;</td></tr><tr id="L40"><td class="ln"><a href="#L40">40</a></td><td class="lc">      &lt;/article&gt;)}&lt;/div&gt;</td></tr><tr id="L41"><td class="ln"><a href="#L41">41</a></td><td class="lc">      &lt;p className=&quot;insight-evidence&quot;&gt;{evidenceText(snapshot.projection_reason)}&lt;/p&gt;</td></tr><tr id="L42"><td class="ln"><a href="#L42">42</a></td><td class="lc">      &lt;details className=&quot;insight-provenance&quot;&gt;&lt;summary&gt;Insight evidence and limits&lt;/summary&gt;&lt;p&gt;{evidenceText(series?.source)} · {series?.window_s} s lookback · {series?.projection_horizon_s} s projection horizon.&lt;/p&gt;&lt;p&gt;{evidenceText(series?.availability_basis)}&lt;/p&gt;&lt;p&gt;Observation window: {new Date(snapshot.window_start_ms).toISOString()} to {new Date(snapshot.window_end_ms).toISOString()}. Method: {series?.method_version}.&lt;/p&gt;{Object.entries(series?.definitions ?? {}).map(([id, definition]) =&gt; &lt;div key={id}&gt;&lt;p&gt;&lt;strong&gt;{definition.label} ({definition.unit})&lt;/strong&gt; · {evidenceText(definition.formula)}&lt;/p&gt;&lt;p&gt;Window: {evidenceText(definition.window)} · Denominator: {evidenceText(definition.denominator)} · Source: {evidenceText(definition.source)}&lt;/p&gt;&lt;/div&gt;)}&lt;/details&gt;</td></tr><tr id="L43"><td class="ln"><a href="#L43">43</a></td><td class="lc">    &lt;/&gt;}</td></tr><tr id="L44"><td class="ln"><a href="#L44">44</a></td><td class="lc">  &lt;/section&gt;</td></tr><tr id="L45"><td class="ln"><a href="#L45">45</a></td><td class="lc">}</td></tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

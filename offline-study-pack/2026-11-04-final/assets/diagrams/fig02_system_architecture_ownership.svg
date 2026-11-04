@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#334155"/>
+    </marker>
+    <marker id="arrBlue" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#1a73e8"/>
+    </marker>
+  </defs>
+  <rect width="980" height="600" fill="#f8fafc" rx="10" stroke="#cbd5e1"/>
+  <text x="24" y="34" font-size="18" font-weight="700" fill="#0f172a">Figure 2.1 — End-to-End Architecture, Artifact Contracts &amp; Ownership Boundary</text>
+  <text x="24" y="54" font-size="12.5" fill="#475569">Python owns all historical metric formulas, coverage gates, and probability models; the browser consumes versioned static JSON/CSV exports.</text>
+
+  <!-- Column 1: Raw Sources -->
+  <rect x="24" y="74" width="200" height="500" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="124" y="98" font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle">1. Raw Evidence Layer</text>
+
+  <rect x="38" y="114" width="172" height="105" rx="6" fill="#ffffff" stroke="#64748b"/>
+  <text x="48" y="134" font-size="12" font-weight="700" fill="#0f172a">Data/*.jsonl (6.87 GB)</text>
+  <text x="48" y="152" font-size="11" fill="#475569">• 28 sessions (9 Cag, 19 Nap)</text>
+  <text x="48" y="168" font-size="11" fill="#475569">• 227 scheduled boat-races</text>
+  <text x="48" y="184" font-size="11" fill="#475569">• 224 with GNSS/SOG/TWD</text>
+  <text x="48" y="200" font-size="11" fill="#b91c1c">• 0 verified official results</text>
+
+  <rect x="38" y="236" width="172" height="90" rx="6" fill="#ffffff" stroke="#64748b"/>
+  <text x="48" y="256" font-size="12" font-weight="700" fill="#0f172a">Audited Ledgers &amp; Rules</text>
+  <text x="48" y="274" font-size="11" fill="#475569">• scheduled_entry_ledger.json</text>
+  <text x="48" y="290" font-size="11" fill="#475569">• forecast_rules_sources.json</text>
+  <text x="48" y="306" font-size="11" fill="#475569">• Protocol AC38 / RRSAC v5.02</text>
+
+  <rect x="38" y="344" width="172" height="90" rx="6" fill="#ffffff" stroke="#64748b"/>
+  <text x="48" y="364" font-size="12" font-weight="700" fill="#0f172a">Open-Meteo Archive APIs</text>
+  <text x="48" y="382" font-size="11" fill="#475569">• Historical 2m Air Temp (°C)</text>
+  <text x="48" y="398" font-size="11" fill="#475569">• Marine Wave Height (m)</text>
+  <text x="48" y="414" font-size="11" fill="#475569">• Sea Surface Temp (°C)</text>
+
+  <rect x="38" y="452" width="172" height="104" rx="6" fill="#fffbeb" stroke="#d97706"/>
+  <text x="48" y="472" font-size="12" font-weight="700" fill="#92400e">Static Config &amp; Overrides</text>
+  <text x="48" y="490" font-size="11" fill="#78350f">• pipeline/config.py</text>
+  <text x="48" y="506" font-size="11" fill="#78350f">• pipeline/identity.py</text>
+  <text x="48" y="522" font-size="11" fill="#78350f">• Session name overrides</text>
+  <text x="48" y="538" font-size="11" fill="#78350f">• Mark RM role mapping</text>
+
+  <!-- Column 2: Python Pipeline (Producer) -->
+  <rect x="254" y="74" width="256" height="500" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="382" y="98" font-size="14" font-weight="700" fill="#1e3a8a" text-anchor="middle">2. Python Producer Pipeline</text>
+
+  <rect x="268" y="114" width="228" height="105" rx="6" fill="#ffffff" stroke="#3b82f6"/>
+  <text x="278" y="134" font-size="12" font-weight="700" fill="#1e40af">Ingestion &amp; Reconstruction</text>
+  <text x="278" y="150" font-size="11" fill="#334155">• ingest.py (stream + 100ms grid)</text>
+  <text x="278" y="166" font-size="11" fill="#334155">• projection.py (WGS84 → local m)</text>
+  <text x="278" y="182" font-size="11" fill="#334155">• reconstruction.py (+12.963m bow)</text>
+  <text x="278" y="198" font-size="11" fill="#334155">• manoeuvres.py &amp; contact_coalescer</text>
+
+  <rect x="268" y="232" width="228" height="115" rx="6" fill="#ffffff" stroke="#3b82f6"/>
+  <text x="278" y="252" font-size="12" font-weight="700" fill="#1e40af">Historical &amp; Team Analytics</text>
+  <text x="278" y="268" font-size="11" fill="#334155">• historical_analysis.py (historical-2)</text>
+  <text x="278" y="284" font-size="11" fill="#334155">• ≥95% coverage &amp; ≤2.0s gap rules</text>
+  <text x="278" y="300" font-size="11" fill="#334155">• performance-1 (self-excl peer=100)</text>
+  <text x="278" y="316" font-size="11" fill="#334155">• debrief-1 &amp; event-feed-1</text>
+  <text x="278" y="332" font-size="11" fill="#334155">• tactical_insights.py (tactical-1)</text>
+
+  <rect x="268" y="360" width="228" height="75" rx="6" fill="#ffffff" stroke="#3b82f6"/>
+  <text x="278" y="380" font-size="12" font-weight="700" fill="#1e40af">Environment &amp; Inventory</text>
+  <text x="278" y="396" font-size="11" fill="#334155">• environment.py (environment-1)</text>
+  <text x="278" y="412" font-size="11" fill="#334155">• build_race_previews.py</text>
+  <text x="278" y="426" font-size="11" fill="#334155">• build_artifact_inventory.py (v1.1)</text>
+
+  <rect x="268" y="448" width="228" height="110" rx="6" fill="#ffffff" stroke="#3b82f6"/>
+  <text x="278" y="468" font-size="12" font-weight="700" fill="#1e40af">Causal Forecasting Engine</text>
+  <text x="278" y="484" font-size="11" fill="#334155">• source.py (6s reorder, +6s pub)</text>
+  <text x="278" y="500" font-size="11" fill="#334155">• state.py (CV Kalman + gap gates)</text>
+  <text x="278" y="516" font-size="11" fill="#334155">• models.py (PL σ=1.2, κ=1.8, Beta)</text>
+  <text x="278" y="532" font-size="11" fill="#334155">• simulation.py (Correlated MC)</text>
+  <text x="278" y="548" font-size="11" fill="#334155">• cup.py (AC38 9-scenario bounds)</text>
+
+  <!-- Column 3: Static Contract Boundary -->
+  <rect x="540" y="74" width="196" height="500" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="638" y="98" font-size="14" font-weight="700" fill="#14532d" text-anchor="middle">3. Published Artifacts</text>
+  <text x="638" y="114" font-size="10.5" fill="#166534" text-anchor="middle">(public/data/ · 506 files)</text>
+
+  <rect x="552" y="126" width="172" height="76" rx="5" fill="#ffffff" stroke="#22c55e"/>
+  <text x="560" y="144" font-size="11.5" font-weight="700" fill="#14532d">manifests.json &amp; replays/</text>
+  <text x="560" y="160" font-size="10.5" fill="#334155">• 28 race JSONs (218.97 MB)</text>
+  <text x="560" y="175" font-size="10.5" fill="#334155">• race_previews.json (18.8 KB)</text>
+  <text x="560" y="190" font-size="10.5" fill="#334155">• 100 ms synchronized columns</text>
+
+  <rect x="552" y="214" width="172" height="96" rx="5" fill="#ffffff" stroke="#22c55e"/>
+  <text x="560" y="232" font-size="11.5" font-weight="700" fill="#14532d">analysis/ (23.01 MB)</text>
+  <text x="560" y="248" font-size="10.5" fill="#334155">• index.json (224 boat-races)</text>
+  <text x="560" y="263" font-size="10.5" fill="#334155">• 28 &lt;id&gt;.json details</text>
+  <text x="560" y="278" font-size="10.5" fill="#334155">• 28 &lt;id&gt;_summary.csv</text>
+  <text x="560" y="293" font-size="10.5" fill="#334155">• 28 &lt;id&gt;_performance.csv</text>
+
+  <rect x="552" y="322" width="172" height="72" rx="5" fill="#ffffff" stroke="#22c55e"/>
+  <text x="560" y="340" font-size="11.5" font-weight="700" fill="#14532d">environment/ &amp; artifacts.json</text>
+  <text x="560" y="356" font-size="10.5" fill="#334155">• 28 race context JSONs</text>
+  <text x="560" y="371" font-size="10.5" fill="#334155">• 18 SHA-256 raw API responses</text>
+  <text x="560" y="386" font-size="10.5" fill="#334155">• 505 inventory entries</text>
+
+  <rect x="552" y="406" width="172" height="152" rx="5" fill="#ffffff" stroke="#22c55e"/>
+  <text x="560" y="424" font-size="11.5" font-weight="700" fill="#14532d">predictions/ (9.16 MB)</text>
+  <text x="560" y="440" font-size="10.5" fill="#334155">• index.json (227 sched entries)</text>
+  <text x="560" y="455" font-size="10.5" fill="#334155">• races/&lt;sha256&gt;.json</text>
+  <text x="560" y="470" font-size="10.5" fill="#334155">• scenarios/&lt;sha256&gt;.json</text>
+  <text x="560" y="485" font-size="10.5" fill="#334155">• cup/&lt;sha256&gt;.json</text>
+  <text x="560" y="500" font-size="10.5" fill="#334155">• models/ &amp; manifests/</text>
+  <text x="560" y="520" font-size="10" font-weight="700" fill="#166534">Content-Addressed &amp; Verified</text>
+  <text x="560" y="535" font-size="10" fill="#166534">Browser checks SHA-256 on load</text>
+
+  <!-- Column 4: Browser Application (Consumer) -->
+  <rect x="764" y="74" width="192" height="500" rx="8" fill="#faf5ff" stroke="#7c3aed" stroke-width="2"/>
+  <text x="860" y="98" font-size="14" font-weight="700" fill="#4c1d95" text-anchor="middle">4. React + Canvas Client</text>
+  <text x="860" y="114" font-size="10.5" fill="#5b21b6" text-anchor="middle">(Never recalculates hist/forecast)</text>
+
+  <rect x="776" y="126" width="168" height="82" rx="5" fill="#ffffff" stroke="#8b5cf6"/>
+  <text x="784" y="144" font-size="11.5" font-weight="700" fill="#4c1d95">[1] Replay Workspace</text>
+  <text x="784" y="160" font-size="10.5" fill="#334155">• MapLibre vs Offline Grid</text>
+  <text x="784" y="175" font-size="10.5" fill="#334155">• 100ms frame interpolation</text>
+  <text x="784" y="190" font-size="10.5" fill="#334155">• SAT contacts &amp; Tactical Wind</text>
+
+  <rect x="776" y="220" width="168" height="82" rx="5" fill="#ffffff" stroke="#8b5cf6"/>
+  <text x="784" y="238" font-size="11.5" font-weight="700" fill="#4c1d95">[2] Analysis Workspace</text>
+  <text x="784" y="254" font-size="10.5" fill="#334155">• Race Report &amp; 6-Axis Radar</text>
+  <text x="784" y="269" font-size="10.5" fill="#334155">• Pinned leg &amp; peer evidence</text>
+  <text x="784" y="284" font-size="10.5" fill="#334155">• Team Debrief &amp; History Cohort</text>
+
+  <rect x="776" y="314" width="168" height="68" rx="5" fill="#ffffff" stroke="#8b5cf6"/>
+  <text x="784" y="332" font-size="11.5" font-weight="700" fill="#4c1d95">[3] Compare Workspace</text>
+  <text x="784" y="348" font-size="10.5" fill="#334155">• Boat A vs B at playhead</text>
+  <text x="784" y="363" font-size="10.5" fill="#334155">• Pairwise Euclidean/Lat/Closure</text>
+
+  <rect x="776" y="394" width="168" height="68" rx="5" fill="#ffffff" stroke="#8b5cf6"/>
+  <text x="784" y="412" font-size="11.5" font-weight="700" fill="#4c1d95">[4] Reports Workspace</text>
+  <text x="784" y="428" font-size="10.5" fill="#334155">• Canonical metrics (no fallback)</text>
+  <text x="784" y="443" font-size="10.5" fill="#334155">• ≤6 primary + 505 tech explorer</text>
+
+  <rect x="776" y="474" width="168" height="84" rx="5" fill="#ffffff" stroke="#8b5cf6"/>
+  <text x="784" y="492" font-size="11.5" font-weight="700" fill="#4c1d95">[5] Forecast Workspace</text>
+  <text x="784" y="508" font-size="10.5" fill="#334155">• Live win, Pre-race E[pos], Cup</text>
+  <text x="784" y="523" font-size="10.5" fill="#334155">• Local /api/forecast-scenarios</text>
+  <text x="784" y="538" font-size="10.5" fill="#334155">  spawns Python with lock</text>
+
+  <!-- Connecting Arrows -->
+  <line x1="224" y1="165" x2="264" y2="165" stroke="#334155" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="224" y1="280" x2="264" y2="490" stroke="#334155" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="224" y1="390" x2="264" y2="390" stroke="#334155" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="510" y1="165" x2="548" y2="165" stroke="#334155" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="510" y1="280" x2="548" y2="265" stroke="#334155" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="510" y1="390" x2="548" y2="360" stroke="#334155" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="510" y1="500" x2="548" y2="480" stroke="#334155" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="736" y1="165" x2="772" y2="165" stroke="#334155" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="736" y1="265" x2="772" y2="265" stroke="#334155" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="736" y1="360" x2="772" y2="425" stroke="#334155" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="736" y1="480" x2="772" y2="510" stroke="#334155" stroke-width="2" marker-end="url(#arr)"/>
+</svg>

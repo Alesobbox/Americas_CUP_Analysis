@@ -1,0 +1,71 @@
+.race-library-shade { padding: 24px; z-index: 200; }
+.modal.race-library { width: min(1120px, 100%); max-width: 1120px; max-height: calc(100dvh - 48px); padding: 32px; border-radius: 24px; border: 0; background: var(--bg-surface); color: var(--text-primary); box-shadow: 0 16px 64px #20212424; overflow-y: auto; }
+.race-library-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+.race-library-heading h2 { margin: 0; font: 500 32px/1.15 var(--font-ui); letter-spacing: -.035em; text-transform: none; }
+.race-library-heading p { margin: 10px 0 0; color: var(--text-secondary); font: 400 16px/1.5 var(--font-ui); }
+.race-library-close { display: grid; place-items: center; flex: 0 0 40px; width: 40px; height: 40px; background: var(--bg-card); border-radius: 50%; font: 400 26px/1 var(--font-ui); }
+.race-library-close:hover { background: var(--bg-active); }
+.race-library-feature { display: grid; grid-template-columns: 1.15fr 1fr; gap: 32px; align-items: center; margin-bottom: 32px; }
+.race-course-art { position: relative; width: 100%; overflow: hidden; border-radius: 16px; background: #edf4f6; color: #52676e; }
+.race-course-art svg { display: block; width: 100%; height: auto; }
+.race-course-art text { fill: #52676e; font: 500 11px var(--font-ui); }
+.race-preview-grid { stroke: #d6e3e7; stroke-width: .65; }
+.race-preview-boundary { fill: #e0ecf0; stroke: #8da9b3; stroke-width: 1.5; stroke-linejoin: round; }
+.race-preview-gate { stroke: #698793; stroke-width: 2; }
+.race-preview-gate.start { stroke: #1967d2; stroke-width: 2.5; }
+.race-preview-mark { fill: #fff; stroke: #3a6676; stroke-width: 1.5; }
+.race-preview-north path { stroke: #52676e; stroke-width: 1.2; fill: none; }
+.race-preview-caption { position: absolute; left: 16px; bottom: 12px; font: 400 11px/1.4 var(--font-ui); color: #52676e; }
+.race-preview-missing { min-height: 170px; display: grid; place-content: center; gap: 8px; text-align: center; color: var(--text-secondary); }
+.race-preview-missing small { font-size: 12px; }
+.race-library .race-library-feature-copy h3 { margin: 12px 0; font: 500 32px/1.15 var(--font-ui); letter-spacing: -.03em; text-transform: none; color: var(--text-primary); }
+.race-library-current { color: var(--telemetry-cyan); font-size: 12px; font-weight: 500; }
+.race-library-feature-copy p { margin: 8px 0; font-size: 14px; line-height: 1.5; color: var(--text-secondary); }
+.race-library-feature-copy > button { margin-top: 16px; min-height: 44px; padding: 0 20px; border-radius: 24px; background: var(--telemetry-cyan); color: #fff; font: 500 14px var(--font-ui); }
+.race-library-feature-copy > button span { margin-left: 16px; }
+.race-library-search { display: grid; grid-template-columns: auto minmax(150px, 1fr) auto; align-items: center; gap: 20px; padding: 20px 0; margin: 0 0 28px; border-bottom: 1px solid var(--border-subtle); }
+.race-library-search > label { font-size: 14px; font-weight: 500; }
+.race-library-search > div { display: flex; align-items: center; gap: 10px; padding: 0 14px; background: var(--bg-card); border-radius: 12px; }
+.race-library-search svg { stroke: var(--text-secondary); stroke-width: 1.7; flex: 0 0 auto; }
+.race-library-search input { min-width: 0; width: 100%; padding: 12px 0; border: 0; background: transparent; font: 400 14px var(--font-ui); color: var(--text-primary); }
+.race-library-search > span { color: var(--text-secondary); font-size: 12px; }
+.race-library section.race-library-group { padding: 0; margin: 0 0 36px; }
+.race-library-group-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.race-library .race-library-group-heading h3 { margin: 0; font: 500 20px/1.3 var(--font-ui); text-transform: none; letter-spacing: -.02em; color: var(--text-primary); }
+.race-library-group-heading > span { color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
+.race-library-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 20px; }
+.race-picker .race-library-option { display: block; margin: 0; padding: 0; border: 0; border-radius: 16px; background: transparent; text-align: left; min-width: 0; }
+.race-picker .race-library-option:hover, .race-picker .race-library-option.current { background: transparent; }
+.race-library-option:hover .race-course-art { background: #e5eff2; }
+.race-library-option.current .race-course-art { box-shadow: inset 0 0 0 2px var(--telemetry-cyan); }
+.race-picker .race-library-option .race-library-option-copy { display: flex; flex-direction: column; gap: 7px; padding: 16px 2px 0; }
+.race-picker .race-library-option strong { font: 500 16px/1.35 var(--font-ui); color: var(--text-primary); }
+.race-picker .race-library-option small { color: var(--text-secondary); font: 400 12px/1.5 var(--font-ui); }
+.race-picker .race-library-option .race-library-option-action { display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 12px; color: var(--telemetry-cyan); font: 500 14px/1.4 var(--font-ui); margin-top: 5px; }
+.race-library-empty { padding: 32px 0; color: var(--text-secondary); font-size: 16px; line-height: 1.5; }
+@media(max-width: 800px) {
+  .modal.race-library { padding: 24px; }
+  .race-library-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .race-library-feature { gap: 24px; }
+  .race-library .race-library-feature-copy h3 { font-size: 26px; }
+}
+@media(max-width: 520px) {
+  .race-library-shade { padding: 8px; }
+  .modal.race-library { max-height: calc(100dvh - 16px); padding: 24px 16px; border-radius: 20px; }
+  .race-library-heading { gap: 12px; margin-bottom: 24px; }
+  .race-library-heading h2 { font-size: 28px; }
+  .race-library-heading p { font-size: 14px; }
+  .race-library-feature { grid-template-columns: 1fr; gap: 16px; }
+  .race-library-feature .race-course-art { max-height: 210px; }
+  .race-library-feature .race-course-art svg { height: 210px; }
+  .race-library .race-library-feature-copy h3 { margin: 8px 0; }
+  .race-library-search { grid-template-columns: 1fr auto; gap: 12px; }
+  .race-library-search > label { grid-column: 1; }
+  .race-library-search > div { grid-column: 1 / -1; grid-row: 2; }
+  .race-library-search > span { grid-column: 2; grid-row: 1; }
+  .race-library-grid { gap: 24px 12px; }
+  .race-library .race-library-group-heading h3 { font-size: 18px; }
+  .race-picker .race-library-option strong { font-size: 14px; }
+  .race-preview-caption { left: 8px; bottom: 6px; font-size: 11px; }
+  .race-course-art { border-radius: 12px; }
+}

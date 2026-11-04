@@ -4,24 +4,6 @@ The source companion is a selected reading set. Line references resolve to copie
 
 ## Snapshot and evidence files
 
-- [26_09_22_nap_ipr_pr2_summary.csv](evidence/26_09_22_nap_ipr_pr2_summary.csv) · 30,292 bytes
-
-- [analysis_index.json](evidence/analysis_index.json) · 1,512,558 bytes
-
-- [analysis_snapshot_26_05_23_cag_ipr_race_4.json](evidence/analysis_snapshot_26_05_23_cag_ipr_race_4.json) · 4,270 bytes
-
-- [analysis_snapshot_26_05_24_cag_ipr_mr_final.json](evidence/analysis_snapshot_26_05_24_cag_ipr_mr_final.json) · 3,710 bytes
-
-- [analysis_snapshot_26_09_22_nap_ipr_pr2.json](evidence/analysis_snapshot_26_09_22_nap_ipr_pr2.json) · 4,374 bytes
-
-- [analysis_snapshot_26_09_23_nap_ipr_pr1.json](evidence/analysis_snapshot_26_09_23_nap_ipr_pr1.json) · 4,463 bytes
-
-- [analysis_snapshot_naples_mr_final.json](evidence/analysis_snapshot_naples_mr_final.json) · 3,703 bytes
-
-- [analysis_snapshot_naples_pr1.json](evidence/analysis_snapshot_naples_pr1.json) · 4,475 bytes
-
-- [analysis_snapshot_overview.json](evidence/analysis_snapshot_overview.json) · 3,365 bytes
-
 - [archive-overview.json](evidence/archive-overview.json) · 3,365 bytes
 
 - [concept_lab_output.json](evidence/concept_lab_output.json) · 1,796 bytes
@@ -32,13 +14,9 @@ The source companion is a selected reading set. Line references resolve to copie
 
 - [coverage-naples_pr1.json](evidence/coverage-naples_pr1.json) · 4,475 bytes
 
-- [cup_2027.json](evidence/cup_2027.json) · 28,095 bytes
-
 - [cup_publication_snapshot.json](evidence/cup_publication_snapshot.json) · 28,095 bytes
 
 - [data_metrics_review.json](evidence/data_metrics_review.json) · 691,300 bytes
-
-- [environment_naples_pr1.json](evidence/environment_naples_pr1.json) · 2,350 bytes
 
 - [forecast_backtest_snapshot.json](evidence/forecast_backtest_snapshot.json) · 61,886 bytes
 
@@ -46,33 +24,11 @@ The source companion is a selected reading set. Line references resolve to copie
 
 - [forecast_review.json](evidence/forecast_review.json) · 11,747 bytes
 
-- [forecast_rules_sources.json](evidence/forecast_rules_sources.json) · 2,759 bytes
-
 - [git-status.txt](evidence/git-status.txt) · 28,950 bytes
 
 - [interface_review.json](evidence/interface_review.json) · 1,819 bytes
 
-- [manifests.json](evidence/manifests.json) · 24,717 bytes
-
-- [naples_mr_final_performance.csv](evidence/naples_mr_final_performance.csv) · 15,943 bytes
-
-- [naples_mr_final_summary.csv](evidence/naples_mr_final_summary.csv) · 7,591 bytes
-
-- [naples_pr1_performance.csv](evidence/naples_pr1_performance.csv) · 78,807 bytes
-
-- [naples_pr1_replay_bounded_excerpt.json](evidence/naples_pr1_replay_bounded_excerpt.json) · 59,322 bytes
-
-- [naples_pr1_summary.csv](evidence/naples_pr1_summary.csv) · 33,795 bytes
-
-- [predictions_index.json](evidence/predictions_index.json) · 99,053 bytes
-
 - [public-artifact-hashes.json](evidence/public-artifact-hashes.json) · 120,031 bytes
-
-- [race_previews.json](evidence/race_previews.json) · 18,797 bytes
-
-- [repository_snapshot_provenance.json](evidence/repository_snapshot_provenance.json) · 80,249 bytes
-
-- [scheduled_entry_ledger.json](evidence/scheduled_entry_ledger.json) · 145,867 bytes
 
 - [snapshot.json](evidence/snapshot.json) · 66,163 bytes
 

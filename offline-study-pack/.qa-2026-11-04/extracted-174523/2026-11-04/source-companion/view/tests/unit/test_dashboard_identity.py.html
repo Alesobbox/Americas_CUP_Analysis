@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>tests/unit/test_dashboard_identity.py — Offline Source Companion</title>
+<style>
+    :root {
+      --bg: #f8fafc; --surface: #ffffff; --border: #e2e8f0;
+      --text: #0f172a; --muted: #475569; --accent: #1a73e8;
+      --code-bg: #f1f5f9; --line-num: #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .breadcrumbs { font-size: 14px; font-weight: 600; }
+    .breadcrumbs a { color: var(--accent); text-decoration: none; }
+    .breadcrumbs a:hover { text-decoration: underline; }
+    .meta { font-size: 12px; color: var(--muted); display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .badge { padding: 2px 8px; border-radius: 999px; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+    .badge.clean { background: #dcfce7; color: #166534; }
+    .badge.modified { background: #fef3c7; color: #92400e; }
+    .badge.untracked { background: #dbeafe; color: #1e40af; }
+    main { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
+    .code-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 12.5px; }
+    .code-table tr:target { background: #fef9c3; }
+    .code-table td { padding: 1px 10px; vertical-align: top; }
+    .ln { width: 56px; text-align: right; color: var(--line-num); user-select: none; border-right: 1px solid var(--border); background: var(--code-bg); }
+    .ln a { color: inherit; text-decoration: none; display: block; }
+    .ln a:hover { color: var(--accent); }
+    .lc { white-space: pre-wrap; word-break: break-word; }
+    </style>
+</head>
+<body>
+<header>
+  <div class="breadcrumbs">
+    <a href="../../../../START_HERE.html">Study Pack</a> /
+    <a href="../../../index.html">Source Companion</a> /
+    <span>tests/unit/test_dashboard_identity.py</span>
+  </div>
+  <div class="meta">
+    <span class="badge clean">clean</span>
+    <span>20 lines</span>
+    <span>964 bytes</span>
+    <span>SHA-256: <code>8f08aa8b7ebef6d3…</code></span>
+    <a href="../../../raw/tests/unit/test_dashboard_identity.py" style="color:var(--accent);font-weight:600;">Raw File</a>
+  </div>
+</header>
+<main>
+  <table class="code-table">
+    <tbody>
+      <tr id="L1"><td class="ln"><a href="#L1">1</a></td><td class="lc">import unittest</td></tr><tr id="L2"><td class="ln"><a href="#L2">2</a></td><td class="lc">from pipeline.config import COMPETITORS</td></tr><tr id="L3"><td class="ln"><a href="#L3">3</a></td><td class="lc">from pipeline.ingest import session_competitor_identity</td></tr><tr id="L4"><td class="ln"><a href="#L4">4</a></td><td class="lc"></td></tr><tr id="L5"><td class="ln"><a href="#L5">5</a></td><td class="lc">class DashboardIdentityTests(unittest.TestCase):</td></tr><tr id="L6"><td class="ln"><a href="#L6">6</a></td><td class="lc">    def test_session_identity_overrides_reused_asset_id(self):</td></tr><tr id="L7"><td class="ln"><a href="#L7">7</a></td><td class="lc">        asset_id = &quot;130ac4af-df5a-4568-af62-9d9395df9e9e&quot;</td></tr><tr id="L8"><td class="ln"><a href="#L8">8</a></td><td class="lc">        source = {asset_id: {&quot;abbreviation&quot;: &quot;ITA B&quot;, &quot;official_name&quot;: &quot; Luna Rossa &quot;, &quot;colour_code&quot;: &quot;#00f0fd&quot;}}</td></tr><tr id="L9"><td class="ln"><a href="#L9">9</a></td><td class="lc">        result = session_competitor_identity(asset_id, source)</td></tr><tr id="L10"><td class="ln"><a href="#L10">10</a></td><td class="lc">        self.assertEqual((result.code, result.name, result.color), (&quot;ITA B&quot;, &quot;Luna Rossa&quot;, &quot;#00f0fd&quot;))</td></tr><tr id="L11"><td class="ln"><a href="#L11">11</a></td><td class="lc">        self.assertEqual(result.uuid, asset_id)</td></tr><tr id="L12"><td class="ln"><a href="#L12">12</a></td><td class="lc">        self.assertEqual(COMPETITORS[asset_id].code, &quot;ITA G&quot;)</td></tr><tr id="L13"><td class="ln"><a href="#L13">13</a></td><td class="lc"></td></tr><tr id="L14"><td class="ln"><a href="#L14">14</a></td><td class="lc">    def test_legacy_input_without_session_asset_remains_compatible(self):</td></tr><tr id="L15"><td class="ln"><a href="#L15">15</a></td><td class="lc">        asset_id = next(iter(COMPETITORS))</td></tr><tr id="L16"><td class="ln"><a href="#L16">16</a></td><td class="lc">        result = session_competitor_identity(asset_id, {})</td></tr><tr id="L17"><td class="ln"><a href="#L17">17</a></td><td class="lc">        self.assertEqual(result.code, COMPETITORS[asset_id].code)</td></tr><tr id="L18"><td class="ln"><a href="#L18">18</a></td><td class="lc"></td></tr><tr id="L19"><td class="ln"><a href="#L19">19</a></td><td class="lc">if __name__ == &quot;__main__&quot;:</td></tr><tr id="L20"><td class="ln"><a href="#L20">20</a></td><td class="lc">    unittest.main()</td></tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

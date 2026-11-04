@@ -1,0 +1,3045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>03 — Repository Atlas &amp; Cross-Domain Glossary — AC40 Regatta Replay Offline Study Pack</title>
+  <style>
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --ink-muted: #475569;
+  --accent: #0284c7;
+  --accent-dark: #0369a1;
+  --border: #cbd5e1;
+  --code-bg: #f1f5f9;
+  --callout-bg: #f0f9ff;
+  --warn-bg: #fffbeb;
+  --warn-border: #f59e0b;
+  --danger-bg: #fef2f2;
+  --danger-border: #ef4444;
+  --ok-bg: #f0fdf4;
+  --ok-border: #16a34a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.62;
+  font-size: 10.5pt;
+}
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 310px;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 20px 16px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+  border-right: 1px solid #1e293b;
+}
+.sidebar h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #38bdf8;
+  margin: 0 0 8px 0;
+}
+.sidebar .pack-meta {
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.search-box {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #f8fafc;
+  font-size: 12.5px;
+  margin-bottom: 10px;
+}
+.search-status {
+  font-size: 11px;
+  color: #38bdf8;
+  margin-bottom: 10px;
+  min-height: 16px;
+}
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 12px;
+}
+.nav-links li { margin-bottom: 5px; }
+.nav-links a {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 12.5px;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.nav-links a:hover, .nav-links a.active {
+  background: #1e293b;
+  color: #38bdf8;
+}
+.toc-container ul {
+  list-style: none;
+  padding-left: 10px;
+  margin: 4px 0;
+}
+.toc-container > ul { padding-left: 0; }
+.toc-container li { margin: 4px 0; }
+.toc-container a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 1.35;
+  display: block;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.toc-container a:hover {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+}
+.main-content {
+  flex: 1;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 36px 48px 64px 48px;
+  background: var(--surface);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  font-weight: 700;
+  line-height: 1.25;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 3px solid #0284c7;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+h2 {
+  font-size: 16.5pt;
+  border-bottom: 1.5px solid #cbd5e1;
+  padding-bottom: 6px;
+  margin-top: 34px;
+  page-break-after: avoid;
+}
+h3 {
+  font-size: 12.8pt;
+  color: #0369a1;
+  margin-top: 22px;
+  page-break-after: avoid;
+}
+h4 {
+  font-size: 11pt;
+  color: #1e293b;
+  margin-top: 16px;
+  page-break-after: avoid;
+}
+p, li {
+  text-align: left;
+}
+code {
+  font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+}
+pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 14px 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 9pt;
+  line-height: 1.45;
+  border: 1px solid #1e293b;
+  break-inside: avoid;
+}
+pre code {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 9.2pt;
+  break-inside: avoid;
+}
+th, td {
+  border: 1px solid #cbd5e1;
+  padding: 7px 9px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background: #f1f5f9;
+  font-weight: 700;
+  color: #0f172a;
+}
+tr:nth-child(even) td {
+  background: #f8fafc;
+}
+blockquote {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--accent);
+  background: var(--callout-bg);
+  border-radius: 0 6px 6px 0;
+  break-inside: avoid;
+}
+blockquote p:first-child { margin-top: 0; }
+blockquote p:last-child { margin-bottom: 0; }
+.diagram-figure, .screenshot-figure {
+  margin: 20px 0;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  text-align: center;
+  break-inside: avoid;
+}
+.diagram-figure .svg-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.screenshot-figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+figcaption {
+  margin-top: 8px;
+  font-size: 9pt;
+  color: #475569;
+  font-weight: 600;
+}
+/* Mathematical typography */
+.math-inline {
+  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", Georgia, serif;
+  font-size: 1.03em;
+  white-space: nowrap;
+}
+.math-block {
+  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", Georgia, serif;
+  font-size: 1.08em;
+  margin: 14px 0;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3.5px solid #0369a1;
+  border-radius: 6px;
+  overflow-x: auto;
+  text-align: center;
+  break-inside: avoid;
+}
+.m-frac {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 3px;
+  font-size: 0.92em;
+}
+.m-num {
+  border-bottom: 1.2px solid currentColor;
+  padding: 0 3px 1px 3px;
+  line-height: 1.15;
+}
+.m-den {
+  padding: 1px 3px 0 3px;
+  line-height: 1.15;
+}
+.m-sqrt {
+  display: inline-flex;
+  align-items: baseline;
+}
+.m-sqrt-body {
+  border-top: 1.1px solid currentColor;
+  padding: 0 2px;
+}
+.m-over {
+  border-top: 1.1px solid currentColor;
+  padding-top: 1px;
+}
+.m-text, .m-rm {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-style: normal;
+  font-size: 0.92em;
+}
+.m-aligned {
+  display: inline-block;
+  text-align: left;
+}
+.m-align-row {
+  margin: 3px 0;
+}
+.m-cases {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+.m-brace {
+  font-size: 2.2em;
+  font-weight: 300;
+  padding-right: 4px;
+}
+.m-cases-table {
+  margin: 0;
+  border: none;
+  width: auto;
+}
+.m-cases-table td {
+  border: none !important;
+  background: transparent !important;
+  padding: 2px 8px;
+}
+.chapter-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #f8fafc;
+  padding: 18px 22px;
+  border-radius: 8px;
+  margin-top: 36px;
+  margin-bottom: 18px;
+  page-break-before: always;
+  break-before: page;
+}
+.chapter-banner.first-banner {
+  page-break-before: avoid;
+  break-before: avoid;
+}
+.chapter-banner h2 {
+  color: #f8fafc;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font-size: 18pt;
+}
+.chapter-banner .part-kicker {
+  color: #38bdf8;
+  font-size: 9.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.pedagogy-box {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  background: #f8fafc;
+  break-inside: avoid;
+}
+.pedagogy-box.objectives {
+  border-left: 4px solid #0284c7;
+  background: #f0f9ff;
+}
+.pedagogy-box.worked-example {
+  border-left: 4px solid #16a34a;
+  background: #f0fdf4;
+}
+.pedagogy-box.failure-mode {
+  border-left: 4px solid #f59e0b;
+  background: #fffbeb;
+}
+.pedagogy-box.mistakes {
+  border-left: 4px solid #ef4444;
+  background: #fef2f2;
+}
+.pedagogy-box.selftest {
+  border-left: 4px solid #7c3aed;
+  background: #f5f3ff;
+}
+mark.search-hit {
+  background: #fde047;
+  color: #0f172a;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+.inline-toc-box {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-left: 4px solid #0284c7;
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin: 16px 0 24px 0;
+}
+.inline-toc-box h2 {
+  margin: 0 0 8px 0;
+  font-size: 13pt;
+  border-bottom: 1px solid #cbd5e1;
+  padding-bottom: 4px;
+}
+.inline-toc-box ul {
+  columns: 2;
+  column-gap: 24px;
+  padding-left: 18px;
+  margin: 4px 0;
+}
+.inline-toc-box ul ul {
+  columns: 1;
+}
+.inline-toc-box li {
+  margin: 2px 0;
+  font-size: 8.8pt;
+  break-inside: avoid;
+}
+.inline-toc-box a {
+  color: #0369a1;
+  text-decoration: none;
+}
+
+@media print {
+  h1:not(:first-of-type) { page-break-before: always; break-before: page; }
+  body {
+    background: #ffffff;
+    font-size: 9.8pt;
+    line-height: 1.52;
+  }
+  .sidebar, .no-print {
+    display: none !important;
+  }
+  .app-shell {
+    display: block;
+  }
+  .main-content {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+  a {
+    color: #0369a1;
+    text-decoration: none;
+  }
+  h2, h3, h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  table, pre, blockquote, .diagram-figure, .screenshot-figure, .pedagogy-box, .math-block {
+    break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar no-print">
+      <h2>AC40 Study Pack</h2>
+      <div class="pack-meta">
+        Snapshot: <code>2026-11-04</code><br/>
+        Commit: <code>f956f8a14feb</code> (dirty)<br/>
+        100% Offline Edition (<code>file://</code> ready)
+      </div>
+      <input id="offline-search" class="search-box" type="search" placeholder="Search this document..." aria-label="Search this document" />
+      <div id="search-status" class="search-status"></div>
+      <h2>Pack Navigation</h2>
+      <ul class="nav-links">
+        <li><a href="./START_HERE.html">★ Start Here & Checklist</a></li>
+<li><a href="./01_Repository_Explained.html">01. Main Textbook</a></li>
+<li><a href="./02_Field_Guide.html">02. Field Guide</a></li>
+<li><a href="./03_Repository_Atlas.html">03. Repository Atlas & Glossary</a></li>
+<li><a href="./04_Workbook.html">04. Workbook (Exercises)</a></li>
+<li><a href="./04_Workbook_Solutions.html">04b. Workbook Solutions</a></li>
+<li><a href="./study-materials/05_Study_Routes_and_Questions.html">05. Study Routes & Open Questions</a></li>
+<li><a href="./study-materials/flashcards_viewer.html">05b. Interactive Flashcards</a></li>
+<li><a href="./study-materials/06_Audio_Narration_Script.html">06. Audio Narration Script</a></li>
+<li><a href="./examples/interactive_sailing_and_forecast_lab.html">07. Interactive Math & Forecast Lab</a></li>
+<li><a href="./examples/05_Interactive_Study_Notebook.html">07b. Rendered Study Notebook</a></li>
+<li><a href="./source-companion/index.html">08. Source Companion (209 Files)</a></li>
+<li><a href="./MANIFEST.html">09. Pack Manifest & SHA-256</a></li>
+      </ul>
+      <h2>Contents</h2>
+      <div class="toc-container">
+        <div class="toc">
+<ul>
+<li><a href="#03-repository-atlas-subsystem-reference-cross-domain-glossary">03 — Repository Atlas, Subsystem Reference &amp; Cross-Domain Glossary</a><ul>
+<li><a href="#1-frozen-snapshot-provenance-dirty-working-tree-ledger">1. Frozen Snapshot Provenance &amp; Dirty Working-Tree Ledger</a><ul>
+<li><a href="#11-category-coverage-summary">1.1 Category Coverage Summary</a></li>
+<li><a href="#12-uncommitted-untracked-working-tree-files-0-files">1.2 Uncommitted / Untracked Working-Tree Files (0 Files)</a></li>
+</ul>
+</li>
+<li><a href="#2-ownership-boundaries-five-runtime-phases">2. Ownership Boundaries &amp; Five Runtime Phases</a></li>
+<li><a href="#3-substantive-first-party-subsystems-deep-reference">3. Substantive First-Party Subsystems (Deep Reference)</a><ul>
+<li><a href="#subsystem-s1-raw-telemetry-ingestion-spatial-projection-pipelineingestpy-pipelineprojectionpy">Subsystem S1 — Raw Telemetry Ingestion &amp; Spatial Projection (pipeline/ingest.py, pipeline/projection.py)</a></li>
+<li><a href="#subsystem-s2-10-hz-timeline-synchronization-interpolation-pipelinesynchronizepy">Subsystem S2 — 10 Hz Timeline Synchronization &amp; Interpolation (pipeline/synchronize.py)</a></li>
+<li><a href="#subsystem-s3-course-geometry-bow-crossings-progress-classifications-pipelinereconstructionpy-pipelineanalyticspy">Subsystem S3 — Course Geometry, Bow Crossings, Progress &amp; Classifications (pipeline/reconstruction.py, pipeline/analytics.py)</a></li>
+<li><a href="#subsystem-s4-manoeuvre-detection-pipelinemanoeuvrespy">Subsystem S4 — Manoeuvre Detection (pipeline/manoeuvres.py)</a></li>
+<li><a href="#subsystem-s5-replay-export-canonical-tables-regatta-batch-ingestion-pipelineexport_replaypy-pipelinecanonical_tablespy-scriptsingest_regattaspy">Subsystem S5 — Replay Export, Canonical Tables &amp; Regatta Batch Ingestion (pipeline/export_replay.py, pipeline/canonical_tables.py, scripts/ingest_regattas.py)</a></li>
+<li><a href="#subsystem-s6-historical-analysis-peer-normalized-radar-tactical-insights-pipelinehistorical_analysispy-pipelinetactical_insightspy-scriptsrefresh_team_analyticspy">Subsystem S6 — Historical Analysis, Peer-Normalized Radar &amp; Tactical Insights (pipeline/historical_analysis.py, pipeline/tactical_insights.py, scripts/refresh_team_analytics.py)</a></li>
+<li><a href="#subsystem-s7-environment-weather-provenance-harvester-pipelineenvironmentpy">Subsystem S7 — Environment &amp; Weather Provenance Harvester (pipeline/environment.py)</a></li>
+<li><a href="#subsystem-s8-causal-forecasting-backtesting-2027-ac38-cup-simulator-pipelineprediction">Subsystem S8 — Causal Forecasting, Backtesting &amp; 2027 AC38 Cup Simulator (pipeline/prediction/)</a></li>
+<li><a href="#subsystem-s9-browser-replay-engine-canvas-renderer-workspace-ui-src-scriptsforecastscenariosts">Subsystem S9 — Browser Replay Engine, Canvas Renderer &amp; Workspace UI (src/, scripts/forecastScenarios.ts)</a></li>
+</ul>
+</li>
+<li><a href="#4-operational-status-summary-of-special-edge-components">4. Operational Status Summary of Special &amp; Edge Components</a></li>
+<li><a href="#5-cross-domain-glossary-math-sailing-ui-code-artifact-fields">5. Cross-Domain Glossary (Math, Sailing, UI, Code &amp; Artifact Fields)</a></li>
+<li><a href="#6-complete-first-party-file-coverage-table-209-files">6. Complete First-Party File Coverage Table (209 Files)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+      </div>
+    </aside>
+    <main class="main-content">
+      <h1 id="03-repository-atlas-subsystem-reference-cross-domain-glossary">03 — Repository Atlas, Subsystem Reference &amp; Cross-Domain Glossary</h1>
+<nav class="inline-toc-box" aria-label="Table of Contents"><h2>Table of Contents</h2><div class="toc">
+<ul>
+<li><a href="#03-repository-atlas-subsystem-reference-cross-domain-glossary">03 — Repository Atlas, Subsystem Reference &amp; Cross-Domain Glossary</a><ul>
+<li><a href="#1-frozen-snapshot-provenance-dirty-working-tree-ledger">1. Frozen Snapshot Provenance &amp; Dirty Working-Tree Ledger</a><ul>
+<li><a href="#11-category-coverage-summary">1.1 Category Coverage Summary</a></li>
+<li><a href="#12-uncommitted-untracked-working-tree-files-0-files">1.2 Uncommitted / Untracked Working-Tree Files (0 Files)</a></li>
+</ul>
+</li>
+<li><a href="#2-ownership-boundaries-five-runtime-phases">2. Ownership Boundaries &amp; Five Runtime Phases</a></li>
+<li><a href="#3-substantive-first-party-subsystems-deep-reference">3. Substantive First-Party Subsystems (Deep Reference)</a><ul>
+<li><a href="#subsystem-s1-raw-telemetry-ingestion-spatial-projection-pipelineingestpy-pipelineprojectionpy">Subsystem S1 — Raw Telemetry Ingestion &amp; Spatial Projection (pipeline/ingest.py, pipeline/projection.py)</a></li>
+<li><a href="#subsystem-s2-10-hz-timeline-synchronization-interpolation-pipelinesynchronizepy">Subsystem S2 — 10 Hz Timeline Synchronization &amp; Interpolation (pipeline/synchronize.py)</a></li>
+<li><a href="#subsystem-s3-course-geometry-bow-crossings-progress-classifications-pipelinereconstructionpy-pipelineanalyticspy">Subsystem S3 — Course Geometry, Bow Crossings, Progress &amp; Classifications (pipeline/reconstruction.py, pipeline/analytics.py)</a></li>
+<li><a href="#subsystem-s4-manoeuvre-detection-pipelinemanoeuvrespy">Subsystem S4 — Manoeuvre Detection (pipeline/manoeuvres.py)</a></li>
+<li><a href="#subsystem-s5-replay-export-canonical-tables-regatta-batch-ingestion-pipelineexport_replaypy-pipelinecanonical_tablespy-scriptsingest_regattaspy">Subsystem S5 — Replay Export, Canonical Tables &amp; Regatta Batch Ingestion (pipeline/export_replay.py, pipeline/canonical_tables.py, scripts/ingest_regattas.py)</a></li>
+<li><a href="#subsystem-s6-historical-analysis-peer-normalized-radar-tactical-insights-pipelinehistorical_analysispy-pipelinetactical_insightspy-scriptsrefresh_team_analyticspy">Subsystem S6 — Historical Analysis, Peer-Normalized Radar &amp; Tactical Insights (pipeline/historical_analysis.py, pipeline/tactical_insights.py, scripts/refresh_team_analytics.py)</a></li>
+<li><a href="#subsystem-s7-environment-weather-provenance-harvester-pipelineenvironmentpy">Subsystem S7 — Environment &amp; Weather Provenance Harvester (pipeline/environment.py)</a></li>
+<li><a href="#subsystem-s8-causal-forecasting-backtesting-2027-ac38-cup-simulator-pipelineprediction">Subsystem S8 — Causal Forecasting, Backtesting &amp; 2027 AC38 Cup Simulator (pipeline/prediction/)</a></li>
+<li><a href="#subsystem-s9-browser-replay-engine-canvas-renderer-workspace-ui-src-scriptsforecastscenariosts">Subsystem S9 — Browser Replay Engine, Canvas Renderer &amp; Workspace UI (src/, scripts/forecastScenarios.ts)</a></li>
+</ul>
+</li>
+<li><a href="#4-operational-status-summary-of-special-edge-components">4. Operational Status Summary of Special &amp; Edge Components</a></li>
+<li><a href="#5-cross-domain-glossary-math-sailing-ui-code-artifact-fields">5. Cross-Domain Glossary (Math, Sailing, UI, Code &amp; Artifact Fields)</a></li>
+<li><a href="#6-complete-first-party-file-coverage-table-209-files">6. Complete First-Party File Coverage Table (209 Files)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+<p><strong>Snapshot Date</strong>: <code>2026-11-04</code> | <strong>Git Commit</strong>: <code>6b8482309d178fc31d724f449f706a98f9a1ea2e</code> (<code>master</code>, dirty working tree: <code>0</code> modified/untracked files) | <strong>First-Party Files Indexed</strong>: <code>209</code> (<code>2,299,208</code> bytes)</p>
+<blockquote>
+<p><strong>Purpose of this Document</strong>: This Atlas provides a complete structural map of the <code>2D_regatta_replay</code> repository. For every substantive first-party subsystem, it documents its conceptual responsibility, entry points with exact line anchors into the offline <a href="source-companion/index.html"><code>source-companion/</code></a>, inputs, outputs, consumers, execution order, runtime phase, verification tests, and operational lifecycle status (<code>Active</code>, <code>Experimental</code>, <code>Retained for Compatibility</code>, <code>Superseded</code>, or <code>Uncertain</code>). It concludes with an explicit coverage ledger of all 209 first-party files and a cross-domain glossary mapping mathematical notation, sailing terminology, UI labels, internal Python/TypeScript identifiers, and JSON/CSV artifact fields.</p>
+</blockquote>
+<hr />
+<h2 id="1-frozen-snapshot-provenance-dirty-working-tree-ledger">1. Frozen Snapshot Provenance &amp; Dirty Working-Tree Ledger</h2>
+<p>A Git commit hash alone (<code>6b8482309d17</code>) does not uniquely identify a workspace when uncommitted changes exist. This study pack freezes the exact working-tree state as of <code>2026-11-04</code>, recording SHA-256 digests for all 209 first-party source, test, script, and documentation files in <a href="evidence/repository_snapshot_provenance.json"><code>evidence/repository_snapshot_provenance.json</code></a>.</p>
+<h3 id="11-category-coverage-summary">1.1 Category Coverage Summary</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Subsystem Category</th>
+<th style="text-align: right;">File Count</th>
+<th style="text-align: right;">Total Lines</th>
+<th style="text-align: right;">Total Bytes</th>
+<th style="text-align: left;">Audit Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Frontend 2D/Map Canvas (src/components/canvas/)</strong></td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">4,389</td>
+<td style="text-align: right;">172,656 B</td>
+<td style="text-align: left;">100% Inspected &amp; Indexed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Frontend App State, Types &amp; Styles (src/)</strong></td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">2,968</td>
+<td style="text-align: right;">84,629 B</td>
+<td style="text-align: left;">100% Inspected &amp; Indexed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Frontend Engine &amp; Catalogs (src/engine/)</strong></td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">3,981</td>
+<td style="text-align: right;">208,499 B</td>
+<td style="text-align: left;">100% Inspected &amp; Indexed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Frontend Workspace &amp; UI Components (src/components/)</strong></td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">6,332</td>
+<td style="text-align: right;">404,034 B</td>
+<td style="text-align: left;">100% Inspected &amp; Indexed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Python Core Pipeline (pipeline/)</strong></td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">5,444</td>
+<td style="text-align: right;">250,405 B</td>
+<td style="text-align: left;">100% Inspected &amp; Indexed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Python Forecasting (pipeline/prediction/)</strong></td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">3,892</td>
+<td style="text-align: right;">228,507 B</td>
+<td style="text-align: left;">100% Inspected &amp; Indexed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Root Configuration &amp; Entry Scripts</strong></td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">371</td>
+<td style="text-align: right;">21,673 B</td>
+<td style="text-align: left;">100% Inspected &amp; Indexed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Technical Documentation (docs/)</strong></td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">2,527</td>
+<td style="text-align: right;">328,505 B</td>
+<td style="text-align: left;">100% Inspected &amp; Indexed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Utility &amp; Middleware Scripts (scripts/)</strong></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">825</td>
+<td style="text-align: right;">50,435 B</td>
+<td style="text-align: left;">100% Inspected &amp; Indexed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Verification Suites (tests/)</strong></td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">10,799</td>
+<td style="text-align: right;">549,865 B</td>
+<td style="text-align: left;">100% Inspected &amp; Indexed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Total First-Party Snapshot</strong></td>
+<td style="text-align: right;"><strong>209</strong></td>
+<td style="text-align: right;"><strong>41,528</strong></td>
+<td style="text-align: right;"><strong>2,299,208 B</strong></td>
+<td style="text-align: left;"><strong>100% Indexed in Source Companion</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-uncommitted-untracked-working-tree-files-0-files">1.2 Uncommitted / Untracked Working-Tree Files (<code>0</code> Files)</h3>
+<p>The following 0 files differ from <code>HEAD</code> (<code>6b8482309d17</code>). They represent the browser-feedback verification pass (<code>docs/browser_feedback_verification.md</code>, <code>tests/browser/redesign.mjs</code>), UI accessibility/copy refinements (<code>src/App.tsx</code>, <code>BoatPerformanceCard.tsx</code>, <code>ForecastWorkspace.tsx</code>, <code>ReportsWorkspace.tsx</code>, <code>AnalysisModal.tsx</code>, <code>CourseCanvas.tsx</code>), and the environment weather harvester (<code>pipeline/environment.py</code>, <code>docs/environment_data.md</code>):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">File Path (Click to Open in Source Companion)</th>
+<th style="text-align: left;">Git Status</th>
+<th style="text-align: right;">Lines</th>
+<th style="text-align: right;">Size</th>
+<th style="text-align: left;">SHA-256 Prefix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-ownership-boundaries-five-runtime-phases">2. Ownership Boundaries &amp; Five Runtime Phases</h2>
+<p>Before examining individual modules, keep the repository's strict architectural ownership rule in view (<code>AGENTS.md</code>, <code>PROJECT.md</code>):</p>
+<ol>
+<li><strong>Python Pipeline Ownership (<code>pipeline/</code>, <code>scripts/</code>)</strong>:
+   - Owns all raw telemetry ingestion, coordinate projection, gate/start reconstruction, manoeuvre detection, historical metric calculation (<code>historical_analysis.py</code>), tactical wind-shift regression (<code>tactical_insights.py</code>), causal live/pre-race/Cup forecasting (<code>pipeline/prediction/</code>), and canonical CSV presentation tables (<code>canonical_tables.py</code>).
+   - Writes static, immutable or schema-versioned JSON and CSV artifacts into <code>public/data/</code>.</li>
+<li><strong>TypeScript Browser Ownership (<code>src/</code>)</strong>:
+   - Consumes <code>public/data/</code> exports with strict runtime schema validation (<code>analysisCatalog.ts</code>, <code>predictionCatalog.ts</code>, <code>manifest.ts</code>).
+   - <strong>Never recalculates historical metrics or forecast probabilities</strong>.
+   - Owns only <strong>instantaneous 10 Hz display interpolation</strong> (<code>ReplayEngine.ts</code>, <code>interpolate.ts</code>), <strong>instantaneous live leaderboard &amp; pairwise boat-to-boat geometry</strong> (<code>src/engine/analytics.ts</code>), <strong>2D viewport projection &amp; greedy label placement</strong> (<code>ViewportMatrix.ts</code>, <code>CourseCanvas.tsx</code>, <code>boatPresentation.ts</code>), and <strong>real-time convex-polygon contact rendering</strong> (<code>contactDetector.ts</code>).</li>
+</ol>
+<p>Every module in the repository executes in one or more of <strong>five distinct runtime phases</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Phase Code</th>
+<th style="text-align: left;">Phase Name</th>
+<th style="text-align: left;">Trigger Command / Event</th>
+<th style="text-align: left;">Writes to <code>public/data/</code>?</th>
+<th style="text-align: left;">Works Offline Without Runtimes?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Phase 1</strong></td>
+<td style="text-align: left;"><strong>Ingestion &amp; Replay Reconstruction</strong></td>
+<td style="text-align: left;"><code>python -m pipeline</code> or <code>python scripts/ingest_regattas.py</code></td>
+<td style="text-align: left;">Yes (<code>replays/*.json</code>, <code>manifests.json</code>, <code>race_previews.json</code>, <code>presentation/**</code>)</td>
+<td style="text-align: left;">Artifacts pre-built; script needs Python + <code>Data/</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 2</strong></td>
+<td style="text-align: left;"><strong>Historical &amp; Team Analytics Refresh</strong></td>
+<td style="text-align: left;"><code>python scripts/refresh_team_analytics.py</code></td>
+<td style="text-align: left;">Yes (<code>analysis/index.json</code>, <code>analysis/&lt;race_id&gt;.json</code>, <code>artifacts.json</code>)</td>
+<td style="text-align: left;">Artifacts pre-built; script needs Python</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 3</strong></td>
+<td style="text-align: left;"><strong>Forecast Build &amp; Verification</strong></td>
+<td style="text-align: left;"><code>python -m pipeline.prediction build</code> / <code>verify</code></td>
+<td style="text-align: left;">Yes (<code>.forecast/**</code>, <code>predictions/index.json</code>, <code>predictions/races/*.json</code>, <code>predictions/cup_2027.json</code>)</td>
+<td style="text-align: left;">Baseline &amp; presets pre-built; script needs Python</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 4</strong></td>
+<td style="text-align: left;"><strong>Dev/Preview Server &amp; Scenario Middleware</strong></td>
+<td style="text-align: left;"><code>npm run dev</code> / <code>vite</code> (<code>scripts/forecastScenarios.ts</code>)</td>
+<td style="text-align: left;">Yes (lazy <code>predictions/scenarios/&lt;race_id&gt;_&lt;hash&gt;.json</code> on <code>POST /api/forecast-scenarios</code>)</td>
+<td style="text-align: left;">Requires local Node + Python runtime</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Phase 5</strong></td>
+<td style="text-align: left;"><strong>Browser Client Interaction</strong></td>
+<td style="text-align: left;">Opening dashboard in browser (<code>src/main.tsx</code> → <code>src/App.tsx</code>)</td>
+<td style="text-align: left;">Read-only (<code>fetch('/data/...')</code>)</td>
+<td style="text-align: left;">Works offline via static HTTP server (Grid mode)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-substantive-first-party-subsystems-deep-reference">3. Substantive First-Party Subsystems (Deep Reference)</h2>
+<h3 id="subsystem-s1-raw-telemetry-ingestion-spatial-projection-pipelineingestpy-pipelineprojectionpy">Subsystem S1 — Raw Telemetry Ingestion &amp; Spatial Projection (<code>pipeline/ingest.py</code>, <code>pipeline/projection.py</code>)</h3>
+<ul>
+<li><strong>Purpose &amp; Conceptual Responsibility</strong>: Streams multi-gigabyte raw <code>.jsonl</code> race logs line-by-line in <span class="math-inline">O(1)</span> memory per record (<code>iter_jsonl</code>), extracts 11 record types (<code>asset</code>, <code>boat_state</code>, <code>course</code>, <code>leg_timings</code>, <code>wind_summary</code>, <code>wind_history</code>, <code>autonomous_marks</code>, <code>mark_roundings</code>, <code>boundary</code>, <code>race_start_status</code>, <code>manoeuvres</code>), resolves asset UUIDs to team codes (<code>RM1</code>–<code>RM8</code> and competitor hulls), and projects WGS84 <code>(lat, lon)</code> into a local metric tangent plane <code>(x East, y North)</code> centered on a venue reference origin.</li>
+<li><strong>Important Files &amp; Entry Points</strong>:</li>
+<li><a href="source-companion/view/pipeline/ingest.py.html#L1"><code>pipeline/ingest.py</code></a>: <code>IngestionPipeline</code> (<a href="source-companion/view/pipeline/ingest.py.html#L444"><code>L444-L746</code></a>), <code>IngestionResult</code> (<a href="source-companion/view/pipeline/ingest.py.html#L296"><code>L296-L441</code></a>), <code>iter_jsonl</code> (<a href="source-companion/view/pipeline/ingest.py.html#L53"><code>L53-L69</code></a>), <code>_resolve_team_code</code> (<a href="source-companion/view/pipeline/ingest.py.html#L126"><code>L126-L157</code></a>).</li>
+<li><a href="source-companion/view/pipeline/projection.py.html#L1"><code>pipeline/projection.py</code></a>: <code>LocalCoordinateConverter</code> (<a href="source-companion/view/pipeline/projection.py.html#L29"><code>L29-L108</code></a>), <code>NAPLES_REFERENCE</code> (<code>40.80875° N, 14.21565° E</code>, <a href="source-companion/view/pipeline/projection.py.html#L18"><code>L18</code></a>), <code>CAGLIARI_REFERENCE</code> (<code>39.1900° N, 9.1425° E</code>, <a href="source-companion/view/pipeline/projection.py.html#L19"><code>L19</code></a>), <code>for_coordinates()</code> (<a href="source-companion/view/pipeline/projection.py.html#L48"><code>L48-L55</code></a>).</li>
+<li><strong>Inputs, Outputs &amp; Consumers</strong>:</li>
+<li><em>Inputs</em>: Raw <code>Data/&lt;session&gt;.jsonl</code> files (28 files, 6,866,006,601 bytes total).</li>
+<li><em>Outputs</em>: In-memory <code>IngestionResult</code> dataclass consumed by <code>pipeline/__main__.py</code> and <code>scripts/ingest_regattas.py</code>.</li>
+<li><strong>Dependencies &amp; Execution Order</strong>: First stage of Phase 1 (<code>pipeline/__main__.py:L40-L43</code>). Must run before synchronization, reconstruction, manoeuvre detection, and analytics.</li>
+<li><strong>Tests Establishing Behavior</strong>: <a href="source-companion/view/tests/unit/test_ingest.py.html#L1"><code>tests/unit/test_ingest.py</code></a>, <a href="source-companion/view/tests/unit/test_projection.py.html#L1"><code>tests/unit/test_projection.py</code></a>, <a href="source-companion/view/tests/e2e/test_runner.py.html#L1"><code>tests/e2e/test_runner.py</code></a> (Tier 1).</li>
+<li><strong>Lifecycle Status</strong>: <strong>Active</strong> (Core production pipeline).</li>
+<li><em>Audit Note</em>: <code>IngestionResult.to_dict()</code> (<a href="source-companion/view/pipeline/ingest.py.html#L383"><code>pipeline/ingest.py:L383-L388</code></a>) hardcodes Naples projection constants in its intermediate dict summary, whereas the actual published replay manifest <a href="source-companion/view/pipeline/export_replay.py.html#L153"><code>pipeline/export_replay.py:L153-L154</code></a> uses the session-specific converter (<code>CAGLIARI_REFERENCE</code> or <code>NAPLES_REFERENCE</code>). In addition, <code>ingest.py:L699-L700</code> drops competitors with <code>not c.telemetry</code> (which removes <code>GBR B</code> in <code>26_09_22_nap_ipr_pr2</code>, <code>pr3</code>, <code>pr4</code> from replay JSONs, creating the <code>224</code> replayed vs <code>227</code> scheduled entry distinction).</li>
+</ul>
+<hr />
+<h3 id="subsystem-s2-10-hz-timeline-synchronization-interpolation-pipelinesynchronizepy">Subsystem S2 — 10 Hz Timeline Synchronization &amp; Interpolation (<code>pipeline/synchronize.py</code>)</h3>
+<ul>
+<li><strong>Purpose &amp; Conceptual Responsibility</strong>: Resamples irregular per-boat <code>boat_state</code> streams (~10 Hz) and <code>autonomous_marks</code> streams (~1 Hz) onto a uniform 100 ms (<code>10 Hz</code>) master timeline spanning <code>[window_start, window_end]</code>. Uses linear interpolation for Cartesian coordinates and scalar channels (<code>x</code>, <code>y</code>, <code>sog</code>, <code>vmg</code>, <code>tws</code>, <code>twa</code>) and shortest-arc circular interpolation modulo <span class="math-inline">360°</span> for directional bearings (<code>heading</code>, <code>cog</code>, <code>twd</code>). Clamps out-of-range timestamps to the nearest boundary observation (causing "held tail" plateaus when telemetry stops early).</li>
+<li><strong>Important Files &amp; Entry Points</strong>:</li>
+<li><a href="source-companion/index.html"><code>pipeline/synchronize.py</code></a>: <code>TimelineSynchronizer</code> (<a href="source-companion/index.html"><code>L127-L315</code></a>), <code>interpolate_angle_deg</code> (<a href="source-companion/index.html"><code>L29-L48</code></a>), <code>interpolate_linear</code> (<a href="source-companion/index.html"><code>L19-L26</code></a>).</li>
+<li><strong>Inputs, Outputs &amp; Consumers</strong>:</li>
+<li><em>Inputs</em>: Raw per-boat and per-mark telemetry lists from <code>IngestionResult</code>.</li>
+<li><em>Outputs</em>: <code>SynchronizedTimeline</code> containing aligned column arrays of identical length <span class="math-inline">T</span> at 100 ms steps, plus <code>WindSample</code> timeline. Consumed by <code>reconstruction.py</code>, <code>manoeuvres.py</code>, <code>analytics.py</code>, and <code>export_replay.py</code>.</li>
+<li><strong>Runtime Phase</strong>: Phase 1 (Ingestion &amp; Replay Reconstruction).</li>
+<li><strong>Tests Establishing Behavior</strong>: <a href="source-companion/index.html"><code>tests/unit/test_synchronize.py</code></a>, <a href="source-companion/view/tests/tier5_integrity.py.html#L107"><code>tests/tier5_integrity.py</code></a> (<code>test_timestamps_and_boat_columns_align</code>).</li>
+<li><strong>Lifecycle Status</strong>: <strong>Active</strong>.</li>
+</ul>
+<hr />
+<h3 id="subsystem-s3-course-geometry-bow-crossings-progress-classifications-pipelinereconstructionpy-pipelineanalyticspy">Subsystem S3 — Course Geometry, Bow Crossings, Progress &amp; Classifications (<code>pipeline/reconstruction.py</code>, <code>pipeline/analytics.py</code>)</h3>
+<ul>
+<li><strong>Purpose &amp; Conceptual Responsibility</strong>: Reconstructs race chronology and geometry when source <code>mark_roundings</code> are sparse or missing (<code>0</code> records in <code>naples_pr1</code>). Computes sub-frame bow-tip (<code>+12.963 m</code> forward of transom GNSS along <code>heading</code>) segment intersections against start lines and 200 m virtual gate corridors (<code>MAX_GATE_RADIUS_M = 100.0</code>), resolves leg sequences (<code>leg = 0..N</code>), computes cumulative monotonic <code>progress_m</code>, evaluates race classifications (<code>RANK_1..K</code>, <code>DNF</code>, <code>OCS</code>, <code>RET</code>, <code>DNS</code>), and runs 10 Hz convex polygon SAT contact detection (<code>detect_virtual_contacts</code>).</li>
+<li><strong>Important Files &amp; Entry Points</strong>:</li>
+<li><a href="source-companion/view/pipeline/reconstruction.py.html#L1"><code>pipeline/reconstruction.py</code></a>: <code>CourseReconstructor</code> (<a href="source-companion/view/pipeline/reconstruction.py.html#L92"><code>L92-L678</code></a>), <code>_segment_intersection_fraction</code> (<a href="source-companion/view/pipeline/reconstruction.py.html#L39"><code>L39-L73</code></a>), <code>_bow_point</code> (<a href="source-companion/view/pipeline/reconstruction.py.html#L76"><code>L76-L83</code></a>), <code>_reconstruct_boat_gates</code> (<a href="source-companion/view/pipeline/reconstruction.py.html#L376"><code>L376-L482</code></a>), <code>_compute_progress</code> (<a href="source-companion/view/pipeline/reconstruction.py.html#L548"><code>L548-L629</code></a>).</li>
+<li><a href="source-companion/view/pipeline/analytics.py.html#L1"><code>pipeline/analytics.py</code></a>: <code>AnalyticsEngine</code> (<a href="source-companion/view/pipeline/analytics.py.html#L223"><code>L223-L345</code></a>), <code>detect_virtual_contacts</code> (<a href="source-companion/view/pipeline/analytics.py.html#L127"><code>L127-L220</code></a>), <code>_polygons_intersect_sat</code> (<a href="source-companion/view/pipeline/analytics.py.html#L61"><code>L61-L97</code></a>).</li>
+<li><strong>Inputs, Outputs &amp; Consumers</strong>:</li>
+<li><em>Inputs</em>: <code>IngestionResult</code> + <code>SynchronizedTimeline</code>.</li>
+<li><em>Outputs</em>: <code>ReconstructedCourse</code>, per-boat <code>GateCrossing</code> lists, <code>progress_m</code> arrays, <code>leg</code> arrays, competitor <code>classification</code> &amp; <code>summary</code>, and <code>virtual_contact_incidents</code>.</li>
+<li><strong>Runtime Phase</strong>: Phase 1 (Ingestion &amp; Replay Reconstruction).</li>
+<li><strong>Tests Establishing Behavior</strong>: <a href="source-companion/view/tests/unit/test_reconstruction.py.html#L1"><code>tests/unit/test_reconstruction.py</code></a>, <a href="source-companion/view/tests/unit/test_analytics.py.html#L1"><code>tests/unit/test_analytics.py</code></a>, <a href="source-companion/index.html"><code>tests/unit/test_contact_detector.py</code></a>.</li>
+<li><strong>Lifecycle Status</strong>: <strong>Active</strong>.</li>
+<li><em>Audit Note 1</em>: <a href="source-companion/view/pipeline/reconstruction.py.html#L228"><code>pipeline/reconstruction.py:L228</code></a> checks <code>comp.get("started")</code> at the top level of the competitor dictionary rather than <code>comp.get("start_state", {}).get("started")</code>. Because <code>started</code> is nested inside <code>start_state</code>, <code>explicit_started</code> evaluates to <code>None</code>, allowing <code>USA</code> in <code>naples_pr1</code> (where <code>start_state.started = False</code> across all 24 records) to be geometrically reconstructed as <code>RANK_4</code>. Downstream <code>historical_analysis.py</code> (<code>L755-L759</code>) catches this discrepancy and flags a <code>source_conflict</code>.</li>
+<li><em>Audit Note 2</em>: In <a href="source-companion/view/pipeline/analytics.py.html#L263"><code>pipeline/analytics.py:L263-L265</code></a>, the Python frame leaderboard estimate divides metre gaps by a constant <code>8.0</code> m/s, whereas the browser leaderboard (<a href="source-companion/view/src/engine/analytics.ts.html#L71"><code>src/engine/analytics.ts:L71</code></a>) divides by the leader's instantaneous <code>sog * (1852 / 3600)</code>.</li>
+</ul>
+<hr />
+<h3 id="subsystem-s4-manoeuvre-detection-pipelinemanoeuvrespy">Subsystem S4 — Manoeuvre Detection (<code>pipeline/manoeuvres.py</code>)</h3>
+<ul>
+<li><strong>Purpose &amp; Conceptual Responsibility</strong>: Detects tacks and gybes from 10 Hz synchronized telemetry (<code>heading</code>, <code>twa</code>, <code>sog</code>, <code>vmg</code>) when raw <code>manoeuvres</code> records are absent (all 28 sessions have <code>0</code> raw <code>manoeuvres</code> records). Applies a 5-sample (<code>0.5 s</code>) circular moving average to heading, identifies turn-rate peaks (<span class="math-inline">≥ 8.0°<span class="m-text">/s</span></span>), verifies sign flip of <span class="math-inline"><span class="m-text">TWA</span></span> across <span class="math-inline">± 20°..160°</span>, checks cumulative heading change <span class="math-inline">≥ 32°</span>, enforces a speed dip <span class="math-inline">≥ 2.5<span class="m-text">kt</span></span> (<code>min_speed_loss_kt = 2.5</code>), and classifies tacks (<span class="math-inline">|<span class="m-over"><span class="m-text">TWA</span></span>| < 90°</span>) vs gybes (<span class="math-inline">|<span class="m-over"><span class="m-text">TWA</span></span>| ≥ 90°</span>).</li>
+<li><strong>Important Files &amp; Entry Points</strong>:</li>
+<li><a href="source-companion/view/pipeline/manoeuvres.py.html#L1"><code>pipeline/manoeuvres.py</code></a>: <code>ManoeuvreDetector</code> (<a href="source-companion/view/pipeline/manoeuvres.py.html#L48"><code>L48-L246</code></a>), <code>detect_for_boat</code> (<a href="source-companion/view/pipeline/manoeuvres.py.html#L74"><code>L74-L227</code></a>).</li>
+<li><strong>Inputs, Outputs &amp; Consumers</strong>:</li>
+<li><em>Inputs</em>: 10 Hz boat telemetry arrays + <code>gun_time</code> + optional finish cutoff.</li>
+<li><em>Outputs</em>: List of <code>ManoeuvreEvent</code> records stored in <code>replay.competitors[].manoeuvres</code> and subsequently re-evaluated by <code>historical_analysis.py</code> (<code>_event_analysis</code>).</li>
+<li><strong>Runtime Phase</strong>: Phase 1 (Ingestion &amp; Replay Reconstruction).</li>
+<li><strong>Tests Establishing Behavior</strong>: <a href="source-companion/view/tests/unit/test_manoeuvres.py.html#L1"><code>tests/unit/test_manoeuvres.py</code></a>.</li>
+<li><strong>Lifecycle Status</strong>: <strong>Active</strong> (with an important dual-definition subtlety between replay export and historical analysis: <code>manoeuvres.py:L192-L207</code> measures recovery to <strong>90%</strong> of entry speed and caps unrecovered events at ~15.0 s, whereas <code>historical_analysis.py:L294-L313</code> recomputes recovery from raw 10 Hz SOG to <strong>95%</strong> of entry speed and sets unrecovered events to <code>None</code>).</li>
+</ul>
+<hr />
+<h3 id="subsystem-s5-replay-export-canonical-tables-regatta-batch-ingestion-pipelineexport_replaypy-pipelinecanonical_tablespy-scriptsingest_regattaspy">Subsystem S5 — Replay Export, Canonical Tables &amp; Regatta Batch Ingestion (<code>pipeline/export_replay.py</code>, <code>pipeline/canonical_tables.py</code>, <code>scripts/ingest_regattas.py</code>)</h3>
+<ul>
+<li><strong>Purpose &amp; Conceptual Responsibility</strong>: Packages synchronized telemetry, reconstructed course geometry, boundary timelines, and competitor summaries into compact JSON replay manifests (<code>public/data/replays/&lt;race_id&gt;.json</code>), generates SVG/JSON course previews (<code>public/data/race_previews.json</code>), builds the regatta catalog (<code>public/data/manifests.json</code>), and exports reconciled canonical CSV/JSON tables (<code>public/data/presentation/**</code>).</li>
+<li><strong>Important Files &amp; Entry Points</strong>:</li>
+<li><a href="source-companion/view/pipeline/export_replay.py.html#L1"><code>pipeline/export_replay.py</code></a>: <code>export_replay_json</code> (<a href="source-companion/view/pipeline/export_replay.py.html#L41"><code>L41-L245</code></a>), <code>update_manifests</code> (<a href="source-companion/view/pipeline/export_replay.py.html#L248"><code>L248-L320</code></a>).</li>
+<li><a href="source-companion/index.html"><code>pipeline/canonical_tables.py</code></a>: <code>export_canonical_tables</code> (<a href="source-companion/index.html"><code>L45-L380</code></a>).</li>
+<li><a href="source-companion/index.html"><code>scripts/ingest_regattas.py</code></a>: Multi-session batch orchestrator for all 28 <code>.jsonl</code> files.</li>
+<li><strong>Runtime Phase</strong>: Phase 1 (Ingestion) and Phase 2 (Refresh).</li>
+<li><strong>Tests Establishing Behavior</strong>: <a href="source-companion/index.html"><code>tests/unit/test_export_replay.py</code></a>, <a href="source-companion/index.html"><code>tests/unit/test_canonical_tables.py</code></a>, <a href="source-companion/view/tests/tier5_integrity.py.html#L1"><code>tests/tier5_integrity.py</code></a>.</li>
+<li><strong>Lifecycle Status</strong>: <strong>Active</strong>.</li>
+</ul>
+<hr />
+<h3 id="subsystem-s6-historical-analysis-peer-normalized-radar-tactical-insights-pipelinehistorical_analysispy-pipelinetactical_insightspy-scriptsrefresh_team_analyticspy">Subsystem S6 — Historical Analysis, Peer-Normalized Radar &amp; Tactical Insights (<code>pipeline/historical_analysis.py</code>, <code>pipeline/tactical_insights.py</code>, <code>scripts/refresh_team_analytics.py</code>)</h3>
+<ul>
+<li><strong>Purpose &amp; Conceptual Responsibility</strong>: The single source of truth for all historical race metrics (<code>schema_version = "2.0"</code>, <code>formula_version = "historical-2"</code>), the 6-axis peer-normalized boat performance radar (<code>performance-1</code>), the coaching debrief items (<code>debrief-1</code>), the chronological event feed (<code>event-feed-1</code>), and the 10-second tactical wind-shift OLS regression snapshots (<code>tactical-1</code>). Enforces strict quality gating (<code>verified</code>, <code>derived</code>, <code>partial</code>, <code>low_coverage</code>, <code>conflict</code>, <code>unavailable</code>), detects source conflicts (e.g., <code>USA</code> start conflict in <code>naples_pr1</code>), and aggregates cross-race team/boat histories counting <strong>boat-races (<code>224</code>) rather than telemetry frames (<code>331,089</code>)</strong>.</li>
+<li><strong>Important Files &amp; Entry Points</strong>:</li>
+<li><a href="source-companion/view/pipeline/historical_analysis.py.html#L1"><code>pipeline/historical_analysis.py</code></a> (<code>1,654</code> lines): <code>DEFINITIONS</code> (<a href="source-companion/view/pipeline/historical_analysis.py.html#L43"><code>L43-L163</code></a>), <code>_event_analysis</code> (<a href="source-companion/view/pipeline/historical_analysis.py.html#L265"><code>L265-L333</code></a>), <code>_leg_Entry_for_boat</code> (<a href="source-companion/view/pipeline/historical_analysis.py.html#L336"><code>L336-L469</code></a>), <code>_boat_performance</code> (<a href="source-companion/view/pipeline/historical_analysis.py.html#L580"><code>L580-L746</code></a>), <code>_boat_debrief</code> (<a href="source-companion/view/pipeline/historical_analysis.py.html#L749"><code>L749-L832</code></a>), <code>build_race_analysis</code> (<a href="source-companion/view/pipeline/historical_analysis.py.html#L925"><code>L925-L1298</code></a>), <code>build_analysis_index</code> (<a href="source-companion/view/pipeline/historical_analysis.py.html#L1301"><code>L1301-L1562</code></a>).</li>
+<li><a href="source-companion/view/pipeline/tactical_insights.py.html#L1"><code>pipeline/tactical_insights.py</code></a> (<code>369</code> lines): <code>build_tactical_insights</code> (<a href="source-companion/view/pipeline/tactical_insights.py.html#L178"><code>L178-L356</code></a>), <code>_circular_mean_deg</code> (<a href="source-companion/view/pipeline/tactical_insights.py.html#L29"><code>L29-L41</code></a>), <code>_linear_slope_per_s</code> (<a href="source-companion/view/pipeline/tactical_insights.py.html#L75"><code>L75-L88</code></a>).</li>
+<li><a href="source-companion/view/scripts/refresh_team_analytics.py.html#L1"><code>scripts/refresh_team_analytics.py</code></a>: Regenerates <code>public/data/analysis/*.json</code>, <code>public/data/analysis/index.json</code>, <code>public/data/presentation/**</code>, and <code>public/data/artifacts.json</code>.</li>
+<li><a href="source-companion/view/scripts/analysis_snapshot.py.html#L1"><code>scripts/analysis_snapshot.py</code></a>: Bounded CLI inspection tool for archive-wide or per-race coverage/quality summaries.</li>
+<li><strong>Runtime Phase</strong>: Phase 2 (Analytics Refresh).</li>
+<li><strong>Tests Establishing Behavior</strong>: <a href="source-companion/view/tests/unit/test_historical_analysis.py.html#L1"><code>tests/unit/test_historical_analysis.py</code></a>, <a href="source-companion/view/tests/unit/test_tactical_insights.py.html#L1"><code>tests/unit/test_tactical_insights.py</code></a>.</li>
+<li><strong>Lifecycle Status</strong>: <strong>Active</strong>.</li>
+</ul>
+<hr />
+<h3 id="subsystem-s7-environment-weather-provenance-harvester-pipelineenvironmentpy">Subsystem S7 — Environment &amp; Weather Provenance Harvester (<code>pipeline/environment.py</code>)</h3>
+<ul>
+<li><strong>Purpose &amp; Conceptual Responsibility</strong>: Reconciles recorded race-course wind sensors against Open-Meteo historical weather (<code>archive-api.open-meteo.com</code>) and Mediterranean marine wave models (<code>marine-api.open-meteo.com</code>), caches raw HTTP responses with SHA-256 verification under <code>Data/environment/raw/</code>, and writes per-race environment provenance artifacts (<code>public/data/environment/&lt;race_id&gt;.json</code> and <code>index.json</code>).</li>
+<li><strong>Important Files &amp; Entry Points</strong>:</li>
+<li><a href="source-companion/view/pipeline/environment.py.html#L1"><code>pipeline/environment.py</code></a> (<code>691</code> lines): <code>build_environment_dataset</code> (<a href="source-companion/view/pipeline/environment.py.html#L490"><code>L490-L610</code></a>), <code>verify_environment_dataset</code> (<a href="source-companion/view/pipeline/environment.py.html#L613"><code>L613-L668</code></a>).</li>
+<li><strong>Runtime Phase</strong>: Phase 2 (offline verification <code>--verify</code> uses cached <code>Data/environment/raw/</code> without network).</li>
+<li><strong>Tests Establishing Behavior</strong>: <a href="source-companion/view/tests/unit/test_environment.py.html#L1"><code>tests/unit/test_environment.py</code></a>.</li>
+<li><strong>Lifecycle Status</strong>: <strong>Active</strong> (Uncommitted new subsystem in working tree, verified by <code>.\run.ps1 verify</code>).</li>
+</ul>
+<hr />
+<h3 id="subsystem-s8-causal-forecasting-backtesting-2027-ac38-cup-simulator-pipelineprediction">Subsystem S8 — Causal Forecasting, Backtesting &amp; 2027 AC38 Cup Simulator (<code>pipeline/prediction/</code>)</h3>
+<ul>
+<li><strong>Purpose &amp; Conceptual Responsibility</strong>: Implements three distinct probabilistic forecasting systems under strict forward-chaining temporal cutoffs (<code>before_day</code>, <code>published_at_ms = state_timestamp_ms + 6000</code>):
+  1. <strong>Pre-Race Expected Finish Position (<code>pre-race-pl-mc-1</code>)</strong>: Empirical Bayes Beta-Binomial completion model (<code>227</code> scheduled entries across 28 sessions) + Plackett–Luce finishing order (<span class="math-inline">σ = 1.2</span>, <span class="math-inline">κ = 1.8</span>) + tied-<span class="math-inline">N</span> nonfinish rank assignment.
+  2. <strong>Live In-Race Win Probability (<code>live-mc-kalman-1</code>)</strong>: Causal 6,000 ms reorder buffer (<code>ReorderBuffer</code>), Constant-Velocity Kalman filter (<code>CVKalmanFilter</code>), log-normal leg-time remaining model (<code>LegTimeModel</code>) with correlated calendar-time weather noise (<span class="math-inline">ρ<sub><span class="m-text">calendar</span></sub> = 0.65</span>), 500-trial exact boundary-crossing Monte Carlo, and <span class="math-inline">0.0001</span> uniform tail regularization.
+  3. <strong>2027 America's Cup Winner Bounds (<code>cup-ac38-conditional-2</code>)</strong>: 7-entrant AC38 tournament simulator (Preliminary Regattas, Challenger Selection Series RR/SF/Final, 1-point bonus carry-over, RRSAC 102.1 tie-break detection, and first-to-7 Cup Match) across a 24-scenario cross-class sensitivity grid (<span class="math-inline">N = 5,000</span> trials/scenario), reporting <code>[lower, upper]</code> rule bounds rather than fabricated point probabilities because <code>34.46%</code> of baseline trials encounter unpublished RRSAC 102.1 tie-break procedures.</li>
+<li><strong>Important Files &amp; Entry Points</strong>:</li>
+<li><a href="source-companion/view/pipeline/prediction/__main__.py.html#L1"><code>pipeline/prediction/__main__.py</code></a> &amp; <a href="source-companion/view/pipeline/prediction/build.py.html#L1"><code>pipeline/prediction/build.py</code></a>: CLI entry points (<code>build</code>, <code>scenario</code>, <code>verify</code>), atomic staging, and SHA-256 verification.</li>
+<li><a href="source-companion/view/pipeline/prediction/contracts.py.html#L1"><code>pipeline/prediction/contracts.py</code></a>: Canonical JSON serializer, SHA-256 hashing, schema constants, and status dictionary (<code>available</code>, <code>estimated</code>, <code>gate_ambiguous</code>, <code>unavailable</code>).</li>
+<li><a href="source-companion/view/pipeline/prediction/labels.py.html#L1"><code>pipeline/prediction/labels.py</code></a>: Scheduled 227-entry ledger builder (<code>extract_scheduled_entry_ledger</code>) and race completion label extractor.</li>
+<li><a href="source-companion/view/pipeline/prediction/state.py.html#L1"><code>pipeline/prediction/state.py</code></a>: Causal 6,000 ms reorder buffer (<code>ReorderBuffer</code>), Constant-Velocity Kalman filter (<code>CVKalmanFilter</code>), and checkpoint certification (<code>extract_causal_race_states</code>).</li>
+<li><a href="source-companion/view/pipeline/prediction/models.py.html#L1"><code>pipeline/prediction/models.py</code></a>: <code>CompletionModel</code>, <code>PlackettLuceModel</code>, <code>LegTimeModel</code>, <code>PositiveDelayMixture</code> (always <code>available=False</code> on current archive because <code>sample_count=0</code>), and <code>fit_Snapshot</code>.</li>
+<li><a href="source-companion/view/pipeline/prediction/simulation.py.html#L1"><code>pipeline/prediction/simulation.py</code></a>: <code>simulate_pre_race</code>, <code>simulate_live_checkpoint</code>, and <code>simulate_race_predictions</code>.</li>
+<li><a href="source-companion/view/pipeline/prediction/cup.py.html#L1"><code>pipeline/prediction/cup.py</code></a>: <code>simulate_cup_2027</code> 7-entrant AC38 tournament simulator across the 24-scenario cross-class sensitivity grid.</li>
+<li><a href="source-companion/view/pipeline/prediction/evaluation.py.html#L1"><code>pipeline/prediction/evaluation.py</code></a>: Forward-chaining day-by-day backtest evaluator and 7-metric risk budget gate.</li>
+<li><a href="source-companion/view/pipeline/prediction/weather.py.html#L1"><code>pipeline/prediction/weather.py</code></a>: Open-Meteo wind integration with automatic offline course-wind fallback (<code>fallback_Course_wind</code>).</li>
+<li><strong>Runtime Phase</strong>: Phase 3 (Forecast Build/Verify) and Phase 4 (On-demand <code>/api/forecast-scenarios</code> via <code>python -m pipeline.prediction scenario</code>).</li>
+<li><strong>Tests Establishing Behavior</strong>: <a href="source-companion/index.html"><code>tests/unit/test_prediction.py</code></a> (39 unit tests).</li>
+<li><strong>Lifecycle Status</strong>:</li>
+<li><code>CompletionModel</code>, <code>PlackettLuceModel</code>, <code>LegTimeModel</code>, <code>CVKalmanFilter</code>, <code>simulate_pre_race</code>, <code>simulate_live_checkpoint</code>, <code>simulate_cup_2027</code>: <strong>Active</strong>.</li>
+<li><code>PositiveDelayMixture</code>: <strong>Retained / Inactive on Current Archive</strong> (<code>available = False</code> across all 9 model cards because <code>0</code> manoeuvre/penalty delay observations are passed into training).</li>
+<li>Non-zero wind direction offset scenarios (<code>direction_offset_deg != 0</code>): <strong>Intentionally Rejected / Guarded</strong> (<code>simulate_pre_race</code> returns <code>status = "unavailable"</code> with reason <code>"Course wind-direction offset requires an explicit wind-field rotation model"</code>).</li>
+<li><code>pipeline/prediction/weather.py</code> (<code>fetch_open_meteo_wind</code>): <strong>Active during online build with automatic offline fallback</strong> (<code>provider = "fallback_Course_wind"</code> when offline).</li>
+</ul>
+<hr />
+<h3 id="subsystem-s9-browser-replay-engine-canvas-renderer-workspace-ui-src-scriptsforecastscenariosts">Subsystem S9 — Browser Replay Engine, Canvas Renderer &amp; Workspace UI (<code>src/</code>, <code>scripts/forecastScenarios.ts</code>)</h3>
+<ul>
+<li><strong>Purpose &amp; Conceptual Responsibility</strong>: Provides the five interactive workspaces (<code>Replay</code>, <code>Analysis</code>, <code>Compare</code>, <code>Reports</code>, <code>Forecast</code>), 60 fps <code>requestAnimationFrame</code> interpolation over the 10 Hz replay arrays, dual-mode course rendering (MapLibre GL map tiles vs 100% offline 2D metric Grid via <code>ViewportMatrix.ts</code>), class-specific AC40/AC75 foiling hull geometry (<code>boatModels.ts</code>), real-time SAT keep-clear/platform polygon overlap visualization (<code>contactDetector.ts</code>), greedy screen-space label collision avoidance (<code>boatPresentation.ts</code>), and strict client-side schema/SHA-256 verification (<code>analysisCatalog.ts</code>, <code>predictionCatalog.ts</code>).</li>
+<li><strong>Important Files &amp; Entry Points</strong>:</li>
+<li><a href="source-companion/view/src/App.tsx.html#L1"><code>src/App.tsx</code></a> (<code>771</code> lines): Top-level state machine, workspace router, <code>AbortController</code> race-switch lifecycle, camera mode state, and modal controllers.</li>
+<li><a href="source-companion/view/src/engine/ReplayEngine.ts.html#L1"><code>src/engine/ReplayEngine.ts</code></a> &amp; <a href="source-companion/view/src/engine/interpolate.ts.html#L1"><code>src/engine/interpolate.ts</code></a>: Binary search frame locator (<code>L42-L52</code>), <code>angleLerp</code> (<code>interpolate.ts:L7-L10</code>), and <code>sampleBoat</code> (<code>interpolate.ts:L12-L16</code>).</li>
+<li><a href="source-companion/view/src/engine/analytics.ts.html#L1"><code>src/engine/analytics.ts</code></a>: <code>getStandings</code> (<code>L48-L84</code>), <code>compareBoats</code> (<code>L86-L99</code>), <code>windAt</code> (<code>L101-L108</code>).</li>
+<li><a href="source-companion/view/src/engine/contactDetector.ts.html#L1"><code>src/engine/contactDetector.ts</code></a>: <code>AC40_PLATFORM_BORDER</code>, <code>AC40_KEEP_CLEAR_BORDER</code>, <code>testPolygonOverlapSAT</code> (<code>L141-L203</code>), <code>computePolygonIntersectionArea</code> (<code>L264-L290</code>).</li>
+<li><a href="source-companion/view/src/components/canvas/CourseCanvas.tsx.html#L1"><code>src/components/canvas/CourseCanvas.tsx</code></a>, <a href="source-companion/view/src/components/canvas/ViewportMatrix.ts.html#L1"><code>ViewportMatrix.ts</code></a>, <a href="source-companion/view/src/components/canvas/boatModels.ts.html#L1"><code>boatModels.ts</code></a>, <a href="source-companion/view/src/components/canvas/boatPresentation.ts.html#L1"><code>boatPresentation.ts</code></a>, <a href="source-companion/index.html"><code>MapLibreCourseMap.tsx</code></a>.</li>
+<li><a href="source-companion/view/src/components/dashboard/ForecastWorkspace.tsx.html#L1"><code>src/components/dashboard/ForecastWorkspace.tsx</code></a>, <a href="source-companion/view/src/components/dashboard/ReportsWorkspace.tsx.html#L1"><code>ReportsWorkspace.tsx</code></a>, <a href="source-companion/view/src/components/dashboard/BoatPerformanceCard.tsx.html#L1"><code>BoatPerformanceCard.tsx</code></a>, <a href="source-companion/index.html"><code>TacticalInsightsCard.tsx</code></a>, <a href="source-companion/index.html"><code>LiveStrategyCard.tsx</code></a>.</li>
+<li><a href="source-companion/view/src/components/modals/AnalysisModal.tsx.html#L1"><code>src/components/modals/AnalysisModal.tsx</code></a>, <a href="source-companion/index.html"><code>RaceSelectorModal.tsx</code></a>, <a href="source-companion/index.html"><code>SettingsModal.tsx</code></a>.</li>
+<li><a href="source-companion/view/scripts/forecastScenarios.ts.html#L1"><code>scripts/forecastScenarios.ts</code></a>: Vite dev/preview middleware handling <code>POST /api/forecast-scenarios</code> by invoking <code>python -m pipeline.prediction scenario</code>.</li>
+<li><strong>Runtime Phase</strong>: Phase 4 (Middleware) and Phase 5 (Browser Interaction).</li>
+<li><strong>Tests Establishing Behavior</strong>: 39 Vitest suites (<code>406</code> tests in <code>src/**/__tests__/*.test.ts(x)</code>) + 5 Playwright browser suites (<code>tests/browser/*.mjs</code>).</li>
+<li><strong>Lifecycle Status</strong>: <strong>Active</strong>.</li>
+</ul>
+<hr />
+<h2 id="4-operational-status-summary-of-special-edge-components">4. Operational Status Summary of Special &amp; Edge Components</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Component / Feature</th>
+<th style="text-align: left;">Location</th>
+<th style="text-align: left;">Operational Status</th>
+<th style="text-align: left;">Evidence &amp; Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>6-Axis Peer Performance Radar (<code>performance-1</code>)</strong></td>
+<td style="text-align: left;"><code>pipeline/historical_analysis.py:L580</code></td>
+<td style="text-align: left;"><strong>Active</strong></td>
+<td style="text-align: left;">Exported in all 28 <code>public/data/analysis/&lt;race_id&gt;.json</code> files; validated by <code>analysisCatalog.ts:L11-L64</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Tactical Wind-Shift OLS Engine (<code>tactical-1</code>)</strong></td>
+<td style="text-align: left;"><code>pipeline/tactical_insights.py:L178</code></td>
+<td style="text-align: left;"><strong>Active (Projection Gated)</strong></td>
+<td style="text-align: left;">Generates <code>3,455</code> snapshots across 28 races; <code>0</code> snapshots pass all 7 gates for a 5-min conditional projection (<code>projection_change_deg</code> is <code>null</code> in all <code>3,455</code> snapshots due to conservative stability/coverage gates).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pre-Race Plackett–Luce Model (<code>pre-race-pl-mc-1</code>)</strong></td>
+<td style="text-align: left;"><code>pipeline/prediction/models.py:L103</code></td>
+<td style="text-align: left;"><strong>Active (Weather-Invariant)</strong></td>
+<td style="text-align: left;">Active across all 28 races (<code>227</code> scheduled entries). Expected positions are currently invariant across supported <code>tws_kt</code> presets (<code>8..22 kt</code>) because <code>PlackettLuceModel</code> and <code>CompletionModel</code> do not condition on <code>tws_kt</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pre-Race Wind Direction Offset (<code>direction_offset_deg != 0</code>)</strong></td>
+<td style="text-align: left;"><code>pipeline/prediction/simulate.py:L52</code></td>
+<td style="text-align: left;"><strong>Guarded / Unavailable</strong></td>
+<td style="text-align: left;">Deliberately returns <code>status = "unavailable"</code> with reason <code>"Course wind-direction offset requires an explicit wind-field rotation model"</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Positive Delay Mixture (<code>PositiveDelayMixture</code>)</strong></td>
+<td style="text-align: left;"><code>pipeline/prediction/models.py:L476</code></td>
+<td style="text-align: left;"><strong>Retained / Inactive</strong></td>
+<td style="text-align: left;">Class is implemented and serialized into <code>.forecast/models/&lt;hash&gt;.json</code>, but <code>fit_Snapshot</code> passes empty delay lists (<code>sample_count = 0</code>), so <code>available = False</code> in all 9 model cards.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>AC38 Cup Winner Point Probabilities (<code>probabilities</code>)</strong></td>
+<td style="text-align: left;"><code>pipeline/prediction/simulate.py:L730</code></td>
+<td style="text-align: left;"><strong>Null by Contract (<code>rule_bounds</code>)</strong></td>
+<td style="text-align: left;">All 7 teams have <code>probabilities[team] = null</code> in <code>cup_2027.json</code> because <code>1,723 / 5,000</code> (<code>34.46%</code>) of baseline trials hit unpublished RRSAC 102.1 tie-break procedures; UI displays <code>rule_bounds_by_team</code> and <code>scenario_envelope_by_team</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Python Leaderboard Time Gap (<code>gap_s</code>)</strong></td>
+<td style="text-align: left;"><code>pipeline/analytics.py:L263</code></td>
+<td style="text-align: left;"><strong>Superseded in UI by TS</strong></td>
+<td style="text-align: left;">Python divides <code>gap_m</code> by constant <code>8.0</code> m/s in <code>AnalyticsEngine</code>, whereas the browser <code>Replay</code> leaderboard (<code>src/engine/analytics.ts:L71</code>) recomputes <code>gapS</code> dynamically using leader instantaneous <code>sog</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-cross-domain-glossary-math-sailing-ui-code-artifact-fields">5. Cross-Domain Glossary (Math, Sailing, UI, Code &amp; Artifact Fields)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Term / Identifier</th>
+<th style="text-align: left;">Domain</th>
+<th style="text-align: left;">Definition, Units, Sign Convention &amp; Repository Mapping</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>AC40</strong></td>
+<td style="text-align: left;">Sailing / Class</td>
+<td style="text-align: left;">40-foot (11.80 m hull + 1.163 m bowsprit = <code>12.963 m</code> forward of transom, <code>-0.215 m</code> rudder aft, total length <code>13.178 m</code>; foil span <code>10.83 m</code> = <span class="math-inline">± 5.415<span class="m-text">m</span></span>) one-design foiling monohull used in all 28 archived 2026 sessions. Defined in <a href="source-companion/view/src/components/canvas/boatModels.ts.html#L28"><code>src/components/canvas/boatModels.ts:L28-L35</code></a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>AC75</strong></td>
+<td style="text-align: left;">Sailing / Class</td>
+<td style="text-align: left;">75-foot (<code>21.50 m</code> forward of transom, <code>-0.40 m</code> rudder aft, total length <code>21.90 m</code>; foil span <code>16.0 m</code> = <span class="math-inline">± 8.0<span class="m-text">m</span></span>) Cup-class foiling monohull scheduled for the 2027 America's Cup (AC38). Defined in <a href="source-companion/view/src/components/canvas/boatModels.ts.html#L43"><code>src/components/canvas/boatModels.ts:L43-L50</code></a>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Along-Leg Offset (<code>alongLegM</code>)</strong></td>
+<td style="text-align: left;">Math / Compare UI</td>
+<td style="text-align: left;">Signed projection (in metres) of vector <span class="math-inline"><span class="m-vec">p</span><sub>B</sub> - <span class="m-vec">p</span><sub>A</sub></span> onto the active leg direction of boat <span class="math-inline">A</span>: <span class="math-inline"><span class="m-text">dir</span><sub>A</sub> · (Δ x sinθ<sub><span class="m-text">axis</span></sub> + Δ y cosθ<sub><span class="m-text">axis</span></sub>)</span>, where <span class="math-inline"><span class="m-text">dir</span><sub>A</sub> = +1</span> on odd (upwind) legs and <span class="math-inline">-1</span> on even (downwind) legs. Positive means Boat <span class="math-inline">B</span> is further ahead along <span class="math-inline">A</span>'s current leg direction (<a href="source-companion/view/src/engine/analytics.ts.html#L90"><code>src/engine/analytics.ts:L90-L92</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Boat-Race (<code>224</code> vs <code>227</code>)</strong></td>
+<td style="text-align: left;">Statistics / Unit</td>
+<td style="text-align: left;">The fundamental statistical observation unit for historical team/boat cohorts. A single boat participating in a single race is 1 boat-race. The archive contains <strong>224 replayed boat-races</strong> (with telemetry in <code>public/data/replays/*.json</code> and <code>analysis/index.json</code>) and <strong>227 scheduled boat-races</strong> (including 3 Naples practice races where <code>GBR B</code> was scheduled in <code>boat_Schedule</code> / <code>race_start_status</code> but recorded 0 <code>boat_state</code> packets).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Bow Offset (<code>BOW_OFFSET_M = 12.963</code>)</strong></td>
+<td style="text-align: left;">Geometry / Code</td>
+<td style="text-align: left;">Distance in metres from the AC40 transom centerline GNSS origin <span class="math-inline">(0,0)</span> to the forward tip of the bowsprit. Used in <a href="source-companion/view/pipeline/reconstruction.py.html#L25"><code>pipeline/reconstruction.py:L25,L76-L83</code></a> to project <span class="math-inline"><span class="m-vec">p</span><sub><span class="m-text">bow</span></sub>(t) = (x(t) + 12.963sinψ(t),  y(t) + 12.963cosψ(t))</span> for start and gate crossings.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Brier Score (<code>brier</code>)</strong></td>
+<td style="text-align: left;">Forecast Evaluation</td>
+<td style="text-align: left;">Proper quadratic scoring rule <span class="math-inline"><span class="m-frac"><span class="m-num">1</span><span class="m-den">M</span></span>∑<sub>m=1</sub><sup>M</sup> ∑<sub>k=1</sub><sup>K</sup> (p<sub>m,k</sub> - 𝕀(y<sub>m</sub> = k))<sup>2</sup></span>. Lower is better. Evaluated across 1,004 live checkpoints (<code>0.7289</code>) in <code>.forecast/backtest.json</code> (<a href="source-companion/view/pipeline/prediction/backtest.py.html#L25"><code>pipeline/prediction/backtest.py:L25-L34</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Circular Mean (<code>_circular_mean_deg</code>)</strong></td>
+<td style="text-align: left;">Math / Directional</td>
+<td style="text-align: left;">Mean of angles <span class="math-inline">θ<sub>1</sub>, …, θ<sub>n</sub> ∈ [0°, 360°)</span> computed via unit-vector components <span class="math-inline"><span class="m-over">S</span> = <span class="m-frac"><span class="m-num">1</span><span class="m-den">n</span></span>∑ sinθ<sub>i</sub></span>, <span class="math-inline"><span class="m-over">C</span> = <span class="m-frac"><span class="m-num">1</span><span class="m-den">n</span></span>∑ cosθ<sub>i</sub></span> as <span class="math-inline"><span class="m-rm">atan2</span>(<span class="m-over">S</span>, <span class="m-over">C</span>)  mod  360°</span>. Undefined (<code>None</code>) when resultant length <span class="math-inline">R = <span class="m-sqrt">√<span class="m-sqrt-body"><span class="m-over">S</span><sup>2</sup> + <span class="m-over">C</span><sup>2</sup></span></span> < 10<sup>-9</sup></span> (<a href="source-companion/view/pipeline/tactical_insights.py.html#L29"><code>pipeline/tactical_insights.py:L29-L41</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Closure Rate (<code>closureMps</code>)</strong></td>
+<td style="text-align: left;">Math / Compare UI</td>
+<td style="text-align: left;">Rate (in <span class="math-inline"><span class="m-text">m/s</span></span>) at which the Euclidean separation between Boat <span class="math-inline">A</span> and Boat <span class="math-inline">B</span> is decreasing: <span class="math-inline">-<span class="m-frac"><span class="m-num">(<span class="m-vec">v</span><sub>B</sub> - <span class="m-vec">v</span><sub>A</sub>) · (<span class="m-vec">p</span><sub>B</sub> - <span class="m-vec">p</span><sub>A</sub>)</span><span class="m-den">\|<span class="m-vec">p</span><sub>B</sub> - <span class="m-vec">p</span><sub>A</sub>\|</span></span></span>. Positive means boats are approaching each other; negative means separating (<a href="source-companion/view/src/engine/analytics.ts.html#L97"><code>src/engine/analytics.ts:L97</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>COG (<code>cog</code>)</strong></td>
+<td style="text-align: left;">Sailing / Telemetry</td>
+<td style="text-align: left;">Course Over Ground in degrees clockwise from True North (<span class="math-inline">[0°, 360°)</span>). Direction of the boat's actual velocity vector over the water surface/seabed. Differs from <code>heading</code> (<span class="math-inline">ψ</span>) by leeway and current.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Contrast Subspace (<code>contrast_cov</code>)</strong></td>
+<td style="text-align: left;">Math / Plackett–Luce</td>
+<td style="text-align: left;">The <span class="math-inline">(K-1)</span>-dimensional subspace of <span class="math-inline">ℝ<sup>K</sup></span> orthogonal to <span class="math-inline"><strong>1</strong><sub>K</sub></span> (<span class="math-inline">∑<sub>i=1</sub><sup>K</sup> θ<sub>i</sub> = 0</span>) where Plackett–Luce log-strengths are identifiable. Covariance is computed via pseudoinverse <span class="math-inline">H<sup>+</sup></span> of the projected Hessian (<a href="source-companion/view/pipeline/prediction/models.py.html#L226"><code>pipeline/prediction/models.py:L226-L258</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Course Axis (<code>axis_deg</code>)</strong></td>
+<td style="text-align: left;">Sailing / Geometry</td>
+<td style="text-align: left;">Bearing in degrees True (<span class="math-inline">[0°, 360°)</span>) from the leeward gate midpoint (or start midpoint on Leg 1) to the windward gate midpoint. Defines the primary upwind reference direction for VMG and <code>Course</code> camera rotation.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DNF / DNS / OCS / RET</strong></td>
+<td style="text-align: left;">Sailing / Rules</td>
+<td style="text-align: left;">Non-finish classifications: <strong>DNF</strong> = Did Not Finish (started validly, did not cross finish before window end); <strong>DNS</strong> = Did Not Start (never crossed start line after gun); <strong>OCS</strong> = On Course Side (crossed start line early / flagged <code>ocs: true</code> without clearing); <strong>RET</strong> = Retired.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Gun Time (<code>gun_time</code>)</strong></td>
+<td style="text-align: left;">Chronology</td>
+<td style="text-align: left;">Unix epoch timestamp in milliseconds (<code>int</code>) when the race start signal fired (<span class="math-inline">T = 0<span class="m-text">s</span></span> elapsed). Pre-start telemetry has <span class="math-inline">t < <span class="m-text">gun<sub>t</sub>ime</span></span>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Gybe (<code>GYBE</code>)</strong></td>
+<td style="text-align: left;">Sailing / Manoeuvre</td>
+<td style="text-align: left;">Turning the stern of the boat through the wind while sailing downwind (<span class="math-inline">|<span class="m-over"><span class="m-text">TWA</span></span>| ≥ 90°</span>), flipping <code>twa</code> sign across the dead-downwind axis (<span class="math-inline">180°</span>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Heading (<code>heading</code>, <span class="math-inline">ψ</span>)</strong></td>
+<td style="text-align: left;">Sailing / Telemetry</td>
+<td style="text-align: left;">Direction the boat's bow points in degrees clockwise from True North (<span class="math-inline">[0°, 360°)</span>). Used to orient hull polygons and project the bowsprit tip.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Keep-Clear Border (<code>keep_clear_border</code>)</strong></td>
+<td style="text-align: left;">Umpiring / Geometry</td>
+<td style="text-align: left;">Convex 9-vertex safety envelope expanded by <span class="math-inline">+2.0<span class="m-text">m</span></span> laterally around the physical <code>platform_border</code> (<span class="math-inline">± 7.415<span class="m-text">m</span></span> width for AC40, <span class="math-inline">± 10.0<span class="m-text">m</span></span> for AC75). Overlap between two boats' <code>keep_clear_border</code> polygons triggers a <code>virtual_contact_incident</code> (<a href="source-companion/view/src/engine/contactDetector.ts.html#L27"><code>src/engine/contactDetector.ts:L27-L38</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Lateral Offset (<code>lateralM</code>)</strong></td>
+<td style="text-align: left;">Math / Compare UI</td>
+<td style="text-align: left;">Signed perpendicular offset (in metres) of Boat <span class="math-inline">B</span> relative to Boat <span class="math-inline">A</span>'s course axis: <span class="math-inline">Δ x cosθ<sub><span class="m-text">axis</span></sub> - Δ y sinθ<sub><span class="m-text">axis</span></sub></span>. Positive means Boat <span class="math-inline">B</span> lies to the right (eastward when <span class="math-inline">θ<sub><span class="m-text">axis</span></sub> = 0°</span>) of the axis line through <span class="math-inline">A</span> (<a href="source-companion/view/src/engine/analytics.ts.html#L93"><code>src/engine/analytics.ts:L93</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Matched-Leg Scope (<code>matched_legs</code>)</strong></td>
+<td style="text-align: left;">Analytics / Radar</td>
+<td style="text-align: left;">Subset of race legs where <strong>both</strong> the subject boat and at least <code>MIN_PEER_COUNT = 1</code> peer boat have valid (<code>derived</code> or <code>verified</code>) leg metrics. Prevents wind shifts on uncompleted legs from biasing <code>performance-1</code> indices (<a href="source-companion/view/pipeline/historical_analysis.py.html#L608"><code>pipeline/historical_analysis.py:L608-L654</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Normalized RPS (<code>norm_rps</code>)</strong></td>
+<td style="text-align: left;">Forecast Evaluation</td>
+<td style="text-align: left;">Ranked Probability Score normalized by <span class="math-inline">K-1</span> across finishing positions <span class="math-inline">1..K</span>: <span class="math-inline"><span class="m-frac"><span class="m-num">1</span><span class="m-den">K-1</span></span>∑<sub>r=1</sub><sup>K-1</sup> (F<sub><span class="m-text">pred</span></sub>(r) - F<sub><span class="m-text">actual</span></sub>(r))<sup>2</sup></span>, measuring cumulative distribution accuracy for ordinal rankings (<a href="source-companion/view/pipeline/prediction/backtest.py.html#L60"><code>pipeline/prediction/backtest.py:L60-L82</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Peer-Normalized Index (<code>index</code>)</strong></td>
+<td style="text-align: left;">Analytics / Radar</td>
+<td style="text-align: left;">Dimensionless performance score where <code>100.0</code> represents the self-excluding peer mean. On leg <span class="math-inline">ℓ</span>, <span class="math-inline">I<sub>b,ℓ</sub> = 100 · <span class="m-frac"><span class="m-num">x<sub>b,ℓ</sub></span><span class="m-den"><span class="m-frac"><span class="m-num">1</span><span class="m-den">|P<sub>b,ℓ</sub>|</span></span>∑<sub>p ∈ P<sub>b,ℓ</sub></sub> x<sub>p,ℓ</sub></span></span></span>. The race dimension index is the unweighted mean across matched legs: <span class="math-inline">I<sub>b</sub> = <span class="m-frac"><span class="m-num">1</span><span class="m-den">|L<sub>b</sub>|</span></span>∑<sub>ℓ ∈ L<sub>b</sub></sub> I<sub>b,ℓ</sub></span> (<a href="source-companion/view/pipeline/historical_analysis.py.html#L656"><code>pipeline/historical_analysis.py:L656-L712</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Platform Border (<code>platform_border</code>)</strong></td>
+<td style="text-align: left;">Geometry / Vessel</td>
+<td style="text-align: left;">Physical 9-vertex convex envelope of the boat hull and deployed foils (<span class="math-inline">± 5.415<span class="m-text">m</span></span> span, <code>-0.215 m</code> to <code>+12.963 m</code> length for AC40). Overlap of two <code>platform_border</code> polygons classifies a contact as <code>COLLISION</code> rather than <code>PROXIMITY</code> (<a href="source-companion/view/pipeline/analytics.py.html#L170"><code>pipeline/analytics.py:L170-L185</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Publication Time (<code>published_at_ms</code>)</strong></td>
+<td style="text-align: left;">Causal Forecasting</td>
+<td style="text-align: left;">Timestamp when a live checkpoint forecast becomes legally visible to the UI: <span class="math-inline"><span class="m-text">published<sub>a</sub>t<sub>m</sub>s</span> = <span class="m-text">state<sub>t</sub>imestamp<sub>m</sub>s</span> + 6000<span class="m-text">ms</span></span>, accounting for the 6.0 s causal reorder buffer (<a href="source-companion/index.html"><code>pipeline/prediction/ingest.py:L21</code></a>, enforced in UI by <a href="source-companion/view/src/engine/predictionCatalog.ts.html#L133"><code>src/engine/predictionCatalog.ts:L133-L146</code></a>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Retention Pct (<code>retention_pct</code>)</strong></td>
+<td style="text-align: left;">Manoeuvre Analytics</td>
+<td style="text-align: left;">Percentage of entry speed retained at the minimum speed trough during a tack or gybe: <span class="math-inline">100 × <span class="m-frac"><span class="m-num"><span class="m-text">minimum<sub>s</sub>peed<sub>k</sub>t</span></span><span class="m-den"><span class="m-text">entry<sub>s</sub>peed<sub>k</sub>t</span></span></span> = 100 - <span class="m-text">speed<sub>l</sub>oss<sub>p</sub>ct</span></span> (<a href="source-companion/view/pipeline/historical_analysis.py.html#L302"><code>pipeline/historical_analysis.py:L302-L315</code></a>). Used as a "higher is better" axis in <code>performance-1</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>RRSAC 102.1</strong></td>
+<td style="text-align: left;">AC38 Tournament Rules</td>
+<td style="text-align: left;">Racing Rules of Sailing America's Cup tie-break rule invoked when 3+ teams are tied at a stage cutoff or when match/preliminary tie-break standings are unresolvable from AC40 fleet priors. Accounts for <code>1,723 / 5,000</code> (<code>34.46%</code>) of unresolved baseline trials in <code>cup_2027.json</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>SOG (<code>sog</code>)</strong></td>
+<td style="text-align: left;">Sailing / Telemetry</td>
+<td style="text-align: left;">Speed Over Ground in knots (<span class="math-inline"><span class="m-text">kt</span></span>, where <span class="math-inline">1<span class="m-text">kt</span> = 1852 / 3600<span class="m-text">m/s</span> ≈ 0.514444<span class="m-text">m/s</span></span>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Tack (<code>TACK</code>)</strong></td>
+<td style="text-align: left;">Sailing / Manoeuvre</td>
+<td style="text-align: left;">Turning the bow of the boat through the wind while sailing upwind (<span class="math-inline">|<span class="m-over"><span class="m-text">TWA</span></span>| < 90°</span>), flipping <code>twa</code> sign across <span class="math-inline">0°</span>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Tied-<span class="math-inline">N</span> Convention (<code>nonfinish_score = "N"</code>)</strong></td>
+<td style="text-align: left;">Pre-Race Forecast</td>
+<td style="text-align: left;">Scoring rule that assigns every non-finishing boat (DNS/DNF/OCS/RET) the worst scheduled field rank <span class="math-inline">N = K</span> (<code>len(boat_ids)</code>), whereas finishers receive ranks <span class="math-inline">1..m</span> (<span class="math-inline">m ≤ K</span>). Under this convention, if <span class="math-inline">ℙ(<span class="m-text">nonfinish</span>) > 0</span>, the sum of expected positions exceeds <span class="math-inline"><span class="m-frac"><span class="m-num">K(K+1)</span><span class="m-den">2</span></span></span>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TWA (<code>twa</code>)</strong></td>
+<td style="text-align: left;">Sailing / Telemetry</td>
+<td style="text-align: left;">Signed True Wind Angle in degrees (<span class="math-inline">[-180°, +180°]</span>), normalized via <code>signed_angle_deg(twd - heading)</code>. Magnitude <span class="math-inline">|<span class="m-text">TWA</span>| < 90°</span> is upwind; <span class="math-inline">|<span class="m-text">TWA</span>| ≥ 90°</span> is downwind.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TWD (<code>twd</code>)</strong></td>
+<td style="text-align: left;">Sailing / Telemetry</td>
+<td style="text-align: left;">True Wind Direction in degrees clockwise from True North (<span class="math-inline">[0°, 360°)</span>) indicating the bearing <strong>from which</strong> the true wind blows.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TWS (<code>tws</code>)</strong></td>
+<td style="text-align: left;">Sailing / Telemetry</td>
+<td style="text-align: left;">True Wind Speed in knots (<span class="math-inline"><span class="m-text">kt</span></span>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>VMG (<code>vmg</code>)</strong></td>
+<td style="text-align: left;">Sailing / Analytics</td>
+<td style="text-align: left;">Velocity Made Good in knots (<span class="math-inline"><span class="m-text">kt</span></span>). <strong>Important Sign Distinction</strong>: In raw/replay telemetry (<code>replay.telemetry.boats[id].vmg</code>), <code>vmg</code> is wind-referenced (<span class="math-inline"><span class="m-text">SOG</span>cos(<span class="m-text">TWA</span>)</span>), which becomes <strong>negative</strong> downwind when <span class="math-inline">|<span class="m-text">TWA</span>| > 90°</span>. In <code>historical_analysis.py</code> (<code>_leg_Entry_for_boat</code> and <code>performance-1</code>), leg VMG is <strong>mark/axis-referenced</strong> along the active leg direction and is <strong>positive</strong> for both upwind and downwind progress toward the next gate!</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-complete-first-party-file-coverage-table-209-files">6. Complete First-Party File Coverage Table (209 Files)</h2>
+<p>Every file listed below has been inspected, hashed, and mirrored into <a href="source-companion/index.html"><code>source-companion/</code></a> with clickable line anchors:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">#</th>
+<th style="text-align: left;">First-Party File Path (Click to Browse Source)</th>
+<th style="text-align: left;">Category</th>
+<th style="text-align: left;">Git Status</th>
+<th style="text-align: right;">Lines</th>
+<th style="text-align: right;">Bytes</th>
+<th style="text-align: left;">SHA-256 Prefix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;"><a href="source-companion/view/AGENTS.md.html#L1"><code>AGENTS.md</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">1,655</td>
+<td style="text-align: left;"><code>30f4c385b537bc63…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;"><a href="source-companion/view/PROJECT.md.html#L1"><code>PROJECT.md</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">4,428</td>
+<td style="text-align: left;"><code>e1fa6f62e373e14b…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;"><a href="source-companion/view/README.md.html#L1"><code>README.md</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">3,699</td>
+<td style="text-align: left;"><code>f38ff38b3548001a…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;"><a href="source-companion/view/index.html.html#L1"><code>index.html</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">587</td>
+<td style="text-align: left;"><code>3a72a7c82922df05…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;"><a href="source-companion/view/package.json.html#L1"><code>package.json</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">1,350</td>
+<td style="text-align: left;"><code>bb79fd09a5f9f150…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;"><a href="source-companion/view/pyproject.toml.html#L1"><code>pyproject.toml</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">364</td>
+<td style="text-align: left;"><code>23aadea66160e23e…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;"><a href="source-companion/view/run.ps1.html#L1"><code>run.ps1</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">2,766</td>
+<td style="text-align: left;"><code>43e3de48e8ece92d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;"><a href="source-companion/view/tsconfig.json.html#L1"><code>tsconfig.json</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">119</td>
+<td style="text-align: left;"><code>770b4140bbb581e2…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;"><a href="source-companion/view/tsconfig.app.json.html#L1"><code>tsconfig.app.json</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">735</td>
+<td style="text-align: left;"><code>8ad1a485c39fcb22…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;"><a href="source-companion/view/tsconfig.node.json.html#L1"><code>tsconfig.node.json</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">393</td>
+<td style="text-align: left;"><code>62e382d75e04b419…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td style="text-align: left;"><a href="source-companion/view/vite.config.ts.html#L1"><code>vite.config.ts</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">751</td>
+<td style="text-align: left;"><code>2fb613edf7b0f984…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/annotation_revision_plan.md.html#L1"><code>docs/annotation_revision_plan.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">163</td>
+<td style="text-align: right;">22,175</td>
+<td style="text-align: left;"><code>3e6f21da7a24b36c…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/annotation_revision_verification.md.html#L1"><code>docs/annotation_revision_verification.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">10,001</td>
+<td style="text-align: left;"><code>a2cf4dcc0858780d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/architecture.md.html#L1"><code>docs/architecture.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">4,288</td>
+<td style="text-align: left;"><code>15197ffbe6c1f243…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/browser_feedback_verification.md.html#L1"><code>docs/browser_feedback_verification.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">5,843</td>
+<td style="text-align: left;"><code>10e182fa3c02cb65…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/dashboard_contract.md.html#L1"><code>docs/dashboard_contract.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">8,975</td>
+<td style="text-align: left;"><code>13bf1c5a03dd42f1…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">17</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/dashboard_verification.md.html#L1"><code>docs/dashboard_verification.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">5,468</td>
+<td style="text-align: left;"><code>ba2ff0080acc04e8…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">18</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/data_schema.md.html#L1"><code>docs/data_schema.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">7,860</td>
+<td style="text-align: left;"><code>72b3c830e38c0acb…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">19</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/derived_metrics.md.html#L1"><code>docs/derived_metrics.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">2,528</td>
+<td style="text-align: left;"><code>658096d86d207844…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/design-system.md.html#L1"><code>docs/design-system.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">8,502</td>
+<td style="text-align: left;"><code>e7fe757d850904b7…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">21</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/environment_data.md.html#L1"><code>docs/environment_data.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">3,906</td>
+<td style="text-align: left;"><code>277a54c117b7c4c0…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">22</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/forecast_rules_sources.json.html#L1"><code>docs/forecast_rules_sources.json</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">2,759</td>
+<td style="text-align: left;"><code>eb055645ba08523f…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/forecasting_implementation.md.html#L1"><code>docs/forecasting_implementation.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">156</td>
+<td style="text-align: right;">22,836</td>
+<td style="text-align: left;"><code>cc04c080cddb6eba…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">24</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/forecasting_research_review.md.html#L1"><code>docs/forecasting_research_review.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">180</td>
+<td style="text-align: right;">23,353</td>
+<td style="text-align: left;"><code>458ba369b6c04899…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">25</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/forecasting_review_resolution.md.html#L1"><code>docs/forecasting_review_resolution.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">27,287</td>
+<td style="text-align: left;"><code>dcbc436d98d8fc5f…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">26</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/google_store_ui_redesign_plan.md.html#L1"><code>docs/google_store_ui_redesign_plan.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">345</td>
+<td style="text-align: right;">36,344</td>
+<td style="text-align: left;"><code>54dbf1c85bb9a7b3…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">27</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/historical_analysis.md.html#L1"><code>docs/historical_analysis.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">15,900</td>
+<td style="text-align: left;"><code>c9a771555328a03c…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">28</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/independent_probability_review_prompt.md.html#L1"><code>docs/independent_probability_review_prompt.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">237</td>
+<td style="text-align: right;">26,619</td>
+<td style="text-align: left;"><code>41744c0bc1e51232…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">29</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/ingesting_new_regattas.md.html#L1"><code>docs/ingesting_new_regattas.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">2,790</td>
+<td style="text-align: left;"><code>f277d7854c1a3b67…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">30</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/probability_execution_plan.md.html#L1"><code>docs/probability_execution_plan.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">285</td>
+<td style="text-align: right;">56,169</td>
+<td style="text-align: left;"><code>9a42b41de593e425…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">31</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/reconstruction_math.md.html#L1"><code>docs/reconstruction_math.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">2,249</td>
+<td style="text-align: left;"><code>3425a0dfef9ecc6f…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">32</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/source_audit.md.html#L1"><code>docs/source_audit.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">9,575</td>
+<td style="text-align: left;"><code>154a2bb940fcc311…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">33</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/team_analytics.md.html#L1"><code>docs/team_analytics.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">12,350</td>
+<td style="text-align: left;"><code>f7babc691374d8c7…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">34</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/team_analytics_plan.md.html#L1"><code>docs/team_analytics_plan.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">3,196</td>
+<td style="text-align: left;"><code>073ec0830cb758c9…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">35</td>
+<td style="text-align: left;"><a href="source-companion/view/docs/ui_redesign_verification.md.html#L1"><code>docs/ui_redesign_verification.md</code></a></td>
+<td style="text-align: left;">Technical Documentation (docs/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">7,532</td>
+<td style="text-align: left;"><code>dfce0bdd592a6541…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">36</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/__init__.py.html#L1"><code>pipeline/__init__.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: left;"><code>56adcedd813fafd8…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">37</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/analytics.py.html#L1"><code>pipeline/analytics.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">344</td>
+<td style="text-align: right;">13,331</td>
+<td style="text-align: left;"><code>b4b7523f888764ce…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">38</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/config.py.html#L1"><code>pipeline/config.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">274</td>
+<td style="text-align: right;">8,856</td>
+<td style="text-align: left;"><code>c64840e7c513d036…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">39</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/contact_coalescer.py.html#L1"><code>pipeline/contact_coalescer.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">394</td>
+<td style="text-align: right;">13,581</td>
+<td style="text-align: left;"><code>2bcbc83dbdd295fc…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/environment.py.html#L1"><code>pipeline/environment.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">362</td>
+<td style="text-align: right;">19,035</td>
+<td style="text-align: left;"><code>083d178e06df3b0d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">41</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/export_replay.py.html#L1"><code>pipeline/export_replay.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">511</td>
+<td style="text-align: right;">21,000</td>
+<td style="text-align: left;"><code>22d1fb8c3a349391…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">42</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/historical_analysis.py.html#L1"><code>pipeline/historical_analysis.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">1,065</td>
+<td style="text-align: right;">70,673</td>
+<td style="text-align: left;"><code>edbffb92c77922f1…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">43</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/identity.py.html#L1"><code>pipeline/identity.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">763</td>
+<td style="text-align: left;"><code>acb8de51b2c091bf…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">44</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/ingest.py.html#L1"><code>pipeline/ingest.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">907</td>
+<td style="text-align: right;">37,778</td>
+<td style="text-align: left;"><code>3f08cded4b2b0398…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">45</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/manoeuvres.py.html#L1"><code>pipeline/manoeuvres.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">225</td>
+<td style="text-align: right;">8,815</td>
+<td style="text-align: left;"><code>659472f4be406666…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">46</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/__init__.py.html#L1"><code>pipeline/prediction/__init__.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">152</td>
+<td style="text-align: left;"><code>7ae00255be1269b3…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">47</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/__main__.py.html#L1"><code>pipeline/prediction/__main__.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">3,165</td>
+<td style="text-align: left;"><code>21dc97945c65d256…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">48</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/backtest.py.html#L1"><code>pipeline/prediction/backtest.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">146</td>
+<td style="text-align: right;">10,237</td>
+<td style="text-align: left;"><code>b4d0ff39b8715820…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">49</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/build.py.html#L1"><code>pipeline/prediction/build.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">437</td>
+<td style="text-align: right;">28,608</td>
+<td style="text-align: left;"><code>1d9a9640726dff03…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">50</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/contracts.py.html#L1"><code>pipeline/prediction/contracts.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">286</td>
+<td style="text-align: right;">18,252</td>
+<td style="text-align: left;"><code>e1c0a7bc16e5ad08…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">51</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/cup.py.html#L1"><code>pipeline/prediction/cup.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">661</td>
+<td style="text-align: right;">41,399</td>
+<td style="text-align: left;"><code>e9748ed4e48c3571…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">52</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/evaluation.py.html#L1"><code>pipeline/prediction/evaluation.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">130</td>
+<td style="text-align: right;">7,847</td>
+<td style="text-align: left;"><code>c6eb7c280b29df8d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">53</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/labels.py.html#L1"><code>pipeline/prediction/labels.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">196</td>
+<td style="text-align: right;">11,212</td>
+<td style="text-align: left;"><code>8068858b468a29e2…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">54</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/models.py.html#L1"><code>pipeline/prediction/models.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">856</td>
+<td style="text-align: right;">43,831</td>
+<td style="text-align: left;"><code>86049eb3c98c3c52…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">55</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/simulation.py.html#L1"><code>pipeline/prediction/simulation.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">516</td>
+<td style="text-align: right;">29,905</td>
+<td style="text-align: left;"><code>a222f109b0877dc3…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">56</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/source.py.html#L1"><code>pipeline/prediction/source.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">238</td>
+<td style="text-align: right;">12,670</td>
+<td style="text-align: left;"><code>4512b6955553772b…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">57</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/state.py.html#L1"><code>pipeline/prediction/state.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">313</td>
+<td style="text-align: right;">18,609</td>
+<td style="text-align: left;"><code>f5657d42e60bfa03…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">58</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/prediction/weather.py.html#L1"><code>pipeline/prediction/weather.py</code></a></td>
+<td style="text-align: left;">Python Forecasting (pipeline/prediction/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">2,620</td>
+<td style="text-align: left;"><code>2c7e1353f16c1e3d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">59</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/projection.py.html#L1"><code>pipeline/projection.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">175</td>
+<td style="text-align: right;">5,638</td>
+<td style="text-align: left;"><code>cc854f7ac3d9572c…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">60</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/reconstruction.py.html#L1"><code>pipeline/reconstruction.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">612</td>
+<td style="text-align: right;">24,849</td>
+<td style="text-align: left;"><code>f0d82209444e0c0c…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">61</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/run_pipeline.py.html#L1"><code>pipeline/run_pipeline.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">370</td>
+<td style="text-align: right;">14,569</td>
+<td style="text-align: left;"><code>5d3846c497705f3a…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">62</td>
+<td style="text-align: left;"><a href="source-companion/view/pipeline/tactical_insights.py.html#L1"><code>pipeline/tactical_insights.py</code></a></td>
+<td style="text-align: left;">Python Core Pipeline (pipeline/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">189</td>
+<td style="text-align: right;">11,419</td>
+<td style="text-align: left;"><code>aea556291b579da7…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">63</td>
+<td style="text-align: left;"><a href="source-companion/view/scripts/analysis_snapshot.py.html#L1"><code>scripts/analysis_snapshot.py</code></a></td>
+<td style="text-align: left;">Utility &amp; Middleware Scripts (scripts/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">2,325</td>
+<td style="text-align: left;"><code>42a082bd822792aa…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">64</td>
+<td style="text-align: left;"><a href="source-companion/view/scripts/build_artifact_inventory.py.html#L1"><code>scripts/build_artifact_inventory.py</code></a></td>
+<td style="text-align: left;">Utility &amp; Middleware Scripts (scripts/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">6,349</td>
+<td style="text-align: left;"><code>69b2e00a04bb2cda…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">65</td>
+<td style="text-align: left;"><a href="source-companion/view/scripts/build_race_previews.py.html#L1"><code>scripts/build_race_previews.py</code></a></td>
+<td style="text-align: left;">Utility &amp; Middleware Scripts (scripts/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">3,631</td>
+<td style="text-align: left;"><code>80ef7af5ce4a7148…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">66</td>
+<td style="text-align: left;"><a href="source-companion/view/scripts/build_report_exports.py.html#L1"><code>scripts/build_report_exports.py</code></a></td>
+<td style="text-align: left;">Utility &amp; Middleware Scripts (scripts/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">4,261</td>
+<td style="text-align: left;"><code>4cecda6fa24cda4b…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">67</td>
+<td style="text-align: left;"><a href="source-companion/view/scripts/forecastArtifacts.ts.html#L1"><code>scripts/forecastArtifacts.ts</code></a></td>
+<td style="text-align: left;">Utility &amp; Middleware Scripts (scripts/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">3,587</td>
+<td style="text-align: left;"><code>383f2c34144225dc…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">68</td>
+<td style="text-align: left;"><a href="source-companion/view/scripts/forecastScenarios.ts.html#L1"><code>scripts/forecastScenarios.ts</code></a></td>
+<td style="text-align: left;">Utility &amp; Middleware Scripts (scripts/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">199</td>
+<td style="text-align: right;">13,773</td>
+<td style="text-align: left;"><code>7f2f63f7077ca7c8…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">69</td>
+<td style="text-align: left;"><a href="source-companion/view/scripts/refresh_team_analytics.py.html#L1"><code>scripts/refresh_team_analytics.py</code></a></td>
+<td style="text-align: left;">Utility &amp; Middleware Scripts (scripts/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">261</td>
+<td style="text-align: right;">16,509</td>
+<td style="text-align: left;"><code>4d6afb83619601bf…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">70</td>
+<td style="text-align: left;"><a href="source-companion/view/src/app.css.html#L1"><code>src/app.css</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">1,126</td>
+<td style="text-align: right;">21,155</td>
+<td style="text-align: left;"><code>146b37c35444ac26…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">71</td>
+<td style="text-align: left;"><a href="source-companion/view/src/App.tsx.html#L1"><code>src/App.tsx</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">210</td>
+<td style="text-align: right;">12,277</td>
+<td style="text-align: left;"><code>28852e045ef6b5cc…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">72</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/boatModels.test.ts.html#L1"><code>src/components/canvas/boatModels.test.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">277</td>
+<td style="text-align: right;">11,654</td>
+<td style="text-align: left;"><code>29081572bcaa75f4…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">73</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/boatModels.ts.html#L1"><code>src/components/canvas/boatModels.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">394</td>
+<td style="text-align: right;">10,968</td>
+<td style="text-align: left;"><code>a7a30542461c8077…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">74</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/boatPresentation.test.ts.html#L1"><code>src/components/canvas/boatPresentation.test.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">2,292</td>
+<td style="text-align: left;"><code>a282ec9754dedf80…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">75</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/boatPresentation.ts.html#L1"><code>src/components/canvas/boatPresentation.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">4,646</td>
+<td style="text-align: left;"><code>4743a4b2d81ba321…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">76</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/cameraAdversarial.test.ts.html#L1"><code>src/components/canvas/cameraAdversarial.test.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">442</td>
+<td style="text-align: right;">18,116</td>
+<td style="text-align: left;"><code>fe1d571168db7c32…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">77</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/cameraStateSyncAdversarial.test.ts.html#L1"><code>src/components/canvas/cameraStateSyncAdversarial.test.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">470</td>
+<td style="text-align: right;">17,025</td>
+<td style="text-align: left;"><code>ddc89cb9c8b608d5…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">78</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/CourseCanvas.tsx.html#L1"><code>src/components/canvas/CourseCanvas.tsx</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">602</td>
+<td style="text-align: right;">22,879</td>
+<td style="text-align: left;"><code>d304a18c3b6ad5d9…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">79</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/courseGeometry.test.ts.html#L1"><code>src/components/canvas/courseGeometry.test.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">4,262</td>
+<td style="text-align: left;"><code>1f50a5886ae21f93…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">80</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/DynamicVesselLayer.ts.html#L1"><code>src/components/canvas/DynamicVesselLayer.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">707</td>
+<td style="text-align: right;">25,701</td>
+<td style="text-align: left;"><code>ec59aea4450330d3…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">81</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/foilingGeometryStress.test.ts.html#L1"><code>src/components/canvas/foilingGeometryStress.test.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">788</td>
+<td style="text-align: right;">33,787</td>
+<td style="text-align: left;"><code>4e40863c265e9c75…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">82</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/mapStyle.ts.html#L1"><code>src/components/canvas/mapStyle.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">2,807</td>
+<td style="text-align: left;"><code>720da1f988d3c5c7…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">83</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/renderPalette.ts.html#L1"><code>src/components/canvas/renderPalette.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">589</td>
+<td style="text-align: left;"><code>84094cdc15ba7a08…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">84</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/StaticCourseLayer.ts.html#L1"><code>src/components/canvas/StaticCourseLayer.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">2,455</td>
+<td style="text-align: left;"><code>3f87ebf31e8796f1…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">85</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/viewModeStress.test.ts.html#L1"><code>src/components/canvas/viewModeStress.test.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">288</td>
+<td style="text-align: right;">12,522</td>
+<td style="text-align: left;"><code>39ad75ea4ac2c5cd…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">86</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/canvas/ViewportMatrix.ts.html#L1"><code>src/components/canvas/ViewportMatrix.ts</code></a></td>
+<td style="text-align: left;">Frontend 2D/Map Canvas (src/components/canvas/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">2,953</td>
+<td style="text-align: left;"><code>81690c64fec2fcef…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">87</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/adversarial_race_timeline_m10_1.test.ts.html#L1"><code>src/components/dashboard/adversarial_race_timeline_m10_1.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">2,528</td>
+<td style="text-align: left;"><code>2f24ac95bcf375e0…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">88</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/analysis-light.css.html#L1"><code>src/components/dashboard/analysis-light.css</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">169</td>
+<td style="text-align: right;">9,934</td>
+<td style="text-align: left;"><code>8c3c3b2886563335…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">89</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/boat-course-controls.css.html#L1"><code>src/components/dashboard/boat-course-controls.css</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">3,818</td>
+<td style="text-align: left;"><code>e112e66ccce3c81c…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">90</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/BoatCourseControls.tsx.html#L1"><code>src/components/dashboard/BoatCourseControls.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">3,784</td>
+<td style="text-align: left;"><code>2072501ed69f52fd…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">91</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/BoatPerformanceCard.adversarial.test.ts.html#L1"><code>src/components/dashboard/BoatPerformanceCard.adversarial.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">1,546</td>
+<td style="text-align: left;"><code>f1d8859d2445297c…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">92</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/BoatPerformanceCard.test.ts.html#L1"><code>src/components/dashboard/BoatPerformanceCard.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">2,068</td>
+<td style="text-align: left;"><code>50aaa1d4ddb6f8f0…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">93</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/BoatPerformanceCard.tsx.html#L1"><code>src/components/dashboard/BoatPerformanceCard.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">180</td>
+<td style="text-align: right;">7,296</td>
+<td style="text-align: left;"><code>84c2062dff792ba0…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">94</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/BoatPerformanceRadar.tsx.html#L1"><code>src/components/dashboard/BoatPerformanceRadar.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">118</td>
+<td style="text-align: right;">19,610</td>
+<td style="text-align: left;"><code>c1d855982f2def0d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">95</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/BoatVisibilityFilter.tsx.html#L1"><code>src/components/dashboard/BoatVisibilityFilter.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">1,941</td>
+<td style="text-align: left;"><code>86e0a749c9c1faa8…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">96</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/cupEvidence.css.html#L1"><code>src/components/dashboard/cupEvidence.css</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">1,307</td>
+<td style="text-align: left;"><code>6f4302ae78cf0caf…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">97</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/dashboard.css.html#L1"><code>src/components/dashboard/dashboard.css</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">348</td>
+<td style="text-align: right;">30,824</td>
+<td style="text-align: left;"><code>e9fc5081c388883a…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">98</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/EventsNotesPanel.adversarial.test.ts.html#L1"><code>src/components/dashboard/EventsNotesPanel.adversarial.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">2,017</td>
+<td style="text-align: left;"><code>27b2ce26d30be2e2…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">99</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/EventsNotesPanel.tsx.html#L1"><code>src/components/dashboard/EventsNotesPanel.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">217</td>
+<td style="text-align: right;">8,100</td>
+<td style="text-align: left;"><code>9bd6e41cecc08a28…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">100</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/forecast.css.html#L1"><code>src/components/dashboard/forecast.css</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">7,427</td>
+<td style="text-align: left;"><code>5c121a4052a00035…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">101</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/ForecastWorkspace.tsx.html#L1"><code>src/components/dashboard/ForecastWorkspace.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">218</td>
+<td style="text-align: right;">28,432</td>
+<td style="text-align: left;"><code>a6842cdbb1ee8166…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">102</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/performance-radar.css.html#L1"><code>src/components/dashboard/performance-radar.css</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">9,631</td>
+<td style="text-align: left;"><code>ccba5a63a08cc1c8…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">103</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/RaceStatusLeaderboard.tsx.html#L1"><code>src/components/dashboard/RaceStatusLeaderboard.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">7,030</td>
+<td style="text-align: left;"><code>b83c63c7f3f59286…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">104</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/RaceTimelinePanel.test.ts.html#L1"><code>src/components/dashboard/RaceTimelinePanel.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">3,468</td>
+<td style="text-align: left;"><code>d877bdfdf1a359a0…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">105</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/RaceTimelinePanel.tsx.html#L1"><code>src/components/dashboard/RaceTimelinePanel.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">362</td>
+<td style="text-align: right;">13,224</td>
+<td style="text-align: left;"><code>9e1c50067ce473c9…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">106</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/reports.css.html#L1"><code>src/components/dashboard/reports.css</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">6,110</td>
+<td style="text-align: left;"><code>d4ea91abba1d8c69…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">107</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/ReportsWorkspace.test.ts.html#L1"><code>src/components/dashboard/ReportsWorkspace.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">3,435</td>
+<td style="text-align: left;"><code>7d58bd5ace9e3941…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">108</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/ReportsWorkspace.tsx.html#L1"><code>src/components/dashboard/ReportsWorkspace.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">10,695</td>
+<td style="text-align: left;"><code>5662f6c5d891509a…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">109</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TacticalDashboard.tsx.html#L1"><code>src/components/dashboard/TacticalDashboard.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">125</td>
+<td style="text-align: right;">14,274</td>
+<td style="text-align: left;"><code>9d3f8f4bc51ec517…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">110</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TacticalHeader.tsx.html#L1"><code>src/components/dashboard/TacticalHeader.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">8,771</td>
+<td style="text-align: left;"><code>602be68a927b8f15…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">111</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TacticalInsightsPanel.tsx.html#L1"><code>src/components/dashboard/TacticalInsightsPanel.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">4,018</td>
+<td style="text-align: left;"><code>cb217b5e64a4290c…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">112</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TacticalMapOverlay.adversarial.test.ts.html#L1"><code>src/components/dashboard/TacticalMapOverlay.adversarial.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">413</td>
+<td style="text-align: right;">17,224</td>
+<td style="text-align: left;"><code>385ba8a98f7ea698…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">113</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TacticalMapOverlay.test.ts.html#L1"><code>src/components/dashboard/TacticalMapOverlay.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">301</td>
+<td style="text-align: right;">11,885</td>
+<td style="text-align: left;"><code>d8bee63a4754df08…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">114</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TacticalMapOverlay.tsx.html#L1"><code>src/components/dashboard/TacticalMapOverlay.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">226</td>
+<td style="text-align: right;">8,821</td>
+<td style="text-align: left;"><code>a3d8a5ab2fbf41e4…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">115</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TeamAnalytics.test.ts.html#L1"><code>src/components/dashboard/TeamAnalytics.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">192</td>
+<td style="text-align: right;">14,755</td>
+<td style="text-align: left;"><code>6181a36774175361…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">116</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TeamDebrief.tsx.html#L1"><code>src/components/dashboard/TeamDebrief.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">1,934</td>
+<td style="text-align: left;"><code>b81b41b5e3954d13…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">117</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TelemetryWorkspace.adversarial.test.ts.html#L1"><code>src/components/dashboard/TelemetryWorkspace.adversarial.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">469</td>
+<td style="text-align: right;">17,385</td>
+<td style="text-align: left;"><code>28b6fe3a13b6b8fb…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">118</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TelemetryWorkspace.test.ts.html#L1"><code>src/components/dashboard/TelemetryWorkspace.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">446</td>
+<td style="text-align: right;">15,799</td>
+<td style="text-align: left;"><code>39e64a33f36a062c…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">119</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TelemetryWorkspace.tsx.html#L1"><code>src/components/dashboard/TelemetryWorkspace.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">617</td>
+<td style="text-align: right;">22,798</td>
+<td style="text-align: left;"><code>eaa549ffce4ba64e…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">120</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/TelemetryWorkspaceAdversarial.test.ts.html#L1"><code>src/components/dashboard/TelemetryWorkspaceAdversarial.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">360</td>
+<td style="text-align: right;">15,064</td>
+<td style="text-align: left;"><code>be5687478eca5c4c…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">121</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/dashboard/workspaces.css.html#L1"><code>src/components/dashboard/workspaces.css</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">8,967</td>
+<td style="text-align: left;"><code>b3bf6ebaeeb076cb…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">122</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/modals/AnalysisModal.tsx.html#L1"><code>src/components/modals/AnalysisModal.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">323</td>
+<td style="text-align: right;">40,134</td>
+<td style="text-align: left;"><code>2a015dd2ce3e0ee0…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">123</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/modals/race-library.css.html#L1"><code>src/components/modals/race-library.css</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">6,581</td>
+<td style="text-align: left;"><code>624b84a0a25c5448…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">124</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/modals/RacePickerModal.tsx.html#L1"><code>src/components/modals/RacePickerModal.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">7,888</td>
+<td style="text-align: left;"><code>4d5e5395df26a644…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">125</td>
+<td style="text-align: left;"><a href="source-companion/view/src/components/panels/ComparisonPanel.tsx.html#L1"><code>src/components/panels/ComparisonPanel.tsx</code></a></td>
+<td style="text-align: left;">Frontend Workspace &amp; UI Components (src/components/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">3,511</td>
+<td style="text-align: left;"><code>3cdbc8bafd0f3217…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">126</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/analysisCatalog.test.ts.html#L1"><code>src/engine/analysisCatalog.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">6,926</td>
+<td style="text-align: left;"><code>83bd07e525b26c65…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">127</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/analysisCatalog.ts.html#L1"><code>src/engine/analysisCatalog.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">10,469</td>
+<td style="text-align: left;"><code>25768b3b6f174f1d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">128</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/analysisNavigation.test.ts.html#L1"><code>src/engine/analysisNavigation.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">1,206</td>
+<td style="text-align: left;"><code>cf5cf7e091e7f1bf…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">129</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/analytics.test.ts.html#L1"><code>src/engine/analytics.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">126</td>
+<td style="text-align: right;">6,168</td>
+<td style="text-align: left;"><code>0f8650aef1a66292…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">130</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/analytics.ts.html#L1"><code>src/engine/analytics.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">108</td>
+<td style="text-align: right;">5,411</td>
+<td style="text-align: left;"><code>5ba0b7ea1d34d47e…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">131</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/catalog.test.ts.html#L1"><code>src/engine/catalog.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">1,091</td>
+<td style="text-align: left;"><code>522481162590bfaf…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">132</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/catalog.ts.html#L1"><code>src/engine/catalog.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">3,568</td>
+<td style="text-align: left;"><code>ca0ad98fa627af56…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">133</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/challengerM4_2.test.ts.html#L1"><code>src/engine/challengerM4_2.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">411</td>
+<td style="text-align: right;">18,350</td>
+<td style="text-align: left;"><code>58e7402848f5795d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">134</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/contactDetector.test.ts.html#L1"><code>src/engine/contactDetector.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">193</td>
+<td style="text-align: right;">7,435</td>
+<td style="text-align: left;"><code>825967ace7e1b1be…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">135</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/contactDetector.ts.html#L1"><code>src/engine/contactDetector.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">406</td>
+<td style="text-align: right;">12,095</td>
+<td style="text-align: left;"><code>5599513e6af10cb8…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">136</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/contactDetectorStress.test.ts.html#L1"><code>src/engine/contactDetectorStress.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">199</td>
+<td style="text-align: right;">8,018</td>
+<td style="text-align: left;"><code>df11ee54e1f23576…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">137</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/course.test.ts.html#L1"><code>src/engine/course.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">1,472</td>
+<td style="text-align: left;"><code>808854078781a6b1…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">138</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/course.ts.html#L1"><code>src/engine/course.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">525</td>
+<td style="text-align: left;"><code>22e7224b6f96f51d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">139</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/dynamicMarksStress.test.ts.html#L1"><code>src/engine/dynamicMarksStress.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">465</td>
+<td style="text-align: right;">18,168</td>
+<td style="text-align: left;"><code>dc0a29c4caf416f3…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">140</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/environment.test.ts.html#L1"><code>src/engine/environment.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">121</td>
+<td style="text-align: right;">7,744</td>
+<td style="text-align: left;"><code>d6e93d2c60942596…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">141</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/environment.ts.html#L1"><code>src/engine/environment.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">103</td>
+<td style="text-align: right;">7,280</td>
+<td style="text-align: left;"><code>08a4bc30060e962e…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">142</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/forecastArtifactRouting.test.ts.html#L1"><code>src/engine/forecastArtifactRouting.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">148</td>
+<td style="text-align: right;">7,654</td>
+<td style="text-align: left;"><code>01dd4dddb70e07e2…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">143</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/forecastScenarios.test.ts.html#L1"><code>src/engine/forecastScenarios.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">2,424</td>
+<td style="text-align: left;"><code>bdf695426c27c7fa…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">144</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/forecastScenarios.ts.html#L1"><code>src/engine/forecastScenarios.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">3,004</td>
+<td style="text-align: left;"><code>5d96161cdb6a481a…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">145</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/forecastScenarioService.test.ts.html#L1"><code>src/engine/forecastScenarioService.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">137</td>
+<td style="text-align: right;">8,524</td>
+<td style="text-align: left;"><code>d6b47d5839c99425…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">146</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/interpolate.test.ts.html#L1"><code>src/engine/interpolate.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">425</td>
+<td style="text-align: left;"><code>24bacb06cfaeb82e…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">147</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/interpolate.ts.html#L1"><code>src/engine/interpolate.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">1,235</td>
+<td style="text-align: left;"><code>36e7ace2130f7a4f…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">148</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/predictionCatalog.test.ts.html#L1"><code>src/engine/predictionCatalog.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">326</td>
+<td style="text-align: right;">23,320</td>
+<td style="text-align: left;"><code>a10cb700d3d7e98b…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">149</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/predictionCatalog.ts.html#L1"><code>src/engine/predictionCatalog.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">230</td>
+<td style="text-align: right;">23,022</td>
+<td style="text-align: left;"><code>e4f163b3166b80b9…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">150</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/ReplayEngine.test.ts.html#L1"><code>src/engine/ReplayEngine.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">172</td>
+<td style="text-align: right;">5,706</td>
+<td style="text-align: left;"><code>97875108fe00e64d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">151</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/ReplayEngine.ts.html#L1"><code>src/engine/ReplayEngine.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">4,888</td>
+<td style="text-align: left;"><code>3edc8b510ef0e3e7…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">152</td>
+<td style="text-align: left;"><a href="source-companion/view/src/engine/vmgWindVerification.test.ts.html#L1"><code>src/engine/vmgWindVerification.test.ts</code></a></td>
+<td style="text-align: left;">Frontend Engine &amp; Catalogs (src/engine/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">316</td>
+<td style="text-align: right;">12,371</td>
+<td style="text-align: left;"><code>e8ada25518330cce…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">153</td>
+<td style="text-align: left;"><a href="source-companion/view/src/index.css.html#L1"><code>src/index.css</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">210</td>
+<td style="text-align: right;">4,903</td>
+<td style="text-align: left;"><code>34a3285430a3ffac…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">154</td>
+<td style="text-align: left;"><a href="source-companion/view/src/main.tsx.html#L1"><code>src/main.tsx</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">232</td>
+<td style="text-align: left;"><code>e9e644d4f2c138e0…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">155</td>
+<td style="text-align: left;"><a href="source-companion/view/src/types/analysis.ts.html#L1"><code>src/types/analysis.ts</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">335</td>
+<td style="text-align: right;">8,817</td>
+<td style="text-align: left;"><code>41a3363ee6b14e4d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">156</td>
+<td style="text-align: left;"><a href="source-companion/view/src/types/prediction.ts.html#L1"><code>src/types/prediction.ts</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">113</td>
+<td style="text-align: right;">4,749</td>
+<td style="text-align: left;"><code>198bb204a556a895…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">157</td>
+<td style="text-align: left;"><a href="source-companion/view/src/types/replay.ts.html#L1"><code>src/types/replay.ts</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">205</td>
+<td style="text-align: right;">4,504</td>
+<td style="text-align: left;"><code>c24446fc886b7cb4…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">158</td>
+<td style="text-align: left;"><a href="source-companion/view/src/utils/evidenceText.test.ts.html#L1"><code>src/utils/evidenceText.test.ts</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">826</td>
+<td style="text-align: left;"><code>b2749a3d9e0ecdf0…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">159</td>
+<td style="text-align: left;"><a href="source-companion/view/src/utils/evidenceText.ts.html#L1"><code>src/utils/evidenceText.ts</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">436</td>
+<td style="text-align: left;"><code>830188ad96a5744d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">160</td>
+<td style="text-align: left;"><a href="source-companion/view/src/utils/geoProjection.test.ts.html#L1"><code>src/utils/geoProjection.test.ts</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">206</td>
+<td style="text-align: right;">7,697</td>
+<td style="text-align: left;"><code>b261c5e80074f652…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">161</td>
+<td style="text-align: left;"><a href="source-companion/view/src/utils/geoProjection.ts.html#L1"><code>src/utils/geoProjection.ts</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">180</td>
+<td style="text-align: right;">4,874</td>
+<td style="text-align: left;"><code>bfee5979a3df0ac6…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">162</td>
+<td style="text-align: left;"><a href="source-companion/view/src/utils/geoProjectionStress.test.ts.html#L1"><code>src/utils/geoProjectionStress.test.ts</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">355</td>
+<td style="text-align: right;">14,121</td>
+<td style="text-align: left;"><code>329921869c450fe1…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">163</td>
+<td style="text-align: left;"><a href="source-companion/view/src/vite-env.d.ts.html#L1"><code>src/vite-env.d.ts</code></a></td>
+<td style="text-align: left;">Frontend App State, Types &amp; Styles (src/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: left;"><code>65996936fbb04291…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">164</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/__init__.py.html#L1"><code>tests/__init__.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: left;"><code>bd6d00be0f24e7a0…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">165</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/adversarial_sat_stress_harness.py.html#L1"><code>tests/adversarial_sat_stress_harness.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">203</td>
+<td style="text-align: right;">8,235</td>
+<td style="text-align: left;"><code>45fcb64c4237b762…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">166</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/browser/annotations.mjs.html#L1"><code>tests/browser/annotations.mjs</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">405</td>
+<td style="text-align: right;">29,962</td>
+<td style="text-align: left;"><code>26685bcff9885b32…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">167</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/browser/dashboard.mjs.html#L1"><code>tests/browser/dashboard.mjs</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">423</td>
+<td style="text-align: right;">31,602</td>
+<td style="text-align: left;"><code>d8f0862ba9288c3b…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">168</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/browser/feedback.mjs.html#L1"><code>tests/browser/feedback.mjs</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">117</td>
+<td style="text-align: right;">8,304</td>
+<td style="text-align: left;"><code>f7d18def80b3ef27…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">169</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/browser/forecast.mjs.html#L1"><code>tests/browser/forecast.mjs</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">449</td>
+<td style="text-align: right;">34,164</td>
+<td style="text-align: left;"><code>18cf55ef25b9823e…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">170</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/browser/redesign.mjs.html#L1"><code>tests/browser/redesign.mjs</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">105</td>
+<td style="text-align: right;">6,686</td>
+<td style="text-align: left;"><code>5472a722c5fa8cdb…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">171</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/e2e/__init__.py.html#L1"><code>tests/e2e/__init__.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">112</td>
+<td style="text-align: left;"><code>62bcaa0edcf1d281…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">172</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/e2e/e2e_types.py.html#L1"><code>tests/e2e/e2e_types.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">435</td>
+<td style="text-align: right;">14,595</td>
+<td style="text-align: left;"><code>16277f68bac727ee…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">173</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/e2e/test_runner.py.html#L1"><code>tests/e2e/test_runner.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">156</td>
+<td style="text-align: right;">4,723</td>
+<td style="text-align: left;"><code>8fa462252f587496…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">174</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/e2e/tier1_features_test.py.html#L1"><code>tests/e2e/tier1_features_test.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">782</td>
+<td style="text-align: right;">35,238</td>
+<td style="text-align: left;"><code>621250cf3f105d25…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">175</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/e2e/tier2_boundaries_test.py.html#L1"><code>tests/e2e/tier2_boundaries_test.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">301</td>
+<td style="text-align: right;">13,126</td>
+<td style="text-align: left;"><code>e818e87977c91f51…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">176</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/e2e/tier3_pairwise_test.py.html#L1"><code>tests/e2e/tier3_pairwise_test.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">275</td>
+<td style="text-align: right;">10,990</td>
+<td style="text-align: left;"><code>a4f68d29d1ec212d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">177</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/e2e/tier4_workloads_test.py.html#L1"><code>tests/e2e/tier4_workloads_test.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">341</td>
+<td style="text-align: right;">15,649</td>
+<td style="text-align: left;"><code>05f9e7c332aa16b6…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">178</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/stress/stress_ingest.py.html#L1"><code>tests/stress/stress_ingest.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">413</td>
+<td style="text-align: right;">17,605</td>
+<td style="text-align: left;"><code>182f526934293919…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">179</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/tier5_integrity.py.html#L1"><code>tests/tier5_integrity.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">151</td>
+<td style="text-align: right;">9,270</td>
+<td style="text-align: left;"><code>5236fde88105dd2d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">180</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/__init__.py.html#L1"><code>tests/unit/__init__.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: left;"><code>6d69971faa7c073e…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">181</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_analytics.py.html#L1"><code>tests/unit/test_analytics.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">186</td>
+<td style="text-align: right;">7,158</td>
+<td style="text-align: left;"><code>ac16b8e895e507cf…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">182</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_contact_coalescer.py.html#L1"><code>tests/unit/test_contact_coalescer.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">4,330</td>
+<td style="text-align: left;"><code>40bc5e4fc3b9951e…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">183</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_dashboard_contract.py.html#L1"><code>tests/unit/test_dashboard_contract.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">1,844</td>
+<td style="text-align: left;"><code>9de8e764e63ff6fe…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">184</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_dashboard_identity.py.html#L1"><code>tests/unit/test_dashboard_identity.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">964</td>
+<td style="text-align: left;"><code>8f08aa8b7ebef6d3…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">185</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_environment.py.html#L1"><code>tests/unit/test_environment.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">198</td>
+<td style="text-align: right;">10,744</td>
+<td style="text-align: left;"><code>e3fa72e7f9906454…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">186</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_historical_analysis.py.html#L1"><code>tests/unit/test_historical_analysis.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">466</td>
+<td style="text-align: right;">24,621</td>
+<td style="text-align: left;"><code>b4eda50a8d0d9f33…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">187</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_ingest.py.html#L1"><code>tests/unit/test_ingest.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">294</td>
+<td style="text-align: right;">13,455</td>
+<td style="text-align: left;"><code>8d5bee34b16f7087…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">188</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_m2_adversarial.py.html#L1"><code>tests/unit/test_m2_adversarial.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">486</td>
+<td style="text-align: right;">20,506</td>
+<td style="text-align: left;"><code>478f001aa3122b79…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">189</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_manoeuvres.py.html#L1"><code>tests/unit/test_manoeuvres.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">159</td>
+<td style="text-align: right;">5,955</td>
+<td style="text-align: left;"><code>8eb60bf42e7217ee…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">190</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_performance_analysis.py.html#L1"><code>tests/unit/test_performance_analysis.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">328</td>
+<td style="text-align: right;">19,042</td>
+<td style="text-align: left;"><code>17080d760040f356…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">191</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_prediction_atomic.py.html#L1"><code>tests/unit/test_prediction_atomic.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">2,230</td>
+<td style="text-align: left;"><code>729c99e2223e19fe…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">192</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_prediction_cup.py.html#L1"><code>tests/unit/test_prediction_cup.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">314</td>
+<td style="text-align: right;">18,996</td>
+<td style="text-align: left;"><code>a8c114347430fb13…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">193</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_prediction_evaluation.py.html#L1"><code>tests/unit/test_prediction_evaluation.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">181</td>
+<td style="text-align: right;">10,709</td>
+<td style="text-align: left;"><code>df63b4742392edd7…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">194</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_prediction_models.py.html#L1"><code>tests/unit/test_prediction_models.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">428</td>
+<td style="text-align: right;">25,969</td>
+<td style="text-align: left;"><code>b17513c1a7ec6a6b…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">195</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_prediction_pipeline.py.html#L1"><code>tests/unit/test_prediction_pipeline.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">472</td>
+<td style="text-align: right;">27,473</td>
+<td style="text-align: left;"><code>a801bfded91b641d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">196</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_prediction_state.py.html#L1"><code>tests/unit/test_prediction_state.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">330</td>
+<td style="text-align: right;">17,805</td>
+<td style="text-align: left;"><code>451ea890b6729ef2…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">197</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_projection.py.html#L1"><code>tests/unit/test_projection.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">179</td>
+<td style="text-align: right;">7,019</td>
+<td style="text-align: left;"><code>8a0b6780aef199b4…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">198</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_projection_adversarial.py.html#L1"><code>tests/unit/test_projection_adversarial.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">427</td>
+<td style="text-align: right;">16,778</td>
+<td style="text-align: left;"><code>44b18e1334d18559…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">199</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_race_previews.py.html#L1"><code>tests/unit/test_race_previews.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">3,367</td>
+<td style="text-align: left;"><code>f9c2140c7763278c…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">200</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_reconstruction.py.html#L1"><code>tests/unit/test_reconstruction.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">206</td>
+<td style="text-align: right;">8,781</td>
+<td style="text-align: left;"><code>201e4fe8327b5a5d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">201</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_report_exports.py.html#L1"><code>tests/unit/test_report_exports.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">2,657</td>
+<td style="text-align: left;"><code>ff02ce560f89265d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">202</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_report_inventory.py.html#L1"><code>tests/unit/test_report_inventory.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">3,252</td>
+<td style="text-align: left;"><code>abd2a47851bcc83f…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">203</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_review_adversarial.py.html#L1"><code>tests/unit/test_review_adversarial.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">165</td>
+<td style="text-align: right;">7,596</td>
+<td style="text-align: left;"><code>8772aa4d9412d78f…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">204</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_sat_adversarial_stress.py.html#L1"><code>tests/unit/test_sat_adversarial_stress.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">419</td>
+<td style="text-align: right;">18,890</td>
+<td style="text-align: left;"><code>16dc97ea81bbd08f…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">205</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_tactical_insights.py.html#L1"><code>tests/unit/test_tactical_insights.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">203</td>
+<td style="text-align: right;">11,341</td>
+<td style="text-align: left;"><code>82c9836a37473561…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">206</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/unit/test_vmg_wind_adversarial.py.html#L1"><code>tests/unit/test_vmg_wind_adversarial.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">215</td>
+<td style="text-align: right;">9,337</td>
+<td style="text-align: left;"><code>ea74d54a066e2591…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">207</td>
+<td style="text-align: left;"><a href="source-companion/view/tests/verify_boundary_corridor.py.html#L1"><code>tests/verify_boundary_corridor.py</code></a></td>
+<td style="text-align: left;">Verification Suites (tests/)</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">221</td>
+<td style="text-align: right;">8,701</td>
+<td style="text-align: left;"><code>cf2cf6b952d5de0d…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">208</td>
+<td style="text-align: left;"><a href="source-companion/view/public/fonts/OFL.txt.html#L1"><code>public/fonts/OFL.txt</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">4,482</td>
+<td style="text-align: left;"><code>9af36190332437f5…</code></td>
+</tr>
+<tr>
+<td style="text-align: right;">209</td>
+<td style="text-align: left;"><a href="source-companion/view/public/fonts/README.md.html#L1"><code>public/fonts/README.md</code></a></td>
+<td style="text-align: left;">Root Configuration &amp; Entry Scripts</td>
+<td style="text-align: left;"><code>clean</code></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">344</td>
+<td style="text-align: left;"><code>8504f15bb0fec43f…</code></td>
+</tr>
+</tbody>
+</table>
+    </main>
+  </div>
+  <script>
+(function() {
+  const input = document.getElementById('offline-search');
+  const status = document.getElementById('search-status');
+  const main = document.querySelector('.main-content');
+  if (!input || !main) return;
+
+  function clearHighlights() {
+    const marks = main.querySelectorAll('mark.search-hit');
+    marks.forEach(m => {
+      const parent = m.parentNode;
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    });
+  }
+
+  input.addEventListener('input', function() {
+    clearHighlights();
+    const q = input.value.trim();
+    if (q.length < 2) {
+      status.textContent = '';
+      return;
+    }
+    const regex = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    let count = 0;
+    let firstHit = null;
+    const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const tag = node.parentNode && node.parentNode.tagName;
+        if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
+        return regex.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+      }
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const frag = document.createDocumentFragment();
+      let lastIdx = 0;
+      node.nodeValue.replace(regex, (match, p1, offset) => {
+        if (offset > lastIdx) {
+          frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIdx, offset)));
+        }
+        const mark = document.createElement('mark');
+        mark.className = 'search-hit';
+        mark.textContent = match;
+        if (!firstHit) firstHit = mark;
+        count++;
+        frag.appendChild(mark);
+        lastIdx = offset + match.length;
+      });
+      if (lastIdx < node.nodeValue.length) {
+        frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIdx)));
+      }
+      node.parentNode.replaceChild(frag, node);
+    });
+    status.textContent = count + ' match' + (count === 1 ? '' : 'es') + ' found';
+    if (firstHit) firstHit.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+})();
+</script>
+</body>
+</html>

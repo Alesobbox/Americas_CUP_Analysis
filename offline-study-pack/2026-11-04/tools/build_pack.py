@@ -1,15 +1,14 @@
 """Build local reading editions and PDFs from the authored Markdown sources."""
 from pathlib import Path
-import base64,csv,hashlib,html,json,re,shutil
+import base64,csv,hashlib,html,json,re
 from urllib.parse import quote
 from xml.sax.saxutils import escape
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib import colors
-from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.styles import getSampleStyleSheet,ParagraphStyle
 from reportlab.lib.pagesizes import A4
-from reportlab.platypus import BaseDocTemplate,PageTemplate,Frame,Paragraph,Spacer,PageBreak,Table,TableStyle,Image,Preformatted,KeepTogether
+from reportlab.platypus import BaseDocTemplate,PageTemplate,Frame,Paragraph,Spacer,PageBreak,Table,TableStyle,Image,KeepTogether
 from reportlab.platypus.tableofcontents import TableOfContents
 
 P=Path(__file__).resolve().parents[1]
@@ -78,9 +77,10 @@ def html_body(md,embedded=True):
             if kind in {'h1','h2'}:heads.append((value,anchor))
             if kind=='h2':result.append('</article><article>')
             result.append(f'<{kind} id="{anchor}">{inline(value)}</{kind}>')
-        elif kind=='p':result.append('<p>'+inline(value)+'</p>')
-        elif kind=='li':result.append('<p class="item">• '+inline(value)+'</p>')
-        elif kind=='code':result.append('<pre>'+html.escape(value)+'</pre>')
+        elif kind in {'p','li','code'}:
+            tags={'p':('<p>','</p>'),'li':('<p class="item">• ','</p>'),'code':('<pre>','</pre>')}
+            opening,closing=tags[kind]
+            result.append(opening+(html.escape(value) if kind=='code' else inline(value))+closing)
         elif kind=='table':
             result.append('<table>')
             for k,row in enumerate(value):
@@ -105,7 +105,7 @@ for family,file in [('Body','arial.ttf'),('Body-Bold','arialbd.ttf'),('Body-Ital
     pdfmetrics.registerFont(TTFont(family,'C:/Windows/Fonts/'+file))
 pdfmetrics.registerFontFamily('Body',normal='Body',bold='Body-Bold',italic='Body-Italic',boldItalic='Body-BoldItalic')
 styles=getSampleStyleSheet()
-styles.add(ParagraphStyle(name='Text',fontName='Body',fontSize=9.7,leading=13.6,spaceAfter=7.5,splitLongWords=True))
+styles.add(ParagraphStyle(name='Text',fontName='Body',fontSize=9.7,leading=13.3,spaceAfter=7,splitLongWords=True,allowWidows=0,allowOrphans=0))
 styles.add(ParagraphStyle(name='Part',fontName='Body-Bold',fontSize=19,leading=24,textColor=colors.HexColor('#164f60'),spaceAfter=13,keepWithNext=True))
 styles.add(ParagraphStyle(name='Chapter',fontName='Body-Bold',fontSize=17,leading=22,spaceAfter=13,keepWithNext=True))
 styles.add(ParagraphStyle(name='Sub',fontName='Body-Bold',fontSize=11.2,leading=15,spaceBefore=9,spaceAfter=6,keepWithNext=True,textColor=colors.HexColor('#195b6b')))
@@ -145,8 +145,8 @@ def pdf(name,md,title,contents=True):
             if not pending_part and story and not isinstance(story[-1],PageBreak):story.append(PageBreak())
             story.append(Paragraph(inline(value,True),styles['Chapter']));pending_part=False
         elif kind in {'h3','h4'}:story.append(Paragraph(inline(value,True),styles['Sub']))
-        elif kind=='p':story.append(Paragraph(inline(value,True),styles['Text']))
-        elif kind=='li':story.append(Paragraph('• '+inline(value,True),styles['Text']))
+        elif kind in {'p','li'}:
+            story.append(Paragraph(('• ' if kind=='li' else '')+inline(value,True),styles['Text']))
         elif kind=='code':
             for line in value.splitlines():story.append(Paragraph(escape(line).replace(' ','&#160;'),styles['CodeSmall']))
         elif kind=='table':
@@ -163,15 +163,16 @@ def pdf(name,md,title,contents=True):
 
 def source_companion():
     entries=[]
-    for f in sorted((P/'source').rglob('*')):
-        if not f.is_file() or f.suffix=='.html':continue
+    originals=json.loads((P/'evidence/snapshot.json').read_text())['files']
+    for record in sorted(originals,key=lambda r:r['path']):
+        f=P/'source'/record['path']
         rel=f.relative_to(P/'source').as_posix();txt=f.read_text(encoding='utf8',errors='replace');lines=txt.splitlines()
         listing=''.join(f'<span class="line" id="L{i}"><a class="num" href="#L{i}">{i}</a>{html.escape(s)}</span>' for i,s in enumerate(lines,1))
         root='../'*(len(Path(rel).parts))
-        page=f'<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>{html.escape(rel)}</title><style>{CSS}</style><main><a href="{root}START_HERE.html">Pack home</a> | <a href="{root}source/index.html">Source index</a><h1>{html.escape(rel)}</h1><p>{len(lines)} lines · {f.stat().st_size:,} bytes · SHA-256 {content_hash(f)}</p><p>Frozen selected first-party source. Line references use these exact bytes. No license grant is inferred from inclusion.</p>{listing}</main></html>'
+        page=f'<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>{html.escape(rel)}</title><style>{CSS}</style><main><a href="{root}START_HERE.html">Pack home</a> | <a href="{root}source/_SOURCE_INDEX.html">Source index</a><h1>{html.escape(rel)}</h1><p>{len(lines)} lines · {f.stat().st_size:,} bytes · SHA-256 {content_hash(f)}</p><p>Frozen selected first-party source. Line references use these exact bytes. No license grant is inferred from inclusion.</p>{listing}</main></html>'
         f.with_name(f.name+'.html').write_text(page,encoding='utf8');entries.append((rel,len(lines),f.stat().st_size))
     body='<article><h2>Selected first party reading set</h2><p>This is not a full Git clone or operational backup. It includes source, tests, documentation, dependency manifests and existing font notices. Raw telemetry, dependency trees, caches and credentials are excluded. No top-level repository license was found; this private study copy does not grant redistribution rights. Original notices are preserved. The PDF fonts are embedded subsets; font files are not redistributed separately.</p><table><tr><th>Path</th><th>Lines</th><th>Bytes</th></tr>'+''.join(f'<tr><td><a href="{quote(r,safe="/")}.html">{html.escape(r)}</a></td><td>{n}</td><td>{s:,}</td></tr>' for r,n,s in entries)+'</table></article>'
-    (P/'source/index.html').write_text(html_page('Frozen source companion',body,False).replace('href="START_HERE.html"','href="../START_HERE.html"'),encoding='utf8')
+    (P/'source/_SOURCE_INDEX.html').write_text(html_page('Frozen source companion',body,False).replace('href="START_HERE.html"','href="../START_HERE.html"'),encoding='utf8')
 
 def evidence_index():
     refs=set()
@@ -216,15 +217,14 @@ Use the companion learning routes for one hour, one day or three days. The centr
 '''
     chapters=[(P/'chapters'/x).read_text(encoding='utf8') for x in ['01_data_metrics.md','02_forecasting.md','03_interface.md','04_trust_decisions.md']]
     book=front+'\n\n'+'\n\n'.join(chapters)
-    figures={'2':'course','4':'dataflow','6':'geometry','10':'performance','18':'cup'}
     if (P/'chapters/05_figures.md').exists():
         book+='\n\n'+(P/'chapters/05_figures.md').read_text(encoding='utf8')
     (P/'01_Repository_Explained.md').write_text(book,encoding='utf8')
     source_companion();evidence_index();interactive_tools()
     jobs=[('01_Repository_Explained',book,'The regatta repository explained',True),('02_Field_Guide',(P/'02_Field_Guide.md').read_text(),'Regatta repository field guide',False),('04_Workbook',(P/'04_Workbook.md').read_text(),'Regatta repository workbook',True),('04_Answer_Key',(P/'04_Answer_Key.md').read_text(),'Regatta workbook answer key',True)]
     for name,md,title,toc in jobs:write_html(name,md);pdf(name,md,title,toc)
-    for name in ['03_Repository_Atlas','05_Learning_Routes','06_Narration']:write_html(name,(P/(name+'.md')).read_text(encoding='utf8'))
-    links=[('01_Repository_Explained.pdf','Main textbook PDF'),('01_Repository_Explained.html','Searchable self-contained textbook HTML'),('02_Field_Guide.pdf','Field guide PDF'),('03_Repository_Atlas.html','Subsystem atlas and glossary'),('04_Workbook.pdf','Workbook PDF with36 questions'),('04_Answer_Key.pdf','Separate full answer key'),('05_Learning_Routes.html','One hour one day and three day routes'),('06_Narration.html','Narration and oral rehearsal'),('07_Flashcards.html','60 offline flashcards'),('09_Interactive_Lab.html','Synthetic interactive bounds lab'),('source/index.html','Frozen source companion'),('08_Evidence_Index.html','Evidence and snapshot index'),('VERIFICATION.html','What was verified and limitations')]
+    for name in ['03_Repository_Atlas','05_Learning_Routes','06_Narration','VERIFICATION']:write_html(name,(P/(name+'.md')).read_text(encoding='utf8'))
+    links=[('01_Repository_Explained.pdf','Main textbook PDF'),('01_Repository_Explained.html','Searchable self-contained textbook HTML'),('02_Field_Guide.pdf','Field guide PDF'),('03_Repository_Atlas.html','Subsystem atlas and glossary'),('04_Workbook.pdf','Workbook PDF with36 questions'),('04_Answer_Key.pdf','Separate full answer key'),('05_Learning_Routes.html','One hour one day and three day routes'),('06_Narration.html','Narration and oral rehearsal'),('07_Flashcards.html','60 offline flashcards'),('09_Interactive_Lab.html','Synthetic interactive bounds lab'),('source/_SOURCE_INDEX.html','Frozen source companion'),('08_Evidence_Index.html','Evidence and snapshot index'),('VERIFICATION.html','What was verified and limitations')]
     body='<article><h2>Open this first</h2><p>Start with the field guide, then the textbook sailing/data chapters, actual case studies and forecast evidence limits. Use the workbook closed-book. All essential reading needs only a PDF viewer or browser.</p><ul>'+''.join('<li><a href="'+a+'">'+b+'</a></li>' for a,b in links)+'</ul><h2>Before departure</h2><p>Extract the entire ZIP. Copy both the ZIP and extracted directory to your laptop. For a phone/tablet, copy the PDFs or the entire extracted pack for the source companion and HTML. Test with Wi-Fi disabled. The four PDFs and every HTML reading page work without installation. The standard-library concept lab needs Python3; saved output is included. No audio was generated; use the narration script with a device read-aloud feature.</p><h2>Size and scope</h2><p id="pack-size">Exact compressed and uncompressed sizes are in PACK_MANIFEST.json and ZIP_INFO.json beside the archive.</p><p>The optional dashboard was measured at266,118,514 bytes built, including263,706,323 bytes of public data. It is not included. Grid can work without tiles when a prepared application is locally served. New forecast generation requires its separate prepared Python backend and feature dataset. Opening this HTML does not create that service.</p><p>Review date4 November2026; base commit f956f8a, dirty state identified in evidence/snapshot.json. Source copy is selected and preserves notices; no raw telemetry, dependencies, caches or credentials are bundled.</p></article>'
     (P/'START_HERE.html').write_text(html_page('Offline regatta study pack',body,False),encoding='utf8')
     print(json.dumps({'book_words':len(book.split()),'pdfs':len(jobs),'source_files':len(json.loads((P/'evidence/snapshot.json').read_text())['files'])}))

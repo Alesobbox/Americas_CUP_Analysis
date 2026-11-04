@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>src/components/dashboard/BoatVisibilityFilter.tsx — Offline Source Companion</title>
+<style>
+    :root {
+      --bg: #f8fafc; --surface: #ffffff; --border: #e2e8f0;
+      --text: #0f172a; --muted: #475569; --accent: #1a73e8;
+      --code-bg: #f1f5f9; --line-num: #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .breadcrumbs { font-size: 14px; font-weight: 600; }
+    .breadcrumbs a { color: var(--accent); text-decoration: none; }
+    .breadcrumbs a:hover { text-decoration: underline; }
+    .meta { font-size: 12px; color: var(--muted); display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .badge { padding: 2px 8px; border-radius: 999px; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+    .badge.clean { background: #dcfce7; color: #166534; }
+    .badge.modified { background: #fef3c7; color: #92400e; }
+    .badge.untracked { background: #dbeafe; color: #1e40af; }
+    main { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
+    .code-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 12.5px; }
+    .code-table tr:target { background: #fef9c3; }
+    .code-table td { padding: 1px 10px; vertical-align: top; }
+    .ln { width: 56px; text-align: right; color: var(--line-num); user-select: none; border-right: 1px solid var(--border); background: var(--code-bg); }
+    .ln a { color: inherit; text-decoration: none; display: block; }
+    .ln a:hover { color: var(--accent); }
+    .lc { white-space: pre-wrap; word-break: break-word; }
+    </style>
+</head>
+<body>
+<header>
+  <div class="breadcrumbs">
+    <a href="../../../../../START_HERE.html">Study Pack</a> /
+    <a href="../../../../index.html">Source Companion</a> /
+    <span>src/components/dashboard/BoatVisibilityFilter.tsx</span>
+  </div>
+  <div class="meta">
+    <span class="badge clean">clean</span>
+    <span>18 lines</span>
+    <span>1,941 bytes</span>
+    <span>SHA-256: <code>86e0a749c9c1faa8…</code></span>
+    <a href="../../../../raw/src/components/dashboard/BoatVisibilityFilter.tsx" style="color:var(--accent);font-weight:600;">Raw File</a>
+  </div>
+</header>
+<main>
+  <table class="code-table">
+    <tbody>
+      <tr id="L1"><td class="ln"><a href="#L1">1</a></td><td class="lc">import { useEffect, useRef, useState } from &#x27;react&#x27;</td></tr><tr id="L2"><td class="ln"><a href="#L2">2</a></td><td class="lc">import type { Competitor } from &#x27;../../types/replay&#x27;</td></tr><tr id="L3"><td class="ln"><a href="#L3">3</a></td><td class="lc"></td></tr><tr id="L4"><td class="ln"><a href="#L4">4</a></td><td class="lc">export function BoatVisibilityFilter({ boats, visibleId, onChange }: { boats: Competitor[]; visibleId: string | null; onChange: (id: string | null) =&gt; void }) {</td></tr><tr id="L5"><td class="ln"><a href="#L5">5</a></td><td class="lc">  const [open, setOpen] = useState(false)</td></tr><tr id="L6"><td class="ln"><a href="#L6">6</a></td><td class="lc">  const root = useRef&lt;HTMLDivElement&gt;(null)</td></tr><tr id="L7"><td class="ln"><a href="#L7">7</a></td><td class="lc">  const trigger = useRef&lt;HTMLButtonElement&gt;(null)</td></tr><tr id="L8"><td class="ln"><a href="#L8">8</a></td><td class="lc">  useEffect(() =&gt; {</td></tr><tr id="L9"><td class="ln"><a href="#L9">9</a></td><td class="lc">    const outside = (event: PointerEvent) =&gt; { if (!root.current?.contains(event.target as Node)) setOpen(false) }</td></tr><tr id="L10"><td class="ln"><a href="#L10">10</a></td><td class="lc">    const key = (event: KeyboardEvent) =&gt; { if (event.key === &#x27;Escape&#x27; &amp;&amp; open) { setOpen(false); trigger.current?.focus() } }</td></tr><tr id="L11"><td class="ln"><a href="#L11">11</a></td><td class="lc">    document.addEventListener(&#x27;pointerdown&#x27;, outside); document.addEventListener(&#x27;keydown&#x27;, key)</td></tr><tr id="L12"><td class="ln"><a href="#L12">12</a></td><td class="lc">    return () =&gt; { document.removeEventListener(&#x27;pointerdown&#x27;, outside); document.removeEventListener(&#x27;keydown&#x27;, key) }</td></tr><tr id="L13"><td class="ln"><a href="#L13">13</a></td><td class="lc">  }, [open])</td></tr><tr id="L14"><td class="ln"><a href="#L14">14</a></td><td class="lc">  return &lt;div className=&quot;header-dropdown-container boat-visibility-filter&quot; ref={root}&gt;</td></tr><tr id="L15"><td class="ln"><a href="#L15">15</a></td><td class="lc">    &lt;button ref={trigger} className=&quot;hdr-pill-dropdown-btn&quot; aria-expanded={open} aria-controls=&quot;boat-visibility-list&quot; onClick={() =&gt; setOpen((value) =&gt; !value)}&gt;{visibleId ? boats.find((boat) =&gt; boat.id === visibleId)?.team_code : &#x27;All Boats&#x27;}&lt;span aria-hidden=&quot;true&quot;&gt;⌄&lt;/span&gt;&lt;/button&gt;</td></tr><tr id="L16"><td class="ln"><a href="#L16">16</a></td><td class="lc">    {open &amp;&amp; &lt;div className=&quot;hdr-dropdown-popover&quot; id=&quot;boat-visibility-list&quot;&gt;&lt;div className=&quot;popover-header&quot;&gt;Visible on course and traces&lt;/div&gt;&lt;button className={`popover-item ${visibleId === null ? &#x27;active&#x27; : &#x27;&#x27;}`} onClick={() =&gt; { onChange(null); setOpen(false) }}&gt;&lt;strong&gt;All Boats&lt;/strong&gt;&lt;small&gt;{boats.length} competitors&lt;/small&gt;&lt;/button&gt;{boats.map((boat) =&gt; &lt;button key={boat.id} className={`popover-item ${visibleId === boat.id ? &#x27;active&#x27; : &#x27;&#x27;}`} onClick={() =&gt; { onChange(boat.id); setOpen(false) }}&gt;&lt;span className=&quot;boat-filter-identity&quot;&gt;&lt;i style={{ background: boat.color }} /&gt;{boat.team_code}&lt;/span&gt;&lt;small&gt;{boat.team_name}&lt;/small&gt;&lt;/button&gt;)}&lt;/div&gt;}</td></tr><tr id="L17"><td class="ln"><a href="#L17">17</a></td><td class="lc">  &lt;/div&gt;</td></tr><tr id="L18"><td class="ln"><a href="#L18">18</a></td><td class="lc">}</td></tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

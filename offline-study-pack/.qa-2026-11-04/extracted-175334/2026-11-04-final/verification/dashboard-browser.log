@@ -1,0 +1,19 @@
+PASS all 28 races load in Grid with complete fleet and event states
+PASS interactions naples_pr1 at 1586×992
+PASS interactions naples_mr_final at 1586×992
+PASS interactions naples_pr1 at 1280×720
+PASS interactions naples_mr_final at 1280×720
+PASS interactions naples_pr1 at 1096×704
+PASS interactions naples_mr_final at 1096×704
+PASS interactions naples_pr1 at 390×844
+PASS interactions naples_mr_final at 390×844
+PASS tactical insights follow the playhead and debrief links reach their evidence
+PASS future and mismatched tactical windows cannot leak into replay
+PASS detail panels, chart selectors, note buttons and keyboard controls
+PASS race picker resets filter, selection and race-scoped notes
+PASS legacy workbench links open the matching dashboard views
+PASS all artifact downloads resolve to data files
+PASS missing analysis feed leaves replay available
+PASS missing replay has a recoverable load error
+PASS OpenStreetMap default, attribution and offline fallback
+{"checks":18,"errors":0,"failedRequests":0}

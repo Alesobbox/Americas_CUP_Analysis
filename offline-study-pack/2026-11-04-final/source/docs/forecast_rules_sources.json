@@ -1,0 +1,74 @@
+{
+  "purpose": "Official AC38 rule source pinning; downloaded bytes do not resolve clause interpretation or effective dates.",
+  "sources": [
+    {
+      "version": "Protocol AC38.10",
+      "url": "https://drive.google.com/file/d/1MZZN-TJlXUkaqTNxCje8RupzAjBP4vvL/view",
+      "status": "downloaded",
+      "sha256": "084762ecd4ffb7d66921bd0d5d83e5ef9f5927cc8ce74edaa34648c3711118ee",
+      "bytes": 1244782,
+      "retrieved_at": "2026-10-15T20:54:27.012473+00:00",
+      "cache_path": ".forecast\\rules\\1MZZN-TJlXUkaqTNxCje8RupzAjBP4vvL.pdf",
+      "effective_date": null
+    },
+    {
+      "version": "LVC/Match Conditions v0",
+      "url": "https://drive.google.com/file/d/1biI3_zCSaLrRiM4nwkhKpaBnMraS5KiP/view",
+      "status": "downloaded",
+      "sha256": "4d3580f58b4dedb348d8f332bb01336b66f722560334fc800751b7bb2a397949",
+      "bytes": 2441385,
+      "retrieved_at": "2026-10-15T20:54:30.872709+00:00",
+      "cache_path": ".forecast\\rules\\1biI3_zCSaLrRiM4nwkhKpaBnMraS5KiP.pdf",
+      "effective_date": null
+    },
+    {
+      "version": "RRSAC v5.02",
+      "url": "https://drive.google.com/file/d/1I21drErgKm4OuYCcGb3D9uv7_UYG4jwj/view",
+      "status": "downloaded",
+      "sha256": "89d08f344abb1d5bb0f123f018bb876c4abdc749075b382cf98fe610c312f1f1",
+      "bytes": 1275368,
+      "retrieved_at": "2026-10-15T20:54:26.915608+00:00",
+      "cache_path": ".forecast\\rules\\1I21drErgKm4OuYCcGb3D9uv7_UYG4jwj.pdf",
+      "effective_date": null
+    }
+  ],
+  "verified_scoring_clauses": {
+    "RRSAC 105.2, page 32": {
+      "seven_boat_complete_finish_points": [
+        10,
+        9,
+        8,
+        7,
+        6,
+        5,
+        4
+      ]
+    },
+    "RRSAC 107, page 32": "Fleet series points ties use latest common scheduled finishing places, then earlier races.",
+    "Conditions 5.2(a), page 2": {
+      "challenger_carry": [
+        2.5,
+        2,
+        1.5,
+        1,
+        0.5,
+        0
+      ]
+    },
+    "Conditions 5.2(b), page 2": {
+      "overall_carry": [
+        3,
+        2.5,
+        2,
+        1.5,
+        1,
+        0.5,
+        0
+      ]
+    },
+    "RRSAC 101.2, page 29": "Only completed rounds between all Challengers count; exclude Defender results for Challenger qualification.",
+    "RRSAC 102.1, page 30": "Wording references first/last Challenger and three-/four-Challenger cases; six-Challenger seeding remains unresolved.",
+    "RRSAC 101.3 and 102.4, pages 29 and 31": "CSS knockouts may use last-day score and tie procedure; Cup Match has no tie break."
+  },
+  "effective_date_note": "PDF creation metadata is not an effective date. Verified effective dates and underlying instructions remain publication prerequisites."
+}

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>06 — Audio Narration &amp; Oral Defense Script — AC40 Regatta Replay Offline Study Pack</title>
+  <style>
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --ink-muted: #475569;
+  --accent: #0284c7;
+  --accent-dark: #0369a1;
+  --border: #cbd5e1;
+  --code-bg: #f1f5f9;
+  --callout-bg: #f0f9ff;
+  --warn-bg: #fffbeb;
+  --warn-border: #f59e0b;
+  --danger-bg: #fef2f2;
+  --danger-border: #ef4444;
+  --ok-bg: #f0fdf4;
+  --ok-border: #16a34a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.62;
+  font-size: 10.5pt;
+}
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 310px;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 20px 16px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+  border-right: 1px solid #1e293b;
+}
+.sidebar h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #38bdf8;
+  margin: 0 0 8px 0;
+}
+.sidebar .pack-meta {
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.search-box {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #f8fafc;
+  font-size: 12.5px;
+  margin-bottom: 10px;
+}
+.search-status {
+  font-size: 11px;
+  color: #38bdf8;
+  margin-bottom: 10px;
+  min-height: 16px;
+}
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 12px;
+}
+.nav-links li { margin-bottom: 5px; }
+.nav-links a {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 12.5px;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.nav-links a:hover, .nav-links a.active {
+  background: #1e293b;
+  color: #38bdf8;
+}
+.toc-container ul {
+  list-style: none;
+  padding-left: 10px;
+  margin: 4px 0;
+}
+.toc-container > ul { padding-left: 0; }
+.toc-container li { margin: 4px 0; }
+.toc-container a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 1.35;
+  display: block;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.toc-container a:hover {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+}
+.main-content {
+  flex: 1;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 36px 48px 64px 48px;
+  background: var(--surface);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  font-weight: 700;
+  line-height: 1.25;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 3px solid #0284c7;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+h2 {
+  font-size: 16.5pt;
+  border-bottom: 1.5px solid #cbd5e1;
+  padding-bottom: 6px;
+  margin-top: 34px;
+  page-break-after: avoid;
+}
+h3 {
+  font-size: 12.8pt;
+  color: #0369a1;
+  margin-top: 22px;
+  page-break-after: avoid;
+}
+h4 {
+  font-size: 11pt;
+  color: #1e293b;
+  margin-top: 16px;
+  page-break-after: avoid;
+}
+p, li {
+  text-align: left;
+}
+code {
+  font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+}
+pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 14px 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 9pt;
+  line-height: 1.45;
+  border: 1px solid #1e293b;
+  break-inside: avoid;
+}
+pre code {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 9.2pt;
+  break-inside: avoid;
+}
+th, td {
+  border: 1px solid #cbd5e1;
+  padding: 7px 9px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background: #f1f5f9;
+  font-weight: 700;
+  color: #0f172a;
+}
+tr:nth-child(even) td {
+  background: #f8fafc;
+}
+blockquote {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--accent);
+  background: var(--callout-bg);
+  border-radius: 0 6px 6px 0;
+  break-inside: avoid;
+}
+blockquote p:first-child { margin-top: 0; }
+blockquote p:last-child { margin-bottom: 0; }
+.diagram-figure, .screenshot-figure {
+  margin: 20px 0;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  text-align: center;
+  break-inside: avoid;
+}
+.diagram-figure .svg-container svg {
+  max-width: 100%;
+  height: auto;
+}
+.screenshot-figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+figcaption {
+  margin-top: 8px;
+  font-size: 9pt;
+  color: #475569;
+  font-weight: 600;
+}
+/* Mathematical typography */
+.math-inline {
+  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", Georgia, serif;
+  font-size: 1.03em;
+  white-space: nowrap;
+}
+.math-block {
+  font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", Georgia, serif;
+  font-size: 1.08em;
+  margin: 14px 0;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3.5px solid #0369a1;
+  border-radius: 6px;
+  overflow-x: auto;
+  text-align: center;
+  break-inside: avoid;
+}
+.m-frac {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 3px;
+  font-size: 0.92em;
+}
+.m-num {
+  border-bottom: 1.2px solid currentColor;
+  padding: 0 3px 1px 3px;
+  line-height: 1.15;
+}
+.m-den {
+  padding: 1px 3px 0 3px;
+  line-height: 1.15;
+}
+.m-sqrt {
+  display: inline-flex;
+  align-items: baseline;
+}
+.m-sqrt-body {
+  border-top: 1.1px solid currentColor;
+  padding: 0 2px;
+}
+.m-over {
+  border-top: 1.1px solid currentColor;
+  padding-top: 1px;
+}
+.m-text, .m-rm {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-style: normal;
+  font-size: 0.92em;
+}
+.m-aligned {
+  display: inline-block;
+  text-align: left;
+}
+.m-align-row {
+  margin: 3px 0;
+}
+.m-cases {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+.m-brace {
+  font-size: 2.2em;
+  font-weight: 300;
+  padding-right: 4px;
+}
+.m-cases-table {
+  margin: 0;
+  border: none;
+  width: auto;
+}
+.m-cases-table td {
+  border: none !important;
+  background: transparent !important;
+  padding: 2px 8px;
+}
+.chapter-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #f8fafc;
+  padding: 18px 22px;
+  border-radius: 8px;
+  margin-top: 36px;
+  margin-bottom: 18px;
+  page-break-before: always;
+  break-before: page;
+}
+.chapter-banner.first-banner {
+  page-break-before: avoid;
+  break-before: avoid;
+}
+.chapter-banner h2 {
+  color: #f8fafc;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font-size: 18pt;
+}
+.chapter-banner .part-kicker {
+  color: #38bdf8;
+  font-size: 9.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.pedagogy-box {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  background: #f8fafc;
+  break-inside: avoid;
+}
+.pedagogy-box.objectives {
+  border-left: 4px solid #0284c7;
+  background: #f0f9ff;
+}
+.pedagogy-box.worked-example {
+  border-left: 4px solid #16a34a;
+  background: #f0fdf4;
+}
+.pedagogy-box.failure-mode {
+  border-left: 4px solid #f59e0b;
+  background: #fffbeb;
+}
+.pedagogy-box.mistakes {
+  border-left: 4px solid #ef4444;
+  background: #fef2f2;
+}
+.pedagogy-box.selftest {
+  border-left: 4px solid #7c3aed;
+  background: #f5f3ff;
+}
+mark.search-hit {
+  background: #fde047;
+  color: #0f172a;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+.inline-toc-box {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-left: 4px solid #0284c7;
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin: 16px 0 24px 0;
+}
+.inline-toc-box h2 {
+  margin: 0 0 8px 0;
+  font-size: 13pt;
+  border-bottom: 1px solid #cbd5e1;
+  padding-bottom: 4px;
+}
+.inline-toc-box ul {
+  columns: 2;
+  column-gap: 24px;
+  padding-left: 18px;
+  margin: 4px 0;
+}
+.inline-toc-box ul ul {
+  columns: 1;
+}
+.inline-toc-box li {
+  margin: 2px 0;
+  font-size: 8.8pt;
+  break-inside: avoid;
+}
+.inline-toc-box a {
+  color: #0369a1;
+  text-decoration: none;
+}
+
+@media print {
+  h1:not(:first-of-type) { page-break-before: always; break-before: page; }
+  body {
+    background: #ffffff;
+    font-size: 9.8pt;
+    line-height: 1.52;
+  }
+  .sidebar, .no-print {
+    display: none !important;
+  }
+  .app-shell {
+    display: block;
+  }
+  .main-content {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+  a {
+    color: #0369a1;
+    text-decoration: none;
+  }
+  h2, h3, h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  table, pre, blockquote, .diagram-figure, .screenshot-figure, .pedagogy-box, .math-block {
+    break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar no-print">
+      <h2>AC40 Study Pack</h2>
+      <div class="pack-meta">
+        Snapshot: <code>2026-11-04</code><br/>
+        Commit: <code>f956f8a14feb</code> (dirty)<br/>
+        100% Offline Edition (<code>file://</code> ready)
+      </div>
+      <input id="offline-search" class="search-box" type="search" placeholder="Search this document..." aria-label="Search this document" />
+      <div id="search-status" class="search-status"></div>
+      <h2>Pack Navigation</h2>
+      <ul class="nav-links">
+        <li><a href="../START_HERE.html">★ Start Here & Checklist</a></li>
+<li><a href="../01_Repository_Explained.html">01. Main Textbook</a></li>
+<li><a href="../02_Field_Guide.html">02. Field Guide</a></li>
+<li><a href="../03_Repository_Atlas.html">03. Repository Atlas & Glossary</a></li>
+<li><a href="../04_Workbook.html">04. Workbook (Exercises)</a></li>
+<li><a href="../04_Workbook_Solutions.html">04b. Workbook Solutions</a></li>
+<li><a href="../study-materials/05_Study_Routes_and_Questions.html">05. Study Routes & Open Questions</a></li>
+<li><a href="../study-materials/flashcards_viewer.html">05b. Interactive Flashcards</a></li>
+<li><a href="../study-materials/06_Audio_Narration_Script.html">06. Audio Narration Script</a></li>
+<li><a href="../examples/interactive_sailing_and_forecast_lab.html">07. Interactive Math & Forecast Lab</a></li>
+<li><a href="../examples/05_Interactive_Study_Notebook.html">07b. Rendered Study Notebook</a></li>
+<li><a href="../source-companion/index.html">08. Source Companion (209 Files)</a></li>
+<li><a href="../MANIFEST.html">09. Pack Manifest & SHA-256</a></li>
+      </ul>
+      <h2>Contents</h2>
+      <div class="toc-container">
+        <div class="toc">
+<ul>
+<li><a href="#06-spoken-narration-oral-defense-script-25-minute-mountain-audio-companion">06 — Spoken Narration &amp; Oral Defense Script (25-Minute Mountain Audio Companion)</a><ul>
+<li><a href="#act-i-what-problem-does-this-system-solve-and-how-is-it-architected-0000-0430">Act I — What Problem Does This System Solve, and How Is It Architected? (00:00 – 04:30)</a></li>
+<li><a href="#act-ii-what-information-actually-exists-in-the-archive-0430-0830">Act II — What Information Actually Exists in the Archive? (04:30 – 08:30)</a></li>
+<li><a href="#act-iii-how-raw-telemetry-becomes-a-10-hz-replay-0830-1300">Act III — How Raw Telemetry Becomes a 10 Hz Replay (08:30 – 13:00)</a></li>
+<li><a href="#act-iv-historical-metrics-and-the-peer-normalized-radar-1300-1730">Act IV — Historical Metrics and the Peer-Normalized Radar (13:00 – 17:30)</a></li>
+<li><a href="#act-v-the-three-causal-forecasting-systems-1730-2230">Act V — The Three Causal Forecasting Systems (17:30 – 22:30)</a></li>
+<li><a href="#act-vi-verification-audit-findings-final-takeaway-2230-2500">Act VI — Verification, Audit Findings &amp; Final Takeaway (22:30 – 25:00)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+      </div>
+    </aside>
+    <main class="main-content">
+      <h1 id="06-spoken-narration-oral-defense-script-25-minute-mountain-audio-companion">06 — Spoken Narration &amp; Oral Defense Script (25-Minute Mountain Audio Companion)</h1>
+<nav class="inline-toc-box" aria-label="Table of Contents"><h2>Table of Contents</h2><div class="toc">
+<ul>
+<li><a href="#06-spoken-narration-oral-defense-script-25-minute-mountain-audio-companion">06 — Spoken Narration &amp; Oral Defense Script (25-Minute Mountain Audio Companion)</a><ul>
+<li><a href="#act-i-what-problem-does-this-system-solve-and-how-is-it-architected-0000-0430">Act I — What Problem Does This System Solve, and How Is It Architected? (00:00 – 04:30)</a></li>
+<li><a href="#act-ii-what-information-actually-exists-in-the-archive-0430-0830">Act II — What Information Actually Exists in the Archive? (04:30 – 08:30)</a></li>
+<li><a href="#act-iii-how-raw-telemetry-becomes-a-10-hz-replay-0830-1300">Act III — How Raw Telemetry Becomes a 10 Hz Replay (08:30 – 13:00)</a></li>
+<li><a href="#act-iv-historical-metrics-and-the-peer-normalized-radar-1300-1730">Act IV — Historical Metrics and the Peer-Normalized Radar (13:00 – 17:30)</a></li>
+<li><a href="#act-v-the-three-causal-forecasting-systems-1730-2230">Act V — The Three Causal Forecasting Systems (17:30 – 22:30)</a></li>
+<li><a href="#act-vi-verification-audit-findings-final-takeaway-2230-2500">Act VI — Verification, Audit Findings &amp; Final Takeaway (22:30 – 25:00)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+<p><strong>Repository</strong>: <code>2D_regatta_replay</code> | <strong>Snapshot</strong>: <code>2026-11-04</code> | <strong>Audio Generation Note</strong>: <em>Delivered as a structured plain-text/Markdown and HTML spoken-word script for reading aloud or oral rehearsal; synthetic TTS audio files were not bundled so the archive remains compact and free of robotic mispronunciations of mathematical notation.</em></p>
+<hr />
+<h2 id="act-i-what-problem-does-this-system-solve-and-how-is-it-architected-0000-0430">Act I — What Problem Does This System Solve, and How Is It Architected? (00:00 – 04:30)</h2>
+<p>Welcome to the offline audio walkthrough of the <code>2D_regatta_replay</code> repository. If you are hiking or sitting in a cabin without Wi-Fi, this script walks you through the entire system from raw satellite telemetry to 60-frame-per-second browser rendering and causal tournament probability bounds.</p>
+<p>At its core, this project solves three distinct analytical problems for America's Cup foiling regattas — problems that are often conflated in sports analytics, but which require completely different mathematical machinery:</p>
+<ol>
+<li><strong>First: Retrospective Observation (<code>Replay</code> and <code>Compare</code> Workspaces)</strong>. What physically happened on the water at every tenth of a second? Where were the nine AC40 foiling monohulls and the eight autonomous robotic course marks (<code>RM1</code> through <code>RM8</code>), when did each boat's bowsprit cross the starting line or gate line, when did they tack or gybe, and where did their umpiring keep-clear zones overlap?</li>
+<li><strong>Second: Retrospective Performance Evaluation (<code>Analysis</code> and <code>Reports</code> Workspaces)</strong>. Once a race or regatta is finished, how fast was a boat relative to the peers that actually sailed the same legs in the same wind? Why did a team lose twenty seconds on Leg 3 — was it straight-line upwind VMG, a bad wind header, or speed loss in a tack?</li>
+<li><strong>Third: Causal Forward Prediction (<code>Forecast</code> Workspace)</strong>. Using only information legally available up to a strict historical cutoff timestamp, what is each boat's expected finishing position before the gun (<code>pre-race-pl-mc-1</code>), what is each boat's live probability of winning the race from its current on-water position (<code>live-mc-kalman-1</code>), and what can — and cannot — be said about the 2027 38th America's Cup in AC75s (<code>cup-ac38-conditional-2</code>)?</li>
+</ol>
+<p>To keep these three worlds from contaminating one another, the repository enforces one cardinal architectural boundary:
+<strong>Python owns all historical metric formulas and all forecasting models. TypeScript owns only display-rate interpolation, live instantaneous geometry, and the user interface.</strong>
+The browser never recalculates a historical metric, never re-runs a Plackett–Luce regression, and never fabricates a fallback probability when an artifact is marked <code>unavailable</code>.</p>
+<hr />
+<h2 id="act-ii-what-information-actually-exists-in-the-archive-0430-0830">Act II — What Information Actually Exists in the Archive? (04:30 – 08:30)</h2>
+<p>Before trusting any equation, you have to know the exact shape of the raw archive.
+Inside <code>Data/</code>, there are <strong>28 raw <code>.jsonl</code> session files</strong> totaling <strong>6.87 gigabytes</strong> (<code>6,866,006,601</code> bytes). Those 28 sessions span <strong>9 race days</strong> across two 2026 AC40 preliminary events:
+- <strong>Cagliari, Sardinia (May 22 to May 24, 2026)</strong>: 9 sessions (<code>63</code> boat-races).
+- <strong>Naples, Italy (September 22 to September 27, 2026)</strong>: 19 sessions (<code>161</code> replayed boat-races, <code>164</code> scheduled boat-races).</p>
+<p>Why do we constantly distinguish <strong>224 replayed boat-races</strong> from <strong>227 scheduled boat-races</strong>?
+Because on September 22 in Naples, in Practice Races 2, 3, and 4 (<code>26_09_22_nap_ipr_pr2</code>, <code>pr3</code>, and <code>pr4</code>), <code>GBR B</code> was listed in the scheduled race roster (<code>race_start_status</code>), but transmitted <strong>zero <code>boat_state</code> telemetry packets</strong>. During replay ingestion (<code>pipeline/ingest.py</code>, lines 699 to 700), boats with empty telemetry lists are dropped so the 2D canvas doesn't render phantom boats at <code>(0, 0)</code> — leaving <code>224</code> replayed boat-races in <code>manifests.json</code> and <code>analysis/index.json</code>. However, the forecasting pipeline (<code>pipeline/prediction/labels.py</code>) restores all <code>227</code> scheduled starts in <code>.forecast/scheduled_entry_ledger.json</code>, because dropping a scheduled DNS entrant would bias completion rates upward and shrink the field size <span class="math-inline">N</span> used in tied-<span class="math-inline">N</span> scoring.</p>
+<p>Even more importantly: across all 28 sessions, <strong><code>official_order_verified</code> is <code>False</code></strong>. We do not have signed race-committee finishing sheets or umpire penalty logs. Every finishing rank in the archive (<code>RANK_1</code>, <code>RANK_2</code>, <code>DNF</code>, <code>OCS</code>) is reconstructed from telemetry and autonomous mark roundings. And while the synchronized replays contain <strong>331,089 frames</strong> at 100-millisecond spacing, 331,089 frames do <strong>not</strong> mean 331,089 independent observations! For cross-race team skill or weather effects, your sample size is 28 sessions across 9 calendar days.</p>
+<hr />
+<h2 id="act-iii-how-raw-telemetry-becomes-a-10-hz-replay-0830-1300">Act III — How Raw Telemetry Becomes a 10 Hz Replay (08:30 – 13:00)</h2>
+<p>Let's trace how a 250-megabyte <code>.jsonl</code> file becomes a compact replay JSON in <code>public/data/replays/</code>.
+1. <strong>Projection (<code>pipeline/projection.py</code>)</strong>: Raw GNSS latitudes and longitudes are projected onto a local tangent plane in metres East (<span class="math-inline">x</span>) and metres North (<span class="math-inline">y</span>) using WGS84 ellipsoidal curvature coefficients (<span class="math-inline">k<sub><span class="m-text">lat</span></sub> ≈ 111,048<span class="m-text">m/deg</span></span> and <span class="math-inline">k<sub><span class="m-text">lon</span></sub> ≈ 84,375<span class="m-text">m/deg</span></span> at Naples; <span class="math-inline">86,408<span class="m-text">m/deg</span></span> at Cagliari).
+2. <strong>10 Hz Synchronization (<code>pipeline/synchronize.py</code>)</strong>: Boats transmit at roughly 10 Hz with clock jitter; robotic marks transmit at roughly 1 Hz. <code>TimelineSynchronizer</code> resamples every channel onto a uniform 100-millisecond grid. Scalar channels (<code>x, y, sog, vmg, tws, twa</code>) use linear interpolation. Angular bearings (<code>heading, cog, twd</code>) use shortest-arc circular interpolation modulo 360 degrees: <span class="math-inline">Δθ = ((θ<sub>1</sub> - θ<sub>0</sub> + 540°)  mod  360°) - 180°</span>. If a boat stops transmitting early — like <code>GBR B</code> in <code>naples_pr1</code>, which retires 15 minutes and 51 seconds before the window ends — its coordinates are clamped to its final packet, creating a "held tail" that <code>historical_analysis.py</code> explicitly excludes.
+3. <strong>Bow-Tip Crossing Geometry (<code>pipeline/reconstruction.py</code>)</strong>: An AC40's GNSS receiver sits at the transom centerline <span class="math-inline">(0, 0)</span>, while the bowsprit tip sits <span class="math-inline">+12.963<span class="m-text">metres</span></span> forward along the boat's true heading <span class="math-inline">ψ</span>. At every 100-millisecond step, <code>CourseReconstructor</code> projects the bow tip <span class="math-inline"><span class="m-vec">p</span><sub><span class="m-text">bow</span></sub>(t) = (x + 12.963sinψ,  y + 12.963cosψ)</span> and solves the 2D cross-product segment intersection <span class="math-inline">u, v ∈ [0, 1]</span> against the start line or active gate segment. If a boat rounds slightly outside a mark or if one gate mark is missing, it falls back to a 200-metre virtual gate corridor (<code>MAX_GATE_RADIUS_M = 100.0</code>). Cumulative race progress <code>progress_m</code> is then computed and clamped with a running maximum so <code>progress_m</code> is strictly non-decreasing.
+4. <strong>Manoeuvres &amp; Virtual Contacts (<code>pipeline/manoeuvres.py</code>, <code>pipeline/analytics.py</code>)</strong>: Because raw <code>manoeuvres</code> records are empty (<code>0</code> records), <code>ManoeuvreDetector</code> scans 10 Hz telemetry for a 4-gate signature: smoothed turn rate <span class="math-inline">≥ 8°/<span class="m-text">s</span></span>, opposite-sign entry/exit TWA in <span class="math-inline">[20°, 160°]</span>, heading change <span class="math-inline">≥ 32°</span>, and speed loss <span class="math-inline">≥ 2.5<span class="m-text">kt</span></span>. Meanwhile, <code>detect_virtual_contacts</code> transforms each boat's 9-vertex <code>keep_clear_border</code> (<span class="math-inline">± 7.415<span class="m-text">m</span></span>) and <code>platform_border</code> (<span class="math-inline">± 5.415<span class="m-text">m</span></span>) into world space and runs the Separating Axis Theorem (SAT) at 10 Hz, coalescing overlaps separated by <span class="math-inline">≤ 2.0<span class="m-text">s</span></span> into incidents.</p>
+<hr />
+<h2 id="act-iv-historical-metrics-and-the-peer-normalized-radar-1300-1730">Act IV — Historical Metrics and the Peer-Normalized Radar (13:00 – 17:30)</h2>
+<p>In <code>pipeline/historical_analysis.py</code> (<code>schema_version = "2.0"</code>, <code>formula_version = "historical-2"</code>), every race, leg, and manoeuvre metric is paired with coverage metadata and a strict quality badge (<code>derived</code> requires <span class="math-inline">≥ 95%</span> valid source-second coverage).</p>
+<p>Two subtleties in Part IV are essential for your oral defense:
+1. <strong>First: The VMG Sign Convention</strong>. In raw replay telemetry, <code>vmg</code> is wind-referenced (<span class="math-inline"><span class="m-text">SOG</span>cos(<span class="m-text">TWA</span>)</span>), which is negative whenever a boat sails downwind (<span class="math-inline">|<span class="m-text">TWA</span>| > 90°</span>). In <code>historical_analysis.py</code>, leg VMG (<code>avg_vmg_kt</code>, <code>upwind_vmg</code>, <code>downwind_vmg</code>) is <strong>mark-referenced</strong> along the active leg vector, so progress toward the leeward gate is positive!
+2. <strong>Second: The 6-Axis Self-Excluding Peer Radar (<code>performance-1</code>)</strong>. To compare boats fairly when wind speed changes across legs or when some boats DNF early, <code>_boat_performance</code> restricts comparison to <code>matched_legs</code> — legs where both the subject boat and at least one peer have valid derived metrics. On each matched leg <span class="math-inline">ℓ</span>, the baseline <span class="math-inline"><span class="m-over">x</span><sub>-b,ℓ</sub></span> is the mean of all valid peers <strong>excluding boat <span class="math-inline">b</span> itself</strong>, and the leg index is <span class="math-inline">I<sub>b,ℓ</sub> = 100 · x<sub>b,ℓ</sub> / <span class="m-over">x</span><sub>-b,ℓ</sub></span>. The dimension index <span class="math-inline">I<sub>b,d</sub></span> is the <strong>unweighted mean of per-leg indices</strong>. Because the average of ratios is not the ratio of averages (<span class="math-inline"><span class="m-frac"><span class="m-num">1</span><span class="m-den">2</span></span>(<span class="m-frac"><span class="m-num">x<sub>2</sub></span><span class="m-den"><span class="m-over">y</span><sub>2</sub></span></span> + <span class="m-frac"><span class="m-num">x<sub>4</sub></span><span class="m-den"><span class="m-over">y</span><sub>4</sub></span></span>) ≠ <span class="m-frac"><span class="m-num">x<sub>2</sub>+x<sub>4</sub></span><span class="m-den"><span class="m-over">y</span><sub>2</sub>+<span class="m-over">y</span><sub>4</sub></span></span></span>), <code>ITA G</code>'s Downwind VMG index in <code>naples_pr1</code> is <code>109.9671</code>, whereas <code>100 * value / peer_mean</code> is <code>108.0853</code>.</p>
+<hr />
+<h2 id="act-v-the-three-causal-forecasting-systems-1730-2230">Act V — The Three Causal Forecasting Systems (17:30 – 22:30)</h2>
+<p>Now let's examine <code>pipeline/prediction/</code>. Why do we say there are <strong>three separate forecasting targets</strong>?
+1. <strong>Target 1: Pre-Race Expected Finish Position (<code>pre-race-pl-mc-1</code>)</strong>:
+   Predicts expected finish rank <span class="math-inline">𝔼[R<sub>i</sub>] ∈ [1, N]</span> across all scheduled starters under the <strong>tied-<span class="math-inline">N</span> nonfinish rule</strong>, where every non-finisher (DNS, DNF, OCS, RET) receives worst rank <span class="math-inline">N</span>. When <span class="math-inline">M</span> boats fail to finish, the sum of ranks is <span class="math-inline"><span class="m-frac"><span class="m-num">N(N+1)</span><span class="m-den">2</span></span> + <span class="m-frac"><span class="m-num">M(M-1)</span><span class="m-den">2</span></span></span>, so expected positions sum to strictly more than <span class="math-inline"><span class="m-frac"><span class="m-num">N(N+1)</span><span class="m-den">2</span></span></span> whenever two or more boats can fail to finish!
+2. <strong>Target 2: Live In-Race Win Probability (<code>live-mc-kalman-1</code> / <code>correlated_mc</code>)</strong>:
+   Every 10 seconds during a race, a 6-second <code>ReorderBuffer</code> feeds a 2D Constant-Velocity Kalman Filter (<code>CVKalmanFilter</code>), publishing at <code>published_at_ms = state_timestamp_ms + 6000</code>. The promoted <code>correlated_mc</code> simulator samples remaining gate times using a persistent crew factor, shared calendar-time weather noise, and remaining-distance-scaled boat innovations, cutting live Brier score by 45% (<code>0.8387</code> down to <code>0.4534</code>) compared to static Plackett–Luce.
+3. <strong>Target 3: The 2027 America's Cup (<code>cup-ac38-conditional-2</code> in <code>cup_2027.json</code>)</strong>:
+   Simulates the 7-team 2027 AC38 tournament in Naples (6 fleet races with <code>10..4</code> points and carry-over, 3 Round Robins, Repechages, first-to-5 Semifinals and Final, and first-to-7 Cup Match against Defender <code>ETNZ</code>). Crucially, team capability is drawn <strong>once per tournament trial</strong> and held persistent across all matches (preventing the i.i.d. series law-of-large-numbers distortion that inflates a <code>75.00%</code> mixture to <code>93.76%</code>). And because <strong>1,723 of 5,000 baseline trials (<code>34.46%</code>)</strong> encounter ties in the 6-Challenger fleet carry or Round Robin seeding where RRSAC 102.1 tie-break procedures are unpublished, headline point probabilities are <code>null</code>, and each team is reported with an exact conservative rule-bound interval <code>[lower, upper]</code> of width <code>0.3446</code> (<code>34.46</code> percentage points).</p>
+<hr />
+<h2 id="act-vi-verification-audit-findings-final-takeaway-2230-2500">Act VI — Verification, Audit Findings &amp; Final Takeaway (22:30 – 25:00)</h2>
+<p>When we ran <code>.\run.ps1 verify</code> on <code>2026-11-04</code>, <strong>all 828 deterministic tests passed</strong> (406 frontend Vitest tests, 291 Python unit tests, 123 E2E Tier 1–4 tests, and 8 Tier 5 white-box integrity tests), alongside cryptographic SHA-256 verification of all published forecast and environment artifacts.</p>
+<p>At the same time, our code audit uncovered six concrete implementation nuances you can cite from memory:
+1. <code>pipeline/reconstruction.py:L228</code> checks top-level <code>comp.get("started")</code> instead of <code>comp.get("start_state", {}).get("started")</code>, causing <code>USA</code> in <code>naples_pr1</code> to be reconstructed as <code>RANK_4</code> before <code>historical_analysis.py</code> flags it as <code>conflict</code>.
+2. <code>pipeline/analytics.py:L263</code> divides metre lead gaps by constant <code>8.0 m/s</code>, whereas <code>src/engine/analytics.ts:L71</code> divides by the leader's live <code>sog</code>.
+3. <code>pipeline/manoeuvres.py</code> uses <code>2.5 kt</code> speed dip and <code>90%</code> recovery vs its <code>3.0 kt</code> docstring and <code>95%</code> recovery in <code>historical_analysis.py</code>.
+4. <code>26_09_22_nap_ipr_pr2</code> has a non-monotonic source Leg 3 timestamp for <code>USA</code>, causing overlapping leg coverage (<code>1,036.3 s</code> vs <code>865.4 s</code> elapsed).
+5. <code>tactical_insights.py</code> suppresses 100% (<code>0 / 3,455</code>) of 5-minute wind projections due to strict <span class="math-inline">R<sup>2</sup> ≥ 0.55</span> and split-half linearity gates.
+6. <code>PositiveDelayMixture</code> is fully coded in <code>models.py</code> but gated off (<code>available = False</code>) because <code>0</code> human-reviewed clean/loss leg labels exist.</p>
+<p>Keep that separation between <strong>measured truth, geometric reconstruction, quality-gated historical indices, and rule-bounded causal forecasts</strong> at the center of your thinking, and you will be ready to explain, critique, defend, and improve every module in this repository.</p>
+    </main>
+  </div>
+  <script>
+(function() {
+  const input = document.getElementById('offline-search');
+  const status = document.getElementById('search-status');
+  const main = document.querySelector('.main-content');
+  if (!input || !main) return;
+
+  function clearHighlights() {
+    const marks = main.querySelectorAll('mark.search-hit');
+    marks.forEach(m => {
+      const parent = m.parentNode;
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    });
+  }
+
+  input.addEventListener('input', function() {
+    clearHighlights();
+    const q = input.value.trim();
+    if (q.length < 2) {
+      status.textContent = '';
+      return;
+    }
+    const regex = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    let count = 0;
+    let firstHit = null;
+    const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const tag = node.parentNode && node.parentNode.tagName;
+        if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
+        return regex.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+      }
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const frag = document.createDocumentFragment();
+      let lastIdx = 0;
+      node.nodeValue.replace(regex, (match, p1, offset) => {
+        if (offset > lastIdx) {
+          frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIdx, offset)));
+        }
+        const mark = document.createElement('mark');
+        mark.className = 'search-hit';
+        mark.textContent = match;
+        if (!firstHit) firstHit = mark;
+        count++;
+        frag.appendChild(mark);
+        lastIdx = offset + match.length;
+      });
+      if (lastIdx < node.nodeValue.length) {
+        frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIdx)));
+      }
+      node.parentNode.replaceChild(frag, node);
+    });
+    status.textContent = count + ' match' + (count === 1 ? '' : 'es') + ' found';
+    if (firstHit) firstHit.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+})();
+</script>
+</body>
+</html>

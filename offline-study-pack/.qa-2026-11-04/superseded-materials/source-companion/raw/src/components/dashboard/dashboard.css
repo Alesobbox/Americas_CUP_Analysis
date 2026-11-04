@@ -1,0 +1,348 @@
+/* Shared dashboard language. Canonical colors and fonts live in index.css. */
+:root {
+  --tac-bg-app: var(--bg-app); --tac-bg-surface: var(--bg-surface); --tac-bg-subtle: var(--bg-card); --tac-bg-muted: var(--bg-card); --tac-bg-hover: var(--bg-hover);
+  --tac-border-card: var(--border-subtle); --tac-border-subtle: var(--border-subtle); --tac-border-strong: var(--border-medium);
+  --tac-text-primary: var(--text-primary); --tac-text-secondary: var(--text-secondary); --tac-text-muted: var(--text-muted); --tac-text-faint: var(--text-faint);
+  --tac-blue-primary: var(--telemetry-cyan); --tac-blue-marine: var(--telemetry-cyan); --tac-cyan-foiling: var(--telemetry-cyan);
+  --tac-green-status: var(--telemetry-emerald); --tac-red-incident: var(--racing-red); --tac-orange-warning: var(--telemetry-amber); --tac-yellow-wind: var(--telemetry-amber);
+  --tac-radius-card: 24px; --tac-radius-sm: 10px; --tac-radius-pill: 999px;
+  --tac-font-sans: var(--font-ui); --tac-font-mono: var(--font-mono);
+}
+.tactical-dashboard-root { width: 100%; max-width: 1800px; margin: auto; min-height: 100dvh; color: var(--text-primary); background: var(--bg-app); font-family: var(--font-ui); min-width: 0; }
+:where(.tactical-dashboard-root) :where(button, select, input) { font: inherit; }
+.tactical-dashboard-root button { transition: background-color 140ms, color 140ms; }
+.tactical-dashboard-root button:focus-visible, .tactical-dashboard-root select:focus-visible, .tactical-dashboard-root a:focus-visible, .tactical-dashboard-root summary:focus-visible { outline: 3px solid var(--border-focus); outline-offset: 3px; }
+.tactical-header-container { position: relative; z-index: 50; background: var(--bg-surface); }
+.main-header-bar { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 80px; padding: 0 32px; border-bottom: 1px solid var(--border-subtle); }
+.header-left-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; color: var(--text-primary); }
+.cup-trophy-mark { color: #5f6368; flex-shrink: 0; }
+.brand-text-block { display: grid; line-height: 1.2; gap: 3px; }
+.brand-cup-title { font-size: 17px; font-weight: 600; letter-spacing: -.4px; }
+.brand-replay-subtitle { font-size: 12px; color: var(--text-secondary); }
+.header-center-nav { display: flex; align-self: stretch; gap: 28px; }
+.nav-tab-link { position: relative; padding: 0 2px; color: var(--text-secondary); font-size: 14px; font-weight: 500; white-space: nowrap; }
+.nav-tab-link:hover { color: var(--text-primary); }
+.nav-tab-link.active { color: var(--telemetry-cyan); }
+.nav-tab-link.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 3px 3px 0 0; background: var(--telemetry-cyan); }
+.header-right-actions { display: flex; align-items: center; gap: 16px; }
+.race-library-trigger { display: flex; align-items: center; gap: 8px; min-height: 40px; font-weight: 500; white-space: nowrap; padding: 0 4px; }
+.race-library-trigger:hover, .header-export-link:hover { color: var(--telemetry-cyan); }
+.hdr-gear-btn { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; color: var(--text-secondary); }
+.hdr-gear-btn:hover { background: var(--bg-card); }
+.race-context-row { display: flex; align-items: center; justify-content: space-between; padding: 28px 32px 12px; gap: 20px; }
+.race-context-title { min-width: 0; }
+.race-context-meta { font-size: 12px; color: var(--text-secondary); margin: 0 0 5px; }
+.race-context-meta span { margin: 0 6px; color: var(--border-medium); }
+.race-context-title h1 { margin: 0; font-size: 32px; font-weight: 500; letter-spacing: -1px; line-height: 1.2; }
+.race-context-actions { display: flex; align-items: center; gap: 20px; }
+.race-phase { display: inline-flex; align-items: center; gap: 7px; color: var(--text-secondary); font-size: 12px; white-space: nowrap; }
+.race-phase i, .live-status-dot { width: 6px; height: 6px; background: var(--telemetry-emerald); border-radius: 50%; }
+.header-dropdown-container { position: relative; }
+.hdr-pill-dropdown-btn { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 38px; padding: 8px 14px; border: 1px solid var(--border-subtle); border-radius: 10px; font-size: 13px; background: var(--bg-surface); color: var(--text-primary); }
+.hdr-pill-dropdown-btn:hover { background: var(--bg-card); }
+.hdr-dropdown-popover { position: absolute; right: 0; top: calc(100% + 8px); width: 300px; max-width: calc(100vw - 32px); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 8px; background: var(--bg-panel); box-shadow: 0 8px 28px #2021241a; z-index: 80; }
+.popover-header { font-size: 12px; color: var(--text-secondary); padding: 10px; }
+.popover-list { max-height: 320px; overflow-y: auto; }
+.popover-item { display: flex; flex-direction: column; gap: 3px; width: 100%; padding: 10px; text-align: left; border-radius: 8px; min-height: 44px; }
+.popover-item strong { font-size: 14px; font-weight: 500; }
+.popover-item small { font-size: 12px; color: var(--text-secondary); }
+.popover-item:hover { background: var(--bg-card); }
+.popover-item.active { background: var(--bg-active); }
+.popover-footer-btn { width: 100%; margin-top: 6px; padding: 12px; text-align: left; color: var(--telemetry-cyan); border-top: 1px solid var(--border-subtle); }
+.header-export-link { min-height: 40px; color: var(--text-secondary); font-size: 13px; white-space: nowrap; }
+.header-export-link span { margin-left: 8px; }
+.environmental-substrip { display: flex; align-items: center; gap: 24px; padding: 0 32px 24px; color: var(--text-secondary); font-size: 12px; }
+.recorded-wind { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.recorded-wind strong { color: var(--text-primary); font-weight: 500; font-variant-numeric: tabular-nums; }
+.conditions-disclosure { position: relative; }
+.conditions-disclosure summary { cursor: pointer; list-style: none; display: flex; gap: 10px; align-items: center; min-height: 28px; }
+.conditions-disclosure summary::-webkit-details-marker { display: none; }
+.conditions-popover { position: absolute; left: 0; top: 100%; width: 280px; padding: 20px; border: 1px solid var(--border-subtle); border-radius: 16px; background: var(--bg-panel); box-shadow: 0 8px 28px #2021241a; z-index: 90; }
+.conditions-title { font-weight: 600; color: var(--text-primary); margin: 0 0 12px; }
+.conditions-popover p:last-child { margin-bottom: 0; line-height: 1.5; }
+.env-weather-badge { margin-bottom: 10px; }
+.tactical-stage-band { display: grid; grid-template-columns: minmax(0, 1fr) 352px; gap: 32px; margin: 0 32px 40px; align-items: start; min-width: 0; }
+.center-tactical-stage-wrap { min-width: 0; background: var(--bg-surface); }
+.course-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.course-section-header h2 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -.3px; }
+.boat-visibility-filter .hdr-pill-dropdown-btn { border: 0; background: var(--bg-card); min-height: 36px; }
+.boat-filter-identity { display: inline-flex; align-items: center; gap: 8px; }
+.boat-filter-identity i { width: 8px; height: 8px; border-radius: 2px; box-shadow: inset 0 0 0 1px #20212426; }
+.map-viewport-frame { position: relative; height: clamp(360px, 50vh, 600px); overflow: hidden; border-radius: 24px; background: #edf4f6; isolation: isolate; }
+.center-tactical-stage-wrap:fullscreen { display: flex; flex-direction: column; padding: 16px; max-width: none; }
+.center-tactical-stage-wrap:fullscreen .map-viewport-frame { height: auto; flex: 1; min-height: 0; }
+.center-tactical-stage-wrap:fullscreen .course-section-header { flex-shrink: 0; }
+.tactical-map-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
+.map-top-left-hud { position: absolute; left: 16px; bottom: 42px; display: flex; align-items: center; gap: 8px; max-width: calc(100% - 32px); }
+.compass-rose-widget { flex-shrink: 0; width: 44px; height: 44px; }
+.dual-hud-glass-card { background: var(--bg-surface); color: var(--text-primary); padding: 10px 14px; border-radius: 12px; border: 1px solid #20212414; }
+.hud-metric-header-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.hud-metric-caption { font-size: 11px; color: var(--text-secondary); }
+.hud-metric-body, .hud-val-group { display: flex; align-items: center; gap: 10px; }
+.hud-bold-val { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hud-sub-angle { font-size: 12px; color: var(--text-secondary); }
+.hud-shift-badge { color: var(--telemetry-cyan); font-size: 12px; }
+.wind-wave-svg { color: var(--telemetry-cyan); }
+.map-top-right-toolbar { position: absolute; top: 12px; right: 12px; max-width: calc(100% - 24px); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; background: var(--bg-surface); padding: 6px; border-radius: 12px; border: 1px solid #20212414; pointer-events: auto; }
+.course-controls-row .map-top-right-toolbar { position: static; max-width: none; width: fit-content; margin-bottom: 12px; border: 0; background: var(--bg-card); justify-content: flex-start; }
+.map-toolbar-group, .map-segmented-toggle, .map-tool-icon-group { display: flex; align-items: center; gap: 2px; }
+.map-segmented-toggle button, .map-tool-toggle-btn, .map-tool-icon-btn { min-height: 32px; color: var(--text-secondary); border-radius: 7px; font-size: 11px; font-weight: 500; padding: 5px 9px; }
+.map-segmented-toggle button:hover, .map-tool-toggle-btn:hover, .map-tool-icon-btn:hover { background: var(--bg-card); }
+.map-segmented-toggle button.active, .map-tool-toggle-btn.active { background: var(--bg-active); color: var(--telemetry-cyan); }
+.map-toolbar-v-divider { width: 1px; height: 20px; background: var(--border-subtle); }
+.map-tool-toggle-btn { display: flex; align-items: center; gap: 6px; }
+.tool-indicator-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--border-medium); }
+.map-tool-toggle-btn.active .tool-indicator-dot { background: var(--telemetry-cyan); }
+.map-tool-icon-btn { width: 32px; padding: 0; font-size: 19px; }
+.map-bottom-scale-bar { position: absolute; bottom: 10px; left: 16px; font-size: 11px; color: var(--text-secondary); background: var(--bg-surface); padding: 3px 8px; border-radius: 5px; }
+.map-source-status { position: absolute; right: 8px; bottom: 30px; z-index: 12; max-width: calc(100% - 16px); padding: 5px 8px; background: var(--bg-panel); color: var(--text-secondary); font-size: 12px; border-radius: 6px; }
+.race-timeline-panel-card { position: relative; margin: 0; padding: 18px 0 12px; background: var(--bg-surface); min-width: 0; }
+.timeline-header { display: flex; align-items: center; justify-content: flex-end; position: absolute; right: 0; bottom: 8px; z-index: 2; }
+.timeline-header > .panel-title { display: none; }
+.collapse-btn { width: 28px; min-height: 28px; font-size: 15px; color: var(--text-secondary); border-radius: 6px; }
+.collapse-btn:hover { background: var(--bg-card); }
+.timeline-panel-body { display: grid; grid-template-columns: 112px 140px minmax(80px, 1fr) auto; align-items: center; gap: 12px; }
+.countdown-display-block { display: flex; flex-direction: column; }
+.countdown-sub-title { font-size: 10px; color: var(--text-secondary); letter-spacing: .03em; }
+.countdown-main-digits { font-size: 26px; font-weight: 500; letter-spacing: -.8px; line-height: 1.25; font-variant-numeric: tabular-nums; }
+.countdown-seconds-sub { display: none; }
+.transport-controls-row { display: flex; gap: 8px; align-items: center; }
+.transport-step-btn { width: 36px; min-height: 36px; font-size: 12px; border-radius: 50%; color: var(--text-secondary); }
+.transport-step-btn:hover { background: var(--bg-card); }
+.transport-play-circle-btn { width: 44px; height: 44px; background: var(--telemetry-cyan); color: white; border-radius: 50%; display: grid; place-items: center; }
+.transport-play-circle-btn:hover { background: #174ea6; }
+.speed-chips-row { display: flex; grid-column: 4; grid-row: 1; align-items: center; gap: 2px; }
+.speed-chip-btn { min-width: 32px; min-height: 32px; font-size: 12px; color: var(--text-secondary); border-radius: 7px; }
+.speed-chip-btn:hover { background: var(--bg-card); }
+.speed-chip-btn.active { color: var(--telemetry-cyan); background: var(--bg-active); }
+.timeline-scrubber-track-wrap { grid-column: 3; grid-row: 1; position: relative; cursor: pointer; min-height: 36px; display: flex; align-items: center; touch-action: none; }
+.scrubber-base-track { position: relative; height: 4px; width: 100%; background: var(--border-subtle); border-radius: 4px; }
+.scrubber-fill-bar { position: absolute; top: 0; bottom: 0; left: 0; background: var(--telemetry-cyan); border-radius: 4px; }
+.scrubber-tick-dot { position: absolute; width: 4px; height: 4px; border-radius: 50%; top: 0; }
+.scrubber-handle-thumb { position: absolute; top: 50%; width: 12px; height: 12px; border: 2px solid white; transform: translate(-50%, -50%); border-radius: 50%; background: var(--telemetry-cyan); box-shadow: 0 0 0 1px var(--telemetry-cyan); }
+.timeline-event-disclosure { grid-column: 1 / -1; font-size: 12px; min-width: 0; }
+.timeline-event-disclosure > summary { display: flex; align-items: center; gap: 8px; min-height: 28px; width: fit-content; list-style: none; cursor: pointer; color: var(--text-secondary); }
+.timeline-event-disclosure > summary::-webkit-details-marker { display: none; }
+.timeline-event-disclosure > summary span:first-child { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.timeline-filter-strip { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0; }
+.timeline-filter-chip { min-height: 32px; padding: 5px 10px; border-radius: 7px; color: var(--text-secondary); font-size: 12px; }
+.timeline-filter-chip.active { background: var(--bg-active); color: var(--telemetry-cyan); }
+.timeline-events-list { max-height: 180px; overflow: auto; }
+.timeline-event-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px; border-radius: 6px; cursor: pointer; }
+.timeline-event-item:hover, .timeline-event-item.active { background: var(--bg-card); }
+.event-item-left { display: flex; gap: 8px; align-items: center; }
+.event-color-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.event-time-right { color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.timeline-empty-message { color: var(--text-secondary); font-size: 12px; padding: 8px 0; }
+.timeline-bottom-action { margin-top: 8px; }
+.filter-events-outline-btn { color: var(--telemetry-cyan); padding: 6px 0; font-size: 12px; }
+.race-status-leaderboard-card { padding: 22px 20px; margin-top: 48px; background: var(--bg-card); border-radius: 24px; min-width: 0; }
+.card-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tactical-dashboard-root .panel-title { margin: 0; font-size: 18px; font-weight: 500; letter-spacing: -.3px; }
+.header-status-left { display: flex; align-items: center; gap: 7px; }
+.phase-text { font-size: 12px; color: var(--text-secondary); }
+.header-leg-right { white-space: nowrap; font-size: 12px; color: var(--text-secondary); }
+.leaderboard-kpi-row { display: flex; gap: 16px; margin: 24px 0 16px; }
+.kpi-mini-card { display: grid; align-content: start; gap: 5px; min-width: 0; flex: 1; }
+.kpi-mini-label { font-size: 11px; color: var(--text-secondary); }
+.kpi-mini-val { font-size: 13px; font-weight: 500; overflow-wrap: anywhere; }
+.kpi-leader-badge { display: flex; align-items: center; gap: 6px; }
+.leader-color-bar { width: 3px; height: 15px; border-radius: 2px; }
+.fleet-table-container { overflow-x: auto; margin: 0 -8px; }
+.fleet-table { border-collapse: collapse; width: 100%; min-width: 304px; font-variant-numeric: tabular-nums; }
+.fleet-table thead th { font-size: 11px; font-weight: 400; color: var(--text-secondary); text-align: right; padding: 9px 4px; white-space: nowrap; }
+.fleet-table thead th:nth-child(2) { text-align: left; }
+.fleet-table tbody td { font-size: 12px; padding: 11px 4px; border-bottom: 1px solid #2021240d; text-align: right; white-space: nowrap; }
+.fleet-table-row { cursor: pointer; }
+.fleet-table-row:hover { background: var(--bg-hover); }
+.fleet-table-row.selected { background: var(--bg-active); }
+.fleet-table td.td-rank { color: var(--text-secondary); width: 20px; }
+.boat-cell-flex { display: flex; align-items: center; gap: 6px; }
+.boat-color-badge, .boat-color-square { width: 7px; height: 7px; border-radius: 2px; box-shadow: inset 0 0 0 1px #20212426; flex-shrink: 0; }
+.boat-code-text { font-weight: 600; }
+.course-layers-collapse { margin-top: 20px; }
+.collapse-trigger-btn { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); min-height: 32px; }
+.collapse-content-drawer { margin-top: 12px; }
+.layer-row { display: flex; justify-content: space-between; gap: 12px; margin: 10px 0; font-size: 12px; }
+.layer-tag { color: var(--text-secondary); font-size: 10px; }
+.selected-boat-kpi-banner { border-top: 1px solid var(--border-subtle); margin-top: 4px; padding-top: 18px; }
+.selected-boat-kpi-banner-card { display: flex; align-items: center; gap: 24px; background: var(--bg-surface); min-width: 0; }
+.banner-boat-id-cell { display: flex; align-items: center; gap: 10px; width: 180px; min-width: 0; }
+.flag-icon-wrap { flex-shrink: 0; }
+.boat-names-wrap { display: grid; gap: 4px; min-width: 0; }
+.boat-code-strong { font-size: 15px; font-weight: 600; }
+.boat-team-span { color: var(--text-secondary); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.banner-divider { height: 32px; width: 1px; background: var(--border-subtle); }
+.banner-kpis-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex: 1; gap: 20px; }
+.banner-kpi-item { min-width: 0; }
+.kpi-item-title { font-size: 11px; color: var(--text-secondary); }
+.kpi-val-sparkline-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.kpi-number-val { font-size: 20px; font-weight: 500; letter-spacing: -.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.kpi-number-val small { font-size: 12px; }
+.mini-sparkline-svg { display: block; width: 36px; height: 16px; }
+.tactical-bottom-band { display: grid; grid-template-columns: minmax(0, 1fr) 352px; gap: 32px; margin: 0 32px 40px; }
+.telemetry-workspace-card { display: flex; flex-direction: column; min-width: 0; border-top: 1px solid var(--border-subtle); padding-top: 24px; }
+.telemetry-ctrl-header { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 24px; }
+.header-title-wrap { display: flex; align-items: center; gap: 8px; flex: 1 0 100%; }
+.info-mark { font-size: 12px; color: var(--text-secondary); cursor: help; }
+.filter-sub-label { font-size: 12px; color: var(--text-secondary); margin-right: 8px; }
+.boats-filter-wrap, .metrics-filter-wrap, .window-selector-wrap { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; min-width: 0; }
+.boat-chips-row, .metric-chips-row { display: flex; align-items: center; gap: 3px; flex-wrap: wrap; }
+.boat-chip-btn { display: flex; align-items: center; gap: 5px; background: transparent; padding: 5px 7px; min-height: 30px; border-radius: 6px; border: 1px solid transparent; }
+.boat-chip-btn.dimmed { opacity: .5; }
+.boat-chip-btn.selected { background: var(--bg-card); border-color: var(--border-medium); }
+.boat-chip-code { font-size: 12px; font-weight: 500; }
+.metric-chip-btn { display: flex; align-items: center; gap: 6px; min-height: 30px; font-size: 12px; color: var(--text-primary); background: var(--bg-card); padding: 5px 8px; border-radius: 6px; }
+.metric-chip-btn.inactive { color: var(--text-secondary); text-decoration: line-through; background: transparent; }
+.close-x { color: var(--text-secondary); font-size: 12px; }
+.window-dropdown-rel { position: relative; }
+.window-select-btn { display: flex; align-items: center; gap: 8px; min-height: 30px; border: 1px solid var(--border-subtle); padding: 5px 8px; border-radius: 6px; font-size: 12px; }
+.window-dropdown-menu { position: absolute; left: 0; top: calc(100% + 5px); min-width: 140px; padding: 6px; background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 12px; box-shadow: 0 6px 18px #20212414; z-index: 40; }
+.window-dropdown-item { display: block; width: 100%; padding: 8px; min-height: 32px; font-size: 12px; text-align: left; border-radius: 6px; }
+.window-dropdown-item:hover, .window-dropdown-item.active { background: var(--bg-active); }
+.stacked-charts-stage { position: relative; display: flex; flex-direction: column; gap: 12px; cursor: crosshair; }
+.chart-row-container { display: flex; height: 88px; min-width: 0; }
+.chart-y-axis-col { width: 68px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 8px 2px 0; text-align: right; }
+.y-axis-title { font-size: 11px; font-weight: 500; color: var(--text-secondary); }
+.y-axis-ticks { display: flex; flex-direction: column; justify-content: space-between; height: 100%; font-size: 11px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.chart-plot-area { flex: 1; position: relative; height: 100%; min-width: 0; }
+.chart-svg-canvas { width: 100%; height: 100%; display: block; }
+.synchronized-needle-cursor { position: absolute; top: 0; bottom: 0; width: 0; pointer-events: none; z-index: 20; }
+.needle-time-pill { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); color: white; background: var(--text-primary); border-radius: 5px; padding: 2px 6px; font-size: 11px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.needle-vertical-line { position: absolute; top: 8px; bottom: 0; width: 1px; background: var(--text-primary); }
+.charts-x-axis-bar { display: flex; align-items: center; margin-top: 8px; }
+.x-axis-spacer { width: 68px; flex-shrink: 0; }
+.x-axis-ticks-row { display: flex; justify-content: space-between; flex: 1; }
+.x-tick-label { font-size: 11px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.events-notes-card { display: flex; flex-direction: column; min-width: 0; padding: 24px 0 0; border-top: 1px solid var(--border-subtle); }
+.events-notes-header { margin-bottom: 16px; }
+.add-note-btn { min-height: 32px; display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--telemetry-cyan); padding: 5px 8px; border-radius: 6px; }
+.add-note-btn:hover { background: var(--bg-active); }
+.events-filter-tabs { display: flex; gap: 5px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+.tab-pill-btn { min-height: 30px; border-radius: 7px; padding: 5px 9px; font-size: 12px; color: var(--text-secondary); }
+.tab-pill-btn.active { color: var(--telemetry-cyan); background: var(--bg-active); }
+.inline-add-note-box { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.note-input-field { min-width: 0; flex: 1 1 140px; min-height: 40px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 8px; font-size: 14px; }
+.inline-note-actions { display: flex; gap: 8px; }
+.note-save-btn, .note-cancel-btn { min-height: 36px; padding: 5px 12px; border-radius: 8px; font-size: 12px; }
+.note-save-btn { background: var(--telemetry-cyan); color: white; }
+.note-cancel-btn { background: var(--bg-card); }
+.events-list-scrollable { max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.event-item-row { display: flex; align-items: center; gap: 8px; padding: 12px 6px; border-bottom: 1px solid var(--border-subtle); cursor: pointer; font-size: 12px; }
+.event-item-row:hover, .event-item-row.current-active { background: var(--bg-active); }
+.event-time-col { width: 44px; color: var(--text-secondary); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.event-type-badge-wrap { display: flex; align-items: center; gap: 5px; min-width: 46px; }
+.event-dot-indicator { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.event-type-label { font-size: 11px; font-weight: 500; }
+.event-desc-col { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.event-action-col { margin-left: auto; font-size: 11px; }
+@media (max-width: 1399px) {
+  .tactical-stage-band, .tactical-bottom-band { grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; margin-left: 24px; margin-right: 24px; }
+  .main-header-bar { padding: 0 24px; gap: 16px; }
+  .header-center-nav { gap: 22px; }
+  .race-context-row { padding-left: 24px; padding-right: 24px; }
+  .environmental-substrip { padding-left: 24px; padding-right: 24px; }
+  .timeline-panel-body { grid-template-columns: 105px 128px minmax(60px, 1fr); gap: 10px; }
+  .speed-chips-row { grid-column: 3; grid-row: 2; justify-self: end; }
+  .timeline-event-disclosure { grid-column: 1 / 3; grid-row: 2; }
+  .banner-boat-id-cell { width: 140px; }
+  .banner-kpis-strip { gap: 12px; }
+  .selected-boat-kpi-banner-card { gap: 16px; }
+  .kpi-trend-pill { display: none; }
+}
+@media (max-height: 800px) and (min-width: 1200px) {
+  .main-header-bar { height: 64px; }
+  .race-context-row { padding-top: 16px; padding-bottom: 6px; }
+  .race-context-title h1 { font-size: 28px; }
+  .environmental-substrip { padding-bottom: 14px; }
+  .map-viewport-frame { height: 250px; }
+  .tactical-stage-band { margin-bottom: 28px; }
+}
+@media (max-width: 1199px) {
+  .header-center-nav { gap: 18px; }
+  .brand-cup-title { font-size: 15px; }
+  .race-library-trigger span { display: none; }
+  .tactical-stage-band { grid-template-columns: minmax(0, 1fr); }
+  .race-status-leaderboard-card { margin-top: 0; padding: 24px; }
+  .fleet-table { min-width: 0; }
+  .fleet-table thead th, .fleet-table tbody td { font-size: 13px; padding: 12px 8px; }
+  .leaderboard-kpi-row { max-width: 440px; }
+  .tactical-bottom-band { grid-template-columns: minmax(0, 1fr) 300px; }
+  .timeline-panel-body { grid-template-columns: 112px 140px minmax(100px, 1fr) auto; }
+  .speed-chips-row { grid-column: 4; grid-row: 1; }
+  .timeline-event-disclosure { grid-column: 1 / -1; grid-row: 2; }
+}
+@media (max-width: 767px) {
+  .main-header-bar { height: auto; min-height: 112px; flex-wrap: wrap; padding: 12px 16px 0; gap: 8px; }
+  .header-left-brand { order: 1; }
+  .header-right-actions { order: 2; margin-left: auto; gap: 12px; }
+  .header-center-nav { order: 3; flex: 0 0 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; min-height: 44px; }
+  .nav-tab-link { font-size: 12px; padding: 12px 2px; }
+  .brand-cup-title { font-size: 16px; }
+  .brand-replay-subtitle { font-size: 11px; }
+  .race-library-trigger, .hdr-gear-btn { width: 40px; height: 40px; justify-content: center; }
+  .race-context-row { align-items: flex-start; padding: 20px 16px 10px; gap: 12px; }
+  .race-context-title h1 { font-size: 26px; letter-spacing: -.7px; }
+  .race-context-meta { font-size: 11px; line-height: 1.6; }
+  .race-context-meta span { margin: 0 3px; }
+  .race-context-actions { gap: 8px; align-items: flex-end; flex-direction: column; }
+  .race-phase { display: none; }
+  .race-context-actions .hdr-pill-dropdown-btn { max-width: 110px; font-size: 12px; padding: 6px 10px; min-height: 36px; }
+  .header-export-link { min-height: 28px; font-size: 12px; }
+  .environmental-substrip { padding: 0 16px 20px; gap: 12px; align-items: flex-start; }
+  .recorded-wind { gap: 6px; font-size: 11px; }
+  .recorded-wind svg { display: none; }
+  .conditions-disclosure summary { font-size: 11px; min-height: 20px; }
+  .conditions-popover { left: auto; right: 0; width: 260px; }
+  .tactical-stage-band, .tactical-bottom-band { margin: 0 16px 28px; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+  .course-section-header { margin-bottom: 8px; }
+  .course-section-header h2 { font-size: 16px; }
+  .map-viewport-frame { height: 320px; border-radius: 16px; }
+  .map-top-right-toolbar { left: 8px; right: 8px; top: 8px; max-width: none; gap: 4px; padding: 4px; justify-content: space-between; }
+  .map-toolbar-v-divider { display: none; }
+  .map-segmented-toggle button { min-height: 36px; padding: 6px 8px; font-size: 10px; }
+  .map-tool-toggle-btn { min-height: 36px; padding: 6px; font-size: 10px; }
+  .map-tool-icon-btn { width: 36px; min-height: 36px; }
+  .map-top-left-hud { left: 8px; bottom: 36px; gap: 4px; max-width: calc(100% - 16px); }
+  .dual-hud-glass-card { padding: 7px 10px; }
+  .hud-bold-val { font-size: 15px; }
+  .hud-metric-caption { font-size: 11px; }
+  .hud-metric-body { gap: 6px; }
+  .hud-sub-angle { font-size: 11px; }
+  .map-bottom-scale-bar { left: 10px; bottom: 8px; }
+  .race-timeline-panel-card { padding-top: 14px; }
+  .timeline-panel-body { grid-template-columns: 100px 140px minmax(0, 1fr); gap: 8px; }
+  .countdown-main-digits { font-size: 24px; }
+  .speed-chips-row { grid-column: 3; grid-row: 1; flex-wrap: wrap; justify-content: end; gap: 0; max-width: 76px; }
+  .speed-chip-btn { min-width: 32px; min-height: 28px; font-size: 11px; }
+  .timeline-scrubber-track-wrap { grid-column: 1 / -1; grid-row: 2; min-height: 28px; }
+  .timeline-event-disclosure { grid-column: 1 / -1; grid-row: 3; }
+  .timeline-header { bottom: 8px; }
+  .countdown-sub-title { font-size: 9px; }
+  .selected-boat-kpi-banner { padding-top: 16px; }
+  .selected-boat-kpi-banner-card { flex-direction: column; gap: 14px; align-items: stretch; }
+  .banner-boat-id-cell { width: 100%; }
+  .boat-names-wrap { display: flex; gap: 8px; align-items: center; }
+  .boat-team-span { font-size: 12px; white-space: normal; }
+  .banner-divider { display: none; }
+  .banner-kpis-strip { gap: 8px; }
+  .kpi-number-val { font-size: 19px; }
+  .race-status-leaderboard-card { border-radius: 16px; padding: 20px 16px; }
+  .fleet-table { min-width: 304px; }
+  .fleet-table thead th, .fleet-table tbody td { padding: 11px 4px; font-size: 12px; }
+  .telemetry-ctrl-header { gap: 12px; margin-bottom: 24px; }
+  .boat-chip-btn, .metric-chip-btn { min-height: 36px; }
+  .chart-row-container { height: 84px; }
+  .chart-y-axis-col, .x-axis-spacer { width: 54px; }
+  .x-tick-label:nth-child(even) { visibility: hidden; }
+  .events-list-scrollable { max-height: 320px; }
+  .hdr-dropdown-popover { width: min(300px, calc(100vw - 32px)); }
+}
+@media (max-width: 359px) {
+  .timeline-panel-body { grid-template-columns: 88px 128px minmax(0, 1fr); gap: 4px; }
+  .transport-controls-row { gap: 4px; }
+  .speed-chip-btn { min-width: 28px; padding: 2px; }
+  .kpi-number-val { font-size: 17px; }
+  .map-segmented-toggle button { padding: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .tactical-dashboard-root *, .tactical-dashboard-root *::before, .tactical-dashboard-root *::after { transition: none !important; animation: none !important; } }

@@ -1,0 +1,1077 @@
+{
+  "review_date": "2026-11-04",
+  "timezone": "Europe/Rome",
+  "captured_utc": "2026-11-04T14:21:04.809103+00:00",
+  "commit": "f956f8a14feb3d6bfa483b91ea10384f3bcb84d4",
+  "branch": "master",
+  "dirty": true,
+  "status_excluding_pack": "M PROJECT.md\n M README.md\n M docs/dashboard_contract.md\n M docs/data_schema.md\n M docs/design-system.md\n M docs/forecasting_implementation.md\n M docs/historical_analysis.md\n M index.html\n M package.json\n M pipeline/historical_analysis.py\n M pipeline/ingest.py\n M pipeline/prediction/build.py\n M pipeline/prediction/contracts.py\n M pipeline/prediction/cup.py\n M pipeline/prediction/labels.py\n M pipeline/prediction/models.py\n M pipeline/prediction/simulation.py\n M pipeline/prediction/state.py\n M pipeline/run_pipeline.py\n M public/data/artifacts.json\n M public/data/predictions/cup_2027.json\n M public/data/predictions/index.json\n M run.ps1\n M scripts/build_artifact_inventory.py\n M src/App.tsx\n M src/components/canvas/CourseCanvas.tsx\n M src/components/canvas/DynamicVesselLayer.ts\n M src/components/canvas/StaticCourseLayer.ts\n M src/components/canvas/cameraStateSyncAdversarial.test.ts\n M src/components/canvas/mapStyle.ts\n M src/components/canvas/viewModeStress.test.ts\n M src/components/dashboard/BoatPerformanceCard.adversarial.test.ts\n M src/components/dashboard/BoatPerformanceCard.test.ts\n M src/components/dashboard/BoatPerformanceCard.tsx\n M src/components/dashboard/EventsNotesPanel.adversarial.test.ts\n M src/components/dashboard/EventsNotesPanel.tsx\n M src/components/dashboard/ForecastWorkspace.tsx\n M src/components/dashboard/RaceStatusLeaderboard.tsx\n M src/components/dashboard/RaceTimelinePanel.test.ts\n M src/components/dashboard/RaceTimelinePanel.tsx\n M src/components/dashboard/ReportsWorkspace.tsx\n M src/components/dashboard/TacticalDashboard.tsx\n M src/components/dashboard/TacticalHeader.tsx\n M src/components/dashboard/TacticalMapOverlay.adversarial.test.ts\n M src/components/dashboard/TacticalMapOverlay.test.ts\n M src/components/dashboard/TacticalMapOverlay.tsx\n M src/components/dashboard/dashboard.css\n M src/components/dashboard/forecast.css\n M src/components/dashboard/workspaces.css\n M src/components/modals/AnalysisModal.tsx\n M src/components/modals/RacePickerModal.tsx\n M src/components/panels/ComparisonPanel.tsx\n M src/engine/analysisCatalog.ts\n M src/engine/predictionCatalog.test.ts\n M src/engine/predictionCatalog.ts\n M src/engine/vmgWindVerification.test.ts\n M src/index.css\n M src/main.tsx\n M src/types/analysis.ts\n M src/types/prediction.ts\n M src/types/replay.ts\n M tests/browser/dashboard.mjs\n M tests/browser/forecast.mjs\n M tests/unit/test_dashboard_contract.py\n M tests/unit/test_prediction_cup.py\n M tests/unit/test_prediction_models.py\n M tests/unit/test_prediction_pipeline.py\n M tests/unit/test_vmg_wind_adversarial.py\n M vite.config.ts\n?? docs/annotation_revision_plan.md\n?? docs/annotation_revision_verification.md\n?? docs/browser_feedback_verification.md\n?? docs/environment_data.md\n?? docs/google_store_ui_redesign_plan.md\n?? docs/independent_probability_review_prompt.md\n?? docs/team_analytics.md\n?? docs/team_analytics_plan.md\n?? docs/ui_redesign_verification.md\n?? pipeline/environment.py\n?? pipeline/tactical_insights.py\n?? public/data/environment/26_05_22_cag_ipr_race_1.json\n?? public/data/environment/26_05_22_cag_ipr_race_2.json\n?? public/data/environment/26_05_22_cag_ipr_race_3.json\n?? public/data/environment/26_05_23_cag_ipr_race_4.json\n?? public/data/environment/26_05_23_cag_ipr_race_5.json\n?? public/data/environment/26_05_23_cag_ipr_race_6.json\n?? public/data/environment/26_05_24_cag_ipr_mr_final.json\n?? public/data/environment/26_05_24_cag_ipr_race_7.json\n?? public/data/environment/26_05_24_cag_ipr_race_8.json\n?? public/data/environment/26_09_22_nap_ipr_pr2.json\n?? public/data/environment/26_09_22_nap_ipr_pr3.json\n?? public/data/environment/26_09_22_nap_ipr_pr4.json\n?? public/data/environment/26_09_23_nap_ipr_pr1.json\n?? public/data/environment/26_09_23_nap_ipr_pr2.json\n?? public/data/environment/26_09_23_nap_ipr_pr3.json\n?? public/data/environment/26_09_24_nap_ipr_pr-a.json\n?? public/data/environment/26_09_24_nap_ipr_pr-b.json\n?? public/data/environment/26_09_24_nap_ipr_pr-c.json\n?? public/data/environment/26_09_25_nap_ipr_race_1-3.json\n?? public/data/environment/26_09_25_nap_ipr_race_2.json\n?? public/data/environment/26_09_25_nap_ipr_race_3.json\n?? public/data/environment/26_09_26_nap_ipr_race_4.json\n?? public/data/environment/26_09_26_nap_ipr_race_5.json\n?? public/data/environment/26_09_26_nap_ipr_race_6.json\n?? public/data/environment/26_09_27_nap_ipr_race_7.json\n?? public/data/environment/26_09_27_nap_ipr_race_8.json\n?? public/data/environment/naples_mr_final.json\n?? public/data/environment/naples_pr1.json\n?? public/data/environment/responses/002c4afca36895eaf819c1dca81b2e1f8584305111964e3fe5c185213185fde1.json\n?? public/data/environment/responses/003b6d4e02b97f58c6e860c5f2ba8e429c33a8e8f173a76c68db98c11235aed7.json\n?? public/data/environment/responses/0f953a2504ec844924a39b5a1f9f21d6e77d370b8297c247ae27ecda3ceba4ff.json\n?? public/data/environment/responses/104453e3b3239cd0d36754d434ceb65b1220ce511cecff766db1a94cf65301ad.json\n?? public/data/environment/responses/20705c8e267baf06f5901e964726b4d3f989961120bc9afdd5276bce81808917.json\n?? public/data/environment/responses/3bb6c3ca9cc656d12604e241864d54f5d629b43cfd547158af86d9e9572dc220.json\n?? public/data/environment/responses/543ee8f750c3a3e57722fef2ba2555f5fa17b1197b5c41478229b839e875b19a.json\n?? public/data/environment/responses/742dfcaa779bdd78d7d3bd025f82a414607ca7acd511ed5ab719775fcbb9f333.json\n?? public/data/environment/responses/74b7906e652a8773b2f2a54eaf22b6299d78257be499cb5404f5244a538245a2.json\n?? public/data/environment/responses/7a5d606c3c1a06facb273b62d41c8179aac21c6ff660fdcd2a65757b58e803c5.json\n?? public/data/environment/responses/7de3f662095286b2fe40ce2ccad063131575441537fac5a52afbc4013781100b.json\n?? public/data/environment/responses/945880e99288a91eb7c333e0f7e1247f81f0f7c3415ff6ad04eaed8249fded1d.json\n?? public/data/environment/responses/9a3bd6bd1db8c0a499ce0118f7bd6661015118182f8315b9aebb7807bf9bd8d2.json\n?? public/data/environment/responses/a446b553bd04034eecd32294ddb6551639441c9a5f7e1f4fab13abf0656c56ce.json\n?? public/data/environment/responses/ba27bdb64d9620b7f16b4ae00b2296cb283a045fe3d1e2430ca78aea9966ab14.json\n?? public/data/environment/responses/cf57e5dd50e573ccb1a65072825338b77eedc7ebb8a21bbfda7d209daa5aaa2c.json\n?? public/data/environment/responses/d3de54150a73a3a6e625ba0c2b24bed14ea65e0ea2062ae5783b837cb4a331fc.json\n?? public/data/environment/responses/eee6cad05fb3ee12eb250267ff7dfb85892b986b1056db10290d35c84eb7a668.json\n?? public/data/manifests.json\n?? public/data/predictions/cup/1fc3311b97ea076295482dc2f093e3e208cdf7df7df15a351f001bdebdfdae6c.json\n?? public/data/predictions/cup/5cae98e1c3856cd6885831d0b876d6ae048d0d005d5fc373ab7d0651a8f9a6b5.json\n?? public/data/predictions/cup/89f568a6b248c6491ba3ddab08ff68165ca6866d2ac5fffd341c6cea1481262d.json\n?? public/data/predictions/cup/a6adfc48c1182ca2f2687e6f03a459d991ff2fe7abe8d6c320c4c9b22d9660c5.json\n?? public/data/predictions/cup/b1c18c721cf032273bc44bd1c9f1a7746ce25df12f91698c75d656c6b70732e6.json\n?? public/data/predictions/cup/b506db42173a9f01041c562fb9a1f47c83201185a135833b9e5a5fc580078eb2.json\n?? public/data/predictions/cup/d007fcf3f213c6ec051cf6bbbaf20aa864f935117c2adf4a2158edd6733c36bd.json\n?? public/data/predictions/manifests/0b70bf9f33466e9678dad477b770482ce0d30e3b103f1b495115974f1e66e900.json\n?? public/data/predictions/manifests/11a818f56511ee8cbf9b39f253bd05026bc2a49f8bff781ededad709a71b9c2c.json\n?? public/data/predictions/manifests/139b9c44c38daf94cb523c25fe8bb9c63fcadb585c488552132aa6d30e94b587.json\n?? public/data/predictions/manifests/383fccde516e8afa0ff423c7274ff7386b10a521d71afd520072682ea8f64c84.json\n?? public/data/predictions/manifests/48292ed9d318228bbcef4a92a81ec5f603c3cfa4f7f14c750a948172e378ed2c.json\n?? public/data/predictions/manifests/50214f2dbfc689c8e21f4851031ee2da60e608a882d3ade6f03be92b11252551.json\n?? public/data/predictions/manifests/64e622d3bace87c6e5be8a58bf26ada87a3205610346c068d016803d13a8f7a8.json\n?? public/data/predictions/manifests/b37fad088ccc955f7efc54962d340d6536cdc68fa653518a5b4ff119db45d05d.json\n?? public/data/predictions/models/066ea617753e908083563e895f5d09787f93aac7d40fbdab32aa5d1bc1fe0766.json\n?? public/data/predictions/models/0da0a23d17d5235be02b1725ddeba78dc9deecf8044e2bb75eec97141b3f7dc7.json\n?? public/data/predictions/models/0db3d441f1be96dbb2eec67c822cf635b75296b3ff92e7f43e822b06eeedd65e.json\n?? public/data/predictions/models/194e5d1df82a65b0363f7059bda7e97332b9f4ff89a55ea442c515921fc6ae4b.json\n?? public/data/predictions/models/1ab382f40da56e8d5020be0daa4c33cbacd93f1503efda9c3650d90426bfdc00.json\n?? public/data/predictions/models/204afe904b47004fdc4e00435b63b2b76f2dd5dc4cc23f2c5630c17253f7d86f.json\n?? public/data/predictions/models/34429ac4259b1cfce30e6afefc24e331c043594c1eec580025e491866e9ff186.json\n?? public/data/predictions/models/34dc918c466e5b9f3e03532e93bea2095da6cd0e2b912bf27bd754cb5c5d8983.json\n?? public/data/predictions/models/34e8a351461ccaffc521710f6c12566936f9b10bbd5e17856206c1521669915d.json\n?? public/data/predictions/models/35857f80991521cf13fcd5da598f2188f322c72377463c55379ffba5e6764688.json\n?? public/data/predictions/models/36f98eba3eb75342371bf678c6b75ceedeab89e834008a1c8d0eedc591b70f12.json\n?? public/data/predictions/models/4326ed4d07f88f847f682a4df542e6bd7c731a2a86027d987b1b3928d3e568b6.json\n?? public/data/predictions/models/454fdc1dd56b693e2759107a1c8e2676b49e5f66fc9dfb3f63362370577d6c79.json\n?? public/data/predictions/models/4dd0095733f570ab6038018887e407c0cc18d2b8a3baac5cae330c1f3c864cc8.json\n?? public/data/predictions/models/643e0427a60e1383e77562245de46fd24158ef5ab4cbee2f30df62252c3bf22a.json\n?? public/data/predictions/models/6726526f5b72ceaf76c46d2ab5d0d413b923b967f2239f8b9e23bab260b880fe.json\n?? public/data/predictions/models/673ba2fdeabe805792c6419d7d7e8a0dbcbd27b422b5c9eedea22de62affccdb.json\n?? public/data/predictions/models/69e56ab5961324b852b71d803615d0b56e4e6f61b7fbd9e3f49f785a00d9d553.json\n?? public/data/predictions/models/74a6561fe494e8d193579509b70218e7820506b333da2e9d605dc6ba4ef5ba01.json\n?? public/data/predictions/models/7515eb4b2485afe1821230135cc18d069666627ddcf776fd3d01fc3723863ff3.json\n?? public/data/predictions/models/7a84cea2bf8ec6ac74f010d35b6758fb80739e27c790c7fb77b754bfa20c22c9.json\n?? public/data/predictions/models/8556db21c57e5338c765b577ee27b3c3e90ad965d16d4482dd53cb0376ae9231.json\n?? public/data/predictions/models/8c100d5af30c7bdc11895c2865f910bb82b6592ad2e00316e6b36f4cc4c8cc9b.json\n?? public/data/predictions/models/95e6369bcdd446ef4cb3674822e526bfd7ac9b246d24e5a8637e6e68c4f8a265.json\n?? public/data/predictions/models/9b13a4aa952effef51e4a5d78cdbe0e378626ca2fc18ca3113ae31af918e907b.json\n?? public/data/predictions/models/a43773f3bec015a19c9327baa2be813ba2d37114c9ca7c6df24d5d5874f2e723.json\n?? public/data/predictions/models/ab0bb00e94200b70721dc382a6d8751aa2239c25bc1030c92586e30ae71c9632.json\n?? public/data/predictions/models/b0b2dc7382bdbc78beae5a6d4276eb6da490eafb43261a7e2130b478919f4f3b.json\n?? public/data/predictions/models/b415aab51f4cfdee9e361cf39f841044843c75284a67af669c2c901c1f45a266.json\n?? public/data/predictions/models/c83e4b91dad9ead448ec71aff45e7a8499736dfacc32f0f228df5dfb835d139e.json\n?? public/data/predictions/models/d6f354b930390f39642aacff22f07bbe347746e41388ad984be571e40a7a8884.json\n?? public/data/predictions/models/d82b99a2a30b660983666b0bf1ef5892aef9dace2ccc3a92378eea0dc5fa9bc2.json\n?? public/data/predictions/models/dd9a31a7834ae1e9d8c0c082b437e0c6542302bed171b0d8e5e45f9c6b3940da.json\n?? public/data/predictions/models/ecfe8530a2448f2701980d6a372fc3cb529492fff1837960cd1b0c03ddf51607.json\n?? public/data/predictions/models/f30c5580a55edd85a22f72d9c599ea92fc72b2e63d2ebb3681418cfb61e563ab.json\n?? public/data/predictions/models/f4cd74d88a5ed43888edc6be18dc773a9405d3e31e821c7fced01388dd2d13b1.json\n?? public/data/predictions/models/f8499c5c3fed8a3af33f18f554af3378430a8ab381402af4076ab91fe249132c.json\n?? public/data/predictions/models/f974125f264495fe21815ee7d90212414ebcf79b4510f420b2743a0ab7b255e0.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_1_8a8b82b3803c7e41d46d32c613855ee40368033d42da5ba08cacc4ffbee3b36f.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_1_931f7eadf084afa362402c15eff14edf75a531d77a936aee32b8fa45e83f3c7d.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_1_99b1752bfa7c3c57006dda100372c855a7153031e7a9a5f36c02d98972001a90.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_1_f266c35f91ca81c24560931488c5f3387fc3fc7a435ea7b4180bfe499717178c.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_1_f573b6fb30b9147821042a0a8295236e6b62ff9023608ff6a5a73434712ae11e.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_2_2923ae37bcff1565f72bc2e28835dbc2ca6ae4e1ed27d14ff362f013a7c17bcf.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_2_350300e2c5e1cef63099869d4d94cbcc0e7d74c0a1adf63ed531e7d9b71643d8.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_2_8331f26bb4bfa84a6ef35d14754e54be7fd37c793751a892ae1ebf730eaf54a6.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_2_cc8169da01b31de12ee262835f4a21802bb1de49a0508181ebbd39b003696b5b.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_2_d5c3ee3a3f4be981cc7e5da6c36c183900f515162ef6b21bede3802544ff15fa.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_3_137bfb29984c5a8683ab1ae1935bcd26fc98ac33097117ec6b0592826321feb5.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_3_14ca9c55cbc3a4237ea06601ed4cb9a15e8df9e9f86abcc179859fe65e67a5b1.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_3_4187c5fc1bc29de09f9a2579a28953bf97a6779fea97771dcb8728e8f200bc35.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_3_480d20645b7df22c264c978699917dd33a2192b31312c726e1b70e8e86efbc8d.json\n?? public/data/predictions/races/26_05_22_cag_ipr_race_3_bc97385603409f010f49fd6e61ee0bf356c6f6c0256b62a72aad37781e8028b6.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_4_5a3a6007aa0a464e5bb6cdb08ef293a263fc16bcf0ca42fab4bed197a87f8dd1.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_4_88a3c81dc0cbb8453f570c0cb3b7976e3ef2976d951537c56a70ef9463c722e6.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_4_c4d448af030d3c2e9e9894870d1f3adbf493cb80eb7a4ad61df20d730e2ed641.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_4_cd54467c1b8e4c11b263b41f8e0440d119c1f3e589a610136b321991a7c45dec.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_5_19e373d25fda288655b929072d358d801542c07cf221b5fc0c929ba26927c8cd.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_5_50167ad09d726f53fa7625cfa87dc26fa6d4d0e282f9a91144616c57920867b4.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_5_5c632a1c62f65548cffe2a784e88afe9f9e230f7600924fe98309451ae2d6f47.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_5_ba0c354b8b575702f3739580c36eb5868b7a54ead596aee2d0d7bec48ae47b74.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_6_1bf1bee82022f4b9a4a6e441a00eb8e58c5e0ee0423362fb9db5e522ad5615cb.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_6_897310f7ffd11b76cca260345877a9967a7374cf8d02394042a492643b3b000a.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_6_b9e144d37a510e9135009397e8444f95fc54b0dcfc54d2fca419e17cf6fc977a.json\n?? public/data/predictions/races/26_05_23_cag_ipr_race_6_f1a396b9aaa369b57f04febbad70d6f6102c1ad831206dc06d8ec529fc7c56ac.json\n?? public/data/predictions/races/26_05_24_cag_ipr_mr_final_9bb3678b16549f27312855d0e9ec1105e6da5564464d1cf691b8d115c576fc52.json\n?? public/data/predictions/races/26_05_24_cag_ipr_mr_final_bab1d39e1c64b1c7fe9b1a09777838030606693f3c0f608109e23f48cfb554f2.json\n?? public/data/predictions/races/26_05_24_cag_ipr_mr_final_d2ad1904f010fc55e0ac22f333a8fb2897c4ad0bdc457862675f1e39f2929116.json\n?? public/data/predictions/races/26_05_24_cag_ipr_mr_final_ee58f65357997c5b947d7161568b2a8dca6dbe88761f90e5ca37cb7529eb51ef.json\n?? public/data/predictions/races/26_05_24_cag_ipr_race_7_6fa55ba3ab04d6bda56296fb42277427feb142fac3dcf010de762aaa963693b6.json\n?? public/data/predictions/races/26_05_24_cag_ipr_race_7_8cd31d2de35806d79fedde0628da68fed6be9254685be6ba5d0a1a88c72f0891.json\n?? public/data/predictions/races/26_05_24_cag_ipr_race_7_8de728bfbfa51c6b3d13221a1ea1b269b4cd5dde1ebddafc660ca5fd352e0252.json\n?? public/data/predictions/races/26_05_24_cag_ipr_race_7_ed7866d5383b6c904eef5cde469184bf2fcc28dc19b65c52a0939a31fa735da8.json\n?? public/data/predictions/races/26_05_24_cag_ipr_race_8_4482ed5a5e08d6026d4ce8996877c35e0b43fd41cba5cf2dfba8f8e848d271d0.json\n?? public/data/predictions/races/26_05_24_cag_ipr_race_8_7414a55556d4b6869eaa11e943f37def86f61458646e66f31052db8fa812769c.json\n?? public/data/predictions/races/26_05_24_cag_ipr_race_8_ab5fd833ec9268defd596ba1014c7637fed4b09ade5131c789380b4d1d9dd9e3.json\n?? public/data/predictions/races/26_05_24_cag_ipr_race_8_e049e50d041c48de0e24b2096b8986de020b45cc2147263fdcd87f354e0061bd.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr2_32594a2857e406368e8ff4abce0268dc05417fdbf451d0f444493a71015ed5c5.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr2_81c8b4293c478ce2be2a91eebfba98a38f00a1574993bbd108de9c7ed42b8e06.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr2_c122286466470c76472ff0140c9a83e3ef0e0f32b7fd95d68aa10824d7c6b248.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr2_dbaefe0af482088f24ebcb222c0ef9d7743088396c264cb55a51b22b2a51d3a9.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr3_2e18a05d559a9f2bebe65ef587f18e843b7062e717d65d2d743ae1113099a21a.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr3_40e21e16f9868f111caa1920fec7cb2347cb1cb311fce311cb3f1e362a85f306.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr3_8cebb2e6e4641f737d636ebeb7e565d0dff4dd2e3354afc1e410daeac29a2c80.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr3_f70ac34c7dec54e172a0409de53282347147fa167b441c68dc64ff90f0fd28f8.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr4_3ed25f2789dcf5f64032f0163c670fa960b23f2553840ce6a15106eb0b2114ca.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr4_6c1e87147a084b442cc99fded339a3e05228b8da47d9771647cf08a4415ee2d9.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr4_a1c7ed8c1f6937932a82ab7c351acfdcb0aff48f95e6cd121ba493b0190d8e61.json\n?? public/data/predictions/races/26_09_22_nap_ipr_pr4_d52caff8bd8bd8de3399ae39100c2a98bef75204c8d50be89fdf325ca024a036.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr1_184d990f609d13f8266f0febbf082776faf78d7771d78903ed25e9a8cb653763.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr1_a201b19d62c0757959b5ed16da0712ff8d543a038f4fd9d3aa72547becb3fa28.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr1_d8500761f4ad8b110b40432a0335eea18578064a08b94d4977c9c23659429c94.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr1_dcc7ff48f3b693dea246059ca45751c164c87b2e8ff27a017440695c39df6d06.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr2_15307f80e8cfdc9dd2a902392bfd522e821c70f55248128e93f9b86cfc787e53.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr2_38b7c03b254d8ba7edb0e4a523d39181372eb54eb9e8e4a6e246f7979df4bb26.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr2_8a0297da65b09b51c61466867f354d4d5f358f3a0e4917f2011c180908d6bfc3.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr2_e9665b2a7c067fa48639b21a271b40a8df11fb817b12c71e9f5603fcfc6f0259.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr3_21aa54112792eed805ec5e14022c0e9adc8ccc14ff57c37152054e260d7c4662.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr3_2303a0569994a5a8161ff1c9e57cad8f66e49d89fe691b3eed659d110a5962a7.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr3_3156fed977e4005e6cf21261475c2071f46de94a8480b5e3362f6e808963abc2.json\n?? public/data/predictions/races/26_09_23_nap_ipr_pr3_f39e14d8188b54be80404ffe6e494e21fd2b0a6ed235c9ba4aef0add843b84c0.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-a_4682105b250eeb3d7485a0e3304d58498c128984d18c6d76a7098cb5b89ec457.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-a_6364f4a47d0361ed23f5c003fa3f80f7c7513ca5856f21cdaaa3183722265eba.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-a_70fdbdf4a271a05f17db1192488de55d6c0e6d90d0d756c41e120063c69a0f8d.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-a_cc1b56ebc461f18361a5c2111496b0d8e4b15da36dad8bfc639192b7bdef8114.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-b_1a764c571667e222e1ba992e1ebf63d6156da0d112f5c9ea9f4b71f65f47618c.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-b_343cc0c0c9152801f670bf384ead0187cbef52df4c3fc9bf9f1a4565a85ec54b.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-b_aacc3210d33a28833e9c1cadffe05652a38b41315658a94de836535f5e373b97.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-b_d44a490d7f306a0453afd66cd4c10a20d7a158cf853fec3938717e78f6f47b98.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-c_129fae96cabeb44049a43268eb9f493a8b2035058a7705d3b96fce9ceda84353.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-c_360c7e2aadc2d66e9bad95f85798dabf8dc2313bde31b6ab0225f31176293ffd.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-c_b3134f3105264e43ad135ef891dd8c190c2abfbf7904e193f61d80aa54484aae.json\n?? public/data/predictions/races/26_09_24_nap_ipr_pr-c_e54d7efad8f7be663ad1a68da4a3847832f40c91764749d275f25406f6da6841.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_1-3_2d5c1d9f82ef4ffbc3a3a9d832ec102101ec86a92fe3794e1557048be4e53445.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_1-3_a44277439731895447ce9cddfaff694a18e120a9af18e3bae749ad65b3cb1f62.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_1-3_ed252bbd2b89bbcd417f0d46c0a4bdb85abef662186f0487ab736357c7c41ba7.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_1-3_f782c29ed9f41b9b500415daefaf87888aa9ae7702b44b480bc5fa0d204e6214.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_2_45b133053c0c07b12c4ea048875328b6c60c4e624b7a8e35726cc7dadb4d5baf.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_2_858a43e060cbece5c4dea1d0076808edc682e23e362872466a0b808bfe0c9039.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_2_9709308b7ecdb1a0f791f557b6c8d6e09130029a1c80a14a2604a60153c2a34d.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_2_a96a83a970f405954128fcea134645bca516e604f7d136a40948cecf53596741.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_3_14d05c85ba35e2eb4318562057c6dc8edcc7b844d2fd53e2003de070e3e9eb10.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_3_4a9bab0c47981cc11f573529fd0676a016e2f9475ead3973ff3699e1c6675679.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_3_9b76385f00a46a5401c32490d55f3df5ad9ff0b7e5345bdda91c4e0ca70a3633.json\n?? public/data/predictions/races/26_09_25_nap_ipr_race_3_a52248ead89bec4b299e71cc867582ff644c3a18c8522c3fc6929e40b568c6e3.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_4_0b447648381266db96943a266ddc285ccf4708c562af68d246d2324e333fd0ea.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_4_49defa640361fcdfd824d2022b78be63dfb678d6256fd0266d0a2b85f8a61c4c.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_4_60ce30c0ee570c942f1d963a9418f45538a4c108f02f3c52e661fa068089fd0e.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_4_8f7d4c6690143c36e94f9419f2fb9280a317894719cf1d297893e81dabf4764d.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_5_10fe7bcafbdb6d3b553b51b2ffcd38e127721445cac8ce866c236f19d8fdc49f.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_5_2e79dcd8b8ca8d443953119588cf935cb219359b2814b91de1521c7b65dd9bdd.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_5_e6dc62d5ce2f91aeeff869c3155a194309c1553f80f41ed1204628bae13894b6.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_5_f35609e8aa9ec459a19a165a0f8dc1c6f8ed7ddab65f58edea78194aacb3cb06.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_6_276c366fd28448a3e46df8e177e1dcdc75ef99224369cffe752a916bfc97b031.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_6_437a0c1c2a2e8c77d5fe661ce35a1e454daef6da767bf1f99ad115acc0764ee2.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_6_5e61f097b1e9bacf21f2c435c770b60a4934bbed3d37fef1bd5d649ad2953044.json\n?? public/data/predictions/races/26_09_26_nap_ipr_race_6_a9cb43bce31355998b2b74c7ccd3e2a7e1c7ddc6a8d59fff0817d82464fd2a26.json\n?? public/data/predictions/races/26_09_27_nap_ipr_race_7_0b17b3b9365ffd1c2077f0690e84b64000cfe108b1e5db13348f3da7c5669a77.json\n?? public/data/predictions/races/26_09_27_nap_ipr_race_7_3f160851807e3c2a8187360b62f728b2599eefbcad804788d21a6dc4912b0364.json\n?? public/data/predictions/races/26_09_27_nap_ipr_race_7_fbcb9738bb983a4dc9e1ffc5cc0e3afab5d660c315788af554ca9a871d5fdbe3.json\n?? public/data/predictions/races/26_09_27_nap_ipr_race_7_fe572cc6756fe69afba9d071522d4ade9bb6ab5e05580442c4f36796d8afd878.json\n?? public/data/predictions/races/26_09_27_nap_ipr_race_8_3dd7afd33bf02716f553c365d6575b7a26c00dfd432f2dab38cf9f320026d15b.json\n?? public/data/predictions/races/26_09_27_nap_ipr_race_8_5080f05c819f2aaef6214971a0a15ceef28c5e74bcb4f3e16d8add2b2f2efd31.json\n?? public/data/predictions/races/26_09_27_nap_ipr_race_8_567c76258d4e8a9f17793536516c9335b2a7b8390b56b44d009deb377d07bf61.json\n?? public/data/predictions/races/26_09_27_nap_ipr_race_8_f004908d572bfa1b9d62b4c86ad6f69ee3a2fc79750771b875e6a52bb7aab755.json\n?? public/data/predictions/races/naples_mr_final_04e374dba595cc66053bdb342f91e0805637cef6339d4da86ad3aef8b80ec04d.json\n?? public/data/predictions/races/naples_mr_final_0e8d4a8a01004cd1eaab1c09f3530473fc803b7c2f500d22745267f4f4f7a13a.json\n?? public/data/predictions/races/naples_mr_final_20b2b2e7bb4e2495da35513e4cc29d09e0556156dcef7b38cedca2e5523b5294.json\n?? public/data/predictions/races/naples_mr_final_7faa64016f75e8769ace63be2d529535416df500dc1c21604a7a6b100cf1200e.json\n?? public/data/predictions/races/naples_pr1_2e70c0cbd0d9207987639c824b19ed521eb9dc7063864a217cb0738cdf779734.json\n?? public/data/predictions/races/naples_pr1_81ba8a1b975b7c828017f98181c1fdb2378fe630a3f26371fbd0803bafff513f.json\n?? public/data/predictions/races/naples_pr1_989c59d18e7348475a0ce297c9ab7fcadffa1a8d01d7951beb8525276a25185c.json\n?? public/data/predictions/races/naples_pr1_9f83c469cda9355746ec500135d3ccf6836737604750233ccd38d980f68a2097.json\n?? public/data/predictions/races/naples_pr1_cacf1029ab837e5ed87d5d706d85ad0ea5b69b6e8a54f0621af5dc6ea55e009e.json\n?? public/data/predictions/scenarios/4355e67cca423703a9a6f482eed6c021989b2eb50196dbb1c17c9d7efae063d8.json\n?? public/data/predictions/scenarios/987b8ca1d40c4ace0c386847ddc02db6b71005be1beb731c481ac050aa3346d8.json\n?? public/data/predictions/scenarios/c76e537e834b8d39450c21eb773499a671fe50ba9629899585a7e19d43679b04.json\n?? public/data/presentation/race_previews.json\n?? public/favicon.svg\n?? public/fonts/OFL.txt\n?? public/fonts/README.md\n?? public/fonts/dm-sans-variable.ttf\n?? scripts/build_race_previews.py\n?? scripts/build_report_exports.py\n?? scripts/forecastArtifacts.ts\n?? scripts/forecastScenarios.ts\n?? scripts/refresh_team_analytics.py\n?? src/components/canvas/boatPresentation.test.ts\n?? src/components/canvas/boatPresentation.ts\n?? src/components/canvas/renderPalette.ts\n?? src/components/dashboard/BoatCourseControls.tsx\n?? src/components/dashboard/BoatPerformanceRadar.tsx\n?? src/components/dashboard/BoatVisibilityFilter.tsx\n?? src/components/dashboard/ReportsWorkspace.test.ts\n?? src/components/dashboard/TacticalInsightsPanel.tsx\n?? src/components/dashboard/TeamAnalytics.test.ts\n?? src/components/dashboard/TeamDebrief.tsx\n?? src/components/dashboard/analysis-light.css\n?? src/components/dashboard/boat-course-controls.css\n?? src/components/dashboard/cupEvidence.css\n?? src/components/dashboard/performance-radar.css\n?? src/components/dashboard/reports.css\n?? src/components/modals/race-library.css\n?? src/engine/analysisCatalog.test.ts\n?? src/engine/environment.test.ts\n?? src/engine/environment.ts\n?? src/engine/forecastArtifactRouting.test.ts\n?? src/engine/forecastScenarioService.test.ts\n?? src/engine/forecastScenarios.test.ts\n?? src/engine/forecastScenarios.ts\n?? src/utils/evidenceText.test.ts\n?? src/utils/evidenceText.ts\n?? tests/browser/annotations.mjs\n?? tests/browser/feedback.mjs\n?? tests/browser/redesign.mjs\n?? tests/unit/test_environment.py\n?? tests/unit/test_performance_analysis.py\n?? tests/unit/test_race_previews.py\n?? tests/unit/test_report_exports.py\n?? tests/unit/test_report_inventory.py\n?? tests/unit/test_tactical_insights.py",
+  "reading_set": "Selected first-party source snapshot, including tests and documentation; no raw telemetry, dependencies, caches or credentials. Public evidence is separately bounded.",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 1655,
+      "sha256": "30f4c385b537bc633c0fc2b8755f53c115d3bb4064f23e81b7b9ea73128e80f6"
+    },
+    {
+      "path": "docs/annotation_revision_plan.md",
+      "bytes": 22175,
+      "sha256": "3e6f21da7a24b36c03ee656636a012f175476f6171e3c8fee3966c3b1c4f3af1"
+    },
+    {
+      "path": "docs/annotation_revision_verification.md",
+      "bytes": 10001,
+      "sha256": "a2cf4dcc0858780de433034ff8050c7cdd3caa67dd941d3919e865a2dcd2af36"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 4288,
+      "sha256": "15197ffbe6c1f24302d91301e7c636b445670cba2ea99b038fe9512cd768dd56"
+    },
+    {
+      "path": "docs/browser_feedback_verification.md",
+      "bytes": 5843,
+      "sha256": "10e182fa3c02cb65882c08d944b06f677b84988f58f27d1537c0dc4415b75582"
+    },
+    {
+      "path": "docs/dashboard_contract.md",
+      "bytes": 8975,
+      "sha256": "13bf1c5a03dd42f1b794f5e8803fabfa36c44d413fa1efa5b6e8643f257bb3dd"
+    },
+    {
+      "path": "docs/dashboard_verification.md",
+      "bytes": 5468,
+      "sha256": "ba2ff0080acc04e879c102153a8710150f5bae904203fc2281a36fbfa195e51e"
+    },
+    {
+      "path": "docs/data_schema.md",
+      "bytes": 7860,
+      "sha256": "72b3c830e38c0acbae6b5d82c32d9b864b46fcfd9dd798d2c66d585c9d3065dc"
+    },
+    {
+      "path": "docs/derived_metrics.md",
+      "bytes": 2528,
+      "sha256": "658096d86d20784426b30c4b2d2533e82aab145833c22a71f3cecc101d55b55e"
+    },
+    {
+      "path": "docs/design-system.md",
+      "bytes": 8502,
+      "sha256": "e7fe757d850904b7ecb4c3d4961f414f92dfb3b03a59f4098929c7e5ab677bc7"
+    },
+    {
+      "path": "docs/environment_data.md",
+      "bytes": 3906,
+      "sha256": "277a54c117b7c4c0d0d64d9bf44254e593cd4282a6191edbce45930b31d35148"
+    },
+    {
+      "path": "docs/forecast_rules_sources.json",
+      "bytes": 2759,
+      "sha256": "eb055645ba08523f9fbd8d5c4a5edec101b707a71a7b69bc2518799ddfaf671d"
+    },
+    {
+      "path": "docs/forecasting_implementation.md",
+      "bytes": 22836,
+      "sha256": "cc04c080cddb6eba31847168b860d68d0acfbbf569999992cef12e99ed65a7ea"
+    },
+    {
+      "path": "docs/forecasting_research_review.md",
+      "bytes": 23353,
+      "sha256": "458ba369b6c04899af3dbc6f8f8399cae560bef04085256a137c5b34b8c149df"
+    },
+    {
+      "path": "docs/forecasting_review_resolution.md",
+      "bytes": 27287,
+      "sha256": "dcbc436d98d8fc5f9d3fe66238e260cc2c6528218f17ba21b84fc8a42050c631"
+    },
+    {
+      "path": "docs/google_store_ui_redesign_plan.md",
+      "bytes": 36344,
+      "sha256": "54dbf1c85bb9a7b36b61fc1cc99dca90765a487f4222e7171bb43672e950320b"
+    },
+    {
+      "path": "docs/historical_analysis.md",
+      "bytes": 15900,
+      "sha256": "c9a771555328a03ca27f0a9282648968f08750aa9b0e27c0e5fdf2a02ef28d75"
+    },
+    {
+      "path": "docs/independent_probability_review_prompt.md",
+      "bytes": 26619,
+      "sha256": "41744c0bc1e51232148fa0c2647c47f2f03c457a2de88bf5118b86b48453eee8"
+    },
+    {
+      "path": "docs/ingesting_new_regattas.md",
+      "bytes": 2790,
+      "sha256": "f277d7854c1a3b67b1cf864f1d88144e6fb8d892bf00ad5587e8343a79a52edb"
+    },
+    {
+      "path": "docs/probability_execution_plan.md",
+      "bytes": 56169,
+      "sha256": "9a42b41de593e425e2042ac97196a702a3112822c05df1832b8a0036aa631c8f"
+    },
+    {
+      "path": "docs/reconstruction_math.md",
+      "bytes": 2249,
+      "sha256": "3425a0dfef9ecc6f17fa83cca81022299841446fbdbf71c6060f7f700c4c3faa"
+    },
+    {
+      "path": "docs/source_audit.md",
+      "bytes": 9575,
+      "sha256": "154a2bb940fcc311eacb439707e6a6a3d6eaf19919c65c90dd9b53854c061856"
+    },
+    {
+      "path": "docs/team_analytics.md",
+      "bytes": 12350,
+      "sha256": "f7babc691374d8c70b30b2f1b890f0012c911e8ff58bf15da6d7888612f66e41"
+    },
+    {
+      "path": "docs/team_analytics_plan.md",
+      "bytes": 3196,
+      "sha256": "073ec0830cb758c93cc4c00ca6ec13aec6f20478d545683e7851c241fbd0be04"
+    },
+    {
+      "path": "docs/ui_redesign_verification.md",
+      "bytes": 7532,
+      "sha256": "dfce0bdd592a65415ed930c3cd3f38e695746533d8d8cf559585162eaad1e1ef"
+    },
+    {
+      "path": "index.html",
+      "bytes": 587,
+      "sha256": "3a72a7c82922df05963ff2b0e8450a8c7dd5ff611adcbb9a4431252fbdeab367"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 62547,
+      "sha256": "8aa45dcda255fe02c8de2fdb1325803eb6057e3a58f5209d6c0ffadaaacc3409"
+    },
+    {
+      "path": "package.json",
+      "bytes": 1350,
+      "sha256": "bb79fd09a5f9f1501ad38076e917be0d10e922d6e0056609456a93de643ccb9e"
+    },
+    {
+      "path": "pipeline/__init__.py",
+      "bytes": 98,
+      "sha256": "56adcedd813fafd8a7a854af12fceb96cb0f28ea8c49f0efe745e00cfb081f49"
+    },
+    {
+      "path": "pipeline/analytics.py",
+      "bytes": 13331,
+      "sha256": "b4b7523f888764ce5fcd921b0b0977e36019430099a3658fa43b7101b6cff8b5"
+    },
+    {
+      "path": "pipeline/config.py",
+      "bytes": 8856,
+      "sha256": "c64840e7c513d03664b0bef1e498fdf465754901dc4ecd65e9da726aa412c92b"
+    },
+    {
+      "path": "pipeline/contact_coalescer.py",
+      "bytes": 13581,
+      "sha256": "2bcbc83dbdd295fc6bd2fe84423b7c66a78e363faf9e1de4fd5fb4869cd9c89a"
+    },
+    {
+      "path": "pipeline/environment.py",
+      "bytes": 19035,
+      "sha256": "083d178e06df3b0d5215d9e5a904808b9950bfb125557788cbbdb04e30e01a0c"
+    },
+    {
+      "path": "pipeline/export_replay.py",
+      "bytes": 21000,
+      "sha256": "22d1fb8c3a349391a351317fbafceea49c0bc12b1373a6e3ed5f3d50586a5d74"
+    },
+    {
+      "path": "pipeline/historical_analysis.py",
+      "bytes": 70673,
+      "sha256": "edbffb92c77922f1ee457f5c1ca6d1ec9e7a805d9d86e41fbaab643a082eac05"
+    },
+    {
+      "path": "pipeline/identity.py",
+      "bytes": 763,
+      "sha256": "acb8de51b2c091bf4e8f82e1e86fafae70a54a60322b406240b5ac0fce58d5cf"
+    },
+    {
+      "path": "pipeline/ingest.py",
+      "bytes": 37778,
+      "sha256": "3f08cded4b2b039809b7b2f0d55fd7c64cd87f817c2903b8ac52bd1e94e1dd7c"
+    },
+    {
+      "path": "pipeline/manoeuvres.py",
+      "bytes": 8815,
+      "sha256": "659472f4be406666cc6571024398de93dafe60d21fbe5b7c23976e831ba57bb1"
+    },
+    {
+      "path": "pipeline/prediction/__init__.py",
+      "bytes": 152,
+      "sha256": "7ae00255be1269b3abe6b90d98c3f0d5bd28bcd861ed75a36ccb64f28d5f4606"
+    },
+    {
+      "path": "pipeline/prediction/__main__.py",
+      "bytes": 3165,
+      "sha256": "21dc97945c65d256a21cf0d4a1080b3fff6617f5a03fed4476d126ff9103c8e5"
+    },
+    {
+      "path": "pipeline/prediction/backtest.py",
+      "bytes": 10237,
+      "sha256": "b4d0ff39b87158207ef11f911fd67381460b27a5710b26048cb2b94f818a4908"
+    },
+    {
+      "path": "pipeline/prediction/build.py",
+      "bytes": 28608,
+      "sha256": "1d9a9640726dff03347306f98463c699d8a876708bfbf89d4f740c33d66601f1"
+    },
+    {
+      "path": "pipeline/prediction/contracts.py",
+      "bytes": 18252,
+      "sha256": "e1c0a7bc16e5ad0886e5cfc1649cb5ebc04bbd0b5734990de90100a0710661e0"
+    },
+    {
+      "path": "pipeline/prediction/cup.py",
+      "bytes": 41399,
+      "sha256": "e9748ed4e48c3571192e748122219cb59f92e046ae2b3fe3ccae6945872f423b"
+    },
+    {
+      "path": "pipeline/prediction/evaluation.py",
+      "bytes": 7847,
+      "sha256": "c6eb7c280b29df8dbf7c534cd9677db071c549a888195d26bbf21c8257f4b5f1"
+    },
+    {
+      "path": "pipeline/prediction/labels.py",
+      "bytes": 11212,
+      "sha256": "8068858b468a29e2c4e0e67e3dc8b133d77226295a973542a67fb1be1a7257f6"
+    },
+    {
+      "path": "pipeline/prediction/models.py",
+      "bytes": 43831,
+      "sha256": "86049eb3c98c3c52b3e441fa5d705da29993ced98afc485753a22029f2c8e583"
+    },
+    {
+      "path": "pipeline/prediction/simulation.py",
+      "bytes": 29905,
+      "sha256": "a222f109b0877dc3aafe451197be57a839b4fb7d47eeea14dbd8cc2cdfe8b0ed"
+    },
+    {
+      "path": "pipeline/prediction/source.py",
+      "bytes": 12670,
+      "sha256": "4512b6955553772b7abaac900fbd24f800660efe22a465c8df2c33a3593685bc"
+    },
+    {
+      "path": "pipeline/prediction/state.py",
+      "bytes": 18609,
+      "sha256": "f5657d42e60bfa03222920264f2ef96fca32f3fdaaa04006e16f29542a8944a2"
+    },
+    {
+      "path": "pipeline/prediction/weather.py",
+      "bytes": 2620,
+      "sha256": "2c7e1353f16c1e3db74d36f313d4d1630b81ac05ef579c490728c4aa6ec2e02b"
+    },
+    {
+      "path": "pipeline/projection.py",
+      "bytes": 5638,
+      "sha256": "cc854f7ac3d9572c39e90526e18efb32880cf82d0ba72a03f9ac3c6dc59a1c90"
+    },
+    {
+      "path": "pipeline/reconstruction.py",
+      "bytes": 24849,
+      "sha256": "f0d82209444e0c0cdb7db690ad84741f084ae0f2964a6fb67ac3ebf6b27f77b4"
+    },
+    {
+      "path": "pipeline/run_pipeline.py",
+      "bytes": 14569,
+      "sha256": "5d3846c497705f3a4b1bc2e9161d945df04bfcebb257cb1c6f566cb0070632ec"
+    },
+    {
+      "path": "pipeline/tactical_insights.py",
+      "bytes": 11419,
+      "sha256": "aea556291b579da7d3b387733c60757f50e585ea3badc8108a6e85ef43aafffb"
+    },
+    {
+      "path": "PROJECT.md",
+      "bytes": 4428,
+      "sha256": "e1fa6f62e373e14bf616f66cc0cbb7120c0bca1567e33d50110cb9300c6624f2"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3699,
+      "sha256": "f38ff38b3548001a8c9d269ce73355cab916e92760dab251a537cce93fed9bd4"
+    },
+    {
+      "path": "run.ps1",
+      "bytes": 2766,
+      "sha256": "43e3de48e8ece92d014380b2e7cce4a802e578bf2586f10f2ecec0856d23f3ba"
+    },
+    {
+      "path": "scripts/analysis_snapshot.py",
+      "bytes": 2325,
+      "sha256": "42a082bd822792aabe052224a985e2687823de6cb01ae3f20e30ea73893b0c8f"
+    },
+    {
+      "path": "scripts/build_artifact_inventory.py",
+      "bytes": 6349,
+      "sha256": "69b2e00a04bb2cda6f91dbc5bb18d823477121763771120a2db373e584ff2daf"
+    },
+    {
+      "path": "scripts/build_race_previews.py",
+      "bytes": 3631,
+      "sha256": "80ef7af5ce4a7148a939b2d771634f66d98093526d4ed0d45eb3816c8f304452"
+    },
+    {
+      "path": "scripts/build_report_exports.py",
+      "bytes": 4261,
+      "sha256": "4cecda6fa24cda4bfada788c2b4552b3fb0132d6fd3a00ccea28de0fbf7c9e52"
+    },
+    {
+      "path": "scripts/forecastArtifacts.ts",
+      "bytes": 3587,
+      "sha256": "383f2c34144225dc615da66d531b1d7037b676fe89da026967581e03ec1c85c9"
+    },
+    {
+      "path": "scripts/forecastScenarios.ts",
+      "bytes": 13773,
+      "sha256": "7f2f63f7077ca7c806743145b8a99e5f73894ed08866ab932b38bbb8926a2dd0"
+    },
+    {
+      "path": "scripts/refresh_team_analytics.py",
+      "bytes": 16509,
+      "sha256": "4d6afb83619601bfd6eb04d37609f6fbce8cf32421e04b56c595485af5017387"
+    },
+    {
+      "path": "src/app.css",
+      "bytes": 21155,
+      "sha256": "146b37c35444ac26a18c2091720b0da3f5d040a53e559c6a09dacad71f41a2b9"
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 12277,
+      "sha256": "28852e045ef6b5cc0d6658cbf5706cddd74af7be94c91e4c288b33bbab8fb869"
+    },
+    {
+      "path": "src/components/canvas/boatModels.test.ts",
+      "bytes": 11654,
+      "sha256": "29081572bcaa75f4fba6c711982541a48974ac74f38b8d0668a6edb72689def6"
+    },
+    {
+      "path": "src/components/canvas/boatModels.ts",
+      "bytes": 10968,
+      "sha256": "a7a30542461c8077ea63db489dcbaa9a68f0a9322c3f737eead0a6e885fa0b56"
+    },
+    {
+      "path": "src/components/canvas/boatPresentation.test.ts",
+      "bytes": 2292,
+      "sha256": "a282ec9754dedf808950c8b4397a32a786e4eec90453106a80ca588c3ae22bae"
+    },
+    {
+      "path": "src/components/canvas/boatPresentation.ts",
+      "bytes": 4646,
+      "sha256": "4743a4b2d81ba3210b3682ae3c1ce59476eb97aa3038485c14c2b0a0bb024346"
+    },
+    {
+      "path": "src/components/canvas/cameraAdversarial.test.ts",
+      "bytes": 18116,
+      "sha256": "fe1d571168db7c322488cfe140cb1c087fa63599c5d019c79d162aef5a12b512"
+    },
+    {
+      "path": "src/components/canvas/cameraStateSyncAdversarial.test.ts",
+      "bytes": 17025,
+      "sha256": "ddc89cb9c8b608d553b35d9e7751ee468218026758f5994e949913be2237698d"
+    },
+    {
+      "path": "src/components/canvas/CourseCanvas.tsx",
+      "bytes": 22879,
+      "sha256": "d304a18c3b6ad5d9a315e0dcd3806704a40040251472244293e357d2973f513c"
+    },
+    {
+      "path": "src/components/canvas/courseGeometry.test.ts",
+      "bytes": 4262,
+      "sha256": "1f50a5886ae21f93e9db77681d22976ac8db52ff0ce8b7ccdea506ab2d6300b6"
+    },
+    {
+      "path": "src/components/canvas/DynamicVesselLayer.ts",
+      "bytes": 25701,
+      "sha256": "ec59aea4450330d3c01f9521c2a2a922c0cd1c029adb7b19cd637817a7dcb93c"
+    },
+    {
+      "path": "src/components/canvas/foilingGeometryStress.test.ts",
+      "bytes": 33787,
+      "sha256": "4e40863c265e9c753c45f731f910dd71449e7144973eff71d61a958ff1daa652"
+    },
+    {
+      "path": "src/components/canvas/mapStyle.ts",
+      "bytes": 2807,
+      "sha256": "720da1f988d3c5c74f3e2f81d48d4e9c7ca8734ff493c77d23fd0b1e520a0b4f"
+    },
+    {
+      "path": "src/components/canvas/renderPalette.ts",
+      "bytes": 589,
+      "sha256": "84094cdc15ba7a08e1b96c1d53e10decad5c201d0ae50f3b824ddb4136419b46"
+    },
+    {
+      "path": "src/components/canvas/StaticCourseLayer.ts",
+      "bytes": 2455,
+      "sha256": "3f87ebf31e8796f16cfbf9e54aa2f77698fdb4be487fd46d9b1d7cd18ac5f277"
+    },
+    {
+      "path": "src/components/canvas/viewModeStress.test.ts",
+      "bytes": 12522,
+      "sha256": "39ad75ea4ac2c5cde6f2d2c8b57592acfee5854f8e47c8acc0edb6721db8c07a"
+    },
+    {
+      "path": "src/components/canvas/ViewportMatrix.ts",
+      "bytes": 2953,
+      "sha256": "81690c64fec2fcef82091cce9b45920080b67d68cdee80f60f3e6f2b47eb2678"
+    },
+    {
+      "path": "src/components/dashboard/adversarial_race_timeline_m10_1.test.ts",
+      "bytes": 2528,
+      "sha256": "2f24ac95bcf375e078f7b5f7385e4a507e659e6ec5f055f6daa4ffe7e48c2b3f"
+    },
+    {
+      "path": "src/components/dashboard/analysis-light.css",
+      "bytes": 9934,
+      "sha256": "8c3c3b2886563335b0731454ec7fc05ebd58cbba303f2643dd4d0653d0b7e6b6"
+    },
+    {
+      "path": "src/components/dashboard/boat-course-controls.css",
+      "bytes": 3818,
+      "sha256": "e112e66ccce3c81c993a66c7d8a11ac31b593cb7d7c106c0370c7ec87f01a68d"
+    },
+    {
+      "path": "src/components/dashboard/BoatCourseControls.tsx",
+      "bytes": 3784,
+      "sha256": "2072501ed69f52fd1a39f48df78138323c16ce787c98bba86ea6eeede077c750"
+    },
+    {
+      "path": "src/components/dashboard/BoatPerformanceCard.adversarial.test.ts",
+      "bytes": 1546,
+      "sha256": "f1d8859d2445297c43d00793ba05ff2be6ee38fc662f0154cfe8fd790fb34e85"
+    },
+    {
+      "path": "src/components/dashboard/BoatPerformanceCard.test.ts",
+      "bytes": 2068,
+      "sha256": "50aaa1d4ddb6f8f0ba87985142cf5810ae6a5b9ab1e98d7d9fc6893b9296304f"
+    },
+    {
+      "path": "src/components/dashboard/BoatPerformanceCard.tsx",
+      "bytes": 7296,
+      "sha256": "84c2062dff792ba03632f7c8d7b786eba3615f4cdf67049a45bc2a657a77354a"
+    },
+    {
+      "path": "src/components/dashboard/BoatPerformanceRadar.tsx",
+      "bytes": 19610,
+      "sha256": "c1d855982f2def0db797e323f020ac1818e187d251b2ce5918640ec29e8ec0f6"
+    },
+    {
+      "path": "src/components/dashboard/BoatVisibilityFilter.tsx",
+      "bytes": 1941,
+      "sha256": "86e0a749c9c1faa8a562ba489284d4c42403f2d2b496d60a578030f314ad5ebf"
+    },
+    {
+      "path": "src/components/dashboard/cupEvidence.css",
+      "bytes": 1307,
+      "sha256": "6f4302ae78cf0caf69c281b2412e4d5fc5ca3fdd62bc350813c703d195b56a19"
+    },
+    {
+      "path": "src/components/dashboard/dashboard.css",
+      "bytes": 30824,
+      "sha256": "e9fc5081c388883adee2498cd7e3bf973dd3197d840949803d39774873b93807"
+    },
+    {
+      "path": "src/components/dashboard/EventsNotesPanel.adversarial.test.ts",
+      "bytes": 2017,
+      "sha256": "27b2ce26d30be2e21a430e9696f46a4ac83fe804f06d6db1febbd72e3205b079"
+    },
+    {
+      "path": "src/components/dashboard/EventsNotesPanel.tsx",
+      "bytes": 8100,
+      "sha256": "9bd6e41cecc08a28229588890cf0e8f8f7bbce5aca42c897ec5c022f62c42b6d"
+    },
+    {
+      "path": "src/components/dashboard/forecast.css",
+      "bytes": 7427,
+      "sha256": "5c121a4052a00035bad4f5a92c557d318e2404499eb68db3f183cb8bc0425671"
+    },
+    {
+      "path": "src/components/dashboard/ForecastWorkspace.tsx",
+      "bytes": 28432,
+      "sha256": "a6842cdbb1ee81665eb1e6724f867b5b778c0865d6326594780d8af27b9a8534"
+    },
+    {
+      "path": "src/components/dashboard/performance-radar.css",
+      "bytes": 9631,
+      "sha256": "ccba5a63a08cc1c83b8efaa4e33625368f69b82f01e955b5be8ae4e1b36aca71"
+    },
+    {
+      "path": "src/components/dashboard/RaceStatusLeaderboard.tsx",
+      "bytes": 7030,
+      "sha256": "b83c63c7f3f592869068cd6e60dd25dd752bc502b611219d71a4df7e3a788c3c"
+    },
+    {
+      "path": "src/components/dashboard/RaceTimelinePanel.test.ts",
+      "bytes": 3468,
+      "sha256": "d877bdfdf1a359a0da292e4e4c54ca2cc2ed2c2ef74fb820743e09445cc52988"
+    },
+    {
+      "path": "src/components/dashboard/RaceTimelinePanel.tsx",
+      "bytes": 13224,
+      "sha256": "9e1c50067ce473c9b04c65cda8ddaf61d456a4987e6fa4173d1d14577e06e393"
+    },
+    {
+      "path": "src/components/dashboard/reports.css",
+      "bytes": 6110,
+      "sha256": "d4ea91abba1d8c6943ad6acf33ebaca37632cb37a4f104a9207874b7df4e4156"
+    },
+    {
+      "path": "src/components/dashboard/ReportsWorkspace.test.ts",
+      "bytes": 3435,
+      "sha256": "7d58bd5ace9e39411321bb55535d3ea91de150ebec1b63a3bedd8bbbc91f43c2"
+    },
+    {
+      "path": "src/components/dashboard/ReportsWorkspace.tsx",
+      "bytes": 10695,
+      "sha256": "5662f6c5d891509a7ec11b38b543a978b2c8c07d8f6fd405ad01f0e1691546cb"
+    },
+    {
+      "path": "src/components/dashboard/TacticalDashboard.tsx",
+      "bytes": 14274,
+      "sha256": "9d3f8f4bc51ec517c1397978c5ee8eea9869840c65941dad0cae802f157e443f"
+    },
+    {
+      "path": "src/components/dashboard/TacticalHeader.tsx",
+      "bytes": 8771,
+      "sha256": "602be68a927b8f1526f02da9174d30517f8efa41594e9f2f9aca4e5800d85f19"
+    },
+    {
+      "path": "src/components/dashboard/TacticalInsightsPanel.tsx",
+      "bytes": 4018,
+      "sha256": "cb217b5e64a4290c9fbaf56199e8aa6939ce1d5008557979f054f36fc739cdd8"
+    },
+    {
+      "path": "src/components/dashboard/TacticalMapOverlay.adversarial.test.ts",
+      "bytes": 17224,
+      "sha256": "385ba8a98f7ea698aa5950c45f5e5a72177360e43e8c7ee8692ef94857fc0ca9"
+    },
+    {
+      "path": "src/components/dashboard/TacticalMapOverlay.test.ts",
+      "bytes": 11885,
+      "sha256": "d8bee63a4754df081b03e515e765013d7f2948be727c54d812286c66cc3e7f67"
+    },
+    {
+      "path": "src/components/dashboard/TacticalMapOverlay.tsx",
+      "bytes": 8821,
+      "sha256": "a3d8a5ab2fbf41e49facf07a326ef4111e418318726817c962e7bd094578a246"
+    },
+    {
+      "path": "src/components/dashboard/TeamAnalytics.test.ts",
+      "bytes": 14755,
+      "sha256": "6181a367741753618d5e963bdc0e32748c3cde7662fbec1d6c4f19d1e8408a4e"
+    },
+    {
+      "path": "src/components/dashboard/TeamDebrief.tsx",
+      "bytes": 1934,
+      "sha256": "b81b41b5e3954d13117140f4cddd997f022882049abb1b43667b7ea933d5d206"
+    },
+    {
+      "path": "src/components/dashboard/TelemetryWorkspace.adversarial.test.ts",
+      "bytes": 17385,
+      "sha256": "28b6fe3a13b6b8fb007e51164766ab0a15e279f305e0652480d4f04de89f9b73"
+    },
+    {
+      "path": "src/components/dashboard/TelemetryWorkspace.test.ts",
+      "bytes": 15799,
+      "sha256": "39e64a33f36a062c36884e4dea8c8bdb509314dfc68e6cf0713c62f96174a051"
+    },
+    {
+      "path": "src/components/dashboard/TelemetryWorkspace.tsx",
+      "bytes": 22798,
+      "sha256": "eaa549ffce4ba64e956b2c55fbb51b2c59b6f3f498a7a4f68d75fced6e669043"
+    },
+    {
+      "path": "src/components/dashboard/TelemetryWorkspaceAdversarial.test.ts",
+      "bytes": 15064,
+      "sha256": "be5687478eca5c4c5674a1cfe3bbc2c7af6bf991c59f6915bfbde2cae416cf6d"
+    },
+    {
+      "path": "src/components/dashboard/workspaces.css",
+      "bytes": 8967,
+      "sha256": "b3bf6ebaeeb076cbbab48326fd54ff897480bcb84b5142cf2408e9c5e4d11ffd"
+    },
+    {
+      "path": "src/components/modals/AnalysisModal.tsx",
+      "bytes": 40134,
+      "sha256": "2a015dd2ce3e0ee067e78ab15e280f465c4a1cdad0cada09bb29775a0c5cb707"
+    },
+    {
+      "path": "src/components/modals/race-library.css",
+      "bytes": 6581,
+      "sha256": "624b84a0a25c54489f57e734113ec3cf958937e0e6db9fbaaa98b4dc28bae930"
+    },
+    {
+      "path": "src/components/modals/RacePickerModal.tsx",
+      "bytes": 7888,
+      "sha256": "4d5e5395df26a644856ed884f85d8a29fda57d9b09528f0abc4b12bb90969c25"
+    },
+    {
+      "path": "src/components/panels/ComparisonPanel.tsx",
+      "bytes": 3511,
+      "sha256": "3cdbc8bafd0f32176cd7540fac3544de5e399d22dd46b907f990172eddee7149"
+    },
+    {
+      "path": "src/engine/analysisCatalog.test.ts",
+      "bytes": 6926,
+      "sha256": "83bd07e525b26c65b830813bc464070abbc62d5159b53571a2292c7f8ff3ef90"
+    },
+    {
+      "path": "src/engine/analysisCatalog.ts",
+      "bytes": 10469,
+      "sha256": "25768b3b6f174f1d4fb08e1cd2242c9dedfe494ba807b6c23151e68b936f5059"
+    },
+    {
+      "path": "src/engine/analysisNavigation.test.ts",
+      "bytes": 1206,
+      "sha256": "cf5cf7e091e7f1bf73855c5e78fe5075fd28f9c98328e30bb12e4260d00dad76"
+    },
+    {
+      "path": "src/engine/analytics.test.ts",
+      "bytes": 6168,
+      "sha256": "0f8650aef1a66292cf35b73377060fea0289c5b0fefb05b95b537f4be36746b5"
+    },
+    {
+      "path": "src/engine/analytics.ts",
+      "bytes": 5411,
+      "sha256": "5ba0b7ea1d34d47e2f4a4ff1c4c839c2dd4fdc03dd8f6c634a81baf58cd97409"
+    },
+    {
+      "path": "src/engine/catalog.test.ts",
+      "bytes": 1091,
+      "sha256": "522481162590bfafe54282d527c201b3a491a6dbae550a67f12d577acdd8096b"
+    },
+    {
+      "path": "src/engine/catalog.ts",
+      "bytes": 3568,
+      "sha256": "ca0ad98fa627af566cf24848b9b22305c9d0399821d5354584b3debf09e9f0fc"
+    },
+    {
+      "path": "src/engine/challengerM4_2.test.ts",
+      "bytes": 18350,
+      "sha256": "58e7402848f5795d5069caa7bb350b394def434b3fe72cc509a919a992e096e0"
+    },
+    {
+      "path": "src/engine/contactDetector.test.ts",
+      "bytes": 7435,
+      "sha256": "825967ace7e1b1be7d419bef7d96b27589bd0e5664820564bac2a387e72335d6"
+    },
+    {
+      "path": "src/engine/contactDetector.ts",
+      "bytes": 12095,
+      "sha256": "5599513e6af10cb8dbb1e2ed7351a16c8e9de8bfcad8584e0855261535456e49"
+    },
+    {
+      "path": "src/engine/contactDetectorStress.test.ts",
+      "bytes": 8018,
+      "sha256": "df11ee54e1f23576621363916aecbb12853a68838849a87eab60f0a9f0d29716"
+    },
+    {
+      "path": "src/engine/course.test.ts",
+      "bytes": 1472,
+      "sha256": "808854078781a6b1e22fc56ec8109214d86e0e7e2d53bffaeb650ed928288a19"
+    },
+    {
+      "path": "src/engine/course.ts",
+      "bytes": 525,
+      "sha256": "22e7224b6f96f51d0fa4931c229b8e316e9b35074af624d82258895bcd97a991"
+    },
+    {
+      "path": "src/engine/dynamicMarksStress.test.ts",
+      "bytes": 18168,
+      "sha256": "dc0a29c4caf416f39165ecad3791a197eac32495141a15d743700495c5999fdf"
+    },
+    {
+      "path": "src/engine/environment.test.ts",
+      "bytes": 7744,
+      "sha256": "d6e93d2c60942596fcd971c3a2ddff742dfab0d742d81b37fd81f27dc8a6a4b9"
+    },
+    {
+      "path": "src/engine/environment.ts",
+      "bytes": 7280,
+      "sha256": "08a4bc30060e962e152b66e46f4b0a5bc90a0eddb5d3b4ac2a9b594fba57e4ad"
+    },
+    {
+      "path": "src/engine/forecastArtifactRouting.test.ts",
+      "bytes": 7654,
+      "sha256": "01dd4dddb70e07e2219e0698ba60dd6fe915ace9b6bcb78e3e659caa98599b11"
+    },
+    {
+      "path": "src/engine/forecastScenarios.test.ts",
+      "bytes": 2424,
+      "sha256": "bdf695426c27c7faa8118790596ae99f7b9db0f65fb3ceb5a5ccb3453fb16e54"
+    },
+    {
+      "path": "src/engine/forecastScenarios.ts",
+      "bytes": 3004,
+      "sha256": "5d96161cdb6a481a7bedf4608ba5e9ec18e106414328e1e3eb75ca9e452947c6"
+    },
+    {
+      "path": "src/engine/forecastScenarioService.test.ts",
+      "bytes": 8524,
+      "sha256": "d6b47d5839c99425da228019eaf2b8e77e9f975aa6145cb829e3dfa912a3e553"
+    },
+    {
+      "path": "src/engine/interpolate.test.ts",
+      "bytes": 425,
+      "sha256": "24bacb06cfaeb82efc6902be92f59e28c99ecbb2215b56fe402da8b741c54a83"
+    },
+    {
+      "path": "src/engine/interpolate.ts",
+      "bytes": 1235,
+      "sha256": "36e7ace2130f7a4fbc6c5b446ed449f43ffd298308708f6508247a26b4515828"
+    },
+    {
+      "path": "src/engine/predictionCatalog.test.ts",
+      "bytes": 23320,
+      "sha256": "a10cb700d3d7e98bfccb51f472e19f4066e1a686736881512c82fd073af23901"
+    },
+    {
+      "path": "src/engine/predictionCatalog.ts",
+      "bytes": 23022,
+      "sha256": "e4f163b3166b80b9c7deef9b84d60f6788f37b5c194fdeb478791c57911599b1"
+    },
+    {
+      "path": "src/engine/ReplayEngine.test.ts",
+      "bytes": 5706,
+      "sha256": "97875108fe00e64d745ae44f05a11918509c7ae7d3e129ba5cc858e06e413422"
+    },
+    {
+      "path": "src/engine/ReplayEngine.ts",
+      "bytes": 4888,
+      "sha256": "3edc8b510ef0e3e76dfbae8fa46a8309835f53cf08c0d17ab526bd2a95c2c475"
+    },
+    {
+      "path": "src/engine/vmgWindVerification.test.ts",
+      "bytes": 12371,
+      "sha256": "e8ada25518330cce3a1e496d3f493672baf221f6e13933e68259ddaa06375a1c"
+    },
+    {
+      "path": "src/index.css",
+      "bytes": 4903,
+      "sha256": "34a3285430a3ffac98e00a521159a7955715d1252b2c8bc1259fb553e98ae414"
+    },
+    {
+      "path": "src/main.tsx",
+      "bytes": 232,
+      "sha256": "e9e644d4f2c138e07c973bc48712989c8d44972ad1b3092fa817c340c2e3c7be"
+    },
+    {
+      "path": "src/types/analysis.ts",
+      "bytes": 8817,
+      "sha256": "41a3363ee6b14e4d9acfdfdb81551194ba6a17af9265dcd03635d8cbcbf2cba7"
+    },
+    {
+      "path": "src/types/prediction.ts",
+      "bytes": 4749,
+      "sha256": "198bb204a556a8954af812bf0bbd80f86daa732b3ef802dad0fcd0fa0a0fc201"
+    },
+    {
+      "path": "src/types/replay.ts",
+      "bytes": 4504,
+      "sha256": "c24446fc886b7cb4f00863e261d9acfe4bde50191d1ec7a3eb59d7c370f3b7f4"
+    },
+    {
+      "path": "src/utils/evidenceText.test.ts",
+      "bytes": 826,
+      "sha256": "b2749a3d9e0ecdf050487e99c37ef6e46a37b8beea0a95916b71420a0b22e5ca"
+    },
+    {
+      "path": "src/utils/evidenceText.ts",
+      "bytes": 436,
+      "sha256": "830188ad96a5744d0845d10bbe05f42bf910498d027a1372d7687afc51e03066"
+    },
+    {
+      "path": "src/utils/geoProjection.test.ts",
+      "bytes": 7697,
+      "sha256": "b261c5e80074f652737b55caf34f7ba5a1bd697d231e41914262b20f1b01d126"
+    },
+    {
+      "path": "src/utils/geoProjection.ts",
+      "bytes": 4874,
+      "sha256": "bfee5979a3df0ac69d83894fb58fafbda99e27f7f1af261b5cd83f1ff1d81dc1"
+    },
+    {
+      "path": "src/utils/geoProjectionStress.test.ts",
+      "bytes": 14121,
+      "sha256": "329921869c450fe19bf202775b64c3e27db9a232093331c92e2f0982efec3b76"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "bytes": 38,
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "tests/__init__.py",
+      "bytes": 25,
+      "sha256": "bd6d00be0f24e7a0cf54fffa608db2df1d2dfd8fc6ddff127995cdf65685a388"
+    },
+    {
+      "path": "tests/adversarial_sat_stress_harness.py",
+      "bytes": 8235,
+      "sha256": "45fcb64c4237b76207b7944651c8ebf2820ca43d660124846f11f62da93ef4d0"
+    },
+    {
+      "path": "tests/browser/annotations.mjs",
+      "bytes": 29962,
+      "sha256": "26685bcff9885b3225c3ece33fcd7e6a9c50798305c24f07bae4115a1fd9a89d"
+    },
+    {
+      "path": "tests/browser/dashboard.mjs",
+      "bytes": 31602,
+      "sha256": "d8f0862ba9288c3b1be0a7a8f2624781dc82066395de9a623a420f1a5b3a131f"
+    },
+    {
+      "path": "tests/browser/feedback.mjs",
+      "bytes": 8304,
+      "sha256": "f7d18def80b3ef27e36d95ff4f0bf451a9781b3b61df3e0cf76c7ee9fe1be75d"
+    },
+    {
+      "path": "tests/browser/forecast.mjs",
+      "bytes": 34164,
+      "sha256": "18cf55ef25b9823ec83171a5e639d1bcb0af08cc0d49b67191b87f53453b1ad7"
+    },
+    {
+      "path": "tests/browser/redesign.mjs",
+      "bytes": 6686,
+      "sha256": "5472a722c5fa8cdb2555ff7db434c1382e2169e2c9b4f537fd0afac3aca647a5"
+    },
+    {
+      "path": "tests/e2e/__init__.py",
+      "bytes": 112,
+      "sha256": "62bcaa0edcf1d2814badedb99f7f999d7735f397b27193c58f9945cfa82b9e3e"
+    },
+    {
+      "path": "tests/e2e/e2e_types.py",
+      "bytes": 14595,
+      "sha256": "16277f68bac727ee9aed71d422e20e7dcdb88e167484055a548f0d4744692169"
+    },
+    {
+      "path": "tests/e2e/test_runner.py",
+      "bytes": 4723,
+      "sha256": "8fa462252f587496dcf9479368124a22c8e365600d23064700b780ce73f216c8"
+    },
+    {
+      "path": "tests/e2e/tier1_features_test.py",
+      "bytes": 35238,
+      "sha256": "621250cf3f105d25400cb25aaedc1041ca8f65801fed663c44430a83747de92b"
+    },
+    {
+      "path": "tests/e2e/tier2_boundaries_test.py",
+      "bytes": 13126,
+      "sha256": "e818e87977c91f511fb40020a10c908dfb570cc230db7ea98ed49761ca285d76"
+    },
+    {
+      "path": "tests/e2e/tier3_pairwise_test.py",
+      "bytes": 10990,
+      "sha256": "a4f68d29d1ec212d903eb7d56bd4d3b73f463a5558e8e5c5841f50d4c613a2c8"
+    },
+    {
+      "path": "tests/e2e/tier4_workloads_test.py",
+      "bytes": 15649,
+      "sha256": "05f9e7c332aa16b65c4bf50df5b579e19fe749b9df5f48900f16f06b12ffb82d"
+    },
+    {
+      "path": "tests/stress/stress_ingest.py",
+      "bytes": 17605,
+      "sha256": "182f526934293919edaad14730e042c7a0de5f47f0ed776099d763c60c99d101"
+    },
+    {
+      "path": "tests/tier5_integrity.py",
+      "bytes": 9270,
+      "sha256": "5236fde88105dd2d3b1d4228b59a7517dcb7d2072f70cebb39f02c9f4aa34f45"
+    },
+    {
+      "path": "tests/unit/__init__.py",
+      "bytes": 59,
+      "sha256": "6d69971faa7c073eb329034bee559de95256b7df91e404c7b5e0ca17b5ba0259"
+    },
+    {
+      "path": "tests/unit/test_analytics.py",
+      "bytes": 7158,
+      "sha256": "ac16b8e895e507cffe9fbf295414f4defa2b3795c63cf2ed038c416d8c870f09"
+    },
+    {
+      "path": "tests/unit/test_contact_coalescer.py",
+      "bytes": 4330,
+      "sha256": "40bc5e4fc3b9951ecf4ec7e7d4a2cedfa8fcb5b9be74acfe4239f2aac4715f8a"
+    },
+    {
+      "path": "tests/unit/test_dashboard_contract.py",
+      "bytes": 1844,
+      "sha256": "9de8e764e63ff6fedce8557c9bd3dc6c0f7d5855e49ba0d4d2737d9c58a89251"
+    },
+    {
+      "path": "tests/unit/test_dashboard_identity.py",
+      "bytes": 964,
+      "sha256": "8f08aa8b7ebef6d3f74746d7f9bffaf89c28cddc7655327bb185c5e024cfc3bc"
+    },
+    {
+      "path": "tests/unit/test_environment.py",
+      "bytes": 10744,
+      "sha256": "e3fa72e7f99064544bf3c132ccc74e25bac3e81dd778d8bf60a30176d624db09"
+    },
+    {
+      "path": "tests/unit/test_historical_analysis.py",
+      "bytes": 24621,
+      "sha256": "b4eda50a8d0d9f33a100fd802b120da03a88fd45cbcec087bd7091ab903e0072"
+    },
+    {
+      "path": "tests/unit/test_ingest.py",
+      "bytes": 13455,
+      "sha256": "8d5bee34b16f70876fff191b746adff4bd1c96c30c4656bc9195ba728c4520f9"
+    },
+    {
+      "path": "tests/unit/test_m2_adversarial.py",
+      "bytes": 20506,
+      "sha256": "478f001aa3122b79b1fdac33861d2353ade9d76f50106a0b60f680ad53f9f969"
+    },
+    {
+      "path": "tests/unit/test_manoeuvres.py",
+      "bytes": 5955,
+      "sha256": "8eb60bf42e7217ee63541fcdfd5eb9f0b91794528ccb434ac84b7a9921338e06"
+    },
+    {
+      "path": "tests/unit/test_performance_analysis.py",
+      "bytes": 19042,
+      "sha256": "17080d760040f3560c68a82c828d84807c231e88bfb1a494f0b3f925578583c5"
+    },
+    {
+      "path": "tests/unit/test_prediction_atomic.py",
+      "bytes": 2230,
+      "sha256": "729c99e2223e19fe6500c6cc707ecc7885255c1b1aff6e81b1eace6b7a98371b"
+    },
+    {
+      "path": "tests/unit/test_prediction_cup.py",
+      "bytes": 18996,
+      "sha256": "a8c114347430fb13819f7a832ffe08a08a5381c1e3673bbb7b7c0c5b1c017ed4"
+    },
+    {
+      "path": "tests/unit/test_prediction_evaluation.py",
+      "bytes": 10709,
+      "sha256": "df63b4742392edd793e73fd3e51d130a8d3de3473133fcd106812eac9b88db3a"
+    },
+    {
+      "path": "tests/unit/test_prediction_models.py",
+      "bytes": 25969,
+      "sha256": "b17513c1a7ec6a6b2aafae9afa8e52620c03d079fc50f0dbf78de5c8a8f877d3"
+    },
+    {
+      "path": "tests/unit/test_prediction_pipeline.py",
+      "bytes": 27473,
+      "sha256": "a801bfded91b641d1b2a710b785072236bf5c80077d9a3f724208f1f4acdf8c1"
+    },
+    {
+      "path": "tests/unit/test_prediction_state.py",
+      "bytes": 17805,
+      "sha256": "451ea890b6729ef2c20ae9be7f647c1ecb50b93ab8e767099a8edf0ed1afbe17"
+    },
+    {
+      "path": "tests/unit/test_projection.py",
+      "bytes": 7019,
+      "sha256": "8a0b6780aef199b4389405564b5cfc881f0cf0b6c8ab3d14a21a77699d94a82f"
+    },
+    {
+      "path": "tests/unit/test_projection_adversarial.py",
+      "bytes": 16778,
+      "sha256": "44b18e1334d1855975e6a3674402a1982443b8afded48b2e01c689b4afc3d159"
+    },
+    {
+      "path": "tests/unit/test_race_previews.py",
+      "bytes": 3367,
+      "sha256": "f9c2140c7763278c204a386d28f3602c9d8eb80f1e305b953cfc1cca31f1ea12"
+    },
+    {
+      "path": "tests/unit/test_reconstruction.py",
+      "bytes": 8781,
+      "sha256": "201e4fe8327b5a5d2f84e6c565f28b1035d83b53e7dcc74c83d5b491fa8f095c"
+    },
+    {
+      "path": "tests/unit/test_report_exports.py",
+      "bytes": 2657,
+      "sha256": "ff02ce560f89265db2eed8949f3d57f610c338792643163668f497ef8812f91d"
+    },
+    {
+      "path": "tests/unit/test_report_inventory.py",
+      "bytes": 3252,
+      "sha256": "abd2a47851bcc83f77415cc25567196c6503134f245d6b89e5195ff0abaa6298"
+    },
+    {
+      "path": "tests/unit/test_review_adversarial.py",
+      "bytes": 7596,
+      "sha256": "8772aa4d9412d78f32e15df700ddad61286ffb84dc71dfabadc23d12fe07ec0e"
+    },
+    {
+      "path": "tests/unit/test_sat_adversarial_stress.py",
+      "bytes": 18890,
+      "sha256": "16dc97ea81bbd08ffa8be453063b2e632379534b7e11fc5cfb1610e68c481495"
+    },
+    {
+      "path": "tests/unit/test_tactical_insights.py",
+      "bytes": 11341,
+      "sha256": "82c9836a374735616ccba92b24443efa35a2832089ea28c0dea9525f92463e79"
+    },
+    {
+      "path": "tests/unit/test_vmg_wind_adversarial.py",
+      "bytes": 9337,
+      "sha256": "ea74d54a066e2591311dbfd4a42c1b2534462d2070d6f10bc902c07c35a884c8"
+    },
+    {
+      "path": "tests/verify_boundary_corridor.py",
+      "bytes": 8701,
+      "sha256": "cf2cf6b952d5de0d8bf93d3a810aa3e37b0161377b82854bf661e38a40f0011c"
+    },
+    {
+      "path": "tsconfig.app.json",
+      "bytes": 735,
+      "sha256": "8ad1a485c39fcb221bdbef4ec34f2d7c8b6b47c2f115c139e465de82548223b9"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 119,
+      "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808"
+    },
+    {
+      "path": "tsconfig.node.json",
+      "bytes": 393,
+      "sha256": "62e382d75e04b4191764975b88168fe23c3837fda41c5088e8fbb53337469544"
+    },
+    {
+      "path": "vite.config.ts",
+      "bytes": 751,
+      "sha256": "2fb613edf7b0f984f822d949193121c878ffd4dabe26d5f2ca1678ce5ba15e08"
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 364,
+      "sha256": "23aadea66160e23ec2f80b01463893a70eb2de945680467af083a1105a9f6145"
+    },
+    {
+      "path": "uv.lock",
+      "bytes": 47120,
+      "sha256": "a3961226315a296441763400553267053dae05806d0418bf25826de813dba01e"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 223,
+      "sha256": "8c5adb1a91b96d9c1a8caf31042505ae615c06ec5e295fbe352e0101f8288386"
+    },
+    {
+      "path": ".python-version",
+      "bytes": 5,
+      "sha256": "7b55f8e67b5623c4bef3fa691288da9437d79d3aba156de48d481db32ac7d16d"
+    },
+    {
+      "path": "public/fonts/OFL.txt",
+      "bytes": 4482,
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+    },
+    {
+      "path": "public/fonts/README.md",
+      "bytes": 344,
+      "sha256": "8504f15bb0fec43f3d3fe0be7e1b4cb515c93dd8ebbeb52b51aedda4202a8bb2"
+    }
+  ]
+}
