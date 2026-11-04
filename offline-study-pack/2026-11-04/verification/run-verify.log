@@ -1,0 +1,244 @@
+
+> ac40-regatta-replay@0.1.0 test
+> vitest run --test-timeout=90000
+
+
+ RUN  v5.0.3 C:/Workspace/Americas Cup/2D_regatta_replay
+
+
+ Test Files  39 passed (39)
+      Tests  406 passed (406)
+   Start at  15:21:53
+   Duration  4.31s (tests 47%, import 27%, transform 24%, worker 1%)
+
+    Isolate  39 workers spawned · ~314ms startup each (spawn + environment, per file)
+             at least ~502ms faster with isolate: false — reuses workers across files instead of one per file
+
+
+> ac40-regatta-replay@0.1.0 build
+> tsc -b && vite build
+
+vite v8.3.3 building client environment for production...
+transforming...
+✓ 67 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                  0.68 kB │ gzip:   0.39 kB
+dist/assets/maplibre-gl-worker-DxGNRm0a.mjs    508.31 kB
+dist/assets/index-DDluBCYR.css                 178.66 kB │ gzip:  28.05 kB
+dist/assets/index-BAxN9Y9O.js                1,479.35 kB │ gzip: 409.89 kB
+
+✓ built in 1.83s
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+{"race_id": "test", "snapshots": 0, "refresh": "performance_only", "source_bytes": 0}
+.............................................................................................................................................................................Verifying dataset archive (28 raw files, 6.87 GB)...
+Verifying dataset archive (28 raw files, 6.87 GB)...
+Building 3 race prediction artifact(s)...
+  [1/3] Simulating 26_05_22_cag_ipr_race_1...
+  [2/3] Simulating 26_05_23_cag_ipr_race_1...
+  [3/3] Simulating 26_05_24_cag_ipr_race_1...
+Verifying dataset archive (28 raw files, 6.87 GB)...
+Verifying dataset archive (28 raw files, 6.87 GB)...
+Verifying dataset archive (28 raw files, 6.87 GB)...
+.Verifying dataset archive (28 raw files, 6.87 GB)...
+..Verifying dataset archive (28 raw files, 6.87 GB)...
+Building 3 race prediction artifact(s)...
+  [1/3] Simulating 26_05_22_cag_ipr_race_1...
+  [2/3] Simulating 26_05_23_cag_ipr_race_1...
+Verifying dataset archive (28 raw files, 6.87 GB)...
+Building 3 race prediction artifact(s)...
+  [1/3] Simulating 26_05_22_cag_ipr_race_1...
+  [2/3] Simulating 26_05_23_cag_ipr_race_1...
+  [3/3] Simulating 26_05_24_cag_ipr_race_1...
+...Verifying dataset archive (28 raw files, 6.87 GB)...
+....Verifying dataset archive (28 raw files, 6.87 GB)...
+.Verifying dataset archive (28 raw files, 6.87 GB)...
+.Verifying dataset archive (28 raw files, 6.87 GB)...
+Verifying dataset archive (28 raw files, 6.87 GB)...
+Building 3 race prediction artifact(s)...
+  [1/3] Simulating 26_05_22_cag_ipr_race_1...
+  [2/3] Simulating 26_05_23_cag_ipr_race_1...
+  [3/3] Simulating 26_05_24_cag_ipr_race_1...
+.Verifying dataset archive (28 raw files, 6.87 GB)...
+.Verifying dataset archive (28 raw files, 6.87 GB)...
+Verifying dataset archive (28 raw files, 6.87 GB)...
+..Verifying dataset archive (28 raw files, 6.87 GB)...
+......................................................................................................
+----------------------------------------------------------------------
+Ran 291 tests in 10.215s
+
+OK
+
+================================================================================
+ [1] 360-DEGREE ROTATION SWEEP METRICS (1 DEGREE INCREMENTS)
+================================================================================
+  Orientations tested: 360 angles (0° to 359°)
+  Overlap Depth (m):  Min=4.4240, Max=4.4240, Mean=4.4240, StdDev=0.000000
+  Overlap Area (m²):  Min=18.8673, Max=18.8673, Mean=18.8673, StdDev=0.000000
+  NaN Count: 0, Inf Count: 0
+  Max Depth Discrepancy vs Theoretical (4.83m): 0.4060m
+  Separated (20m) False Positives across 360 orientations: 0 / 360
+
+================================================================================
+ [2] GLANCING TOUCHES & SUB-CENTIMETER STEP SWEEP
+================================================================================
+   Offset (mm) |  Separation (m) |   Contact? |    Depth (m) |    Area (m²)
+  ------------------------------------------------------------------------
+           -50 |         14.8800 |      False |       0.0000 |       0.0000
+           -20 |         14.8500 |      False |       0.0000 |       0.0000
+           -10 |         14.8400 |      False |       0.0000 |       0.0000
+            -5 |         14.8350 |      False |       0.0000 |       0.0000
+            -2 |         14.8320 |      False |       0.0000 |       0.0000
+            -1 |         14.8310 |      False |       0.0000 |       0.0000
+             0 |         14.8300 |      False |       0.0000 |       0.0000
+             1 |         14.8290 |       True |       0.0010 |       0.0006
+             2 |         14.8280 |       True |       0.0020 |       0.0012
+             5 |         14.8250 |       True |       0.0050 |       0.0031
+            10 |         14.8200 |       True |       0.0100 |       0.0062
+            20 |         14.8100 |       True |       0.0200 |       0.0125
+            50 |         14.7800 |       True |       0.0500 |       0.0323
+
+================================================================================
+ [3] HIGH-VELOCITY CROSSING & TUNNELING STRESS TEST
+================================================================================
+  Speed (kt) |  Speed (m/s) |  Step/frame (m) |   Frames Hit |  Duration (ms) |   Peak Depth
+  -------------------------------------------------------------------------------------
+        10.0 |         5.14 |           0.514 |           55 |           5400 |       12.377m
+        20.0 |        10.29 |           1.029 |           27 |           2600 |       12.116m
+        30.0 |        15.43 |           1.543 |           18 |           1700 |       12.377m
+        40.0 |        20.58 |           2.058 |           14 |           1300 |       12.116m
+        50.0 |        25.72 |           2.572 |           11 |           1000 |       11.732m
+        60.0 |        30.87 |           3.087 |            9 |            800 |       11.348m
+        80.0 |        41.16 |           4.116 |            7 |            600 |       12.116m
+       100.0 |        51.44 |           5.144 |            5 |            400 |       11.277m
+
+================================================================================
+ [4] NAPLES PR1 GROUND TRUTH INCIDENT BREAKDOWN (6 INCIDENTS)
+================================================================================
+
+  Incident 1: vci-ITA B-GBR G-1790078886600
+    Pair:                  ITA B vs GBR G
+    Active Window:         1790078886600 - 1790078886600 (Duration: 0 ms, Frames: 1)
+    Peak Time (ms):        1790078886600
+    Min Center Distance:   19.27 m
+    Peak Overlap Depth:    0.043 m
+    Peak Overlap Area:     0.008 m²
+    Peak Headings:         ITA B=2.7°, GBR G=179.3° (Delta: 176.6°)
+    Empirical Verification: Contact=True, Depth=0.043m, Area=0.008m² -> [CONFIRMED GENUINE]
+
+  Incident 2: vci-GBR G-SUI-1790079006600
+    Pair:                  GBR G vs SUI
+    Active Window:         1790079006600 - 1790079008800 (Duration: 2200 ms, Frames: 23)
+    Peak Time (ms):        1790079008500
+    Min Center Distance:   12.54 m
+    Peak Overlap Depth:    0.129 m
+    Peak Overlap Area:     0.053 m²
+    Peak Headings:         GBR G=9.4°, SUI=12.6° (Delta: 3.2°)
+    Empirical Verification: Contact=True, Depth=0.129m, Area=0.043m² -> [CONFIRMED GENUINE]
+
+  Incident 3: vci-GBR G-GBR B-1790079088400
+    Pair:                  GBR G vs GBR B
+    Active Window:         1790079088400 - 1790079089700 (Duration: 1300 ms, Frames: 14)
+    Peak Time (ms):        1790079089200
+    Min Center Distance:   13.64 m
+    Peak Overlap Depth:    4.938 m
+    Peak Overlap Area:     30.653 m²
+    Peak Headings:         GBR G=123.2°, GBR B=174.6° (Delta: 51.4°)
+    Empirical Verification: Contact=True, Depth=4.938m, Area=28.691m² -> [CONFIRMED GENUINE]
+
+  Incident 4: vci-NZL B-GBR B-1790079089300
+    Pair:                  NZL B vs GBR B
+    Active Window:         1790079089300 - 1790079090000 (Duration: 700 ms, Frames: 8)
+    Peak Time (ms):        1790079089700
+    Min Center Distance:   16.29 m
+    Peak Overlap Depth:    2.071 m
+    Peak Overlap Area:     4.502 m²
+    Peak Headings:         NZL B=7.2°, GBR B=174.9° (Delta: 167.7°)
+    Empirical Verification: Contact=True, Depth=2.071m, Area=4.502m² -> [CONFIRMED GENUINE]
+
+  Incident 5: vci-NZL B-SUI-1790079571100
+    Pair:                  NZL B vs SUI
+    Active Window:         1790079571100 - 1790079571200 (Duration: 100 ms, Frames: 2)
+    Peak Time (ms):        1790079571100
+    Min Center Distance:   15.70 m
+    Peak Overlap Depth:    0.057 m
+    Peak Overlap Area:     0.010 m²
+    Peak Headings:         NZL B=116.2°, SUI=106.4° (Delta: 9.8°)
+    Empirical Verification: Contact=True, Depth=0.057m, Area=0.010m² -> [CONFIRMED GENUINE]
+
+  Incident 6: vci-USA-ITA G-1790080168100
+    Pair:                  USA vs ITA G
+    Active Window:         1790080168100 - 1790080168500 (Duration: 400 ms, Frames: 5)
+    Peak Time (ms):        1790080168200
+    Min Center Distance:   15.03 m
+    Peak Overlap Depth:    1.067 m
+    Peak Overlap Area:     1.370 m²
+    Peak Headings:         USA=322.7°, ITA G=337.8° (Delta: 15.1°)
+    Empirical Verification: Contact=True, Depth=1.067m, Area=1.321m² -> [CONFIRMED GENUINE]
+.....................................................................
+----------------------------------------------------------------------
+Ran 69 tests in 0.001s
+
+OK
+..........................
+----------------------------------------------------------------------
+Ran 26 tests in 0.000s
+
+OK
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 0.000s
+
+OK
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 1.262s
+
+OK
+================================================================================
+ AC40 AMERICA'S CUP 2D REGATTA REPLAY — E2E TEST RUNNER
+================================================================================
+Workspace: C:\Workspace\Americas Cup\2D_regatta_replay
+Executing Tiers: [1, 2, 3, 4]
+
+================================================================================
+ RUNNING Tier 1 — Feature Coverage (13 Core Features, >=5 tests each)
+================================================================================
+
+================================================================================
+ RUNNING Tier 2 — Boundary & Corner Cases (5 Domains, >=5 tests each)
+================================================================================
+
+================================================================================
+ RUNNING Tier 3 — Cross-Feature Combinations (Pairwise Interaction)
+================================================================================
+
+================================================================================
+ RUNNING Tier 4 — Real-World Application Workloads (Full Dataset Integrity)
+================================================================================
+
+================================================================================
+ E2E TEST SUITE EXECUTION SUMMARY
+================================================================================
+Tier     | Description                                | Tests  | Pass  | Fail  | Time     | Status
+----------------------------------------------------------------------------------------
+Tier 1   | Feature Coverage (13 Core Features, >=5 te | 69     | 69    | 0     | 0.00s    | PASS
+Tier 2   | Boundary & Corner Cases (5 Domains, >=5 te | 26     | 26    | 0     | 0.00s    | PASS
+Tier 3   | Cross-Feature Combinations (Pairwise Inter | 14     | 14    | 0     | 0.00s    | PASS
+Tier 4   | Real-World Application Workloads (Full Dat | 14     | 14    | 0     | 1.26s    | PASS
+----------------------------------------------------------------------------------------
+TOTAL: 123 tests executed in 1.26s. Passed: 123, Failed: 0, Errors: 0, Skipped: 0.
+OVERALL STATUS: [PASS] 100% SUCCESS
+================================================================================
+........
+----------------------------------------------------------------------
+Ran 8 tests in 5.117s
+
+OK
+{"races": 28, "baseline_bytes": 1192282, "race_gzip_bytes": 143463, "referenced_model_bytes": 85065, "source_manifest_bytes": 19838, "lazy_scenario_bytes": 15235, "target_1_5_MiB_passed": true, "hard_3_MiB_passed": true}
+{"status": "pass", "races": 28, "verified_response_objects": 18, "races_with_available_field": {"air_temperature_c": 28, "wave_height_m": 28, "water_temperature_c": 28}, "races_with_source_errors": {}}
+{"race_count": 28, "boat_race_count": 224, "snapshot_count": 3455, "conditional_projection_count": 0, "verification": "passed", "source_check": "existence, size and recorded hash format; raw contents are hashed during refresh"}

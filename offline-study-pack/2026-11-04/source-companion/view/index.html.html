@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>index.html — Offline Source Companion</title>
+<style>
+    :root {
+      --bg: #f8fafc; --surface: #ffffff; --border: #e2e8f0;
+      --text: #0f172a; --muted: #475569; --accent: #1a73e8;
+      --code-bg: #f1f5f9; --line-num: #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .breadcrumbs { font-size: 14px; font-weight: 600; }
+    .breadcrumbs a { color: var(--accent); text-decoration: none; }
+    .breadcrumbs a:hover { text-decoration: underline; }
+    .meta { font-size: 12px; color: var(--muted); display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .badge { padding: 2px 8px; border-radius: 999px; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+    .badge.clean { background: #dcfce7; color: #166534; }
+    .badge.modified { background: #fef3c7; color: #92400e; }
+    .badge.untracked { background: #dbeafe; color: #1e40af; }
+    main { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
+    .code-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 12.5px; }
+    .code-table tr:target { background: #fef9c3; }
+    .code-table td { padding: 1px 10px; vertical-align: top; }
+    .ln { width: 56px; text-align: right; color: var(--line-num); user-select: none; border-right: 1px solid var(--border); background: var(--code-bg); }
+    .ln a { color: inherit; text-decoration: none; display: block; }
+    .ln a:hover { color: var(--accent); }
+    .lc { white-space: pre-wrap; word-break: break-word; }
+    </style>
+</head>
+<body>
+<header>
+  <div class="breadcrumbs">
+    <a href="../../START_HERE.html">Study Pack</a> /
+    <a href="../index.html">Source Companion</a> /
+    <span>index.html</span>
+  </div>
+  <div class="meta">
+    <span class="badge modified">modified</span>
+    <span>16 lines</span>
+    <span>587 bytes</span>
+    <span>SHA-256: <code>3a72a7c82922df05…</code></span>
+    <a href="../raw/index.html" style="color:var(--accent);font-weight:600;">Raw File</a>
+  </div>
+</header>
+<main>
+  <table class="code-table">
+    <tbody>
+      <tr id="L1"><td class="ln"><a href="#L1">1</a></td><td class="lc">&lt;!doctype html&gt;</td></tr><tr id="L2"><td class="ln"><a href="#L2">2</a></td><td class="lc">&lt;html lang=&quot;en&quot;&gt;</td></tr><tr id="L3"><td class="ln"><a href="#L3">3</a></td><td class="lc">  &lt;head&gt;</td></tr><tr id="L4"><td class="ln"><a href="#L4">4</a></td><td class="lc">    &lt;meta charset=&quot;UTF-8&quot; /&gt;</td></tr><tr id="L5"><td class="ln"><a href="#L5">5</a></td><td class="lc">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;</td></tr><tr id="L6"><td class="ln"><a href="#L6">6</a></td><td class="lc">    &lt;meta name=&quot;theme-color&quot; content=&quot;#ffffff&quot; /&gt;</td></tr><tr id="L7"><td class="ln"><a href="#L7">7</a></td><td class="lc">    &lt;meta name=&quot;color-scheme&quot; content=&quot;light&quot; /&gt;</td></tr><tr id="L8"><td class="ln"><a href="#L8">8</a></td><td class="lc">    &lt;title&gt;AC40 Race Telemetry · America&#x27;s Cup&lt;/title&gt;</td></tr><tr id="L9"><td class="ln"><a href="#L9">9</a></td><td class="lc">    &lt;link rel=&quot;icon&quot; type=&quot;image/svg+xml&quot; href=&quot;/favicon.svg&quot; /&gt;</td></tr><tr id="L10"><td class="ln"><a href="#L10">10</a></td><td class="lc">    &lt;link rel=&quot;preload&quot; href=&quot;/fonts/dm-sans-variable.ttf&quot; as=&quot;font&quot; type=&quot;font/ttf&quot; crossorigin /&gt;</td></tr><tr id="L11"><td class="ln"><a href="#L11">11</a></td><td class="lc">  &lt;/head&gt;</td></tr><tr id="L12"><td class="ln"><a href="#L12">12</a></td><td class="lc">  &lt;body&gt;</td></tr><tr id="L13"><td class="ln"><a href="#L13">13</a></td><td class="lc">    &lt;div id=&quot;root&quot;&gt;&lt;/div&gt;</td></tr><tr id="L14"><td class="ln"><a href="#L14">14</a></td><td class="lc">    &lt;script type=&quot;module&quot; src=&quot;/src/main.tsx&quot;&gt;&lt;/script&gt;</td></tr><tr id="L15"><td class="ln"><a href="#L15">15</a></td><td class="lc">  &lt;/body&gt;</td></tr><tr id="L16"><td class="ln"><a href="#L16">16</a></td><td class="lc">&lt;/html&gt;</td></tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>
