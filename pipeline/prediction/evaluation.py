@@ -1,6 +1,7 @@
 """Preregistered chronological evaluation. Frames are never independent races."""
 from __future__ import annotations
 from collections import defaultdict
+from collections.abc import Mapping
 import hashlib
 import json
 import math
@@ -128,3 +129,90 @@ def promotion(candidate, reference, *, applicable=("brier", "normalized_rps", "n
                                   and c.get("log_loss", math.inf) < r.get("log_loss", math.inf))
     return {"promoted": all(checks.values()), "checks": checks,
             "status": "provisional_low_evidence", "guard_budgets": GUARD_BUDGETS}
+
+
+def implied_probabilities(decimal_odds: dict[str, float] | Mapping[str, float]) -> dict:
+    """Computes raw implied, bookmaker overround, and proportional de-vigged probabilities.
+    
+    Validates that every odd > 1.0 and is finite.
+    """
+    if not decimal_odds:
+        raise ValueError("decimal_odds mapping cannot be empty")
+    for sel, odd in decimal_odds.items():
+        if not math.isfinite(odd) or odd <= 1.0:
+            raise ValueError(f"Odd for selection '{sel}' must be finite and > 1.0, got {odd}")
+    raw_implied = {k: 1.0 / float(v) for k, v in decimal_odds.items()}
+    sum_raw = float(sum(raw_implied.values()))
+    overround = float(sum_raw - 1.0)
+    devigged = {k: float(v / sum_raw) for k, v in raw_implied.items()}
+    return {
+        "raw_implied": raw_implied,
+        "overround": overround,
+        "probabilities": devigged
+    }
+
+
+def compare_market_to_forecast(snapshot: dict, forecast: dict, *, forecast_issue_time_ms: int) -> dict:
+    """Causal, complete-book market odds benchmark against forecast probabilities."""
+    captured_at = snapshot.get("captured_at_ms")
+    if captured_at is not None and captured_at > forecast_issue_time_ms:
+        return {
+            "status": "post_issue_time_excluded",
+            "reason": "Market snapshot was captured after forecast issue time"
+        }
+    
+    from .cup import TEAM_IDS
+    market = snapshot.get("market")
+    selections = snapshot.get("selections", {})
+    if not isinstance(selections, dict) or not selections:
+        return {
+            "status": "incomplete_book_excluded",
+            "reason": "Selection list does not cover the complete event universe"
+        }
+    
+    sel_keys = set(selections.keys())
+    if market == "ac38_winner":
+        required = set(TEAM_IDS)
+        if sel_keys != required:
+            return {
+                "status": "incomplete_book_excluded",
+                "reason": "Selection list does not cover the complete event universe"
+            }
+    elif market == "lvc_winner":
+        required = set(TEAM_IDS[1:])
+        if sel_keys != required:
+            return {
+                "status": "incomplete_book_excluded",
+                "reason": "Selection list does not cover the complete event universe"
+            }
+    elif market == "race":
+        universe = set(snapshot.get("selection_universe", []))
+        if not universe or sel_keys != universe:
+            return {
+                "status": "incomplete_book_excluded",
+                "reason": "Selection list does not cover the complete event universe"
+            }
+    else:
+        universe = set(snapshot.get("selection_universe", []))
+        if universe and sel_keys != universe:
+            return {
+                "status": "incomplete_book_excluded",
+                "reason": "Selection list does not cover the complete event universe"
+            }
+    
+    devig = implied_probabilities(selections)
+    f_probs = forecast.get("probabilities", {})
+    diffs = {}
+    for k, p_mkt in devig["probabilities"].items():
+        p_fc = f_probs.get(k)
+        if p_fc is not None:
+            diffs[k] = round(float(p_fc - p_mkt), 6)
+            
+    return {
+        "status": "valid",
+        "market": market,
+        "overround": round(devig["overround"], 6),
+        "market_probabilities": devig["probabilities"],
+        "forecast_differences": diffs,
+    }
+

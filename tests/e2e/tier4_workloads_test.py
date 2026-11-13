@@ -31,7 +31,13 @@ from tests.e2e.e2e_types import (
 )
 
 WORKSPACE_ROOT = Path(__file__).resolve().parent.parent.parent
-DATASET_PATH = WORKSPACE_ROOT / "Data" / "26 09 22 NAP IPR PR1.jsonl"
+DATASET_PATH = next(
+    (p for p in [
+        WORKSPACE_ROOT / "Data" / "26 09 22 NAP IPR PR1.jsonl",
+        WORKSPACE_ROOT / "Data" / "AC38" / "26 09 22 NAP IPR PR1.jsonl",
+    ] if p.exists()),
+    WORKSPACE_ROOT / "Data" / "AC38" / "26 09 22 NAP IPR PR1.jsonl"
+)
 
 
 class TestTier4RealWorldWorkloads(unittest.TestCase):

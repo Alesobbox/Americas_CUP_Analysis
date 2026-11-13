@@ -13,6 +13,7 @@ from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 import math
+from pathlib import Path
 from typing import Mapping, Sequence
 
 import numpy as np
@@ -46,19 +47,25 @@ class CupScenario:
     sigma_multiplier: float = 1.0
     match_concentration: float = 1.0
     hazard_multiplier: float = 1.0
+    daily_drift_sd: float = 0.0
 
     def validate(self) -> None:
         if not 0 <= self.rho <= 1 or self.sigma_multiplier < 0:
             raise ValueError("rho must lie in [0,1] and sigma_multiplier must be nonnegative")
         if self.match_concentration <= 0 or self.hazard_multiplier <= 0:
             raise ValueError("match concentration and hazard multiplier must be positive")
+        if not 0 <= self.daily_drift_sd <= 0.5:
+            raise ValueError("daily_drift_sd must lie in [0, 0.5]")
         if not all(math.isfinite(v) for v in asdict(self).values()):
             raise ValueError("scenario parameters must be finite")
 
     @property
     def scenario_id(self) -> str:
-        return (f"rho{self.rho:g}_sigma{self.sigma_multiplier:g}"
-                f"_c{self.match_concentration:g}_k{self.hazard_multiplier:g}")
+        base_id = (f"rho{self.rho:g}_sigma{self.sigma_multiplier:g}"
+                   f"_c{self.match_concentration:g}_k{self.hazard_multiplier:g}")
+        if self.daily_drift_sd > 0:
+            base_id += f"_drift{self.daily_drift_sd:g}"
+        return base_id
 
 
 @dataclass(frozen=True)
@@ -165,6 +172,18 @@ def hazard_probability(probability: float, multiplier: float) -> float:
     return 1.0 if probability == 1 else -math.expm1(multiplier * math.log1p(-probability))
 
 
+def exposure_hazard_probability(hourly_failure_rate: float, hazard_multiplier: float = 1.0, duration_hours: float = 0.35) -> float:
+    """Computes failure probability from continuous hourly exposure rate."""
+    if not math.isfinite(hourly_failure_rate) or hourly_failure_rate < 0:
+        raise ValueError("hourly_failure_rate must be finite and non-negative")
+    if not math.isfinite(hazard_multiplier) or hazard_multiplier < 0:
+        raise ValueError("hazard_multiplier must be finite and non-negative")
+    if not math.isfinite(duration_hours) or duration_hours < 0:
+        raise ValueError("duration_hours must be finite and non-negative")
+    return -math.expm1(-hourly_failure_rate * hazard_multiplier * duration_hours)
+
+
+
 def choose_semifinal_opponent(eligible: Sequence[str], wins: Mapping[str, float],
                               played: Mapping[str, int], prior_match_strength: Mapping[str, float]) -> str:
     """Observable-only policy; no sampled latent ability enters this interface."""
@@ -185,7 +204,13 @@ def _canonical_hash(payload: object) -> str:
 def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario | None = None,
                  rules: CupRules | None = None, trials: int = 100_000, seed: int = 2027,
                  pooled_scale: float = 0.5, failure_probability: float = 0.0,
-                 conditional_on_completed_scored_races: bool = True) -> dict:
+                 conditional_on_completed_scored_races: bool = True,
+                 feasible_slot_rule_bounds: bool = False,
+                 direct_ac75_distribution: Mapping[str, object] | None = None,
+                 posterior_world_draws: np.ndarray | None = None,
+                 forecast_prior_mean: Mapping[str, float] | None = None,
+                 forecast_prior_var: Mapping[str, float] | None = None,
+                 return_trial_outcomes: bool = False) -> dict:
     """Vectorized complete-tournament continuations with persistent team effects.
 
     A zero reliability input means an explicit no-failure scenario, not a learned
@@ -209,12 +234,41 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
     rows = np.arange(trials)
     means = np.array([mapped_strength.get(team, 0.0) for team in TEAM_IDS])
     missing = np.array([team not in mapped_strength for team in TEAM_IDS])
-    population = rng.normal(0, pooled_scale, (trials, 7))
-    base = np.where(missing[None, :], population, means[None, :])
-    # One draw per team per whole tournament, never independently per match.
-    theta = scenario.rho * base + rng.normal(0, scenario.sigma_multiplier * pooled_scale, (trials, 7))
+    if posterior_world_draws is not None:
+        theta = np.asarray(posterior_world_draws, dtype=float)
+        if theta.shape != (trials, 7) or not np.all(np.isfinite(theta)):
+            raise ValueError(f"posterior_world_draws must be finite with shape ({trials}, 7), got {theta.shape}")
+        capability_source = "ac38_joint_posterior_draws"
+    elif direct_ac75_distribution is not None:
+        expected_order = list(TEAM_IDS)
+        if list(direct_ac75_distribution.get("team_order", [])) != expected_order:
+            raise ValueError(f"direct_ac75_distribution['team_order'] must match TEAM_IDS exactly: {expected_order}")
+        cov_mat = np.asarray(direct_ac75_distribution["covariance"], dtype=float)
+        if cov_mat.shape != (7, 7):
+            raise ValueError(f"direct_ac75_distribution['covariance'] must be a 7x7 matrix, got {cov_mat.shape}")
+        if not np.allclose(cov_mat, cov_mat.T, atol=1e-8):
+            raise ValueError("direct_ac75_distribution['covariance'] must be symmetric")
+        eigvals = np.linalg.eigvalsh(cov_mat)
+        if np.any(eigvals < -1e-8):
+            raise ValueError("direct_ac75_distribution['covariance'] must be positive semi-definite")
+        cov_clean = 0.5 * (cov_mat + cov_mat.T)
+        min_eig = np.min(np.linalg.eigvalsh(cov_clean))
+        if min_eig < 1e-9:
+            cov_clean += np.eye(7) * (abs(min_eig) + 1e-9)
+        mu_vec = np.array([float(direct_ac75_distribution["mean"].get(t, 0.0)) for t in TEAM_IDS], dtype=float)
+        theta = rng.multivariate_normal(mu_vec, cov_clean, size=trials)
+        capability_source = "direct_ac75_posterior"
+    else:
+        population = rng.normal(0, pooled_scale, (trials, 7))
+        base = np.where(missing[None, :], population, means[None, :])
+        # One draw per team per whole tournament, never independently per match.
+        theta = scenario.rho * base + rng.normal(0, scenario.sigma_multiplier * pooled_scale, (trials, 7))
+        capability_source = "ac40_transfer_prior"
+
     slopes = np.array([rules.weather_sensitivity.get(team, 0.0) for team in TEAM_IDS])
     day_factors: dict[int, np.ndarray] = {}
+    day_drifts: dict[int, np.ndarray] = {}
+    sorted_days_seen: list[int] = []
     unresolved = np.zeros(trials, dtype=bool)
     reasons: set[str] = set()
     reason_masks: dict[str, np.ndarray] = {}
@@ -240,7 +294,19 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
     def day_theta(day: int) -> np.ndarray:
         if day not in day_factors:
             day_factors[day] = rng.normal(size=trials)
-        return theta + day_factors[day][:, None] * slopes[None, :]
+            if scenario.daily_drift_sd > 0:
+                if not sorted_days_seen:
+                    day_drifts[day] = np.zeros((trials, 7), dtype=float)
+                    sorted_days_seen.append(day)
+                else:
+                    prev_day = sorted_days_seen[-1]
+                    delta_t = max(1, abs(day - prev_day))
+                    drift_step = rng.normal(0, math.sqrt(delta_t) * scenario.daily_drift_sd, (trials, 7))
+                    day_drifts[day] = day_drifts[prev_day] + drift_step
+                    sorted_days_seen.append(day)
+            else:
+                day_drifts[day] = np.zeros((trials, 7), dtype=float)
+        return theta + day_drifts[day] + day_factors[day][:, None] * slopes[None, :]
 
     def standing(points: np.ndarray, ids: np.ndarray, stage: str,
                  fleet_history: list[np.ndarray] | None = None) -> np.ndarray:
@@ -344,6 +410,9 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
                     rr_played[:, b_idx] += 1
                 rr_race += 1
     seeds = standing(challenger_points[:, 1:], challenger_ids, "round_robin_challengers")
+    top3 = seeds[:, :3]
+    fourth = seeds[:, 3]
+    rep_entrants = seeds[:, 3:6]
 
     def series(a: np.ndarray, b: np.ndarray, target: int, stage: str,
                initial_a: float = 0, initial_b: float = 0, day: int = 100) -> np.ndarray:
@@ -370,8 +439,20 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
     eligible = np.column_stack((seeds[:, 1], seeds[:, 2], repechage_winner))
     selector = seeds[:, 0]
     fraction = np.divide(rr_wins, rr_played, out=np.full_like(rr_wins, 0.5), where=rr_played > 0)
-    prior_variance = (scenario.sigma_multiplier * pooled_scale) ** 2 + missing * (scenario.rho * pooled_scale) ** 2
-    prior_mean = scenario.rho * means
+    if posterior_world_draws is not None:
+        prior_mean = (
+            np.array([float(forecast_prior_mean.get(t, 0.0)) for t in TEAM_IDS], dtype=float)
+            if forecast_prior_mean is not None
+            else np.mean(theta, axis=0)
+        )
+        prior_variance = (
+            np.array([max(0.0, float(forecast_prior_var.get(t, 0.0))) for t in TEAM_IDS], dtype=float)
+            if forecast_prior_var is not None
+            else np.var(theta, axis=0)
+        )
+    else:
+        prior_variance = (scenario.sigma_multiplier * pooled_scale) ** 2 + missing * (scenario.rho * pooled_scale) ** 2
+        prior_mean = scenario.rho * means
     prior_logits = (scenario.match_concentration * (prior_mean[eligible] - prior_mean[selector][:, None]) /
                     np.sqrt(1 + math.pi * scenario.match_concentration**2 *
                             (prior_variance[eligible] + prior_variance[selector][:, None]) / 8))
@@ -396,9 +477,79 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
     unresolved_count = trials - resolved_count
     counts = np.bincount(champion[~unresolved], minlength=7)
     lower = counts / trials
-    upper = np.minimum(1, (counts + unresolved_count) / trials)
+    if feasible_slot_rule_bounds and unresolved_count > 0:
+        feasible_champions = np.zeros((trials, 7), dtype=bool)
+        feasible_champions[~unresolved, champion[~unresolved]] = True
+        feasible_champions[unresolved, 0] = True
+
+        m_cup = unresolved & (first_unresolved_stage == "cup_match")
+        if np.any(m_cup):
+            feasible_champions[m_cup, challenger[m_cup]] = True
+
+        m_cf = unresolved & (first_unresolved_stage == "challenger_final")
+        if np.any(m_cf):
+            feasible_champions[m_cf, sf1[m_cf]] = True
+            feasible_champions[m_cf, sf2[m_cf]] = True
+
+        m_sf1 = unresolved & np.isin(first_unresolved_stage, ["semifinal_1", "semifinal_selection"])
+        if np.any(m_sf1):
+            feasible_champions[m_sf1, selector[m_sf1]] = True
+            for col in range(eligible.shape[1]):
+                feasible_champions[m_sf1, eligible[m_sf1, col]] = True
+
+        m_sf2 = unresolved & (first_unresolved_stage == "semifinal_2")
+        if np.any(m_sf2):
+            feasible_champions[m_sf2, sf1[m_sf2]] = True
+            feasible_champions[m_sf2, others[m_sf2, 0]] = True
+            feasible_champions[m_sf2, others[m_sf2, 1]] = True
+
+        m_rep2 = unresolved & (first_unresolved_stage == "repechage_2")
+        if np.any(m_rep2):
+            for col in range(top3.shape[1]):
+                feasible_champions[m_rep2, top3[m_rep2, col]] = True
+            feasible_champions[m_rep2, fourth[m_rep2]] = True
+            feasible_champions[m_rep2, repechage_first[m_rep2]] = True
+
+        m_rep1 = unresolved & np.isin(first_unresolved_stage, ["repechage_1", "repechage"])
+        if np.any(m_rep1):
+            feasible_champions[m_rep1, :] = True
+
+        m_rr = unresolved & (first_unresolved_stage == "round_robin_challengers")
+        if np.any(m_rr):
+            # All 6 Challengers enter Semifinals (seeds 1-3) or Repechage (seeds 4-6).
+            # No Challenger is eliminated at round_robin_challengers; all remain alive.
+            feasible_champions[m_rr, :] = True
+
+        m_earlier = unresolved & ~np.isin(first_unresolved_stage, [
+            "cup_match", "challenger_final", "semifinal_1", "semifinal_2",
+            "semifinal_selection", "repechage_2", "repechage_1", "repechage",
+            "round_robin_challengers"
+        ])
+        if np.any(m_earlier):
+            feasible_champions[m_earlier, :] = True
+
+        upper = np.sum(feasible_champions, axis=0) / trials
+    else:
+        upper = np.minimum(1, (counts + unresolved_count) / trials)
     estimate = counts / trials if unresolved_count == 0 else None
     numerical_half_width = 1.96 * np.sqrt(0.25 / trials)
+    overall_fleet_ranks = np.empty((trials, 7), dtype=np.int8)
+    overall_fleet_ranks[rows[:, None], overall_fleet_order] = np.arange(1, 8, dtype=np.int8)[None, :]
+    mean_fleet_pos = np.mean(overall_fleet_ranks, axis=0)
+    fleet_pos_dist = {
+        team: [float(np.mean(overall_fleet_ranks[:, i] == pos)) for pos in range(1, 8)]
+        for i, team in enumerate(TEAM_IDS)
+    }
+    top3_counts = np.bincount(top3.ravel(), minlength=7)
+    sf_contenders = np.column_stack((selector, selected, others))
+    sf_counts = np.bincount(sf_contenders.ravel(), minlength=7)
+    actual_mc_se = {
+        team: {
+            "lower": float(math.sqrt(max(lower[i] * (1.0 - lower[i]), 0.0) / trials)),
+            "upper": float(math.sqrt(max(upper[i] * (1.0 - upper[i]), 0.0) / trials)),
+        }
+        for i, team in enumerate(TEAM_IDS)
+    }
     payload = {
         "status": "conditional_scenario" if unresolved_count == 0 else "rule_bounds",
         "target": "2027 America's Cup AC75 trophy", "units": "probability",
@@ -408,8 +559,10 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
             team: float(estimate[i]) if estimate is not None else None for i, team in enumerate(TEAM_IDS)},
         "rule_bounds": {team: {"lower": float(lower[i]), "upper": float(upper[i])}
                         for i, team in enumerate(TEAM_IDS)},
-        "bounds_kind": "conservative_outer_bounds; unresolved trajectories retain [0,1]",
+        "bounds_kind": ("feasible_slot_rule_bounds; unresolved mass restricted to feasible slot contenders"
+                        if feasible_slot_rule_bounds else "conservative_outer_bounds; unresolved trajectories retain [0,1]"),
         "numerical_error": {"worst_case_95_half_width": numerical_half_width,
+                            "actual_mc_se_by_team": actual_mc_se,
                             "scope": "Monte Carlo integration only; excludes model/rule uncertainty"},
         "rules": {"tie_policy": rules.tie_policy, "tie_rule_reference": rules.tie_rule_reference,
                   "round_robins": rules.round_robins, "fleet_races": rules.fleet_races,
@@ -432,10 +585,15 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
                                            for stage in sorted(set(first_unresolved_stage) - {""})},
         "overlapping_reason_counts": {reason: int(np.sum(mask)) for reason, mask in sorted(reason_masks.items())},
         "reason_count_policy": "First-stage counts are mutually exclusive; reason counts may overlap and must not be added.",
-        "diagnostics": {"missing_strength_teams": [team for i, team in enumerate(TEAM_IDS) if missing[i]],
+        "diagnostics": {"capability_source": capability_source,
+                        "missing_strength_teams": [team for i, team in enumerate(TEAM_IDS) if missing[i]],
                         "persistent_ability_variance_by_team": dict(zip(TEAM_IDS, ((scenario.sigma_multiplier * pooled_scale) ** 2 + missing * (scenario.rho * pooled_scale) ** 2).tolist())),
                         "mean_round_robin_points": dict(zip(TEAM_IDS, np.mean(challenger_points, axis=0).tolist())),
                         "mean_overall_points": dict(zip(TEAM_IDS, np.mean(overall_points, axis=0).tolist())),
+                        "mean_fleet_position": dict(zip(TEAM_IDS, mean_fleet_pos.tolist())),
+                        "fleet_position_distribution": fleet_pos_dist,
+                        "top3_challenger_frequency": dict(zip(TEAM_IDS, (top3_counts / trials).tolist())),
+                        "semifinal_frequency": dict(zip(TEAM_IDS, (sf_counts / trials).tolist())),
                         "challenger_selection_frequency": dict(zip(TEAM_IDS, (np.bincount(challenger, minlength=7) / trials).tolist())),
                         "advancement_frequency": {
                             stage: dict(zip(TEAM_IDS, (np.bincount(winners, minlength=7) / trials).tolist()))
@@ -443,11 +601,84 @@ def simulate_cup(mapped_strength: Mapping[str, float], *, scenario: CupScenario 
                                                    ("semifinal_1", sf1), ("semifinal_2", sf2),
                                                    ("challenger_final", challenger))}},
     }
+    draws_digest = (
+        hashlib.sha256(np.ascontiguousarray(theta, dtype=np.float64).tobytes()).hexdigest()
+        if posterior_world_draws is not None
+        else None
+    )
+    if draws_digest is not None:
+        payload["posterior_draws_sha256"] = draws_digest
     payload["input_hash"] = _canonical_hash({"mapped_strength": dict(mapped_strength), "rules": asdict(rules),
                                              "scenario": asdict(scenario), "seed": seed, "trials": trials,
                                              "pooled_scale": pooled_scale, "failure_probability": failure_probability,
-                                             "conditional_on_completed_scored_races": conditional_on_completed_scored_races})
+                                             "conditional_on_completed_scored_races": conditional_on_completed_scored_races,
+                                             **({"posterior_draws_sha256": draws_digest} if draws_digest else {})})
+    if return_trial_outcomes:
+        payload["_trial_outcomes"] = {
+            "champion": champion,
+            "unresolved": unresolved,
+            "feasible_champions": feasible_champions if (feasible_slot_rule_bounds and unresolved_count > 0) else None,
+        }
     return payload
+
+
+def update_cup_from_2027_results(prior_mean: Mapping[str, float],
+                                 prior_cov: np.ndarray,
+                                 completed_ac75_orders: Sequence[Sequence[str]],
+                                 *,
+                                 kappa: float = 1.8) -> dict:
+    """Laplace approximation updating of AC75 team capabilities given 2027 race finish orders."""
+    team_list = list(TEAM_IDS)
+    t_map = {t: idx for idx, t in enumerate(team_list)}
+    mu_0 = np.array([prior_mean.get(t, 0.0) for t in team_list], dtype=float)
+    Sigma_0 = np.asarray(prior_cov, dtype=float)
+    if Sigma_0.shape != (7, 7):
+        raise ValueError(f"prior_cov must be 7x7, got {Sigma_0.shape}")
+    
+    inv_Sigma_0 = np.linalg.pinv(Sigma_0)
+    theta = mu_0.copy()
+    
+    for _ in range(25):
+        diff = theta - mu_0
+        grad = inv_Sigma_0 @ diff
+        H = inv_Sigma_0.copy()
+        
+        for order in completed_ac75_orders:
+            valid_order = [t_map[t] for t in order if t in t_map]
+            if len(valid_order) < 2:
+                continue
+            for k in range(len(valid_order) - 1):
+                subset = valid_order[k:]
+                winner = valid_order[k]
+                u = theta[subset] * kappa
+                u_max = np.max(u)
+                exp_u = np.exp(u - u_max)
+                sum_exp = np.sum(exp_u)
+                p = exp_u / sum_exp
+                
+                grad[winner] -= kappa
+                for idx_s, s in enumerate(subset):
+                    grad[s] += kappa * p[idx_s]
+                    
+                W = np.diag(p) - np.outer(p, p)
+                for r_i, s_i in enumerate(subset):
+                    for c_j, s_j in enumerate(subset):
+                        H[s_i, s_j] += (kappa ** 2) * W[r_i, c_j]
+                        
+        step = np.linalg.solve(H + 1e-6 * np.eye(7), grad)
+        theta -= step
+        if float(np.max(np.abs(step))) < 1e-6:
+            break
+            
+    post_cov = np.linalg.pinv(H)
+    post_cov = 0.5 * (post_cov + post_cov.T)
+    
+    return {
+        "mean": {t: float(theta[i]) for i, t in enumerate(team_list)},
+        "covariance": post_cov.tolist(),
+        "team_order": team_list
+    }
+
 
 
 def official_rules_gaps(rules: CupRules | None = None) -> list[str]:
@@ -505,36 +736,120 @@ def build_cup_forecast(mapped_strength: Mapping[str, float] | None = None, *, ru
                 evaluated_scenario_ids=[item["scenario_id"] for item in built])
 
 
-def map_ac40_to_cup(ac40_effects: Mapping[str, float]) -> dict[str, float]:
+ROSTER_POLICIES = ("equal", "principal_only", "assumed_10_02")
+
+
+def build_roster_mapping_matrix(entry_keys: list[str], policy: str = "equal",
+                                entry_id_mode: str = "pooled_entry",
+                                roster_path: Path | None = None) -> np.ndarray:
+    """Build 7 x K linear combination matrix A mapping entry effects to syndicates."""
+    if policy not in ROSTER_POLICIES:
+        raise ValueError(f"Unknown roster policy '{policy}'; choose from {ROSTER_POLICIES}")
+    mapping_weights = {
+        "ETNZ": {"equal": {"NZL B": 0.5, "NZL G": 0.5, "NZL": 1.0},
+                 "principal_only": {"NZL B": 1.0, "NZL G": 0.0, "NZL": 1.0},
+                 "assumed_10_02": {"NZL B": 10.0 / 12.0, "NZL G": 2.0 / 12.0, "NZL": 1.0}},
+        "GB1": {"equal": {"GBR B": 0.5, "GBR G": 0.5, "GBR": 1.0},
+                "principal_only": {"GBR B": 1.0, "GBR G": 0.0, "GBR": 1.0},
+                "assumed_10_02": {"GBR B": 10.0 / 12.0, "GBR G": 2.0 / 12.0, "GBR": 1.0}},
+        "LUNA_ROSSA": {"equal": {"ITA B": 0.5, "ITA G": 0.5, "ITA": 1.0},
+                       "principal_only": {"ITA B": 1.0, "ITA G": 0.0, "ITA": 1.0},
+                       "assumed_10_02": {"ITA B": 10.0 / 12.0, "ITA G": 2.0 / 12.0, "ITA": 1.0}},
+        "ALINGHI": {"equal": {"SUI": 1.0}, "principal_only": {"SUI": 1.0}, "assumed_10_02": {"SUI": 1.0}},
+        "LA_ROCHE_POSAY": {"equal": {"FRA": 1.0}, "principal_only": {"FRA": 1.0}, "assumed_10_02": {"FRA": 1.0}},
+        "ARC_USA": {"equal": {"USA": 1.0}, "principal_only": {"USA": 1.0}, "assumed_10_02": {"USA": 1.0}},
+        "AUSTRALIA": {"equal": {"AUS": 1.0, "AUSTRALIA": 1.0},
+                      "principal_only": {"AUS": 1.0, "AUSTRALIA": 1.0},
+                      "assumed_10_02": {"AUS": 1.0, "AUSTRALIA": 1.0}},
+    }
+    event_entry_comp_races = {}
+    if entry_id_mode == "event_entry" or any("::" in k for k in entry_keys):
+        r_path = roster_path or (Path(__file__).resolve().parent.parent.parent / "docs" / "ac38_roster.json")
+        if r_path.exists():
+            try:
+                r_doc = json.loads(r_path.read_text(encoding="utf-8"))
+                for ee in r_doc.get("event_entries", []):
+                    event_entry_comp_races[ee["event_entry_id"]] = max(ee.get("n_competitive_races", 1), 1)
+            except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+                raise ValueError(f"Failed to load competitive race weights from {r_path}: {exc}") from exc
+
+    k = len(entry_keys)
+    A = np.zeros((7, k), dtype=float)
+    key_idx = {k: i for i, k in enumerate(entry_keys)}
+    for row_idx, team in enumerate(TEAM_IDS):
+        weights = mapping_weights.get(team, {}).get(policy, {})
+        present = {}
+        for ek in entry_keys:
+            base_k = ek.split("::")[-1]
+            if base_k in weights:
+                base_w = weights[base_k]
+                comp_mult = event_entry_comp_races.get(ek, 1) if ("::" in ek or entry_id_mode == "event_entry") else 1
+                present[ek] = base_w * comp_mult
+        if present:
+            tot = sum(present.values())
+            if tot > 0:
+                for ek, w in present.items():
+                    A[row_idx, key_idx[ek]] = w / tot
+    return A
+
+
+def map_ac40_to_cup(ac40_effects: Mapping[str, float], policy: str = "equal",
+                    entry_id_mode: str = "pooled_entry") -> dict[str, float]:
     """Map AC40 entry abilities to the 7 registered 2027 America's Cup teams.
 
-    Teams with multiple crews (e.g. B and G) are averaged.
-    Unobserved teams are omitted so the simulator draws their population prior;
-    an estimated zero remains a present, observed strength.
+    Uses linear combination weights according to the specified roster policy:
+    - 'equal': 50/50 mean between senior (B) and youth/women (G) pairs.
+    - 'principal_only': 100% weight to primary senior (B) team.
+    - 'assumed_10_02': 10/12 senior, 2/12 youth/women.
+    Unobserved teams are omitted so the simulator draws their population prior.
     """
-    mapping = {
-        "ETNZ": ["NZL", "NZL B", "NZL G"],
-        "GB1": ["GBR", "GBR B", "GBR G"],
-        "LUNA_ROSSA": ["ITA", "ITA B", "ITA G"],
-        "ALINGHI": ["SUI"],
-        "LA_ROCHE_POSAY": ["FRA"],
-        "ARC_USA": ["USA"],
-        "AUSTRALIA": ["AUS", "AUSTRALIA"],
-    }
+    valid_groups = [
+        ["NZL", "NZL B", "NZL G"],
+        ["GBR", "GBR B", "GBR G"],
+        ["ITA", "ITA B", "ITA G"],
+        ["SUI"], ["FRA"], ["USA"], ["AUS", "AUSTRALIA"]
+    ]
+    keys = [k for k in ac40_effects if any(k.split("::")[-1] in grp for grp in valid_groups)]
+    if not keys:
+        return {}
+    A = build_roster_mapping_matrix(keys, policy=policy, entry_id_mode=entry_id_mode)
+    theta_entry = np.array([float(ac40_effects[k]) for k in keys])
+    theta_syndicate = A @ theta_entry
     result = {}
-    for cup_team, ac40_codes in mapping.items():
-        matched = [float(ac40_effects[k]) for k in ac40_codes if k in ac40_effects]
-        if matched:
-            result[cup_team] = float(np.mean(matched))
+    for i, team in enumerate(TEAM_IDS):
+        if np.any(A[i, :] > 0):
+            result[team] = float(theta_syndicate[i])
     return result
 
 
-def cup_mapping_provenance(ac40_effects: Mapping[str, float]) -> dict:
+def map_ac40_to_cup_with_covariance(ac40_effects: Mapping[str, float],
+                                    covariance: np.ndarray,
+                                    entry_keys: list[str],
+                                    policy: str = "equal",
+                                    entry_id_mode: str = "pooled_entry") -> tuple[dict[str, float], dict[str, float], np.ndarray]:
+    """Propagate Laplace posterior covariance from entry effects to syndicates:
+    theta_syndicate = A @ theta_entry
+    Sigma_syndicate = A @ Sigma_entry @ A^T
+    """
+    A = build_roster_mapping_matrix(entry_keys, policy=policy, entry_id_mode=entry_id_mode)
+    theta_entry = np.array([float(ac40_effects[k]) for k in entry_keys])
+    theta_syndicate = A @ theta_entry
+    cov_syndicate = A @ covariance @ A.T
+    mean_result = {}
+    sd_result = {}
+    for i, team in enumerate(TEAM_IDS):
+        if np.any(A[i, :] > 0):
+            mean_result[team] = float(theta_syndicate[i])
+            sd_result[team] = float(np.sqrt(max(0.0, cov_syndicate[i, i])))
+    return mean_result, sd_result, cov_syndicate
+
+
+def cup_mapping_provenance(ac40_effects: Mapping[str, float], policy: str = "equal") -> dict:
     groups = {"ETNZ": ("NZL", "NZL B", "NZL G"), "GB1": ("GBR", "GBR B", "GBR G"),
               "LUNA_ROSSA": ("ITA", "ITA B", "ITA G"), "ALINGHI": ("SUI",),
               "LA_ROCHE_POSAY": ("FRA",), "ARC_USA": ("USA",), "AUSTRALIA": ("AUS", "AUSTRALIA")}
-    mapped = map_ac40_to_cup(ac40_effects)
-    return {"policy": "Arithmetic mean of observed AC40 entry effects within each team; unobserved teams retain a population prior.",
+    mapped = map_ac40_to_cup(ac40_effects, policy=policy)
+    return {"policy": f"Combination policy '{policy}' of observed AC40 entry effects within each team; unobserved teams retain a population prior.",
             "teams": [{"team_id": team, "observed": team in mapped,
                        "source_entries": [{"entry_id": entry, "effect": float(ac40_effects[entry])}
                                           for entry in groups[team] if entry in ac40_effects],
@@ -543,7 +858,10 @@ def cup_mapping_provenance(ac40_effects: Mapping[str, float]) -> dict:
 
 def public_cup_artifact(*, source_manifest_hash: str, mapped_strength: Mapping[str, float] | None = None,
                         rules: CupRules | None = None, trials: int = 5_000, seed: int = 2027,
-                        model_lineage: Mapping | None = None, mapping_provenance: Mapping | None = None) -> dict:
+                        model_lineage: Mapping | None = None, mapping_provenance: Mapping | None = None,
+                        feasible_slot_rule_bounds: bool = False,
+                        direct_ac75_distribution: Mapping[str, object] | None = None,
+                        posterior_draws_by_scenario: Mapping[str, np.ndarray] | None = None) -> dict:
     """Production Cup UI artifact with AC40 transfer scenario envelope and rule bounds.
 
     The source archive contains AC40 observations only. When mapped AC40 strengths
@@ -579,7 +897,19 @@ def public_cup_artifact(*, source_manifest_hash: str, mapped_strength: Mapping[s
         }
 
     scenarios = standard_scenarios()
-    built = [simulate_cup(mapped_strength, scenario=s, rules=rules, trials=trials, seed=seed) for s in scenarios]
+    built = [
+        simulate_cup(
+            mapped_strength,
+            scenario=s,
+            rules=rules,
+            trials=trials,
+            seed=seed,
+            feasible_slot_rule_bounds=feasible_slot_rule_bounds,
+            direct_ac75_distribution=direct_ac75_distribution,
+            posterior_world_draws=(posterior_draws_by_scenario or {}).get(s.scenario_id),
+        )
+        for s in scenarios
+    ]
     envelope = {
         team: {
             "lower": round(min(item["rule_bounds"][team]["lower"] for item in built), 4),
@@ -622,7 +952,8 @@ def public_cup_artifact(*, source_manifest_hash: str, mapped_strength: Mapping[s
             "first_unresolved_stage_counts", "overlapping_reason_counts", "reason_count_policy",
             "rule_bounds", "probabilities", "numerical_error", "unresolved_reasons", "assumptions")}
             | {"model_ref": (model_lineage or {}).get("model_ref"),
-               "source_manifest_hash": source_manifest_hash} for item in built],
+               "source_manifest_hash": source_manifest_hash,
+               **({"posterior_draws_sha256": item["posterior_draws_sha256"]} if item.get("posterior_draws_sha256") else {})} for item in built],
         "extrema_by_team": {team: {
             "lower_scenario_ids": [item["scenario_id"] for item in built if item["rule_bounds"][team]["lower"] == min(b["rule_bounds"][team]["lower"] for b in built)],
             "upper_scenario_ids": [item["scenario_id"] for item in built if item["rule_bounds"][team]["upper"] == max(b["rule_bounds"][team]["upper"] for b in built)],

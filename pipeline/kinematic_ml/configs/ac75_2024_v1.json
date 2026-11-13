@@ -1,0 +1,66 @@
+{
+  "schema_version": "ac75-config-1",
+  "config_id": "ac75_2024_v1",
+  "description": "AC37 Barcelona 2024 AC75 learned simulation configuration defaults (G2.6)",
+  "primary_class": "AC75",
+  "cycle": "AC37",
+  "retrospective_grid_ms": 100,
+  "steady_windows": {
+    "duration_s": 5.0,
+    "nonoverlapping": true,
+    "min_supported_duration_fraction": 0.95,
+    "max_internal_gap_ms_telemetry": 1200,
+    "max_internal_gap_ms_wind": 2500,
+    "speed_eligibility_filter": false
+  },
+  "causal_latency": {
+    "modeled_latency_ms": 6000,
+    "sensitivities_ms": [0, 6000, 12000]
+  },
+  "turn_detection": {
+    "seed_min_rotation_deg": 65.0,
+    "seed_max_duration_s": 18.0,
+    "seed_reversal_tolerance_s": 1.5
+  },
+  "recovery": {
+    "reference_window_offset_s": [-7.0, -2.0],
+    "recovery_threshold_fraction": 0.95,
+    "continuous_hold_duration_s": 2.0,
+    "censor_timeout_s": 30.0,
+    "straight_motion_exclusion_buffer_s": 5.0
+  },
+  "uncertainty": {
+    "residual_block_duration_s": 30.0,
+    "residual_block_sensitivities_s": [15.0, 60.0]
+  },
+  "neural_model": {
+    "hidden_layers": 2,
+    "units_per_layer": 32,
+    "activation": "silu",
+    "distribution": "lognormal",
+    "final_seeds": [2027, 2028, 2029],
+    "training": {
+      "max_threads": 4,
+      "batch_size": 512,
+      "max_epochs": 150,
+      "early_stopping_patience": 15,
+      "learning_rates": [0.001, 0.0003],
+      "weight_decays": [0.0001, 0.001],
+      "dropouts": [0.0, 0.1],
+      "screen_seed": 2027
+    }
+  },
+  "spline_baseline": {
+    "regularization_grid": [0.1, 1.0, 10.0, 100.0]
+  },
+  "scenario_trial_counts": {
+    "preview": 2000,
+    "standard": 10000,
+    "evaluation": 20000
+  },
+  "reference_seed": 2027,
+  "memory_limits": {
+    "max_normalized_rows_per_batch": 50000,
+    "max_simulated_trials_per_batch": 512
+  }
+}

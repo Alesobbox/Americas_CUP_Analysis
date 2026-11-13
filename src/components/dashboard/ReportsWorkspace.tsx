@@ -11,6 +11,8 @@ export interface Artifact {
 }
 interface Inventory { schema_version: '1.0' | '1.1'; summary: { race_count: number; replayed_boat_races: number }; artifacts: Artifact[] }
 export const primaryDownloads = (items: Artifact[], raceId: string) => items.filter((item) => item.race_id === raceId && item.primary_download && item.status === 'current')
+const AC38_KINDS = new Set(['ac38_forecast', 'ac38_model_card', 'ac38_evaluation', 'ac38_source_inventory', 'report'])
+export const ac38Downloads = (items: Artifact[]) => items.filter((item) => AC38_KINDS.has(item.kind ?? '') && item.status === 'current')
 export function technicalDownloads(items: Artifact[], raceId: string, scope: string, search: string): Artifact[] {
   const query = search.trim().toLocaleLowerCase()
   return items.filter((item) => (scope === 'all' || (scope === 'current' ? item.race_id === raceId && item.status !== 'retained' : scope === 'catalogs' ? item.kind === 'catalog' : item.status === scope)) &&
@@ -30,6 +32,11 @@ const downloadDescriptions: Record<string, string> = {
   summary_csv: 'Canonical race metrics for the complete field.',
   environment: 'Historical sea and temperature model estimates.',
   forecast: 'Published race forecasts and model references.',
+  ac38_forecast: 'Experimental AC38 forecast (from AC40 posterior, matchups & Cup rule bounds).',
+  ac38_model_card: 'Compact AC38 transfer model summary, priors & convergence (private posterior omitted).',
+  ac38_evaluation: 'AC38 backtest evaluation, nested intervals & comparison vs previous Cup.',
+  ac38_source_inventory: 'AC37/AC38 telemetry & race inventory, eligibility summary & rule sources.',
+  report: 'Reproducible Markdown report covering AC38 data, assumptions, uncertainty & backtest.',
   replay: 'Synchronized positions and recorded telemetry.',
 }
 export function ReportsWorkspace({ replay, analysisDetail, catalog, onOpenRace }: {
@@ -57,6 +64,7 @@ export function ReportsWorkspace({ replay, analysisDetail, catalog, onOpenRace }
   }, [])
   useEffect(() => { setScope('current'); setSearch('') }, [replay.id])
   const primary = primaryDownloads(inventory?.artifacts ?? [], replay.id)
+  const ac38Files = ac38Downloads(inventory?.artifacts ?? [])
   const technical = technicalDownloads(inventory?.artifacts ?? [], replay.id, scope, search)
   return <section className="dashboard-workspace reports-workspace" aria-label="Reports and downloads">
     <div className="reports-heading"><div><h2>{replay.name} · race report</h2><p>Historical racing metrics and the files behind them.</p></div><span className="reports-race-meta">{[replay.venue, replay.date].filter(Boolean).join(' · ')}</span></div>
@@ -72,6 +80,12 @@ export function ReportsWorkspace({ replay, analysisDetail, catalog, onOpenRace }
       <div className="race-export-grid">{primary.map((item) => <a key={item.id} href={item.url} download data-download-kind={item.kind}><span className="export-file-type">{item.format.toUpperCase()}</span><span className="export-description"><strong>{item.label}</strong><span>{downloadDescriptions[item.kind ?? ''] ?? 'Published source file for this race.'}</span></span><span className="export-file-size">{(item.bytes / 1024).toFixed(0)} KiB</span><span className="export-download-action">Download <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 16v4h14v-4" strokeLinecap="round" strokeLinejoin="round" /></svg></span></a>)}</div>
       {inventory && !primary.length && <p>Curated race downloads are unavailable in this catalog. All published files remain available in Technical data and provenance.</p>}
     </section>
+    {ac38Files.length > 0 && (
+      <section className="race-exports" aria-label="AC38 forecast reports">
+        <div className="race-exports-heading"><h3>AC38 forecast downloads &amp; report</h3><p>Published experimental AC38 forecast artifact and reproducible methodology summary.</p></div>
+        <div className="race-export-grid">{ac38Files.map((item) => <a key={item.id} href={item.url} download data-download-kind={item.kind}><span className="export-file-type">{item.format.toUpperCase()}</span><span className="export-description"><strong>{item.label}</strong><span>{downloadDescriptions[item.kind ?? ''] ?? 'Published AC38 forecast file.'}</span></span><span className="export-file-size">{(item.bytes / 1024).toFixed(0)} KiB</span><span className="export-download-action">Download</span></a>)}</div>
+      </section>
+    )}
     <details className="technical-data"><summary>Technical data and provenance</summary>
       <p>Complete, reproducible data, model evidence and retained versions. Retained forecasts remain available for older references.</p><p><a href="/data/artifacts.json" download>Download the complete artifact inventory</a></p>
       {inventory && <p>{inventory.summary.race_count} unique races · {inventory.summary.replayed_boat_races} replayed boat-races · {inventory.artifacts.length} published files.</p>}

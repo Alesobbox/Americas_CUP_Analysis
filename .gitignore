@@ -17,3 +17,6 @@ public/data/replays/
 public/data/analysis/
 test-results/
 playwright-report/
+
+graphify-out/
+.aislop/

@@ -23,15 +23,32 @@ def build_inventory(root: Path = ROOT) -> dict:
     race_ids = {race["id"] for race in races}
     for environment in (data / "environment").rglob("*.json"):
         relative = environment.relative_to(data).as_posix()
-        is_race = environment.stem in race_ids and environment.parent == data / "environment"
-        race_paths[relative] = (environment.stem if is_race else None,
-                                "Historical environment" if is_race else "Environment source response",
-                                "Replay")
+        if environment.parent == data / "environment" / "boats" and environment.stem in race_ids:
+            race_paths[relative] = (environment.stem, "Historical boat environment", "Replay")
+        elif environment.parent == data / "environment" / "bundles":
+            race_paths[relative] = (None, "Environment provenance bundle", "Replay")
+        else:
+            is_race = environment.stem in race_ids and environment.parent == data / "environment"
+            race_paths[relative] = (
+                environment.stem if is_race else None,
+                "Historical environment" if is_race else "Environment source response",
+                "Replay",
+            )
     prediction_index = data / "predictions" / "index.json"
     if prediction_index.is_file():
         predictions = json.loads(prediction_index.read_text(encoding="utf-8"))
         race_paths["predictions/index.json"] = (None, "Forecast catalog", "Forecast")
         race_paths["predictions/" + predictions["cup_path"]] = (None, "America's Cup evidence and scenarios", "Forecast")
+        if predictions.get("ac38_forecast_path"):
+            race_paths["predictions/" + predictions["ac38_forecast_path"]] = (None, "AC38 unified forecast", "Forecast")
+        if (data / "predictions" / "ac38_model_card.json").is_file():
+            race_paths["predictions/ac38_model_card.json"] = (None, "AC38 model card summary", "Forecast")
+        if (data / "predictions" / "ac38_evaluation.json").is_file():
+            race_paths["predictions/ac38_evaluation.json"] = (None, "AC38 historical evaluation", "Forecast")
+        if (data / "predictions" / "ac38_source_inventory.json").is_file():
+            race_paths["predictions/ac38_source_inventory.json"] = (None, "AC38 source inventory", "Reports")
+        if (data / "predictions" / "ac38_report.md").is_file():
+            race_paths["predictions/ac38_report.md"] = (None, "AC38 forecast report", "Reports")
         race_paths["predictions/" + predictions["source_manifest_path"]] = (None, "Forecast source provenance", "Forecast")
         if (data / "predictions/cup_2027.json").is_file():
             race_paths["predictions/cup_2027.json"] = (None, "America's Cup compatibility reference", "Forecast")
@@ -62,6 +79,9 @@ def build_inventory(root: Path = ROOT) -> dict:
              "Race forecast": "forecast", "Pre-race condition scenario": "scenario",
              "Race catalog": "catalog", "Historical analysis index": "catalog", "Forecast catalog": "catalog", "Race course preview index": "catalog",
              "America's Cup evidence and scenarios": "cup", "Forecast model and validation card": "model",
+             "AC38 unified forecast": "ac38_forecast", "AC38 model card summary": "ac38_model_card",
+             "AC38 historical evaluation": "ac38_evaluation", "AC38 source inventory": "ac38_source_inventory",
+             "AC38 forecast report": "report",
              "Forecast verification results": "verification", "Forecast source provenance": "provenance",
              "Environment source response": "source", "Forecast archive artifact": "archive",
              "America's Cup compatibility reference": "alias"}

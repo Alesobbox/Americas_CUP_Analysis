@@ -136,7 +136,10 @@ def source_dataset(root: Path, *, race: str | None = None, force=False) -> dict:
     cache = root / ".forecast" / "dataset"
     cache.mkdir(parents=True, exist_ok=True)
     entries = []
-    for path in sorted((root/"Data").glob("*.jsonl")):
+    raw_candidates = list((root / "Data").glob("*.jsonl"))
+    if not raw_candidates and (root / "Data" / "AC38").exists():
+        raw_candidates = list((root / "Data" / "AC38").glob("*.jsonl"))
+    for path in sorted(raw_candidates):
         rid = infer_race_metadata(str(path))["race_id"]
         if race and race != rid:
             continue
@@ -153,7 +156,7 @@ def source_dataset(root: Path, *, race: str | None = None, force=False) -> dict:
                 _validate_cache(cached, data_path)
                 reusable = True
             except ValueError:
-                pass
+                reusable = False
         if reusable:
             metadata = cached
         else:
@@ -210,7 +213,10 @@ def seal_existing_dataset(root: Path) -> dict:
     import pyarrow.parquet as pq
     base = root/".forecast"/"dataset"
     index = json.loads((base/"index.json").read_text())
-    raw_paths = {infer_race_metadata(str(path))["race_id"]: path for path in (root/"Data").glob("*.jsonl")}
+    raw_files = list((root / "Data").glob("*.jsonl"))
+    if not raw_files and (root / "Data" / "AC38").exists():
+        raw_files = list((root / "Data" / "AC38").glob("*.jsonl"))
+    raw_paths = {infer_race_metadata(str(path))["race_id"]: path for path in raw_files}
     if set(raw_paths) != {entry["race_id"] for entry in index["races"]}:
         raise ValueError("Explicit sealing requires a complete index matching every current raw source")
     staged = []

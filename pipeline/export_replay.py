@@ -419,8 +419,8 @@ def export_replay_artifacts(
                     manifest_index = existing
                     manifest_index.setdefault("event_edition", event_edition)
                     manifest_index.setdefault("boat_class", boat_class)
-        except Exception:
-            pass
+        except (OSError, json.JSONDecodeError, TypeError) as exc:
+            manifest_index["load_warning"] = str(exc)
 
     comps = manifest_dict.get("competitors", [])
     winner = next((comp for comp in comps if comp.get("classification") == "RANK_1"
@@ -505,7 +505,7 @@ def export_replay_artifacts(
                 json.dump(manifest_dict, f, separators=(",", ":"))
             with open(dist_manifest, "w", encoding="utf-8") as f:
                 json.dump(manifest_index, f, indent=2)
-        except Exception:
-            pass
+        except OSError as exc:
+            raise RuntimeError(f"Failed to sync dist replay artifacts to {dist_replays}: {exc}") from exc
 
     return replay_path, manifests_file

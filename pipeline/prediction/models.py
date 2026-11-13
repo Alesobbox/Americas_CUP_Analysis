@@ -67,7 +67,9 @@ class StrengthModel:
     def fit(cls, rows: Iterable[Mapping[str, Any]], *, condition_effects: bool = False,
             strength_sd: float = 1.2, condition_sd: float = 0.25,
             practice_weight: float = 0.0,
-            discrimination_scale: float = 1.8) -> "StrengthModel":
+            discrimination_scale: float = 1.8,
+            entry_id_mode: str = "pooled_entry",
+            cross_event_correlation: float = 0.85) -> "StrengthModel":
         valid_rows = []
         weights = []
         for r in rows:
@@ -76,7 +78,11 @@ class StrengthModel:
             is_practice = bool(r.get("practice", False))
             w = practice_weight if is_practice else 1.0
             if w > 0:
-                valid_rows.append(dict(r))
+                row_dict = dict(r)
+                if entry_id_mode == "event_entry":
+                    ev_id = "cagliari_2026" if str(row_dict.get("date", "")) < "2026-07-01" else "naples_2026"
+                    row_dict["order"] = [f"{ev_id}::{b}" if "::" not in str(b) else str(b) for b in row_dict["order"]]
+                valid_rows.append(row_dict)
                 weights.append(float(w))
         for row in valid_rows:
             if len(set(row["order"])) != len(row["order"]):
@@ -91,9 +97,33 @@ class StrengthModel:
         n = len(boats)
         dimensions = n * (2 if condition_effects else 1)
         lookup = {b: i for i, b in enumerate(boats)}
-        precision = np.full(dimensions, 1.0 / strength_sd ** 2)
-        if condition_effects:
-            precision[n:] = 1.0 / condition_sd ** 2
+
+        if entry_id_mode == "event_entry":
+            sigma_0 = np.zeros((dimensions, dimensions), dtype=float)
+            for i in range(n):
+                sigma_0[i, i] = strength_sd ** 2
+                base_i = boats[i].split("::")[-1]
+                for j in range(i + 1, n):
+                    base_j = boats[j].split("::")[-1]
+                    if base_i == base_j:
+                        sigma_0[i, j] = cross_event_correlation * (strength_sd ** 2)
+                        sigma_0[j, i] = sigma_0[i, j]
+            if condition_effects:
+                for i in range(n, 2 * n):
+                    sigma_0[i, i] = condition_sd ** 2
+                    base_i = boats[i - n].split("::")[-1]
+                    for j in range(i + 1, 2 * n):
+                        base_j = boats[j - n].split("::")[-1]
+                        if base_i == base_j:
+                            sigma_0[i, j] = cross_event_correlation * (condition_sd ** 2)
+                            sigma_0[j, i] = sigma_0[i, j]
+            lambda_0 = np.linalg.inv(sigma_0)
+        else:
+            precision = np.full(dimensions, 1.0 / strength_sd ** 2)
+            if condition_effects:
+                precision[n:] = 1.0 / condition_sd ** 2
+            lambda_0 = np.diag(precision)
+
         designs = []
         for row in valid_rows:
             order = [lookup[str(b)] for b in row["order"]]
@@ -106,9 +136,9 @@ class StrengthModel:
             designs.append(design)
 
         def objective(beta: np.ndarray, derivatives: bool = True):
-            value = 0.5 * float(np.dot(precision * beta, beta))
-            gradient = precision * beta
-            hessian = np.diag(precision)
+            value = 0.5 * float(beta @ (lambda_0 @ beta))
+            gradient = lambda_0 @ beta
+            hessian = np.copy(lambda_0)
             for w, design in zip(weights, designs):
                 for k in range(len(design) - 1):
                     x = design[k:]
@@ -591,8 +621,16 @@ class LegTimeModel:
         reference = float(np.exp(np.mean(np.log([r["distance_m"] for r in valid]))))
         winds = [r["wind_knots"] for r in valid if _positive(r.get("wind_knots"))]
         wind_ref = float(np.exp(np.mean(np.log(winds)))) if winds else 12.0
+        def _water_duration(r: Mapping[str, Any]) -> float:
+            d, t = float(r["distance_m"]), float(r["duration_s"])
+            c = float(r.get("c_parallel_mps") or 0.0)
+            if c == 0.0:
+                return t
+            v_water = max(d / t - c, 0.5)
+            return d / v_water
+
         x = np.zeros((len(valid), 3 + len(crews) + len(kinds)))
-        y = np.log([r["duration_s"] for r in valid])
+        y = np.log([_water_duration(r) for r in valid])
         for i, row in enumerate(valid):
             x[i, :3] = [1.0, math.log(row["distance_m"] / reference),
                         math.log(row["wind_knots"] / wind_ref) if _positive(row.get("wind_knots")) else 0.0]
@@ -654,7 +692,12 @@ class LegTimeModel:
                    + b[2] * math.log(float(wind) / self.wind_reference_knots)
                    + self.crew_effects.get(boat_id, 0.0)
                    + self.kind_effects.get(str(leg.get("leg_kind", "unknown")), 0.0))
-        return math.exp(float(logtime))
+        t_water = math.exp(float(logtime))
+        c = float(leg.get("c_parallel_mps") or 0.0)
+        if c == 0.0:
+            return t_water
+        v_ground = max(distance / t_water + c, 0.5)
+        return distance / v_ground
 
     def to_dict(self) -> dict[str, Any]:
         return {**asdict(self), "available": self.available}

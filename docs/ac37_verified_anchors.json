@@ -1,0 +1,51 @@
+{
+  "schema_version": "ac37-verified-anchors-1",
+  "retrieved_at": "2026-11-07T12:00:00+00:00",
+  "description": "Independently verified series results for the 37th America's Cup (Barcelona, 2024), used as ground-truth consistency anchors.",
+  "anchors": {
+    "lvc_semifinal_1": {
+      "series": "Louis Vuitton Cup Semi-Final 1",
+      "team_a": "INEOS",
+      "team_b": "ALINGHI",
+      "score_a": 5,
+      "score_b": 2,
+      "winner": "INEOS",
+      "races_scheduled": "first-to-5",
+      "source_url": "https://www.americascup.com/race-reports/3488_JEOPARDY-ABOUNDS-ON-DAY-FOUR-OF-THE-LOUIS-VUITTON-CUP-SEMI-FINALS",
+      "verified_date": "2024-09-18"
+    },
+    "lvc_semifinal_2": {
+      "series": "Louis Vuitton Cup Semi-Final 2",
+      "team_a": "LUNA_ROSSA",
+      "team_b": "AMERICAN_MAGIC",
+      "score_a": 5,
+      "score_b": 3,
+      "winner": "LUNA_ROSSA",
+      "races_scheduled": "first-to-5",
+      "source_url": "https://www.lunarossachallenge.com/en/news/1241_LOUIS-VUITTON-CUP-SEMI-FINALS-DAY-05",
+      "verified_date": "2024-09-19"
+    },
+    "lvc_final": {
+      "series": "Louis Vuitton Cup Final",
+      "team_a": "INEOS",
+      "team_b": "LUNA_ROSSA",
+      "score_a": 7,
+      "score_b": 4,
+      "winner": "INEOS",
+      "races_scheduled": "first-to-7",
+      "source_url": "https://www.americascup.com/race-reports/3540_INEOS-BRITANNIA-WIN-THE-LOUIS-VUITTON-CUP",
+      "verified_date": "2024-10-04"
+    },
+    "match": {
+      "series": "37th America's Cup Match",
+      "team_a": "ETNZ",
+      "team_b": "INEOS",
+      "score_a": 7,
+      "score_b": 2,
+      "winner": "ETNZ",
+      "races_scheduled": "first-to-7",
+      "source_url": "https://www.americascup.com/race-reports/3576_EMIRATES-TEAM-NEW-ZEALAND-WIN-THE-37TH-AMERICAS-CUP",
+      "verified_date": "2024-10-19"
+    }
+  }
+}

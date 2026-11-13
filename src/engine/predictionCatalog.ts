@@ -1,4 +1,7 @@
 import type { CupPrediction, ForecastStatus, PredictionIndex, PredictionPreset, PredictionRaceReference, PredictionReference, RacePrediction } from '../types/prediction'
+import { parseAc38Forecast } from './ac38ForecastCatalog'
+
+export { parseAc38Forecast }
 
 const statuses: ForecastStatus[] = ['available', 'estimated', 'gate_ambiguous', 'unavailable']
 const usable = (status: ForecastStatus) => status === 'available' || status === 'estimated'
@@ -64,6 +67,15 @@ export function parsePredictionIndex(value: unknown): PredictionIndex {
     }
   }
   checkedPath(value.cup_path)
+  if (value.ac38_forecast_path !== undefined) {
+    checkedPath(value.ac38_forecast_path)
+  }
+  if (value.evidence_manifest_path !== undefined) {
+    checkedPath(value.evidence_manifest_path as string)
+    if (value.evidence_manifest_hash !== undefined && (!nonempty(value.evidence_manifest_hash) || !/^[a-f0-9]{64}$/.test(value.evidence_manifest_hash as string))) {
+      invalid('invalid evidence manifest hash')
+    }
+  }
   return value as unknown as PredictionIndex
 }
 
@@ -228,3 +240,4 @@ function validateCupScenarioEvidence(value: Record<string, unknown>, ids: string
 export async function loadPredictionIndex(signal?: AbortSignal) { return parsePredictionIndex(await readJson('/data/predictions/index.json', signal)) }
 export async function loadRacePrediction(path: string, context: Parameters<typeof parseRacePrediction>[1], signal?: AbortSignal) { return parseRacePrediction(await readJson(checkedPath(path), signal), context) }
 export async function loadCupPrediction(path: string, signal?: AbortSignal) { return parseCupPrediction(await readJson(checkedPath(path), signal)) }
+export async function loadAc38Forecast(path: string, signal?: AbortSignal) { return parseAc38Forecast(await readJson(checkedPath(path), signal)) }

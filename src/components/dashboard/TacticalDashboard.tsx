@@ -14,6 +14,7 @@ import { TelemetryWorkspace } from './TelemetryWorkspace'
 import { EventsNotesPanel } from './EventsNotesPanel'
 import { ReportsWorkspace } from './ReportsWorkspace'
 import { ForecastWorkspace } from './ForecastWorkspace'
+import { SimulatorWorkspace } from './SimulatorWorkspace'
 import { TacticalInsightsPanel } from './TacticalInsightsPanel'
 import { BoatVisibilityFilter } from './BoatVisibilityFilter'
 import { BoatCourseControls } from './BoatCourseControls'
@@ -22,7 +23,7 @@ import './workspaces.css'
 import './analysis-light.css'
 import './performance-radar.css'
 
-export type DashboardView = 'replay' | 'analysis' | 'compare' | 'reports' | 'forecast'
+export type DashboardView = 'replay' | 'analysis' | 'compare' | 'reports' | 'forecast' | 'simulator'
 export interface ReviewInterval { raceId: string; boatId: string; start_ms: number; end_ms: number }
 interface Props {
   replay: ReplayManifest; frame: ReplayFrame; catalog: RaceListing[]; currentRace: RaceListing | null
@@ -77,7 +78,7 @@ export function TacticalDashboard(p: Props) {
   const primary = p.replay.competitors.find((boat) => boat.id === p.selectedId) ?? p.replay.competitors[0]
   const timeline = <RaceTimelinePanel replay={p.replay} frame={p.frame} playing={p.playing} speed={p.speed} onToggle={p.onToggle} onSeek={p.onSeek} onStep={p.onStep} onSpeed={p.onSpeed} selectedId={p.selectedId} events={events} />
   const telemetry = <TelemetryWorkspace replay={p.replay} frame={p.frame} selectedId={p.selectedId} onSelectBoat={p.onSelectBoat} onSeek={p.onSeek} visibleBoatId={p.visibleBoatId} />
-  const chooseView = (view: string) => { if (['replay', 'analysis', 'compare', 'reports', 'forecast'].includes(view)) p.onViewChange(view as DashboardView) }
+  const chooseView = (view: string) => { if (['replay', 'analysis', 'compare', 'reports', 'forecast', 'simulator'].includes(view)) p.onViewChange(view as DashboardView) }
   return <div className="tactical-dashboard-root theme-tactical-light" data-view={p.activeView}>
     <TacticalHeader replay={p.replay} frame={p.frame} currentRace={p.currentRace} catalog={p.catalog} activeNav={p.activeView} onSelectNav={chooseView} onSelectRace={p.onSelectRace} onOpenPicker={p.onOpenPicker} onOpenSettings={() => { settingsOpener.current = document.activeElement as HTMLElement; setSettingsOpen(true) }} />
     {p.activeView === 'replay' && <>
@@ -110,7 +111,8 @@ export function TacticalDashboard(p: Props) {
     {p.activeView === 'analysis' && <AnalysisModal inline selectedBoatId={p.selectedId} onSelectBoat={p.onSelectBoat} comparisonId={p.comparisonId} onSelectComparison={p.onSelectComparison} onSelectRace={(id) => { const race = p.catalog.find((item) => item.id === id); if (race) p.onSelectRace(race) }} currentRaceId={p.replay.id} replayRaceIds={p.catalog.map((race) => race.id)} onOpenReplay={p.onOpenAnalysisReplay} onClose={() => p.onViewChange('replay')} />}
     {p.activeView === 'compare' && <div className="dashboard-secondary-layout"><section className="dashboard-workspace compare-workspace" aria-label="Compare boats"><div className="compare-introduction"><div><p className="workspace-kicker">Boat comparison</p><h2>Side by side.</h2><p>Two boats. One moment on the course.</p></div><BoatVisibilityFilter boats={p.replay.competitors} visibleId={p.visibleBoatId} onChange={p.onVisibleBoatChange} /></div><ComparisonPanel replay={p.replay} frame={p.frame} primary={primary} secondaryId={p.comparisonId} onSecondary={p.onSelectComparison} onPrimary={p.onSelectBoat} />{timeline}{telemetry}<p className="comparison-context">Values follow the shared playhead. Open Analysis for exported race and leg aggregates.</p><TacticalInsightsPanel detail={p.analysisDetail} raceId={p.replay.id} playhead={p.frame.timestamp} embedded /></section></div>}
     {p.activeView === 'reports' && <ReportsWorkspace replay={p.replay} analysisDetail={p.analysisDetail} catalog={p.catalog} onOpenRace={(race, view) => { p.onSelectRace(race); chooseView(view.toLowerCase()) }} />}
-    {p.activeView === 'forecast' && <ForecastWorkspace key={p.replay.id} replay={p.replay} playhead={p.frame.timestamp} selectedId={p.selectedId} onSelectBoat={p.onSelectBoat} onSeek={p.onSeek} playing={p.playing} onToggle={p.onToggle} />}
+    {p.activeView === 'forecast' && <ForecastWorkspace key={p.replay.id} replay={p.replay} playhead={p.frame.timestamp} selectedId={p.selectedId} onSelectBoat={p.onSelectBoat} onSeek={p.onSeek} playing={p.playing} onToggle={p.onToggle} onOpenSimulator={() => p.onViewChange('simulator')} />}
+    {p.activeView === 'simulator' && <SimulatorWorkspace />}
     {settingsOpen && <div className="modal-shade" onMouseDown={(event) => { if (event.target === event.currentTarget) setSettingsOpen(false) }}><section ref={settingsDialog} role="dialog" aria-modal="true" aria-label="Dashboard settings" className="dashboard-settings dashboard-workspace">
       <div className="workspace-heading"><h2>Dashboard settings</h2><button autoFocus aria-label="Close settings" onClick={() => setSettingsOpen(false)}>×</button></div>
       <label>Map source <select aria-label="Map source" value={p.viewMode} onChange={(event) => p.onViewModeChange(event.target.value as ViewMode)}><option value="map">OpenStreetMap</option><option value="grid">Offline Grid</option></select></label>
@@ -119,7 +121,7 @@ export function TacticalDashboard(p: Props) {
       <label>Trail length <select aria-label="Trail length" value={p.trailLength} onChange={(event) => p.onTrailLengthChange(event.target.value as TrailLength)}>{['off', '10s', '30s', '60s', 'leg', 'race'].map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
       <label>Trail colour <select aria-label="Trail colour" value={p.trailColor} onChange={(event) => p.onTrailColorChange(event.target.value as TrailColor)}>{['team', 'speed', 'vmg'].map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
       <label><input type="checkbox" checked={p.showSafetyBorders} onChange={p.onToggleSafetyBorders} /> Show virtual safety borders</label>
-      <p>Space plays or pauses; arrow keys seek 5 seconds; keys 1–5 select the main tabs. Notes are saved locally for each race.</p>
+      <p>Space plays or pauses; arrow keys seek 5 seconds; keys 1–6 select the main tabs. Notes are saved locally for each race.</p>
     </section></div>}
   </div>
 }

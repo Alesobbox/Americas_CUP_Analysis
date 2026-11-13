@@ -13,7 +13,7 @@ function initialView(params: URLSearchParams): DashboardView {
   if (params.get('modal') === 'summary') return 'reports'
   if (requested === 'duel') return 'compare'
   if (requested === 'start') return 'analysis'
-  return requested === 'analysis' || requested === 'compare' || requested === 'reports' || requested === 'forecast' ? requested : 'replay'
+  return requested === 'analysis' || requested === 'compare' || requested === 'reports' || requested === 'forecast' || requested === 'simulator' ? requested : 'replay'
 }
 
 function savedViewMode(): ViewMode {
@@ -170,6 +170,7 @@ export default function App() {
       else if (event.key === '3') setActiveView('compare')
       else if (event.key === '4') setActiveView('reports')
       else if (event.key === '5') setActiveView('forecast')
+      else if (event.key === '6') setActiveView('simulator')
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)

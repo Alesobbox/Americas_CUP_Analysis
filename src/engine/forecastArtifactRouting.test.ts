@@ -75,6 +75,11 @@ describe('forecast artifact routing during a running development session', () =>
     }
     const index = `${JSON.stringify({ races: [{ path: references[0] }], cup_path: references[1], source_manifest_path: references[2] })}\n`
     await expectJson(await publish('index.json', index), index)
+    const mdUrl = await publish('ac38_report.md', '# AC38 Report\n')
+    const mdResp = await fetch(`${base}${mdUrl}`)
+    expect(mdResp.status).toBe(200)
+    expect(mdResp.headers.get('content-type')).toMatch(/^text\/markdown\b/)
+    expect(await mdResp.text()).toBe('# AC38 Report\n')
   })
 
   it('reads an atomically replaced index and its newly published object without restarting', async () => {

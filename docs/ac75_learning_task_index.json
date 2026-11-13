@@ -1,0 +1,401 @@
+{
+  "schema_version": "ac75-implementation-task-index-1",
+  "plan_version": "1.0",
+  "plan_path": "docs/ac75_learning_implementation_plan.md",
+  "executor_path": "docs/ac75_learning_executor_prompt.md",
+  "progress_path": ".forecast/ac75_learning/progress.json",
+  "default_mode": "implementation_only_when_user_requests_execution",
+  "priority_order": [
+    "integrity_and_compatibility",
+    "defensible_predictive_quality_and_coverage",
+    "minimize_total_llm_tokens",
+    "avoid_unnecessary_compute"
+  ],
+  "status_values": [
+    "pending",
+    "running",
+    "complete",
+    "complete_with_exclusions",
+    "blocked_external",
+    "failed"
+  ],
+  "dependency_rules": [
+    "T04 may complete_with_exclusions for unsupported external binary schema; propagate exact excluded source coverage.",
+    "T05 and later must incorporate supported T04 output before freezing the dataset.",
+    "T16 may prepare fixtures/export infrastructure before T15; selected final candidate metadata requires T15.",
+    "T07 review unavailability keeps maneuver labels and validation claims provisional; propagate status.",
+    "No task_index entry constitutes evidence that a task has run."
+  ],
+  "tasks": [
+    {
+      "id": "T00",
+      "title": "Preservation, environment, receipts",
+      "depends_on": [],
+      "section": "T00",
+      "global_sections": [
+        "G0",
+        "G1",
+        "G4",
+        "G5"
+      ],
+      "deliverables": [
+        "progress.json",
+        "preservation receipt"
+      ]
+    },
+    {
+      "id": "T01",
+      "title": "Contracts, identity, configuration",
+      "depends_on": [
+        "T00"
+      ],
+      "section": "T01",
+      "global_sections": [
+        "G2",
+        "G4",
+        "G8.1",
+        "G8.5"
+      ],
+      "deliverables": [
+        "contracts",
+        "versioned config"
+      ]
+    },
+    {
+      "id": "T02",
+      "title": "Complete source/evidence inventory",
+      "depends_on": [
+        "T01"
+      ],
+      "section": "T02",
+      "global_sections": [
+        "G0",
+        "G2"
+      ],
+      "deliverables": [
+        "source manifest",
+        "evidence inventory"
+      ]
+    },
+    {
+      "id": "T03",
+      "title": "Streaming JSONL normalization",
+      "depends_on": [
+        "T02"
+      ],
+      "section": "T03",
+      "global_sections": [
+        "G2",
+        "G4",
+        "G8.3"
+      ],
+      "deliverables": [
+        "native JSONL partitions"
+      ]
+    },
+    {
+      "id": "T04",
+      "title": "Verified binary adapter or explicit exclusion",
+      "depends_on": [
+        "T02"
+      ],
+      "section": "T04",
+      "global_sections": [
+        "G2",
+        "G4"
+      ],
+      "deliverables": [
+        "binary decoder evidence",
+        "coverage exclusions"
+      ]
+    },
+    {
+      "id": "T05",
+      "title": "Attempts, identity, geometry, outcomes",
+      "depends_on": [
+        "T03"
+      ],
+      "section": "T05",
+      "global_sections": [
+        "G2",
+        "G3.5",
+        "G3.6",
+        "G8.3"
+      ],
+      "deliverables": [
+        "attempt ledger",
+        "outcome evidence"
+      ]
+    },
+    {
+      "id": "T06",
+      "title": "Causal alignment and steady windows",
+      "depends_on": [
+        "T05"
+      ],
+      "section": "T06",
+      "global_sections": [
+        "G2",
+        "G3.1",
+        "G8.2",
+        "G8.3"
+      ],
+      "deliverables": [
+        "steady features",
+        "quality report"
+      ]
+    },
+    {
+      "id": "T07",
+      "title": "Maneuver review and event labels",
+      "depends_on": [
+        "T06"
+      ],
+      "section": "T07",
+      "global_sections": [
+        "G3.3",
+        "G8.3"
+      ],
+      "deliverables": [
+        "maneuver labels",
+        "review report"
+      ]
+    },
+    {
+      "id": "T08",
+      "title": "Sealed datasets and route templates",
+      "depends_on": [
+        "T04",
+        "T05",
+        "T06",
+        "T07"
+      ],
+      "section": "T08",
+      "global_sections": [
+        "G3.2",
+        "G3.3",
+        "G4",
+        "G8.3"
+      ],
+      "deliverables": [
+        "sealed dataset",
+        "route geometry"
+      ]
+    },
+    {
+      "id": "T09",
+      "title": "Splits and immutable experiment",
+      "depends_on": [
+        "T08"
+      ],
+      "section": "T09",
+      "global_sections": [
+        "G3.6",
+        "G8.2"
+      ],
+      "deliverables": [
+        "split manifest",
+        "experiment registration"
+      ]
+    },
+    {
+      "id": "T10",
+      "title": "Empirical and learned spline baselines",
+      "depends_on": [
+        "T09"
+      ],
+      "section": "T10",
+      "global_sections": [
+        "G3.1",
+        "G3.6",
+        "G8.1",
+        "G8.2"
+      ],
+      "deliverables": [
+        "fitted baselines",
+        "OOF predictions"
+      ]
+    },
+    {
+      "id": "T11",
+      "title": "Mandatory neural training and export",
+      "depends_on": [
+        "T09"
+      ],
+      "section": "T11",
+      "global_sections": [
+        "G3.1",
+        "G4",
+        "G8.1",
+        "G8.2"
+      ],
+      "deliverables": [
+        "fitted neural model",
+        "safe weights",
+        "parity receipt"
+      ]
+    },
+    {
+      "id": "T12",
+      "title": "Event models and observed-route policy",
+      "depends_on": [
+        "T10",
+        "T11"
+      ],
+      "section": "T12",
+      "global_sections": [
+        "G3.2",
+        "G3.3",
+        "G8.3",
+        "G8.4"
+      ],
+      "deliverables": [
+        "event model",
+        "fold policies"
+      ]
+    },
+    {
+      "id": "T13",
+      "title": "Joint uncertainty and completion scope",
+      "depends_on": [
+        "T12"
+      ],
+      "section": "T13",
+      "global_sections": [
+        "G3.4",
+        "G3.5",
+        "G8.2",
+        "G8.4"
+      ],
+      "deliverables": [
+        "residual sampler",
+        "variance ledger",
+        "completion scope"
+      ]
+    },
+    {
+      "id": "T14",
+      "title": "Unified learned numerical inference",
+      "depends_on": [
+        "T13"
+      ],
+      "section": "T14",
+      "global_sections": [
+        "G2",
+        "G3",
+        "G4",
+        "G8.1",
+        "G8.4"
+      ],
+      "deliverables": [
+        "scenario-v2 inference",
+        "physical regression tests"
+      ]
+    },
+    {
+      "id": "T15",
+      "title": "End-to-end evaluation and selection",
+      "depends_on": [
+        "T14"
+      ],
+      "section": "T15",
+      "global_sections": [
+        "G3.6",
+        "G8.2"
+      ],
+      "deliverables": [
+        "comparison report",
+        "selected experimental candidate"
+      ]
+    },
+    {
+      "id": "T16",
+      "title": "Immutable export and exact scenario cache",
+      "depends_on": [
+        "T14"
+      ],
+      "section": "T16",
+      "global_sections": [
+        "G4",
+        "G8.5",
+        "G8.7"
+      ],
+      "deliverables": [
+        "fixture bundle",
+        "exact cache",
+        "candidate export"
+      ]
+    },
+    {
+      "id": "T17",
+      "title": "Bounded asynchronous local service",
+      "depends_on": [
+        "T16"
+      ],
+      "section": "T17",
+      "global_sections": [
+        "G4",
+        "G8.5",
+        "G8.6"
+      ],
+      "deliverables": [
+        "inference worker",
+        "service tests"
+      ]
+    },
+    {
+      "id": "T18",
+      "title": "UI semantics and result identity",
+      "depends_on": [
+        "T17"
+      ],
+      "section": "T18",
+      "global_sections": [
+        "G2",
+        "G3.5",
+        "G8.5"
+      ],
+      "deliverables": [
+        "scenario-v2 UI",
+        "browser checks"
+      ]
+    },
+    {
+      "id": "T19",
+      "title": "Focused and full verification",
+      "depends_on": [
+        "T15",
+        "T18"
+      ],
+      "section": "T19",
+      "global_sections": [
+        "G5",
+        "G6",
+        "G8.7"
+      ],
+      "deliverables": [
+        "verification receipts",
+        "preservation comparison"
+      ]
+    },
+    {
+      "id": "T20",
+      "title": "Candidate delivery and handoff",
+      "depends_on": [
+        "T19"
+      ],
+      "section": "T20",
+      "global_sections": [
+        "G0",
+        "G4",
+        "G5",
+        "G8.7"
+      ],
+      "deliverables": [
+        "model card",
+        "results report",
+        "restartable handoff"
+      ]
+    }
+  ]
+}

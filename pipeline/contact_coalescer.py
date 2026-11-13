@@ -133,6 +133,9 @@ def test_sat_overlap(
     return True, min_overlap if min_overlap != float("inf") else 0.0
 
 
+test_sat_overlap.__test__ = False
+
+
 def compute_polygon_area(poly: List[Tuple[float, float]]) -> float:
     """Computes area of a 2D polygon using the Shoelace formula."""
     n = len(poly)

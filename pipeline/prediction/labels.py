@@ -2,7 +2,39 @@
 from __future__ import annotations
 from datetime import datetime, timezone
 import json
+import math
 from pathlib import Path
+from typing import Sequence
+
+
+def current_along_leg_mps(environment: dict | None, timestamp_ms: int | float | None,
+                          course_axis: float | None, leg_index: int) -> float:
+    """Project hourly 2m ocean current onto the leg axis.
+    
+    Current flows TOWARDS direction d. course_axis is the bearing from Gate 0 to Gate 1.
+    Odd leg (index 0, 2, ...): along course_axis (+sign).
+    Even leg (index 1, 3, ...): opposite course_axis (-sign).
+    """
+    if not environment or timestamp_ms is None or course_axis is None or not math.isfinite(course_axis):
+        return 0.0
+    hourly = environment.get("hourly", {})
+    times = hourly.get("time_ms", [])
+    velocities = hourly.get("current_velocity_mps", [])
+    directions = hourly.get("current_direction_deg", [])
+    if not times or not velocities or not directions or len(times) != len(velocities):
+        return 0.0
+    hour_ms = (int(timestamp_ms) // 3_600_000) * 3_600_000
+    idx = next((i for i, t in enumerate(times) if t == hour_ms), None)
+    if idx is None:
+        earlier = [i for i, t in enumerate(times) if t <= timestamp_ms]
+        if not earlier:
+            return 0.0
+        idx = earlier[-1]
+    v, d = velocities[idx], directions[idx]
+    if v is None or d is None or not math.isfinite(v) or not math.isfinite(d):
+        return 0.0
+    sign = 1.0 if leg_index % 2 == 0 else -1.0
+    return sign * float(v) * math.cos(math.radians(float(d) - float(course_axis)))
 
 
 def race_labels(metadata: dict) -> dict:
@@ -65,15 +97,82 @@ def race_labels(metadata: dict) -> dict:
     finishers = sorted((aid for aid in metadata["boat_ids"] if valid_finish(aid)),
                        key=lambda a: timings[a][final_leg])
     ties = any(timings[a][final_leg] == timings[b][final_leg] for a,b in zip(finishers, finishers[1:]))
+    on_water_order = [metadata["identities"][a]["entry_id"] for a in finishers]
+    result_available = max(availability.values(), default=metadata["window_end_ms"]+6000)
     return {"race_id": metadata["race_id"], "date": metadata["date"],
             "practice": metadata["practice"], "source_classification": status,
             "source_started": starts, "timings": timings,
             "imputed_gates": imputed, "cleared_ocs": cleared_ocs, "active_dsq": active_dsq,
-            "order": [metadata["identities"][a]["entry_id"] for a in finishers],
-            "finisher_ids": finishers, "order_tied":ties,"order_valid": not ties and len(finishers) >= 2,
+            "order": on_water_order,
+            "on_water_result": {
+                "order": list(on_water_order),
+                "finisher_ids": list(finishers),
+                "order_tied": ties,
+                "order_valid": not ties and len(finishers) >= 2,
+                "available_at_ms": result_available
+            },
+            "official_result": None,
+            "finisher_ids": finishers, "order_tied": ties, "order_valid": not ties and len(finishers) >= 2,
             "provenance": "source_gate_timings_with_nested_start_flag_and_cleared_ocs; not independently verified",
             "official_order_verified": False,
-            "result_available_at_ms": max(availability.values(), default=metadata["window_end_ms"]+6000)}
+            "result_available_at_ms": result_available}
+
+
+def attach_official_results(labels_input: dict[str, dict] | Sequence[dict],
+                            official_path: Path | None = None,
+                            current_time_ms: int | None = None) -> tuple[list[dict], dict[str, Any]]:
+    """Attach verified official results without mutating on-water order in-place."""
+    path = official_path or Path("docs/official_results_ac38_prelims.json")
+    if isinstance(labels_input, dict):
+        labels_by_race = labels_input
+        labels_list = list(labels_input.values())
+    else:
+        labels_by_race = {r["race_id"]: r for r in labels_input}
+        labels_list = list(labels_input)
+
+    if not path.exists():
+        return labels_list, {"total_races": 0, "verified_races": 0}
+
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    verified_count = 0
+    for r in doc.get("races", []):
+        rid = r.get("race_id")
+        if rid in labels_by_race:
+            avail = r.get("available_at_ms", 0)
+            if current_time_ms is not None and current_time_ms < avail:
+                continue
+            source_url = str(r.get("source_url") or r.get("source") or "")
+            is_external_source = source_url.startswith("https://") and not source_url.startswith("Data/")
+            is_verified_final = (
+                r.get("status") == "final"
+                and r.get("verified") is True
+                and is_external_source
+                and isinstance(r.get("official_order"), list)
+                and len(r["official_order"]) >= 2
+            )
+            target_order = list(r["official_order"]) if is_verified_final else list(labels_by_race[rid].get("order", []))
+            if is_verified_final:
+                verified_count += 1
+            labels_by_race[rid]["official_result"] = {
+                "order": target_order,
+                "dns_entries": list(r.get("dns_entries", [])),
+                "dnf_entries": list(r.get("dnf_entries", [])),
+                "ocs_or_dsq_entries": list(r.get("ocs_or_dsq_entries", [])),
+                "protest_penalties": list(r.get("protest_penalties", [])),
+                "jury_decisions_applied_at_ms": r.get("jury_decisions_applied_at_ms"),
+                "available_at_ms": avail,
+                "verified": is_verified_final,
+                "status": r.get("status", "unverified"),
+                "source_url": source_url,
+            }
+            labels_by_race[rid]["official_order_verified"] = is_verified_final
+            labels_by_race[rid]["official_order"] = target_order if is_verified_final else None
+            labels_by_race[rid]["dns_entries"] = list(r.get("dns_entries", []))
+            labels_by_race[rid]["dnf_entries"] = list(r.get("dnf_entries", []))
+            labels_by_race[rid]["ocs_or_dsq_entries"] = list(r.get("ocs_or_dsq_entries", []))
+            labels_by_race[rid]["official_status"] = r.get("status", "unverified")
+
+    return labels_list, {"total_races": len(doc.get("races", [])), "verified_races": verified_count}
 
 
 def source_completion_records(metadata: dict, label: dict) -> list[dict]:
@@ -138,11 +237,14 @@ def leg_rows(metadata, rows, label):
             if not entry_session or leg >= len(entry_session["race_course"]["sequences"]):
                 continue
             distance=float(entry_session["race_course"]["course_length"])
+            axis=entry_session["race_course"].get("course_axis")
+            c_parallel = current_along_leg_mps(metadata.get("environment"), entry, axis, leg - 1)
             wind = next((w["value"]*1.943844 for w in reversed(winds)
                          if w.get("bucket_closed_at_ms",w["timestamp_ms"]) <= entry), None)
             result.append({"boat_id": metadata["identities"][aid]["entry_id"],
                            "leg_kind": "odd" if leg%2 else "even", "leg_index":leg-1,"distance_m": distance,
                            "duration_s": (exit-entry)/1000, "wind_knots": wind,
+                           "c_parallel_mps": c_parallel,
                            "race_id": metadata["race_id"], "date": metadata["date"],
                            "practice": metadata["practice"], "valid": True,
                            "target_censored": False, "target_source": "source_gate_interval",
@@ -194,3 +296,37 @@ def load_reviews(root: Path, datasets: list[dict], path: Path | None = None) -> 
 def before_day(rows, date: str):
     cutoff = int(datetime.fromisoformat(date).replace(tzinfo=timezone.utc).timestamp()*1000)
     return [r for r in rows if r["date"] < date and r.get("available_at_ms", r.get("result_available_at_ms", 0)) < cutoff]
+
+
+def select_training_order_rows(labels: Sequence[dict], *,
+                               target: str = "on_water",
+                               prefer_official: bool | None = None,
+                               cutoff_ms: int | None = None) -> list[dict]:
+    """Select training order rows using explicit on_water or official target with cutoff check."""
+    result = []
+    if prefer_official is True:
+        target = "official"
+    for r in labels:
+        row = dict(r)
+        if target == "official":
+            off = r.get("official_result")
+            is_verified = bool(r.get("official_order_verified") or (off and off.get("verified") is not False))
+            if off and off.get("order") and is_verified and (cutoff_ms is None or off.get("available_at_ms", 0) <= cutoff_ms):
+                row["order"] = list(off["order"])
+                row["training_target"] = "official"
+                row["training_order_source"] = "official_verified"
+                row["target_available_at_ms"] = off.get("available_at_ms")
+            else:
+                on_w = r.get("on_water_result", {})
+                row["order"] = list(on_w.get("order", r.get("order", [])))
+                row["training_target"] = "on_water_fallback"
+                row["training_order_source"] = "on_water_fallback"
+                row["target_available_at_ms"] = on_w.get("available_at_ms", r.get("result_available_at_ms"))
+        else:
+            on_w = r.get("on_water_result", {})
+            row["order"] = list(on_w.get("order", r.get("order", [])))
+            row["training_target"] = "on_water"
+            row["training_order_source"] = "on_water"
+            row["target_available_at_ms"] = on_w.get("available_at_ms", r.get("result_available_at_ms"))
+        result.append(row)
+    return result

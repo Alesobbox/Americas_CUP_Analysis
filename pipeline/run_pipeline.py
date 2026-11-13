@@ -334,16 +334,27 @@ def main():
     if args.input:
         files_to_process = [args.input]
     else:
-        # Auto-discover all .jsonl in Data/
+        # Auto-discover all .jsonl in Data/ or Data/AC38/
         data_dir = "Data"
+        files_to_process = []
         if os.path.exists(data_dir):
             files_to_process = [
                 os.path.join(data_dir, f)
                 for f in sorted(os.listdir(data_dir))
                 if f.endswith(".jsonl")
             ]
-        else:
-            files_to_process = ["Data/26 09 22 NAP IPR PR1.jsonl"]
+            if not files_to_process and os.path.exists(os.path.join(data_dir, "AC38")):
+                ac38_dir = os.path.join(data_dir, "AC38")
+                files_to_process = [
+                    os.path.join(ac38_dir, f)
+                    for f in sorted(os.listdir(ac38_dir))
+                    if f.endswith(".jsonl")
+                ]
+        if not files_to_process:
+            fallback = os.path.join("Data", "AC38", "26 09 22 NAP IPR PR1.jsonl")
+            if not os.path.exists(fallback):
+                fallback = os.path.join("Data", "26 09 22 NAP IPR PR1.jsonl")
+            files_to_process = [fallback]
 
     print(f"Found {len(files_to_process)} dataset(s) to process: {files_to_process}")
 

@@ -116,9 +116,9 @@ The downloaded official PDFs are pinned in [forecast_rules_sources.json](forecas
 ### 2027 America's Cup Domain Assumptions & Series Transfer
 
 1. **Class Architecture & Technical Assumptions**:
-   - AC75 hull reuse: Strict one-new-hull rule for the 38th America's Cup (2027); competitors modify existing AC37 generation hulls.
-   - Crew configuration: Reduced from 8 to 5 sailors.
-   - Power generation: Human cyclors removed in favor of stored hydraulic/electrical energy battery systems.
+   - AC75 hull reuse: Protocol Article 24.2(b) mandates that AC37 competitors must reuse their AC37 hull (or build to their AC37 design if unavailable due to causes beyond control), and new competitors must acquire an AC37 hull or build to an AC37 design. No new hull designs are permitted; modifications are strictly governed by AC38 Technical Regulations.
+   - Crew configuration: Protocol Article 22.1(d) and AC75 Class Rule V3.05 (2026-06-26) specify 5 crew members with at least 1 female sailor, plus an optional non-contributing Guest Racer.
+   - Power generation: Protocol Article 22.1(e) removes manual power input (cyclors) except steering, replaced by a supplied battery-powered system mimicking the 4-cyclor capacity in average power, peak power, and fatigue.
 2. **First-to-7 Match Series Dependence**:
    Team ability factors are sampled once per tournament trial and held persistent across all match races in a series. Independent per-race ability sampling changes the series win probability by averaging away persistent ability uncertainty (under a 50/50 mix of latent $p \in \{0.5, 0.9\}$, persistent draws yield $\approx 75.00\%$ series win probability, whereas independent draws yield $\approx 93.76\%$).
 3. **Cross-Class Transfer Scaling**:

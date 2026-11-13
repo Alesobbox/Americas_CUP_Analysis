@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import type { AnalysisDetail } from '../../types/analysis'
 import type { ReplayManifest } from '../../types/replay'
-import { primaryDownloads, ReportsWorkspace, technicalDownloads, type Artifact } from './ReportsWorkspace'
+import { ac38Downloads, primaryDownloads, ReportsWorkspace, technicalDownloads, type Artifact } from './ReportsWorkspace'
 const metric = (value: number | null, quality = 'partial') => ({ value, unit: 'kt', quality, coverage_s: value === null ? null : 847.085, reason: value === null ? 'no valid racing window' : 'observed incomplete leg' })
 const replay = { id: 'race', name: 'Race', competitors: [{ id: 'boat', team_code: 'GBR B', team_name: 'Boat', summary: { avg_speed_kt: 9876, distance_sailed_m: 8765 } }] } as unknown as ReplayManifest
 const detail = { race: { id: 'race' }, boats: [{ id: 'boat', classification: 'RET', official_rank: null, official_elapsed_s: null, metrics: { sog_mean_kt: metric(null), distance_m: metric(12769.8969), tack_count: { ...metric(7), unit: 'events' }, gybe_count: { ...metric(4), unit: 'events' } }, source_conflicts: ['Source start conflict'] }] } as unknown as AnalysisDetail
@@ -28,5 +28,17 @@ describe('canonical professional reports', () => {
     expect(technicalDownloads(items, 'race', 'retained', '').map((item) => item.id)).toEqual(['retained'])
     expect(technicalDownloads(items, 'race', 'supporting', 'RAW').map((item) => item.id)).toEqual(['raw'])
     expect(technicalDownloads(items, 'race', 'current', '').map((item) => item.id)).toEqual(['primary', 'raw', 'legacy'])
+  })
+  it('exposes AC38 forecast, compact model/eval/inventory summaries, and markdown report', () => {
+    const items = [
+      artifact('fc', { race_id: null, kind: 'ac38_forecast' }),
+      artifact('mc', { race_id: null, kind: 'ac38_model_card' }),
+      artifact('ev', { race_id: null, kind: 'ac38_evaluation' }),
+      artifact('inv', { race_id: null, kind: 'ac38_source_inventory' }),
+      artifact('rep', { race_id: null, kind: 'report' }),
+      artifact('old', { race_id: null, kind: 'ac38_forecast', status: 'retained' }),
+      artifact('race_rep', { race_id: 'race', kind: 'analysis' }),
+    ]
+    expect(ac38Downloads(items).map((item) => item.id)).toEqual(['fc', 'mc', 'ev', 'inv', 'rep'])
   })
 })

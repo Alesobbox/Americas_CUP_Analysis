@@ -1,0 +1,404 @@
+{
+  "schema_version": "ac37-ac40-prelims-1",
+  "retrieved_at": "2026-11-12T11:55:00+00:00",
+  "description": "Independently anchored AC40 Preliminary Regatta results for AC37 (Vilanova R1-5, Vilanova MR Final marked abandoned/excluded, Jeddah R1-8 + MR Final).",
+  "total_races": 15,
+  "completed_races": 14,
+  "teams": [
+    "ETNZ",
+    "INEOS",
+    "LUNA_ROSSA",
+    "AMERICAN_MAGIC",
+    "ALINGHI",
+    "ORIENT_EXPRESS"
+  ],
+  "races": [
+    {
+      "race_id": "ac37_ac40_vnr_r1",
+      "cycle": "ac37",
+      "event": "Vilanova Preliminary Regatta",
+      "date": "2023-09-16",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "ORIENT_EXPRESS",
+        "LUNA_ROSSA",
+        "AMERICAN_MAGIC",
+        "ETNZ",
+        "ALINGHI",
+        "INEOS"
+      ],
+      "non_finishes": {},
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-09-16T18:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_vnr_r2",
+      "cycle": "ac37",
+      "event": "Vilanova Preliminary Regatta",
+      "date": "2023-09-16",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "ETNZ",
+        "ALINGHI",
+        "ORIENT_EXPRESS",
+        "INEOS",
+        "AMERICAN_MAGIC",
+        "LUNA_ROSSA"
+      ],
+      "non_finishes": {},
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-09-16T18:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_vnr_r3",
+      "cycle": "ac37",
+      "event": "Vilanova Preliminary Regatta",
+      "date": "2023-09-17",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "ETNZ",
+        "AMERICAN_MAGIC",
+        "LUNA_ROSSA",
+        "ALINGHI",
+        "ORIENT_EXPRESS",
+        "INEOS"
+      ],
+      "non_finishes": {},
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-09-17T18:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_vnr_r4",
+      "cycle": "ac37",
+      "event": "Vilanova Preliminary Regatta",
+      "date": "2023-09-17",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "AMERICAN_MAGIC",
+        "ALINGHI",
+        "LUNA_ROSSA",
+        "ETNZ",
+        "ORIENT_EXPRESS",
+        "INEOS"
+      ],
+      "non_finishes": {},
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-09-17T18:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_vnr_r5",
+      "cycle": "ac37",
+      "event": "Vilanova Preliminary Regatta",
+      "date": "2023-09-17",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "AMERICAN_MAGIC",
+        "ETNZ",
+        "ORIENT_EXPRESS",
+        "INEOS",
+        "LUNA_ROSSA",
+        "ALINGHI"
+      ],
+      "non_finishes": {},
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-09-17T18:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_vnr_mr_final",
+      "cycle": "ac37",
+      "event": "Vilanova Preliminary Regatta Match Final",
+      "date": "2023-09-17",
+      "status": "abandoned",
+      "eligible_for_primary": false,
+      "exclusion_reason": "abandoned_on_leg_1_time_limit_light_air",
+      "official_order": [],
+      "scheduled_pair": [
+        "AMERICAN_MAGIC",
+        "ETNZ"
+      ],
+      "evidence": {
+        "supporting_source": "https://www.sail-world.com/news/266703/American-Magic-defies-the-odds",
+        "captured_path": ".forecast/evidence_sources/sailworld_vilanova_2023.html",
+        "captured_bytes": 150257,
+        "source_sha256": "127cc315d641962223013e194c3c618b1d0e62e029f94ec850e6b22572d35b9f",
+        "result_scope": "abandoned_confirmation",
+        "available_at_utc": "2023-09-17T18:30:00Z",
+        "review_status": "independently_anchored_abandoned",
+        "notes": "Corroborated by Data/AC37/prelims_ac40_2023/2023-09-17 VNR 6 USA NZL.jsonl terminating on leg 1."
+      }
+    },
+    {
+      "race_id": "ac37_ac40_jed_r1",
+      "cycle": "ac37",
+      "event": "Jeddah Preliminary Regatta",
+      "date": "2023-11-30",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "ETNZ",
+        "INEOS",
+        "LUNA_ROSSA",
+        "ALINGHI",
+        "ORIENT_EXPRESS"
+      ],
+      "non_finishes": {
+        "AMERICAN_MAGIC": "DSQ"
+      },
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-11-30T16:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_jed_r2",
+      "cycle": "ac37",
+      "event": "Jeddah Preliminary Regatta",
+      "date": "2023-11-30",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "ETNZ",
+        "ALINGHI",
+        "INEOS",
+        "LUNA_ROSSA",
+        "ORIENT_EXPRESS",
+        "AMERICAN_MAGIC"
+      ],
+      "non_finishes": {},
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-11-30T16:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_jed_r3",
+      "cycle": "ac37",
+      "event": "Jeddah Preliminary Regatta",
+      "date": "2023-11-30",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "LUNA_ROSSA",
+        "ORIENT_EXPRESS",
+        "ALINGHI",
+        "INEOS",
+        "ETNZ"
+      ],
+      "non_finishes": {
+        "AMERICAN_MAGIC": "DNS"
+      },
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-11-30T16:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_jed_r4",
+      "cycle": "ac37",
+      "event": "Jeddah Preliminary Regatta",
+      "date": "2023-12-01",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "LUNA_ROSSA",
+        "ETNZ",
+        "AMERICAN_MAGIC",
+        "INEOS",
+        "ALINGHI",
+        "ORIENT_EXPRESS"
+      ],
+      "non_finishes": {},
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-12-01T16:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_jed_r5",
+      "cycle": "ac37",
+      "event": "Jeddah Preliminary Regatta",
+      "date": "2023-12-01",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "ETNZ",
+        "LUNA_ROSSA",
+        "ALINGHI",
+        "AMERICAN_MAGIC",
+        "INEOS",
+        "ORIENT_EXPRESS"
+      ],
+      "non_finishes": {},
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-12-01T16:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_jed_r6",
+      "cycle": "ac37",
+      "event": "Jeddah Preliminary Regatta",
+      "date": "2023-12-01",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "ETNZ",
+        "AMERICAN_MAGIC",
+        "ALINGHI",
+        "LUNA_ROSSA",
+        "INEOS",
+        "ORIENT_EXPRESS"
+      ],
+      "non_finishes": {},
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-12-01T16:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_jed_r7",
+      "cycle": "ac37",
+      "event": "Jeddah Preliminary Regatta",
+      "date": "2023-12-02",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "LUNA_ROSSA",
+        "AMERICAN_MAGIC",
+        "ETNZ",
+        "ORIENT_EXPRESS",
+        "INEOS",
+        "ALINGHI"
+      ],
+      "non_finishes": {},
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-12-02T16:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_jed_r8",
+      "cycle": "ac37",
+      "event": "Jeddah Preliminary Regatta",
+      "date": "2023-12-02",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "ETNZ",
+        "ALINGHI",
+        "AMERICAN_MAGIC",
+        "ORIENT_EXPRESS",
+        "INEOS"
+      ],
+      "non_finishes": {
+        "LUNA_ROSSA": "DNF"
+      },
+      "evidence": {
+        "supporting_source": "https://en.wikipedia.org/wiki/37th_America%27s_Cup",
+        "captured_path": ".forecast/evidence_sources/wiki_2024_ac.json",
+        "captured_bytes": 59857,
+        "source_sha256": "02e0a60afacbccb95d98fb3d125e07cfe3085111f0ed1bd1d99b394b6ae12100",
+        "result_scope": "full_fleet_order",
+        "available_at_utc": "2023-12-02T16:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    },
+    {
+      "race_id": "ac37_ac40_jed_mr_final",
+      "cycle": "ac37",
+      "event": "Jeddah Preliminary Regatta Match Final",
+      "date": "2023-12-02",
+      "status": "completed",
+      "eligible_for_primary": true,
+      "official_order": [
+        "ETNZ",
+        "LUNA_ROSSA"
+      ],
+      "non_finishes": {},
+      "evidence": {
+        "supporting_source": "https://www.sailing.org/2023/12/03/americas-cup-grand-final-in-jeddah-crowns-emirates-team-new-zealand-winners/",
+        "captured_path": ".forecast/evidence_sources/worldsailing_jeddah_2023.html",
+        "captured_bytes": 347085,
+        "source_sha256": "d0b25a5846c452d3fa8b8bb2404aff79d2999c5ba242a03a2ae1095110f7fb82",
+        "result_scope": "match_final_winner",
+        "available_at_utc": "2023-12-03T12:00:00Z",
+        "review_status": "independently_anchored"
+      }
+    }
+  ]
+}

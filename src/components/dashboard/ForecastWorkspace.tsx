@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { checkpointStatus, findExactPreset, loadCupPrediction, loadPredictionIndex, loadRacePrediction, selectForecastCheckpoint } from '../../engine/predictionCatalog'
-import type { CupPrediction, PredictionIndex, RacePrediction } from '../../types/prediction'
+import { checkpointStatus, findExactPreset, loadAc38Forecast, loadCupPrediction, loadPredictionIndex, loadRacePrediction, selectForecastCheckpoint } from '../../engine/predictionCatalog'
+import type { Ac38Forecast, CupPrediction, PredictionIndex, RacePrediction } from '../../types/prediction'
 import type { ReplayManifest } from '../../types/replay'
 import { loadScenarioService, prepareScenario, type ScenarioService } from '../../engine/forecastScenarios'
 import { evidenceText } from '../../utils/evidenceText'
+import { Ac38ForecastPanel } from './Ac38ForecastPanel'
 import './forecast.css'
 import './cupEvidence.css'
 
@@ -20,6 +21,7 @@ interface Props {
   onSeek: (time: number) => void
   playing: boolean
   onToggle: () => void
+  onOpenSimulator?: () => void
 }
 
 export function LiveForecastCard({ prediction, error, playhead, replay, selectedId }: Pick<Props, 'playhead' | 'replay' | 'selectedId'> & { prediction: RacePrediction | null; error: string | null }) {
@@ -105,8 +107,11 @@ export function ForecastWorkspace(p: Props) {
   const [index, setIndex] = useState<PredictionIndex | null>(null)
   const [race, setRace] = useState<RacePrediction | null>(null)
   const [cup, setCup] = useState<CupPrediction | null>(null)
+  const [ac38, setAc38] = useState<Ac38Forecast | null>(null)
   const [raceError, setRaceError] = useState<string | null>(null)
   const [cupError, setCupError] = useState<string | null>(null)
+  const [ac38Error, setAc38Error] = useState<string | null>(null)
+  const tabTouched = useRef(false)
   const [conditionsMode, setConditionsMode] = useState('recorded')
   const [tws, setTws] = useState('12')
   const [offset, setOffset] = useState('0')
@@ -135,10 +140,16 @@ export function ForecastWorkspace(p: Props) {
 
   useEffect(() => {
     const controller = new AbortController()
-    setIndex(null); setRace(null); setCup(null); setRaceError(null); setCupError(null)
+    setIndex(null); setRace(null); setCup(null); setAc38(null); setRaceError(null); setCupError(null); setAc38Error(null)
     void loadPredictionIndex(controller.signal).then((archive) => {
       if (controller.signal.aborted) return
       setIndex(archive)
+      if (archive.ac38_forecast_path) {
+        if (!tabTouched.current) setQuestion('cup')
+        void loadAc38Forecast(archive.ac38_forecast_path, controller.signal)
+          .then((data) => { if (!controller.signal.aborted) setAc38(data) })
+          .catch((error: unknown) => { if (!controller.signal.aborted) setAc38Error(failure(error)) })
+      }
       const selected = archive.races.find((item) => item.race_id === p.replay.id)
       if (!selected) setRaceError('There is no forecast artifact for this race.')
       else void loadRacePrediction(selected.path, { raceId: p.replay.id, boatIds: p.replay.competitors.map((boat) => boat.id), boatClass: p.replay.boat_class ?? 'AC40', reference: selected }, controller.signal)
@@ -191,11 +202,12 @@ export function ForecastWorkspace(p: Props) {
   ]
   return <section className="dashboard-workspace forecast-workspace" aria-label="Forecast">
     <div className="workspace-heading"><div><h2>Forecast</h2><p>Explore the current race, pre-race expectations and the Cup. Each uses its own conditions and evidence.</p></div><label>Selected boat <select aria-label="Forecast selected boat" value={p.selectedId ?? ''} onChange={(event) => p.onSelectBoat(event.target.value)}>{p.replay.competitors.map((boat) => <option key={boat.id} value={boat.id}>{boat.team_code}</option>)}</select></label></div>
-    <div className="forecast-question-nav" role="tablist" aria-label="Forecast questions">{questions.map((item) => <button key={item.id} id={`forecast-tab-${item.id}`} type="button" role="tab" aria-label={item.label} aria-describedby={`forecast-readiness-${item.id}`} aria-selected={question === item.id} aria-controls={`forecast-panel-${item.id}`} tabIndex={question === item.id ? 0 : -1} onClick={() => setQuestion(item.id)} onKeyDown={(event) => {
+    <div className="forecast-question-nav" role="tablist" aria-label="Forecast questions">{questions.map((item) => <button key={item.id} id={`forecast-tab-${item.id}`} type="button" role="tab" aria-label={item.label} aria-describedby={`forecast-readiness-${item.id}`} aria-selected={question === item.id} aria-controls={`forecast-panel-${item.id}`} tabIndex={question === item.id ? 0 : -1} onClick={() => { tabTouched.current = true; setQuestion(item.id) }} onKeyDown={(event) => {
       const current = questions.findIndex((entry) => entry.id === item.id)
       const next = event.key === 'ArrowRight' ? (current + 1) % questions.length : event.key === 'ArrowLeft' ? (current + questions.length - 1) % questions.length : event.key === 'Home' ? 0 : event.key === 'End' ? questions.length - 1 : null
       if (next === null) return
       event.preventDefault()
+      tabTouched.current = true
       setQuestion(questions[next].id)
       document.getElementById(`forecast-tab-${questions[next].id}`)?.focus()
     }}><span className="forecast-question-label">{item.label}</span><span className="forecast-question-description">{item.description}</span><span id={`forecast-readiness-${item.id}`} className={`forecast-question-readiness ${['Available', 'Estimated state', 'Scenario envelope'].includes(item.status) ? 'is-ready' : ''}`}>{item.status}</span></button>)}</div>
@@ -211,6 +223,14 @@ export function ForecastWorkspace(p: Props) {
       </PreRaceForecastCard>
       </section>
       <section id="forecast-panel-cup" className="forecast-question-panel" role="tabpanel" aria-labelledby="forecast-tab-cup" hidden={question !== 'cup'}>
+        {p.onOpenSimulator && (
+          <div className="forecast-scenario-actions" style={{ marginBottom: '0.75rem' }}>
+            <button type="button" className="forecast-generate" onClick={p.onOpenSimulator}>
+              Open AC38 Matchup Simulator
+            </button>
+          </div>
+        )}
+        <Ac38ForecastPanel forecast={ac38} error={ac38Error} />
         <CupForecastCard prediction={cup} error={cupError} />
       </section>
     </div>

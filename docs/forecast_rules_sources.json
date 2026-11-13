@@ -3,13 +3,14 @@
   "sources": [
     {
       "version": "Protocol AC38.10",
+      "amendment": "10",
       "url": "https://drive.google.com/file/d/1MZZN-TJlXUkaqTNxCje8RupzAjBP4vvL/view",
       "status": "downloaded",
       "sha256": "084762ecd4ffb7d66921bd0d5d83e5ef9f5927cc8ce74edaa34648c3711118ee",
       "bytes": 1244782,
-      "retrieved_at": "2026-10-15T20:54:27.012473+00:00",
-      "cache_path": ".forecast\\rules\\1MZZN-TJlXUkaqTNxCje8RupzAjBP4vvL.pdf",
-      "effective_date": null
+      "cache_path": ".forecast/rules/1MZZN-TJlXUkaqTNxCje8RupzAjBP4vvL.pdf",
+      "effective_date": "2026-09-04",
+      "effective_date_source": "noticeboard_protocol_1RqgUX4C.csv (Pro v10 Amendment 10 Article 24.3(g))"
     },
     {
       "version": "LVC/Match Conditions v0",
@@ -17,9 +18,9 @@
       "status": "downloaded",
       "sha256": "4d3580f58b4dedb348d8f332bb01336b66f722560334fc800751b7bb2a397949",
       "bytes": 2441385,
-      "retrieved_at": "2026-10-15T20:54:30.872709+00:00",
-      "cache_path": ".forecast\\rules\\1biI3_zCSaLrRiM4nwkhKpaBnMraS5KiP.pdf",
-      "effective_date": null
+      "cache_path": ".forecast/rules/1biI3_zCSaLrRiM4nwkhKpaBnMraS5KiP.pdf",
+      "effective_date": null,
+      "effective_date_note": "Initial conditions posted; amendments/sailing instructions pending prior to Cup."
     },
     {
       "version": "RRSAC v5.02",
@@ -27,9 +28,36 @@
       "status": "downloaded",
       "sha256": "89d08f344abb1d5bb0f123f018bb876c4abdc749075b382cf98fe610c312f1f1",
       "bytes": 1275368,
-      "retrieved_at": "2026-10-15T20:54:26.915608+00:00",
-      "cache_path": ".forecast\\rules\\1I21drErgKm4OuYCcGb3D9uv7_UYG4jwj.pdf",
-      "effective_date": null
+      "cache_path": ".forecast/rules/1I21drErgKm4OuYCcGb3D9uv7_UYG4jwj.pdf",
+      "effective_date": "2026-09-25",
+      "effective_date_source": "noticeboard_racing_11VmLLe9.csv (Version 5.02 Rule 87.2 New (d))"
+    },
+    {
+      "version": "AC75 Class Rule V3.08 (R246)",
+      "url": "https://github.com/AC-Rules-Committee/AC38-Rules-Public/releases/tag/TRv2.12_CR75v3.08_CR40v2.15_SP75v1.02_DC40v1.07_CP75v1.01_R246",
+      "status": "rules_committee_github_release",
+      "sha256": "f24441aefbff48f7a5232e0b1e1049ae706aadad36289df1b866eb53439743c6",
+      "publication_date": "2026-09-21",
+      "effective_date": "2026-09-21",
+      "supersedes": "Noticeboard AC75 CR 3.05 (2026-06-26)"
+    },
+    {
+      "version": "AC Technical Regulations V2.12 (R246)",
+      "url": "https://github.com/AC-Rules-Committee/AC38-Rules-Public/releases/tag/TRv2.12_CR75v3.08_CR40v2.15_SP75v1.02_DC40v1.07_CP75v1.01_R246",
+      "status": "rules_committee_github_release",
+      "sha256": "5d18acfd1cfcc2a98fa76b256899e2e8bca592725f30c5dd0382f47bab966c74",
+      "publication_date": "2026-09-21",
+      "effective_date": "2026-09-21",
+      "supersedes": "Noticeboard TR 2.07 (2026-07-03)"
+    },
+    {
+      "version": "AC40 Class Rule V2.15 (R246)",
+      "url": "https://github.com/AC-Rules-Committee/AC38-Rules-Public/releases/tag/TRv2.12_CR75v3.08_CR40v2.15_SP75v1.02_DC40v1.07_CP75v1.01_R246",
+      "status": "rules_committee_github_release",
+      "sha256": "9c179f89af8a73ad421e543e32230247870cdf0e904551c2b9905654e2e2bcf1",
+      "publication_date": "2026-09-21",
+      "effective_date": "2026-09-21",
+      "supersedes": "Noticeboard AC40 2.11 (2026-06-26)"
     }
   ],
   "verified_scoring_clauses": {
@@ -68,7 +96,44 @@
     },
     "RRSAC 101.2, page 29": "Only completed rounds between all Challengers count; exclude Defender results for Challenger qualification.",
     "RRSAC 102.1, page 30": "Wording references first/last Challenger and three-/four-Challenger cases; six-Challenger seeding remains unresolved.",
-    "RRSAC 101.3 and 102.4, pages 29 and 31": "CSS knockouts may use last-day score and tie procedure; Cup Match has no tie break."
+    "RRSAC 101.3 and 102.4, pages 29 and 31": "CSS knockouts may use last-day score and tie procedure; Cup Match has no tie break.",
+    "Protocol Article 22.1(d), page 19": "5 crew members with at least 1 female sailor; optional non-contributing Guest Racer in addition.",
+    "Protocol Article 22.1(e), page 19": "Manual power input prohibited except steering; battery-powered system mimicking 4 human cyclors in average/peak power and fatigue.",
+    "Protocol Article 24.2(b), page 20": "AC37 competitors must reuse AC37 hull (or build to AC37 design if unavailable); New Competitors must acquire AC37 hull or build to AC37 design. No new hull designs.",
+    "Conditions 4.5 & 4.6, pages 1-2": "Top 3 Challengers from Group Stage 2 progress to Semi-Finals; 4th, 5th, 6th compete in Group Stage 3 Rep\u00eachage (6th vs 5th with +1 to 5th, winner vs 4th with +1 to 4th).",
+    "RRSAC 102.1 & 102.3, pages 30-31": "CSS round-robin ties only broken for first and last placed Challenger. Broken by sail-off (102.1(a)) or 102.3 hierarchy: head-to-head match score, last match, points against top other boat, prior regatta standing, draw."
   },
-  "effective_date_note": "PDF creation metadata is not an effective date. Verified effective dates and underlying instructions remain publication prerequisites."
+  "effective_date_note": "PDF creation metadata is not an effective date. Verified effective dates and underlying instructions remain publication prerequisites.",
+  "refreshed_at_utc": "2026-11-12T11:51:00Z",
+  "rules_precedence": {
+    "authoritative_github_repo": "https://github.com/AC-Rules-Committee/AC38-Rules-Public",
+    "noticeboard_url": "https://ac38noticeboard.acofficials.org/",
+    "stated_precedence": "Rules Committee official GitHub releases take precedence over noticeboard text summaries; PDF creation metadata is never an effective date.",
+    "github_release_tag": "TRv2.12_CR75v3.08_CR40v2.15_SP75v1.02_DC40v1.07_CP75v1.01_R246",
+    "github_release_published_at_utc": "2026-09-21T20:45:33Z",
+    "github_checksums_evidence": {
+      "supporting_source": "https://github.com/AC-Rules-Committee/AC38-Rules-Public/releases/tag/TRv2.12_CR75v3.08_CR40v2.15_SP75v1.02_DC40v1.07_CP75v1.01_R246",
+      "captured_path": ".forecast/evidence_sources/ac38_rules_public_latest_checksums.txt",
+      "captured_bytes": 692,
+      "source_sha256": "b9de2803a550d0590c3c63a8f399ff0b30f4fafccbce09111a6ce146812b5933",
+      "result_scope": "official_rule_checksums",
+      "available_at_utc": "2026-09-21T20:45:33Z",
+      "review_status": "independently_anchored"
+    },
+    "noticeboard_protocol_csv_evidence": {
+      "supporting_source": "https://ac38noticeboard.acofficials.org/protocol",
+      "captured_path": ".forecast/evidence_sources/noticeboard_protocol_1RqgUX4C.csv",
+      "captured_bytes": 2232,
+      "source_sha256": "ed49fc8bbcf2e6a9ceea4fa19791bdb404283b710d346373579dc8a53a160201",
+      "result_scope": "protocol_amendment_log",
+      "available_at_utc": "2026-09-04T00:00:00Z",
+      "review_status": "independently_anchored"
+    }
+  },
+  "unresolved_clauses": [
+    "Six-challenger qualification/seeding tie procedure requires authoritative clarification (RRSAC 102.1 only covers 3- and 4-Challenger ties).",
+    "Timing-dependent shared/zero-score results require the applicable race state and instructions.",
+    "Incomplete-series, withdrawal and continuation instructions must be pinned before publication.",
+    "Protocol Amendment 08 notes Article 13.2 rule number reference remains under review."
+  ]
 }

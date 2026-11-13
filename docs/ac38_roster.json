@@ -1,0 +1,482 @@
+{
+  "schema_version": "ac38-roster-2",
+  "retrieved_at": "2026-11-07T12:00:00+00:00",
+  "description": "Event entry roster and syndicate combination weight policies for the 38th America's Cup.",
+  "policies": {
+    "equal": "Equal 50/50 weighting between senior and youth/women pairs.",
+    "principal_only": "100% weight to primary senior team.",
+    "assumed_10_02": "Estimated pairing weight (10/12 senior, 2/12 youth/women)."
+  },
+  "syndicates": [
+    {
+      "team_id": "ETNZ",
+      "name": "Emirates Team New Zealand",
+      "country": "NZL",
+      "role": "Defender",
+      "entries": [
+        {
+          "entry_id": "NZL B",
+          "type": "senior",
+          "name": "Emirates Team New Zealand",
+          "cycle_entry_id": "ac38:NZL B"
+        },
+        {
+          "entry_id": "NZL G",
+          "type": "youth_women",
+          "name": "Emirates Team New Zealand Women and Youth",
+          "cycle_entry_id": "ac38:NZL G"
+        }
+      ],
+      "weights_by_policy": {
+        "equal": {
+          "NZL B": 0.5,
+          "NZL G": 0.5
+        },
+        "principal_only": {
+          "NZL B": 1.0,
+          "NZL G": 0.0
+        },
+        "assumed_10_02": {
+          "NZL B": 0.8333333333333334,
+          "NZL G": 0.16666666666666666
+        }
+      },
+      "campaign_team_id": "ac38:ETNZ",
+      "principal_ac40_entry": "NZL B",
+      "historical_continuity_assumed": false
+    },
+    {
+      "team_id": "GB1",
+      "name": "INEOS Britannia",
+      "country": "GBR",
+      "role": "Challenger of Record",
+      "entries": [
+        {
+          "entry_id": "GBR B",
+          "type": "senior",
+          "name": "Ineos Britannia",
+          "cycle_entry_id": "ac38:GBR B"
+        },
+        {
+          "entry_id": "GBR G",
+          "type": "youth_women",
+          "name": "Ineos Britannia Women and Youth",
+          "cycle_entry_id": "ac38:GBR G"
+        }
+      ],
+      "weights_by_policy": {
+        "equal": {
+          "GBR B": 0.5,
+          "GBR G": 0.5
+        },
+        "principal_only": {
+          "GBR B": 1.0,
+          "GBR G": 0.0
+        },
+        "assumed_10_02": {
+          "GBR B": 0.8333333333333334,
+          "GBR G": 0.16666666666666666
+        }
+      },
+      "campaign_team_id": "ac38:GB1",
+      "principal_ac40_entry": "GBR B",
+      "historical_continuity_assumed": false
+    },
+    {
+      "team_id": "LUNA_ROSSA",
+      "name": "Luna Rossa Prada Pirelli",
+      "country": "ITA",
+      "role": "Challenger",
+      "entries": [
+        {
+          "entry_id": "ITA B",
+          "type": "senior",
+          "name": "Luna Rossa",
+          "cycle_entry_id": "ac38:ITA B"
+        },
+        {
+          "entry_id": "ITA G",
+          "type": "youth_women",
+          "name": "Luna Rossa Women and Youth",
+          "cycle_entry_id": "ac38:ITA G"
+        }
+      ],
+      "weights_by_policy": {
+        "equal": {
+          "ITA B": 0.5,
+          "ITA G": 0.5
+        },
+        "principal_only": {
+          "ITA B": 1.0,
+          "ITA G": 0.0
+        },
+        "assumed_10_02": {
+          "ITA B": 0.8333333333333334,
+          "ITA G": 0.16666666666666666
+        }
+      },
+      "campaign_team_id": "ac38:LUNA_ROSSA",
+      "principal_ac40_entry": "ITA B",
+      "historical_continuity_assumed": false
+    },
+    {
+      "team_id": "ALINGHI",
+      "name": "Alinghi Red Bull Racing",
+      "country": "SUI",
+      "role": "Challenger",
+      "entries": [
+        {
+          "entry_id": "SUI",
+          "type": "senior",
+          "name": "Tudor Team Alinghi",
+          "cycle_entry_id": "ac38:SUI"
+        }
+      ],
+      "weights_by_policy": {
+        "equal": {
+          "SUI": 1.0
+        },
+        "principal_only": {
+          "SUI": 1.0
+        },
+        "assumed_10_02": {
+          "SUI": 1.0
+        }
+      },
+      "campaign_team_id": "ac38:ALINGHI",
+      "principal_ac40_entry": "SUI",
+      "historical_continuity_assumed": false
+    },
+    {
+      "team_id": "ARC_USA",
+      "name": "NYYC American Magic",
+      "country": "USA",
+      "role": "Challenger",
+      "entries": [
+        {
+          "entry_id": "USA",
+          "type": "senior",
+          "name": "American Racing Challenger Team USA",
+          "cycle_entry_id": "ac38:USA"
+        }
+      ],
+      "weights_by_policy": {
+        "equal": {
+          "USA": 1.0
+        },
+        "principal_only": {
+          "USA": 1.0
+        },
+        "assumed_10_02": {
+          "USA": 1.0
+        }
+      },
+      "campaign_team_id": "ac38:ARC_USA",
+      "principal_ac40_entry": "USA",
+      "historical_continuity_assumed": false
+    },
+    {
+      "team_id": "LA_ROCHE_POSAY",
+      "name": "Orient Express Racing Team",
+      "country": "FRA",
+      "role": "Challenger",
+      "entries": [
+        {
+          "entry_id": "FRA",
+          "type": "senior",
+          "name": "La Roche-Posay Racing Team",
+          "cycle_entry_id": "ac38:FRA"
+        }
+      ],
+      "weights_by_policy": {
+        "equal": {
+          "FRA": 1.0
+        },
+        "principal_only": {
+          "FRA": 1.0
+        },
+        "assumed_10_02": {
+          "FRA": 1.0
+        }
+      },
+      "campaign_team_id": "ac38:LA_ROCHE_POSAY",
+      "principal_ac40_entry": "FRA",
+      "historical_continuity_assumed": false
+    },
+    {
+      "team_id": "AUSTRALIA",
+      "name": "Team Australia Challenge",
+      "country": "AUS",
+      "role": "New Challenger",
+      "entries": [],
+      "weights_by_policy": {
+        "equal": {},
+        "principal_only": {},
+        "assumed_10_02": {}
+      },
+      "campaign_team_id": "ac38:AUSTRALIA",
+      "principal_ac40_entry": null,
+      "historical_continuity_assumed": false
+    }
+  ],
+  "event_entries": [
+    {
+      "event_entry_id": "cagliari_2026::FRA",
+      "event_id": "cagliari_2026",
+      "entry_id": "FRA",
+      "team_id": "LA_ROCHE_POSAY",
+      "role": "principal",
+      "n_races": 8,
+      "n_competitive_races": 8
+    },
+    {
+      "event_entry_id": "cagliari_2026::GBR B",
+      "event_id": "cagliari_2026",
+      "entry_id": "GBR B",
+      "team_id": "GB1",
+      "role": "senior",
+      "n_races": 5,
+      "n_competitive_races": 5
+    },
+    {
+      "event_entry_id": "cagliari_2026::GBR G",
+      "event_id": "cagliari_2026",
+      "entry_id": "GBR G",
+      "team_id": "GB1",
+      "role": "youth_women",
+      "n_races": 8,
+      "n_competitive_races": 8
+    },
+    {
+      "event_entry_id": "cagliari_2026::ITA B",
+      "event_id": "cagliari_2026",
+      "entry_id": "ITA B",
+      "team_id": "LUNA_ROSSA",
+      "role": "senior",
+      "n_races": 9,
+      "n_competitive_races": 9
+    },
+    {
+      "event_entry_id": "cagliari_2026::ITA G",
+      "event_id": "cagliari_2026",
+      "entry_id": "ITA G",
+      "team_id": "LUNA_ROSSA",
+      "role": "youth_women",
+      "n_races": 8,
+      "n_competitive_races": 8
+    },
+    {
+      "event_entry_id": "cagliari_2026::NZL B",
+      "event_id": "cagliari_2026",
+      "entry_id": "NZL B",
+      "team_id": "ETNZ",
+      "role": "senior",
+      "n_races": 9,
+      "n_competitive_races": 9
+    },
+    {
+      "event_entry_id": "cagliari_2026::NZL G",
+      "event_id": "cagliari_2026",
+      "entry_id": "NZL G",
+      "team_id": "ETNZ",
+      "role": "youth_women",
+      "n_races": 8,
+      "n_competitive_races": 8
+    },
+    {
+      "event_entry_id": "cagliari_2026::SUI",
+      "event_id": "cagliari_2026",
+      "entry_id": "SUI",
+      "team_id": "ALINGHI",
+      "role": "principal",
+      "n_races": 8,
+      "n_competitive_races": 8
+    },
+    {
+      "event_entry_id": "naples_2026::FRA",
+      "event_id": "naples_2026",
+      "entry_id": "FRA",
+      "team_id": "LA_ROCHE_POSAY",
+      "role": "principal",
+      "n_races": 18,
+      "n_competitive_races": 8
+    },
+    {
+      "event_entry_id": "naples_2026::GBR B",
+      "event_id": "naples_2026",
+      "entry_id": "GBR B",
+      "team_id": "GB1",
+      "role": "senior",
+      "n_races": 18,
+      "n_competitive_races": 8
+    },
+    {
+      "event_entry_id": "naples_2026::GBR G",
+      "event_id": "naples_2026",
+      "entry_id": "GBR G",
+      "team_id": "GB1",
+      "role": "youth_women",
+      "n_races": 18,
+      "n_competitive_races": 8
+    },
+    {
+      "event_entry_id": "naples_2026::ITA B",
+      "event_id": "naples_2026",
+      "entry_id": "ITA B",
+      "team_id": "LUNA_ROSSA",
+      "role": "senior",
+      "n_races": 19,
+      "n_competitive_races": 9
+    },
+    {
+      "event_entry_id": "naples_2026::ITA G",
+      "event_id": "naples_2026",
+      "entry_id": "ITA G",
+      "team_id": "LUNA_ROSSA",
+      "role": "youth_women",
+      "n_races": 18,
+      "n_competitive_races": 8
+    },
+    {
+      "event_entry_id": "naples_2026::NZL B",
+      "event_id": "naples_2026",
+      "entry_id": "NZL B",
+      "team_id": "ETNZ",
+      "role": "senior",
+      "n_races": 19,
+      "n_competitive_races": 9
+    },
+    {
+      "event_entry_id": "naples_2026::NZL G",
+      "event_id": "naples_2026",
+      "entry_id": "NZL G",
+      "team_id": "ETNZ",
+      "role": "youth_women",
+      "n_races": 18,
+      "n_competitive_races": 8
+    },
+    {
+      "event_entry_id": "naples_2026::SUI",
+      "event_id": "naples_2026",
+      "entry_id": "SUI",
+      "team_id": "ALINGHI",
+      "role": "principal",
+      "n_races": 18,
+      "n_competitive_races": 8
+    },
+    {
+      "event_entry_id": "naples_2026::USA",
+      "event_id": "naples_2026",
+      "entry_id": "USA",
+      "team_id": "ARC_USA",
+      "role": "principal",
+      "n_races": 18,
+      "n_competitive_races": 8
+    }
+  ],
+  "noticeboard_registered_sailors": {
+    "source_evidence": {
+      "supporting_source": "https://ac38noticeboard.acofficials.org/racing/registered-sailors",
+      "captured_path": ".forecast/evidence_sources/noticeboard_racing_registered-sailors_1x92Kk5z.csv",
+      "captured_bytes": 460,
+      "source_sha256": "0baa6916b2a89efb0e29a30268b9602c3b66d386d06d651660b891ddd605a6ca",
+      "result_scope": "registered_sailors_declarations",
+      "available_at_utc": "2026-05-08T00:00:00Z",
+      "review_status": "independently_anchored"
+    },
+    "declarations": [
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Jo Aleh",
+        "nationality_criteria": "30.2(a)",
+        "date_posted": "18 Feb 26"
+      },
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Josh Armit",
+        "nationality_criteria": "30.2(a)",
+        "date_posted": "18 Feb 26"
+      },
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Chris Draper",
+        "nationality_criteria": "Non-National",
+        "date_posted": "18 Feb 26"
+      },
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Iain Jensen",
+        "nationality_criteria": "Non-National",
+        "date_posted": "18 Feb 26"
+      },
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Andrew Maloney",
+        "nationality_criteria": "30.2(a)",
+        "date_posted": "18 Feb 26"
+      },
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Seb Menzies",
+        "nationality_criteria": "30.2(a)",
+        "date_posted": "18 Feb 26"
+      },
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Sam Meech",
+        "nationality_criteria": "30.2(a)",
+        "date_posted": "18 Feb 26"
+      },
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Nathan Outteridge",
+        "nationality_criteria": "30.2(b)",
+        "date_posted": "18 Feb 26"
+      },
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Jacob Pye",
+        "nationality_criteria": "30.2(a)",
+        "date_posted": "18 Feb 26"
+      },
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Blair Tuke",
+        "nationality_criteria": "30.2(a)",
+        "date_posted": "18 Feb 26"
+      },
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Helena Sanderson",
+        "nationality_criteria": "30.2(a)",
+        "date_posted": "8 May 26"
+      },
+      {
+        "syndicate": "ETNZ",
+        "campaign_team_id": "ac38:ETNZ",
+        "sailor_name": "Serena Woodall",
+        "nationality_criteria": "30.2(a)",
+        "date_posted": "8 May 26"
+      }
+    ]
+  },
+  "default_mapping_policy": {
+    "primary": "confirmed_crew_then_principal_ac40_else_prior",
+    "sensitivity": [
+      "equal"
+    ],
+    "prohibited_default": "race_count_weighted_mixture"
+  },
+  "refreshed_at_utc": "2026-11-12T11:51:00Z"
+}

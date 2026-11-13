@@ -155,6 +155,10 @@ def verify(root=ROOT):
         check("not arrival-time causal" in tactical["availability_basis"], f"Missing retrospective caveat: {race_id}")
         provenance = tactical["source_provenance"]
         source = (root / provenance["source_file"]).resolve()
+        if not source.exists():
+            cand = (root / "Data" / "AC38" / Path(provenance["source_file"]).name).resolve()
+            if cand.exists():
+                source = cand
         check(source.is_relative_to((root / "Data").resolve()), f"Source outside Data: {source}")
         check(source not in source_paths and infer_race_metadata(str(source))["race_id"] == race_id, f"Source mapping mismatch: {race_id}")
         source_paths.add(source)
@@ -211,7 +215,10 @@ def refresh(root=ROOT, race_ids=None, *, performance_only=False):
     catalog_path = data / "manifests.json"
     races = _races(json.loads(catalog_path.read_text(encoding="utf-8")))
     source_by_race = {}
-    for path in ([] if performance_only else sorted((root / "Data").glob("*.jsonl"))):
+    raw_files = list((root / "Data").glob("*.jsonl"))
+    if not raw_files and (root / "Data" / "AC38").exists():
+        raw_files = list((root / "Data" / "AC38").glob("*.jsonl"))
+    for path in ([] if performance_only else sorted(raw_files)):
         race_id = infer_race_metadata(str(path))["race_id"]
         if race_id in source_by_race:
             raise ValueError(f"Multiple source files map to {race_id}")

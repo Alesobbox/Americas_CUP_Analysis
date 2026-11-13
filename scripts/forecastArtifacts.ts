@@ -3,6 +3,7 @@ import path from 'node:path'
 import type { Plugin } from 'vite'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { createScenarioMiddleware } from './forecastScenarios.ts'
+import { createKinematicMiddleware } from './kinematicScenarioMiddleware.ts'
 
 const generatedDirectories = ['predictions', 'environment']
 
@@ -18,10 +19,10 @@ function artifactMiddleware(publicDir: string, reportError: (message: string) =>
         const directory = inventory ? { prefix: pathname, root: path.resolve(publicDir, 'data') } : directories.find(({ prefix }) => pathname === prefix || pathname.startsWith(`${prefix}/`))
         if (!directory) return next()
 
-        const reply = (status: number, body: Buffer | string) => {
+        const reply = (status: number, body: Buffer | string, contentType = 'application/json; charset=utf-8') => {
           const bytes = typeof body === 'string' ? Buffer.from(body) : body
           response.writeHead(status, {
-            'Content-Type': 'application/json; charset=utf-8',
+            'Content-Type': contentType,
             'Content-Length': bytes.length,
             'Cache-Control': 'no-store',
             'X-Content-Type-Options': 'nosniff',
@@ -42,16 +43,17 @@ function artifactMiddleware(publicDir: string, reportError: (message: string) =>
           reply(400, '{"error":"Invalid generated artifact path"}\n')
           return
         }
-        // Only exported JSON names are accepted; reject traversal and Windows separators.
-        if (!/^(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.json$/.test(relative)) {
+        // Only exported JSON/Markdown names are accepted; reject traversal and Windows separators.
+        if (!/^(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.(?:json|md)$/.test(relative)) {
           reply(400, '{"error":"Invalid generated artifact path"}\n')
           return
         }
 
         // readFile closes its handle before replying. No watch handle can block
         // the publisher's atomic index replacement on Windows.
+        const contentType = relative.endsWith('.md') ? 'text/markdown; charset=utf-8' : 'application/json; charset=utf-8'
         void readFile(path.join(directory.root, relative)).then(
-          (bytes) => reply(200, bytes),
+          (bytes) => reply(200, bytes, contentType),
           (error: NodeJS.ErrnoException) => {
             const missing = error.code === 'ENOENT' || error.code === 'ENOTDIR'
             if (!missing) reportError(`Cannot read generated artifact: ${error.message}`)
@@ -69,10 +71,12 @@ export function forecastArtifactsPlugin(): Plugin {
     apply: 'serve',
     configureServer(server) {
       server.middlewares.use(createScenarioMiddleware(server.config.root))
+      server.middlewares.use(createKinematicMiddleware(server.config.root))
       server.middlewares.use(artifactMiddleware(server.config.publicDir, (message) => server.config.logger.error(message)))
     },
     configurePreviewServer(server) {
       server.middlewares.use(createScenarioMiddleware(server.config.root))
+      server.middlewares.use(createKinematicMiddleware(server.config.root))
       server.middlewares.use(artifactMiddleware(server.config.publicDir, (message) => server.config.logger.error(message)))
     },
   }

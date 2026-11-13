@@ -1,0 +1,140 @@
+{
+  "schema_version": "ac38-team-covariates-1",
+  "retrieved_at": "2026-11-07T12:00:00+00:00",
+  "description": "Baseline team covariates for the 7 registered 38th America's Cup teams. Values not independently sourced from official public documents remain null and listed under unresolved_fields.",
+  "teams": [
+    {
+      "team_id": "ETNZ",
+      "team_name": "Emirates Team New Zealand",
+      "role": "Defender",
+      "hull_generation": "AC37_reused",
+      "hull_reuse_rule_source": "Protocol Article 24.2(b)(i)",
+      "foil_generations_tested": null,
+      "simulator_hours_reported": null,
+      "cyclor_to_battery_system_status": "in_development",
+      "cyclor_rule_source": "Protocol Article 22.1(e)",
+      "key_personnel_continuity_score": null,
+      "design_continuity_score": null,
+      "unresolved_fields": [
+        "foil_generations_tested",
+        "simulator_hours_reported",
+        "key_personnel_continuity_score",
+        "design_continuity_score"
+      ]
+    },
+    {
+      "team_id": "GB1",
+      "team_name": "INEOS Britannia",
+      "role": "Challenger of Record",
+      "hull_generation": "AC37_reused",
+      "hull_reuse_rule_source": "Protocol Article 24.2(b)(i)",
+      "foil_generations_tested": null,
+      "simulator_hours_reported": null,
+      "cyclor_to_battery_system_status": "in_development",
+      "cyclor_rule_source": "Protocol Article 22.1(e)",
+      "key_personnel_continuity_score": null,
+      "design_continuity_score": null,
+      "unresolved_fields": [
+        "foil_generations_tested",
+        "simulator_hours_reported",
+        "key_personnel_continuity_score",
+        "design_continuity_score"
+      ]
+    },
+    {
+      "team_id": "LUNA_ROSSA",
+      "team_name": "Luna Rossa Prada Pirelli",
+      "role": "Challenger",
+      "hull_generation": "AC37_reused",
+      "hull_reuse_rule_source": "Protocol Article 24.2(b)(i)",
+      "foil_generations_tested": null,
+      "simulator_hours_reported": null,
+      "cyclor_to_battery_system_status": "in_development",
+      "cyclor_rule_source": "Protocol Article 22.1(e)",
+      "key_personnel_continuity_score": null,
+      "design_continuity_score": null,
+      "unresolved_fields": [
+        "foil_generations_tested",
+        "simulator_hours_reported",
+        "key_personnel_continuity_score",
+        "design_continuity_score"
+      ]
+    },
+    {
+      "team_id": "ALINGHI",
+      "team_name": "Alinghi Red Bull Racing",
+      "role": "Challenger",
+      "hull_generation": "AC37_reused",
+      "hull_reuse_rule_source": "Protocol Article 24.2(b)(i)",
+      "foil_generations_tested": null,
+      "simulator_hours_reported": null,
+      "cyclor_to_battery_system_status": "in_development",
+      "cyclor_rule_source": "Protocol Article 22.1(e)",
+      "key_personnel_continuity_score": null,
+      "design_continuity_score": null,
+      "unresolved_fields": [
+        "foil_generations_tested",
+        "simulator_hours_reported",
+        "key_personnel_continuity_score",
+        "design_continuity_score"
+      ]
+    },
+    {
+      "team_id": "ARC_USA",
+      "team_name": "NYYC American Magic",
+      "role": "Challenger",
+      "hull_generation": "AC37_reused",
+      "hull_reuse_rule_source": "Protocol Article 24.2(b)(i)",
+      "foil_generations_tested": null,
+      "simulator_hours_reported": null,
+      "cyclor_to_battery_system_status": "in_development",
+      "cyclor_rule_source": "Protocol Article 22.1(e)",
+      "key_personnel_continuity_score": null,
+      "design_continuity_score": null,
+      "unresolved_fields": [
+        "foil_generations_tested",
+        "simulator_hours_reported",
+        "key_personnel_continuity_score",
+        "design_continuity_score"
+      ]
+    },
+    {
+      "team_id": "LA_ROCHE_POSAY",
+      "team_name": "Orient Express Racing Team",
+      "role": "Challenger",
+      "hull_generation": "AC37_reused",
+      "hull_reuse_rule_source": "Protocol Article 24.2(b)(i)",
+      "foil_generations_tested": null,
+      "simulator_hours_reported": null,
+      "cyclor_to_battery_system_status": "in_development",
+      "cyclor_rule_source": "Protocol Article 22.1(e)",
+      "key_personnel_continuity_score": null,
+      "design_continuity_score": null,
+      "unresolved_fields": [
+        "foil_generations_tested",
+        "simulator_hours_reported",
+        "key_personnel_continuity_score",
+        "design_continuity_score"
+      ]
+    },
+    {
+      "team_id": "AUSTRALIA",
+      "team_name": "Team Australia Challenge",
+      "role": "New Challenger",
+      "hull_generation": "AC37_design_acquired_or_new_build",
+      "hull_reuse_rule_source": "Protocol Article 24.2(b)(ii)",
+      "foil_generations_tested": null,
+      "simulator_hours_reported": null,
+      "cyclor_to_battery_system_status": "in_development",
+      "cyclor_rule_source": "Protocol Article 22.1(e)",
+      "key_personnel_continuity_score": null,
+      "design_continuity_score": null,
+      "unresolved_fields": [
+        "foil_generations_tested",
+        "simulator_hours_reported",
+        "key_personnel_continuity_score",
+        "design_continuity_score"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,10 @@
 """Hand-checkable coherence and generative-boundary tests for forecasting."""
+import json
 import math
+from pathlib import Path
 import unittest
+
+ROOT = Path(__file__).resolve().parents[2]
 
 try:
     import numpy as np
@@ -264,6 +268,20 @@ class PredictionModelTests(unittest.TestCase):
         self.assertIn("absent", model.mixture_reason)
         self.assertEqual(LegTimeModel.from_dict(model.to_dict()).to_dict(), model.to_dict())
 
+    def test_leg_time_model_current_kinematic_adjustment(self):
+        model = self.fixture_model()
+        leg_neutral = {"distance_m": 1000, "leg_kind": "odd", "c_parallel_mps": 0.0}
+        leg_favorable = {"distance_m": 1000, "leg_kind": "odd", "c_parallel_mps": 1.5}
+        leg_adverse = {"distance_m": 1000, "leg_kind": "odd", "c_parallel_mps": -1.5}
+        t_neutral = model.median_seconds("A", leg_neutral)
+        t_favorable = model.median_seconds("A", leg_favorable)
+        t_adverse = model.median_seconds("A", leg_adverse)
+        self.assertLess(t_favorable, t_neutral)
+        self.assertGreater(t_adverse, t_neutral)
+        v_water = 1000 / t_neutral
+        self.assertAlmostEqual(1000 / t_favorable, v_water + 1.5, places=5)
+        self.assertAlmostEqual(1000 / t_adverse, v_water - 1.5, places=5)
+
     def test_positive_delay_candidate_needs_reviewed_labels_and_refits_clean_distribution(self):
         missing = PositiveDelayMixture.fit([{"boat_id": "A", "duration_s": 100,
                                             "distance_m": 1000, "date": "2026-01-01"}] * 80)
@@ -422,6 +440,22 @@ class PredictionModelTests(unittest.TestCase):
         self.assertAlmostEqual(w_50, 0.5)
         self.assertAlmostEqual(persistent_series_win, 0.75, delta=0.001)
         self.assertAlmostEqual(independent_series_win, 0.9376, delta=0.001)
+
+    def test_evaluate_wind_experiment_runs_end_to_end(self):
+        """Audit Finding 9: verify evaluate_wind_experiment artifact and functions."""
+        from scripts.evaluate_wind_experiment import evaluate_split, compute_order_log_loss
+        model = StrengthModel.fit([{"order": ["A", "B", "C"]}], condition_effects=False)
+        loss = compute_order_log_loss(model, ["A", "B", "C"])
+        self.assertGreater(loss, 0.0)
+
+        eval_path = ROOT / ".forecast" / "wind_experiment" / "evaluation.json"
+        self.assertTrue(eval_path.exists())
+        doc = json.loads(eval_path.read_text(encoding="utf-8"))
+        self.assertEqual(doc["schema_version"], "wind-experiment-2")
+        dev = doc["splits"]["development"]
+        self.assertIsInstance(dev["baseline"]["brier_mean"], float)
+        self.assertIsInstance(dev["wind_conditioned"]["brier_mean"], float)
+        self.assertIn("recommendation", doc)
 
 
 if __name__ == "__main__":

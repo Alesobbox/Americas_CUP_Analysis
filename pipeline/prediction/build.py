@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from importlib import metadata as packages
 import json
+import math
 import re
 from pathlib import Path
 import shutil
@@ -11,7 +12,7 @@ import sys
 import time
 import numpy as np
 from .contracts import STATUSES, atomic_json, content_hash, validate_cup, validate_race, verify_public
-from .labels import race_labels, leg_rows, load_reviews, before_day, source_completion_records
+from .labels import race_labels, leg_rows, load_reviews, before_day, source_completion_records, current_along_leg_mps, select_training_order_rows, attach_official_results
 from .models import StrengthModel, CompletionModel, LegTimeModel
 from .source import BUFFER_MS, digest, load_dataset
 from .state import CausalRace, certify_outages, fit_filter_parameters
@@ -49,9 +50,23 @@ def provenance(root, metadata):
 def prepare(root):
     print("Verifying dataset archive (28 raw files, 6.87 GB)...", file=sys.stderr, flush=True)
     metadata = metadata_archive(root)
+    env_dir = root / "public" / "data" / "environment"
+    for meta in metadata:
+        env_file = env_dir / (meta["race_id"] + ".json")
+        if env_file.exists():
+            try:
+                meta["environment"] = json.loads(env_file.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                meta["environment"] = None
     labels, transitions = [], []
     for meta in metadata:
-        raw=root/"Data"/meta["source_file"]
+        raw = root / "Data" / meta["source_file"]
+        if not raw.exists():
+            raw = root / "Data" / "AC38" / meta["source_file"]
+        if not raw.exists():
+            for match in (root / "Data").rglob(meta["source_file"]):
+                raw = match
+                break
         if raw.stat().st_size != meta["bytes"] or digest(raw) != meta["sha256"]:
             raise ValueError("Raw source changed after dataset creation; rebuild the dataset")
         _, rows = load_dataset(root,meta["race_id"])
@@ -106,7 +121,9 @@ def legs_for(meta, cutoff=None):
     if session is None:
         raise ValueError("No course known at prediction cutoff")
     course = session["race_course"]
-    return [{"distance_m":float(course["course_length"]),"leg_kind":"odd" if i%2==0 else "even"}
+    axis = course.get("course_axis")
+    return [{"distance_m":float(course["course_length"]),"leg_kind":"odd" if i%2==0 else "even",
+             "c_parallel_mps": current_along_leg_mps(meta.get("environment"), cutoff, axis, i)}
             for i in range(len(course["sequences"])-1)]
 
 
@@ -115,8 +132,15 @@ def simulation_states(features, times, legs):
     states={entry:dict(feature,started=True) for entry,feature in features.items()}
     for entry,state in states.items():
         if state.get("vmg_mps",0)>0 and state.get("leg_length_m",0)>0 and 0<=state.get("current_leg",-1)<len(legs):
-            full=times.median_seconds(entry,legs[state["current_leg"]])
-            state["pace_ratio"]=state["vmg_mps"]*full/state["leg_length_m"]
+            leg = legs[state["current_leg"]]
+            c = float(leg.get("c_parallel_mps") or 0.0)
+            vmg_water = state["vmg_mps"] - c
+            if vmg_water > 0:
+                full_water = times.median_seconds(entry, {**leg, "c_parallel_mps": 0.0})
+                state["pace_ratio"] = vmg_water * full_water / state["leg_length_m"]
+            else:
+                full = times.median_seconds(entry, leg)
+                state["pace_ratio"] = state["vmg_mps"] * full / state["leg_length_m"]
     return states
 
 
@@ -295,8 +319,19 @@ def export_archive(root: Path, *, race_id=None, pre_n=100000, live_n=20000, cup_
     return report
 
 
-def _cup_from_pinned_model(root, model_ref, model, manifest_hash, *, trials, seed):
-    from .cup import cup_mapping_provenance, map_ac40_to_cup, public_cup_artifact
+def _cup_from_pinned_model(root, model_ref, model, manifest_hash, *, trials, seed,
+                           roster_policy: str = "equal",
+                           propagate_covariance: bool = False,
+                           transfer_variance_tau_sq: float = 0.0,
+                           feasible_slot_rule_bounds: bool = True):
+    from .cup import (
+        TEAM_IDS,
+        cup_mapping_provenance,
+        map_ac40_to_cup,
+        map_ac40_to_cup_with_covariance,
+        public_cup_artifact,
+        standard_scenarios,
+    )
     if content_hash(model) != model_ref or model["source_manifest_hash"] != manifest_hash:
         raise ValueError("Pinned Cup model/source hash mismatch")
     cutoff = model["training_before_day"]
@@ -306,9 +341,56 @@ def _cup_from_pinned_model(root, model_ref, model, manifest_hash, *, trials, see
                "strength_method": model["strength"]["method"],
                "source_manifest_hash": manifest_hash}
     effects = model["strength"]["effects"]
-    cup = public_cup_artifact(source_manifest_hash=manifest_hash,
-        mapped_strength=map_ac40_to_cup(effects), trials=trials, seed=seed,
-        model_lineage=lineage, mapping_provenance=cup_mapping_provenance(effects))
+
+    direct_dist = None
+    posterior_draws_by_scenario = None
+    if propagate_covariance or roster_policy != "equal":
+        cov_matrix = model["strength"].get("covariance") or model["strength"].get("covariance_matrix")
+        entries = model["strength"].get("boat_order") or model["strength"].get("entries") or sorted(effects.keys())
+        if cov_matrix is not None:
+            cov_arr = np.array(cov_matrix, dtype=float)
+            mapped_str, _, cov_syndicate = map_ac40_to_cup_with_covariance(
+                effects, cov_arr, entries, policy=roster_policy
+            )
+            cov_clean = 0.5 * (cov_syndicate + cov_syndicate.T) + 1e-9 * np.eye(7)
+            mu_vec = np.array([float(mapped_str.get(t, 0.0)) for t in TEAM_IDS], dtype=float)
+            missing_mask = np.array([t not in mapped_str for t in TEAM_IDS], dtype=bool)
+            rng_cup = np.random.default_rng(seed)
+            base_cov_draws = rng_cup.multivariate_normal(mu_vec, cov_clean, size=trials)
+            pop_draws = rng_cup.normal(0.0, 0.5, size=(trials, 7))
+            base_worlds = np.where(missing_mask[None, :], pop_draws, base_cov_draws)
+            res_noise = rng_cup.normal(0.0, 1.0, size=(trials, 7))
+            posterior_draws_by_scenario = {}
+            for sc in standard_scenarios():
+                res_sd = math.sqrt((sc.sigma_multiplier * 0.5) ** 2 + (transfer_variance_tau_sq if transfer_variance_tau_sq > 0 else 0.0))
+                posterior_draws_by_scenario[sc.scenario_id] = sc.rho * base_worlds + res_noise * res_sd
+            if transfer_variance_tau_sq > 0.0:
+                for t in mapped_str:
+                    if t in TEAM_IDS:
+                        idx = TEAM_IDS.index(t)
+                        cov_syndicate[idx, idx] += transfer_variance_tau_sq
+            direct_dist = {
+                "team_order": list(TEAM_IDS),
+                "covariance": cov_syndicate.tolist(),
+                "mean": mapped_str
+            }
+            target_strengths = mapped_str
+        else:
+            target_strengths = map_ac40_to_cup(effects)
+    else:
+        target_strengths = map_ac40_to_cup(effects)
+
+    cup = public_cup_artifact(
+        source_manifest_hash=manifest_hash,
+        mapped_strength=target_strengths,
+        trials=trials,
+        seed=seed,
+        model_lineage=lineage,
+        mapping_provenance=cup_mapping_provenance(effects, policy=roster_policy),
+        feasible_slot_rule_bounds=feasible_slot_rule_bounds,
+        direct_ac75_distribution=direct_dist,
+        posterior_draws_by_scenario=posterior_draws_by_scenario,
+    )
     cup["header"]["model_ref"] = model_ref
     cup["header"]["method_version"] = "cup-ac38-conditional-2"
     cup["build_provenance"] = {"policy": "Reuse the hashed strength model and its original source manifest; record current Cup-generation code separately.",
@@ -360,9 +442,10 @@ def publish_cup_candidate(root: Path, candidate_path: Path):
     validate_cup(cup)
     index = json.loads((directory / "index.json").read_text())
     ref = cup["header"].get("model_ref")
-    if ref not in {entry["model_ref"] for entry in index["races"]}:
+    model_file = directory / "models" / (ref + ".json")
+    if ref not in {entry["model_ref"] for entry in index["races"]} and not model_file.is_file():
         raise ValueError("Cup candidate model is not in the active forecast index")
-    model = json.loads((directory / "models" / (ref + ".json")).read_text())
+    model = json.loads(model_file.read_text())
     if (content_hash(model) != ref or model["source_manifest_hash"] != index["source_manifest_hash"]
             or cup["header"]["source_manifest_hash"] != index["source_manifest_hash"]):
         raise ValueError("Cup candidate provenance differs from active forecast publication")
@@ -382,6 +465,308 @@ def publish_cup_candidate(root: Path, candidate_path: Path):
     atomic_json(directory / "index.json", index)
     atomic_json(directory / "cup_2027.json", cup)
     return {"cup_path": index["cup_path"], "model_ref": ref, "verification": "passed"}
+
+
+def build_private_forecast_bundle(
+    root: Path,
+    *,
+    output_dir: Path | None = None,
+    prefer_official: bool = True,
+    entry_id_mode: str = "event_entry",
+    roster_policy: str = "equal",
+    condition_effects: bool = False,
+    strength_sd: float = 0.55,
+    propagate_covariance: bool = True,
+    include_transfer_uncertainty: bool = False,
+    trials: int = 5000,
+    seed: int = 2027,
+    training_before_day: str = "2026-09-26",
+    use_official_results: bool | None = None,
+    feasible_slot_rule_bounds: bool = True,
+) -> dict:
+    """Build an isolated candidate forecast bundle under .forecast/candidates/<bundle_hash>/
+
+    Never updates the public directory or public index.
+    """
+    if use_official_results is not None:
+        prefer_official = bool(use_official_results)
+        if not use_official_results:
+            propagate_covariance = False
+
+    root = Path(root)
+    predictions_dir = root / "public" / "data" / "predictions"
+    index = json.loads((predictions_dir / "index.json").read_text())
+    source_manifest_hash = index["source_manifest_hash"]
+
+    # 1. Evidence manifest
+    evidence_files = [
+        "docs/official_results_ac38_prelims.json",
+        "docs/ac37_verified_anchors.json",
+        "docs/ac37_results.json",
+        "docs/ac37_ac40_2023_results.json",
+        "docs/ac38_rules_extracted.json",
+        "docs/ac38_roster.json",
+        "docs/ac38_team_covariates.json",
+        "docs/forecast_rules_sources.json",
+        "docs/rules_tie_audit.md",
+        "docs/market_odds.json",
+        ".forecast/transfer/ac37_transfer.json",
+    ]
+    fit_config = {
+        "prefer_official": prefer_official,
+        "entry_id_mode": entry_id_mode,
+        "roster_policy": roster_policy,
+        "condition_effects": condition_effects,
+        "strength_sd": strength_sd,
+        "propagate_covariance": propagate_covariance,
+        "include_transfer_uncertainty": include_transfer_uncertainty,
+    }
+    evidence_manifest = {
+        "schema_version": "evidence-manifest-2",
+        "retrieved_at": "2026-11-08T12:00:00+00:00",
+        "files": {},
+        "fit_config": fit_config,
+    }
+    for rel in evidence_files:
+        fpath = root / rel
+        if fpath.exists():
+            evidence_manifest["files"][rel] = digest(fpath)
+    evidence_manifest_hash = content_hash(evidence_manifest)
+
+    # 2. Refit or reuse model
+    refs = {entry["model_ref"] for entry in index["races"]}
+    models = {ref: json.loads((predictions_dir / "models" / (ref + ".json")).read_text()) for ref in refs}
+    matching_ref = next((ref for ref in refs if models[ref].get("training_before_day") == training_before_day), None)
+
+    official_path = root / "docs" / "official_results_ac38_prelims.json"
+    has_official_diff = False
+    if prefer_official and official_path.exists():
+        off_doc = json.loads(official_path.read_text(encoding="utf-8"))
+        for r in off_doc.get("races", []):
+            if r.get("date", "") < training_before_day:
+                if r.get("official_order") != r.get("on_water_finish_order"):
+                    has_official_diff = True
+                    break
+
+    has_custom_config = (
+        entry_id_mode != "event_entry"
+        or roster_policy != "equal"
+        or condition_effects is True
+        or abs(strength_sd - 0.55) > 1e-6
+        or propagate_covariance is True
+        or include_transfer_uncertainty is True
+    )
+
+    if matching_ref and not has_official_diff and not has_custom_config and not prefer_official:
+        candidate_model_ref = matching_ref
+        candidate_model = dict(models[matching_ref])
+    else:
+        metadata = metadata_archive(root)
+        labels = [race_labels(meta) for meta in metadata]
+        if prefer_official:
+            attach_official_results({l["race_id"]: l for l in labels}, official_path)
+        cutoff_ms = int(datetime.fromisoformat(training_before_day).replace(tzinfo=timezone.utc).timestamp() * 1000)
+        rows = before_day(labels, training_before_day)
+        fit_rows = select_training_order_rows(
+            rows,
+            prefer_official=prefer_official,
+            cutoff_ms=cutoff_ms,
+        )
+        from .models import StrengthModel
+        strength = StrengthModel.fit(
+            fit_rows,
+            strength_sd=strength_sd,
+            practice_weight=0.5,
+            discrimination_scale=1.8,
+            condition_effects=condition_effects,
+        )
+        str_dict = strength.to_dict()
+        if "covariance" in str_dict and "covariance_matrix" not in str_dict:
+            str_dict["covariance_matrix"] = str_dict["covariance"]
+        if "boat_order" in str_dict and "entries" not in str_dict:
+            str_dict["entries"] = str_dict["boat_order"]
+
+        candidate_model = {
+            "schema_version": "prediction-model-1",
+            "training_before_day": training_before_day,
+            "source_manifest_hash": source_manifest_hash,
+            "evidence_manifest_hash": evidence_manifest_hash,
+            "strength": str_dict,
+            "selected": "joint_pl_reference",
+            "calibration": "identity; no empirical calibrated-accuracy claim",
+            "training_labels_source": "official_results" if prefer_official else "on_water",
+            "fit_config": fit_config,
+        }
+        candidate_model_ref = content_hash(candidate_model)
+
+    # 3. Build Cup candidate with optional covariance & transfer uncertainty
+    tau_sq = 0.0
+    if include_transfer_uncertainty:
+        transfer_file = root / ".forecast" / "transfer" / "ac37_transfer.json"
+        if transfer_file.exists():
+            t_doc = json.loads(transfer_file.read_text(encoding="utf-8"))
+            tau_val = float(t_doc.get("tau_mode", 0.54))
+            tau_sq = tau_val ** 2
+
+    cup = _cup_from_pinned_model(
+        root,
+        candidate_model_ref,
+        candidate_model,
+        source_manifest_hash,
+        trials=trials,
+        seed=seed,
+        roster_policy=roster_policy,
+        propagate_covariance=propagate_covariance,
+        transfer_variance_tau_sq=tau_sq,
+        feasible_slot_rule_bounds=feasible_slot_rule_bounds,
+    )
+    validate_cup(cup)
+    cup_hash = content_hash(cup)
+
+    # 4. Write into isolated bundle directory
+    bundle_content = {
+        "model_ref": candidate_model_ref,
+        "cup_hash": cup_hash,
+        "source_manifest_hash": source_manifest_hash,
+        "evidence_manifest_hash": evidence_manifest_hash,
+        "training_before_day": training_before_day,
+        "trials": trials,
+        "seed": seed,
+        "fit_config": fit_config,
+    }
+    bundle_hash = content_hash(bundle_content)
+    bundle_dir = output_dir if output_dir is not None else root / ".forecast" / "candidates" / bundle_hash
+    if bundle_dir.resolve().is_relative_to((root / "public").resolve()):
+        raise ValueError("Private bundle must stay outside public directory")
+
+    atomic_json(bundle_dir / "models" / (candidate_model_ref + ".json"), candidate_model)
+    atomic_json(bundle_dir / "manifests" / (evidence_manifest_hash + ".json"), evidence_manifest)
+    atomic_json(bundle_dir / "cup" / (cup_hash + ".json"), cup)
+    atomic_json(bundle_dir / "bundle.json", bundle_content)
+
+    # 5. Build evaluation.json
+    eval_doc = {
+        "schema_version": "candidate-evaluation-1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "candidate_model_ref": candidate_model_ref,
+        "fit_config": fit_config,
+        "market_comparison": {"status": "no_verified_market_snapshots", "snapshots_count": 0},
+    }
+    atomic_json(bundle_dir / "evaluation.json", eval_doc)
+
+    # 6. Build diff_vs_public.json
+    diff_doc: dict[str, Any] = {
+        "schema_version": "candidate-diff-vs-public-1",
+        "candidate_cup_hash": cup_hash,
+        "public_cup_path": index.get("cup_path"),
+        "team_diffs": {},
+    }
+    public_cup_file = predictions_dir / index.get("cup_path", "cup_2027.json")
+    if not public_cup_file.is_file():
+        public_cup_file = predictions_dir / "cup_2027.json"
+    if public_cup_file.is_file():
+        try:
+            pub_cup = json.loads(public_cup_file.read_text(encoding="utf-8"))
+            pub_bounds = pub_cup.get("rule_bounds_by_team", {})
+            pub_envelope = pub_cup.get("scenario_envelope_by_team", {})
+            cand_bounds = cup.get("rule_bounds_by_team", {})
+            cand_envelope = cup.get("scenario_envelope_by_team", {})
+            from .cup import TEAM_IDS
+            for t in TEAM_IDS:
+                pb = pub_bounds.get(t, {"lower": 0.0, "upper": 1.0})
+                cb = cand_bounds.get(t, {"lower": 0.0, "upper": 1.0})
+                pe = pub_envelope.get(t, {"lower": 0.0, "upper": 1.0})
+                ce = cand_envelope.get(t, {"lower": 0.0, "upper": 1.0})
+                diff_doc["team_diffs"][t] = {
+                    "rule_bounds": {
+                        "candidate": cb,
+                        "public": pb,
+                        "delta_lower": round(cb["lower"] - pb["lower"], 4),
+                        "delta_upper": round(cb["upper"] - pb["upper"], 4),
+                        "delta_width": round((cb["upper"] - cb["lower"]) - (pb["upper"] - pb["lower"]), 4),
+                    },
+                    "scenario_envelope": {
+                        "candidate": ce,
+                        "public": pe,
+                        "delta_lower": round(ce["lower"] - pe["lower"], 4),
+                        "delta_upper": round(ce["upper"] - pe["upper"], 4),
+                        "delta_width": round((ce["upper"] - ce["lower"]) - (pe["upper"] - pe["lower"]), 4),
+                    }
+                }
+        except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+            diff_doc["diff_error"] = str(exc)
+    atomic_json(bundle_dir / "diff_vs_public.json", diff_doc)
+
+    return {
+        "bundle_dir": str(bundle_dir),
+        "bundle_hash": bundle_hash,
+        "candidate_model_ref": candidate_model_ref,
+        "cup_hash": cup_hash,
+        "evidence_manifest_hash": evidence_manifest_hash,
+        "source_manifest_hash": source_manifest_hash,
+        "status": cup["status"],
+        "evaluation_path": str(bundle_dir / "evaluation.json"),
+        "diff_vs_public_path": str(bundle_dir / "diff_vs_public.json"),
+    }
+
+
+def publish_forecast_bundle(root: Path, bundle_dir: Path) -> dict:
+    """Promote a reviewed private bundle to public/data/predictions/."""
+    root = Path(root)
+    bundle_dir = Path(bundle_dir)
+    bundle_file = bundle_dir / "bundle.json"
+    if not bundle_file.exists():
+        raise ValueError(f"No bundle.json found in {bundle_dir}")
+    bundle = json.loads(bundle_file.read_text(encoding="utf-8"))
+
+    model_ref = bundle["model_ref"]
+    cup_hash = bundle["cup_hash"]
+    evidence_manifest_hash = bundle.get("evidence_manifest_hash")
+
+    model_path = bundle_dir / "models" / (model_ref + ".json")
+    cup_path = bundle_dir / "cup" / (cup_hash + ".json")
+    if not model_path.exists() or not cup_path.exists():
+        raise ValueError("Missing bundle artifact files")
+
+    model = json.loads(model_path.read_text(encoding="utf-8"))
+    cup = json.loads(cup_path.read_text(encoding="utf-8"))
+    validate_cup(cup)
+
+    public_dir = root / "public" / "data" / "predictions"
+    index = json.loads((public_dir / "index.json").read_text(encoding="utf-8"))
+
+    # Copy model
+    atomic_json(public_dir / "models" / (model_ref + ".json"), model)
+
+    # Copy evidence manifest if present
+    if evidence_manifest_hash:
+        ev_path = bundle_dir / "manifests" / (evidence_manifest_hash + ".json")
+        if ev_path.exists():
+            ev_doc = json.loads(ev_path.read_text(encoding="utf-8"))
+            atomic_json(public_dir / "manifests" / (evidence_manifest_hash + ".json"), ev_doc)
+            index["evidence_manifest_hash"] = evidence_manifest_hash
+            index["evidence_manifest_path"] = "manifests/" + evidence_manifest_hash + ".json"
+
+    # Copy Cup
+    index["cup_path"] = "cup/" + cup_hash + ".json"
+    atomic_json(public_dir / index["cup_path"], cup)
+
+    # Verify and publish index atomically
+    verify_public(root, index=index)
+    atomic_json(public_dir / "index.json", index)
+    atomic_json(public_dir / "cup_2027.json", cup)
+
+    if (root / "public" / "data" / "manifests.json").is_file():
+        from scripts.build_artifact_inventory import build_inventory
+        build_inventory(root)
+
+    return {
+        "bundle_dir": str(bundle_dir),
+        "model_ref": model_ref,
+        "cup_path": index["cup_path"],
+        "evidence_manifest_hash": evidence_manifest_hash,
+        "verification": "passed"
+    }
 
 
 def export_pre_race_scenario(root: Path, race_id: str, *, tws_kt: float, direction_offset_deg: float, n=100000):

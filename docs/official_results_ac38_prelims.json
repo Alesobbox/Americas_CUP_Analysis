@@ -1,0 +1,1710 @@
+{
+  "schema": "official-results-2",
+  "schema_version": "official-results-2",
+  "description": "Transcribed published official results for competitive AC38 preliminary regatta races. Verified races cite official published classifications; partial races are explicitly flagged as unverified without synthetic filling.",
+  "retrieved_at": "2026-11-08T12:00:00+00:00",
+  "total_competitive_races": 18,
+  "races": [
+    {
+      "race_id": "26_05_22_cag_ipr_race_1",
+      "date": "2026-05-22",
+      "event_id": "cagliari_2026",
+      "event": "CAG_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-05-22T14:30:00Z",
+      "available_at_ms": 1779457144703,
+      "correction_available_at_ms": null,
+      "source": "https://www.lunarossachallenge.com/en/news/1285_PRELIMINARY-REGATTA-CAGLIARI-DAY-1",
+      "source_url": "https://www.lunarossachallenge.com/en/news/1285_PRELIMINARY-REGATTA-CAGLIARI-DAY-1",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI"
+      ],
+      "scheduled_entries": [
+        "GBR G",
+        "GBR B",
+        "NZL B",
+        "ITA G",
+        "ITA B",
+        "SUI",
+        "NZL G",
+        "FRA"
+      ],
+      "dns_entries": [
+        "ITA B",
+        "GBR B"
+      ],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [
+        "ITA B"
+      ],
+      "on_water_finish_order": [
+        "ITA G",
+        "FRA",
+        "SUI",
+        "NZL B",
+        "NZL G",
+        "GBR G",
+        "ITA B"
+      ],
+      "official_order": [
+        "ITA G",
+        "FRA",
+        "SUI",
+        "NZL B",
+        "NZL G",
+        "GBR G"
+      ],
+      "published_partial_order": [
+        "ITA G",
+        "FRA",
+        "SUI",
+        "NZL B",
+        "NZL G",
+        "GBR G"
+      ],
+      "nonfinishers": [
+        {
+          "entry_id": "ITA B",
+          "classification": "DNS",
+          "points_awarded": 0
+        },
+        {
+          "entry_id": "GBR B",
+          "classification": "DNS",
+          "points_awarded": 0
+        }
+      ],
+      "verified": false,
+      "protest_modified_from_on_water": true,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "ITA B crossed 7th on water but was scored 0 pts (DNS/OCS/DSQ per penalty telemetry and official report). GBR B DNS.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sailweb.co.uk/2026/05/22/ac38-preliminary-regatta-luna-rossa-teams-dominate-first-day-in-cagliari/",
+          "captured_path": ".forecast/evidence_sources/sailweb_cag_day1.html",
+          "captured_bytes": 65316,
+          "source_sha256": "98e114268d0f8425d8f8821090c240d46477d676d2cba1d7bd784a43fc1ef475",
+          "result_scope": "partial_podium_and_incidents",
+          "available_at_utc": "2026-05-22T19:00:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_05_22_cag_ipr_race_1)",
+          "captured_path": ".forecast/dataset/26_05_22_cag_ipr_race_1.json",
+          "captured_bytes": 991652,
+          "source_sha256": "268d68aea043bd40bdf552298a9a2c3e1bd0b2849fa21bd19cc28a5d11232a56",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-05-22T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_05_22_cag_ipr_race_2",
+      "date": "2026-05-22",
+      "event_id": "cagliari_2026",
+      "event": "CAG_IPR",
+      "status": "partial_unverified",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-05-22T15:45:00Z",
+      "available_at_ms": 1779459659594,
+      "correction_available_at_ms": null,
+      "source": "https://www.lunarossachallenge.com/en/news/1285_PRELIMINARY-REGATTA-CAGLIARI-DAY-1",
+      "source_url": "https://www.lunarossachallenge.com/en/news/1285_PRELIMINARY-REGATTA-CAGLIARI-DAY-1",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI"
+      ],
+      "scheduled_entries": [
+        "GBR G",
+        "GBR B",
+        "NZL B",
+        "ITA G",
+        "ITA B",
+        "SUI",
+        "NZL G",
+        "FRA"
+      ],
+      "dns_entries": [
+        "GBR B",
+        "GBR G"
+      ],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "NZL B",
+        "ITA G",
+        "ITA B",
+        "NZL G",
+        "SUI",
+        "FRA"
+      ],
+      "official_order": null,
+      "published_partial_order": [
+        "NZL B",
+        "ITA B",
+        "ITA G"
+      ],
+      "nonfinishers": [
+        {
+          "entry_id": "GBR B",
+          "classification": "DNS",
+          "points_awarded": 0
+        },
+        {
+          "entry_id": "GBR G",
+          "classification": "DNS",
+          "points_awarded": 0
+        }
+      ],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Published report confirms podium (NZL B, ITA B, ITA G); full 8-boat table not published in press summary.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sailweb.co.uk/2026/05/22/ac38-preliminary-regatta-luna-rossa-teams-dominate-first-day-in-cagliari/",
+          "captured_path": ".forecast/evidence_sources/sailweb_cag_day1.html",
+          "captured_bytes": 65316,
+          "source_sha256": "98e114268d0f8425d8f8821090c240d46477d676d2cba1d7bd784a43fc1ef475",
+          "result_scope": "partial_podium_and_incidents",
+          "available_at_utc": "2026-05-22T19:00:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_05_22_cag_ipr_race_2)",
+          "captured_path": ".forecast/dataset/26_05_22_cag_ipr_race_2.json",
+          "captured_bytes": 861770,
+          "source_sha256": "f559d1fece5ac1831fcb172a0d07a0e72c42c71f15bad71e442ea5eb5a7ba72a",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-05-22T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_05_22_cag_ipr_race_3",
+      "date": "2026-05-22",
+      "event_id": "cagliari_2026",
+      "event": "CAG_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-05-22T17:00:00Z",
+      "available_at_ms": 1779461887647,
+      "correction_available_at_ms": null,
+      "source": "https://www.lunarossachallenge.com/en/news/1285_PRELIMINARY-REGATTA-CAGLIARI-DAY-1",
+      "source_url": "https://www.lunarossachallenge.com/en/news/1285_PRELIMINARY-REGATTA-CAGLIARI-DAY-1",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI"
+      ],
+      "scheduled_entries": [
+        "GBR G",
+        "GBR B",
+        "NZL B",
+        "ITA G",
+        "ITA B",
+        "SUI",
+        "NZL G",
+        "FRA"
+      ],
+      "dns_entries": [],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "ITA G",
+        "GBR B",
+        "ITA B",
+        "NZL G",
+        "SUI",
+        "FRA",
+        "GBR G",
+        "NZL B"
+      ],
+      "official_order": [
+        "ITA G",
+        "GBR B",
+        "ITA B",
+        "NZL G",
+        "SUI",
+        "FRA",
+        "GBR G",
+        "NZL B"
+      ],
+      "published_partial_order": [
+        "ITA G",
+        "GBR B",
+        "ITA B",
+        "NZL G",
+        "SUI",
+        "FRA",
+        "GBR G",
+        "NZL B"
+      ],
+      "nonfinishers": [],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Full 8-boat finish order confirmed in Day 1 official summary.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sailweb.co.uk/2026/05/22/ac38-preliminary-regatta-luna-rossa-teams-dominate-first-day-in-cagliari/",
+          "captured_path": ".forecast/evidence_sources/sailweb_cag_day1.html",
+          "captured_bytes": 65316,
+          "source_sha256": "98e114268d0f8425d8f8821090c240d46477d676d2cba1d7bd784a43fc1ef475",
+          "result_scope": "partial_podium_and_incidents",
+          "available_at_utc": "2026-05-22T19:00:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_05_22_cag_ipr_race_3)",
+          "captured_path": ".forecast/dataset/26_05_22_cag_ipr_race_3.json",
+          "captured_bytes": 959766,
+          "source_sha256": "ee0e343151e3229f7926420bee175d0cf9c92a2b6638e3ed647d1da9da172904",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-05-22T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_05_23_cag_ipr_race_4",
+      "date": "2026-05-23",
+      "event_id": "cagliari_2026",
+      "event": "CAG_IPR",
+      "status": "partial_unverified",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-05-23T14:45:00Z",
+      "available_at_ms": 1779543151916,
+      "correction_available_at_ms": null,
+      "source": "https://www.lunarossachallenge.com/en/news/1287_PRELIMINARY-REGATTA-CAGLIARI-DAY-2",
+      "source_url": "https://www.lunarossachallenge.com/en/news/1287_PRELIMINARY-REGATTA-CAGLIARI-DAY-2",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI"
+      ],
+      "scheduled_entries": [
+        "GBR G",
+        "NZL B",
+        "ITA G",
+        "ITA B",
+        "SUI",
+        "NZL G",
+        "FRA"
+      ],
+      "dns_entries": [
+        "GBR B"
+      ],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "NZL B",
+        "ITA B",
+        "NZL G",
+        "ITA G",
+        "FRA",
+        "GBR G",
+        "SUI"
+      ],
+      "official_order": null,
+      "published_partial_order": [
+        "NZL B",
+        "ITA B",
+        "FRA",
+        "ITA G"
+      ],
+      "nonfinishers": [
+        {
+          "entry_id": "GBR B",
+          "classification": "DNS",
+          "points_awarded": 0
+        }
+      ],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Published summary reports top finishers and GBR B DNS; full table not published.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.lunarossachallenge.com/en/news/1287_PRELIMINARY-REGATTA-CAGLIARI-DAY-2",
+          "captured_path": null,
+          "captured_bytes": 0,
+          "source_sha256": null,
+          "result_scope": "none_spa_or_generic_url",
+          "available_at_utc": null,
+          "review_status": "unanchored_full_order"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_05_23_cag_ipr_race_4)",
+          "captured_path": ".forecast/dataset/26_05_23_cag_ipr_race_4.json",
+          "captured_bytes": 877561,
+          "source_sha256": "9f22e89a2148da111c02771a18946cfe513b1343d8963c6b81e557928fa216f7",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-05-23T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_05_23_cag_ipr_race_5",
+      "date": "2026-05-23",
+      "event_id": "cagliari_2026",
+      "event": "CAG_IPR",
+      "status": "partial_unverified",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-05-23T16:00:00Z",
+      "available_at_ms": 1779545284094,
+      "correction_available_at_ms": null,
+      "source": "https://www.lunarossachallenge.com/en/news/1287_PRELIMINARY-REGATTA-CAGLIARI-DAY-2",
+      "source_url": "https://www.lunarossachallenge.com/en/news/1287_PRELIMINARY-REGATTA-CAGLIARI-DAY-2",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI"
+      ],
+      "scheduled_entries": [
+        "GBR G",
+        "NZL B",
+        "ITA G",
+        "ITA B",
+        "SUI",
+        "NZL G",
+        "FRA"
+      ],
+      "dns_entries": [
+        "GBR B"
+      ],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "GBR G",
+        "ITA G",
+        "FRA",
+        "NZL B",
+        "ITA B",
+        "NZL G"
+      ],
+      "official_order": null,
+      "published_partial_order": [
+        "GBR G",
+        "ITA G",
+        "FRA"
+      ],
+      "nonfinishers": [
+        {
+          "entry_id": "GBR B",
+          "classification": "DNS",
+          "points_awarded": 0
+        }
+      ],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Published summary confirms GBR G win and ITA G 2nd; full 8-boat table unverified.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.lunarossachallenge.com/en/news/1287_PRELIMINARY-REGATTA-CAGLIARI-DAY-2",
+          "captured_path": null,
+          "captured_bytes": 0,
+          "source_sha256": null,
+          "result_scope": "none_spa_or_generic_url",
+          "available_at_utc": null,
+          "review_status": "unanchored_full_order"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_05_23_cag_ipr_race_5)",
+          "captured_path": ".forecast/dataset/26_05_23_cag_ipr_race_5.json",
+          "captured_bytes": 1081948,
+          "source_sha256": "8ca1fce8509fd650bca645f5abe08c458ce93c239854ca5c817a0f6840205eac",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-05-23T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_05_23_cag_ipr_race_6",
+      "date": "2026-05-23",
+      "event_id": "cagliari_2026",
+      "event": "CAG_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-05-23T17:15:00Z",
+      "available_at_ms": 1779547880020,
+      "correction_available_at_ms": null,
+      "source": "https://www.lunarossachallenge.com/en/news/1287_PRELIMINARY-REGATTA-CAGLIARI-DAY-2",
+      "source_url": "https://www.lunarossachallenge.com/en/news/1287_PRELIMINARY-REGATTA-CAGLIARI-DAY-2",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI"
+      ],
+      "scheduled_entries": [
+        "GBR G",
+        "NZL B",
+        "ITA G",
+        "ITA B",
+        "SUI",
+        "NZL G",
+        "FRA"
+      ],
+      "dns_entries": [
+        "GBR B"
+      ],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "ITA G",
+        "NZL B",
+        "ITA B",
+        "FRA",
+        "NZL G",
+        "GBR G",
+        "SUI"
+      ],
+      "official_order": [
+        "ITA G",
+        "NZL B",
+        "ITA B",
+        "FRA",
+        "NZL G",
+        "GBR G",
+        "SUI"
+      ],
+      "published_partial_order": [
+        "ITA G",
+        "NZL B",
+        "ITA B",
+        "FRA",
+        "NZL G",
+        "GBR G",
+        "SUI"
+      ],
+      "nonfinishers": [
+        {
+          "entry_id": "GBR B",
+          "classification": "DNS",
+          "points_awarded": 0
+        }
+      ],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Full finish order published for Day 2 Race 6.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.lunarossachallenge.com/en/news/1287_PRELIMINARY-REGATTA-CAGLIARI-DAY-2",
+          "captured_path": null,
+          "captured_bytes": 0,
+          "source_sha256": null,
+          "result_scope": "none_spa_or_generic_url",
+          "available_at_utc": null,
+          "review_status": "unanchored_full_order"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_05_23_cag_ipr_race_6)",
+          "captured_path": ".forecast/dataset/26_05_23_cag_ipr_race_6.json",
+          "captured_bytes": 911088,
+          "source_sha256": "2e853820f5f7ccc85615a7dd37ca2bc887c37503cbf3a42c1f87993a19362b15",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-05-23T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_05_24_cag_ipr_mr_final",
+      "date": "2026-05-24",
+      "event_id": "cagliari_2026",
+      "event": "CAG_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-05-24T16:30:00Z",
+      "available_at_ms": 1779634042328,
+      "correction_available_at_ms": null,
+      "source": "https://www.americascup.com/results",
+      "source_url": "https://www.sailweb.co.uk/2026/05/24/americas-cup-preliminary-regatta-luna-rossa-2-take-overall-victory-in-cagliari/",
+      "source_sha256": "5b4762b8b0ac4e901010714b2007d9a345763735907dfdf31e9c5ac68b686854",
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "ITA B",
+        "NZL B"
+      ],
+      "scheduled_entries": [
+        "ITA B",
+        "NZL B"
+      ],
+      "dns_entries": [],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "ITA B",
+        "NZL B"
+      ],
+      "official_order": [
+        "ITA B",
+        "NZL B"
+      ],
+      "published_partial_order": [
+        "ITA B",
+        "NZL B"
+      ],
+      "nonfinishers": [],
+      "verified": true,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Match race final between top 2 regatta qualifiers; Luna Rossa defeated ETNZ.",
+      "evidence": {
+        "primary_review_status": "independently_anchored",
+        "independent_anchor": {
+          "supporting_source": "https://www.sailweb.co.uk/2026/05/24/americas-cup-preliminary-regatta-luna-rossa-2-take-overall-victory-in-cagliari/",
+          "captured_path": ".forecast/evidence_sources/sailweb_cag_day3.html",
+          "captured_bytes": 67612,
+          "source_sha256": "5b4762b8b0ac4e901010714b2007d9a345763735907dfdf31e9c5ac68b686854",
+          "result_scope": "match_final_winner",
+          "available_at_utc": "2026-05-24T19:00:00Z",
+          "review_status": "independently_anchored"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_05_24_cag_ipr_mr_final)",
+          "captured_path": ".forecast/dataset/26_05_24_cag_ipr_mr_final.json",
+          "captured_bytes": 372842,
+          "source_sha256": "8738dc30d6e1602ab76d00c77afa2332f59f864664b9e457ad694216833835e3",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-05-24T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_05_24_cag_ipr_race_7",
+      "date": "2026-05-24",
+      "event_id": "cagliari_2026",
+      "event": "CAG_IPR",
+      "status": "partial_unverified",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-05-24T14:30:00Z",
+      "available_at_ms": 1779629427638,
+      "correction_available_at_ms": null,
+      "source": "https://www.lunarossachallenge.com/en/news/1288_PRELIMINARY-REGATTA-CAGLIARI-DAY-3",
+      "source_url": "https://www.lunarossachallenge.com/en/news/1288_PRELIMINARY-REGATTA-CAGLIARI-DAY-3",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI"
+      ],
+      "scheduled_entries": [
+        "GBR G",
+        "GBR B",
+        "NZL B",
+        "ITA G",
+        "ITA B",
+        "SUI",
+        "NZL G",
+        "FRA"
+      ],
+      "dns_entries": [
+        "GBR B"
+      ],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [
+        "ITA G"
+      ],
+      "on_water_finish_order": [
+        "GBR B",
+        "ITA B",
+        "FRA",
+        "NZL B",
+        "NZL G",
+        "GBR G",
+        "SUI"
+      ],
+      "official_order": null,
+      "published_partial_order": [
+        "GBR B",
+        "ITA B",
+        "FRA"
+      ],
+      "nonfinishers": [
+        {
+          "entry_id": "GBR B",
+          "classification": "DNS",
+          "points_awarded": 0
+        },
+        {
+          "entry_id": "ITA G",
+          "classification": "DSQ",
+          "points_awarded": 0
+        }
+      ],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Published report notes ITA G suffered OCS penalty; full order unverified.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sailweb.co.uk/2026/05/24/americas-cup-preliminary-regatta-luna-rossa-2-take-overall-victory-in-cagliari/",
+          "captured_path": ".forecast/evidence_sources/sailweb_cag_day3.html",
+          "captured_bytes": 67612,
+          "source_sha256": "5b4762b8b0ac4e901010714b2007d9a345763735907dfdf31e9c5ac68b686854",
+          "result_scope": "partial_positions_and_standings",
+          "available_at_utc": "2026-05-24T19:00:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_05_24_cag_ipr_race_7)",
+          "captured_path": ".forecast/dataset/26_05_24_cag_ipr_race_7.json",
+          "captured_bytes": 852373,
+          "source_sha256": "6503f850687fd6f9740fbaa48fb01d9e7df2dc510210d7d79cdee3b469398b18",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-05-24T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_05_24_cag_ipr_race_8",
+      "date": "2026-05-24",
+      "event_id": "cagliari_2026",
+      "event": "CAG_IPR",
+      "status": "partial_unverified",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-05-24T15:45:00Z",
+      "available_at_ms": 1779631683114,
+      "correction_available_at_ms": null,
+      "source": "https://www.lunarossachallenge.com/en/news/1288_PRELIMINARY-REGATTA-CAGLIARI-DAY-3",
+      "source_url": "https://www.lunarossachallenge.com/en/news/1288_PRELIMINARY-REGATTA-CAGLIARI-DAY-3",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI"
+      ],
+      "scheduled_entries": [
+        "GBR G",
+        "GBR B",
+        "NZL B",
+        "ITA G",
+        "ITA B",
+        "SUI",
+        "NZL G",
+        "FRA"
+      ],
+      "dns_entries": [],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "ITA B",
+        "FRA",
+        "GBR B",
+        "SUI",
+        "NZL B",
+        "NZL G",
+        "ITA G",
+        "GBR G"
+      ],
+      "official_order": null,
+      "published_partial_order": [
+        "ITA B",
+        "FRA",
+        "GBR B"
+      ],
+      "nonfinishers": [],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Published report details final podium and regatta point totals (ITA G 63, FRA 60, NZL B 59, ITA B 55, SUI 50, NZL G 40, GBR G 38, GBR B 27).",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sailweb.co.uk/2026/05/24/americas-cup-preliminary-regatta-luna-rossa-2-take-overall-victory-in-cagliari/",
+          "captured_path": ".forecast/evidence_sources/sailweb_cag_day3.html",
+          "captured_bytes": 67612,
+          "source_sha256": "5b4762b8b0ac4e901010714b2007d9a345763735907dfdf31e9c5ac68b686854",
+          "result_scope": "partial_positions_and_standings",
+          "available_at_utc": "2026-05-24T19:00:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_05_24_cag_ipr_race_8)",
+          "captured_path": ".forecast/dataset/26_05_24_cag_ipr_race_8.json",
+          "captured_bytes": 967341,
+          "source_sha256": "f91f262fc22fcb762ec33b61d5e3b6ae0e6233f093bf1c21aab1a6c64f49d7b0",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-05-24T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_09_25_nap_ipr_race_1-3",
+      "date": "2026-09-25",
+      "event_id": "naples_2026",
+      "event": "NAP_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-09-25T14:15:00Z",
+      "available_at_ms": 1790348342753,
+      "correction_available_at_ms": null,
+      "source": "https://www.americascup.com/results",
+      "source_url": "https://www.americascup.com/results",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI",
+        "USA"
+      ],
+      "scheduled_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL G",
+        "NZL B",
+        "SUI",
+        "USA"
+      ],
+      "dns_entries": [],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "USA",
+        "ITA B",
+        "GBR G",
+        "ITA G",
+        "NZL B",
+        "FRA",
+        "NZL G",
+        "GBR B",
+        "SUI"
+      ],
+      "official_order": [
+        "USA",
+        "ITA B",
+        "GBR G",
+        "ITA G",
+        "NZL B",
+        "FRA",
+        "NZL G",
+        "GBR B",
+        "SUI"
+      ],
+      "published_partial_order": [
+        "USA",
+        "ITA B",
+        "GBR G",
+        "ITA G",
+        "NZL B",
+        "FRA",
+        "NZL G",
+        "GBR B",
+        "SUI"
+      ],
+      "nonfinishers": [],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Naples Race 1 official result verified from published results matrix.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sail-world.com/news/300183/Americas-Cup-Preliminary-Regatta-2-Day-1",
+          "captured_path": ".forecast/evidence_sources/sailworld_naples_day1.html",
+          "captured_bytes": 99047,
+          "source_sha256": "dfd74a16f9c532010865afcf7ef36cc335d00fe55a07463858f89857e520454c",
+          "result_scope": "partial_podium",
+          "available_at_utc": "2026-09-25T19:00:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_09_25_nap_ipr_race_1-3)",
+          "captured_path": ".forecast/dataset/26_09_25_nap_ipr_race_1-3.json",
+          "captured_bytes": 938124,
+          "source_sha256": "b919b2a9986983ae8d55db0b8b5b0bd4dfca49190a726a45023089a4dcbcb379",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-09-25T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_09_25_nap_ipr_race_2",
+      "date": "2026-09-25",
+      "event_id": "naples_2026",
+      "event": "NAP_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-09-25T15:30:00Z",
+      "available_at_ms": 1790350447133,
+      "correction_available_at_ms": null,
+      "source": "https://www.americascup.com/results",
+      "source_url": "https://www.americascup.com/results",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI",
+        "USA"
+      ],
+      "scheduled_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL G",
+        "NZL B",
+        "SUI",
+        "USA"
+      ],
+      "dns_entries": [],
+      "dnf_entries": [
+        "FRA"
+      ],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "ITA B",
+        "SUI",
+        "NZL B",
+        "NZL G",
+        "ITA G",
+        "GBR G",
+        "USA",
+        "GBR B"
+      ],
+      "official_order": [
+        "ITA B",
+        "SUI",
+        "NZL B",
+        "NZL G",
+        "ITA G",
+        "GBR G",
+        "USA",
+        "GBR B"
+      ],
+      "published_partial_order": [
+        "ITA B",
+        "SUI",
+        "NZL B",
+        "NZL G",
+        "ITA G",
+        "GBR G",
+        "USA",
+        "GBR B"
+      ],
+      "nonfinishers": [
+        {
+          "entry_id": "FRA",
+          "classification": "DNF",
+          "points_awarded": 0
+        }
+      ],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "FRA officially RET / DNF (0 pts), not DNS.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sail-world.com/news/300183/Americas-Cup-Preliminary-Regatta-2-Day-1",
+          "captured_path": ".forecast/evidence_sources/sailworld_naples_day1.html",
+          "captured_bytes": 99047,
+          "source_sha256": "dfd74a16f9c532010865afcf7ef36cc335d00fe55a07463858f89857e520454c",
+          "result_scope": "partial_podium",
+          "available_at_utc": "2026-09-25T19:00:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_09_25_nap_ipr_race_2)",
+          "captured_path": ".forecast/dataset/26_09_25_nap_ipr_race_2.json",
+          "captured_bytes": 780493,
+          "source_sha256": "ba88be1547a933bf891aa060ec155d9dbbd5e3a75f2ec52a39ac33ea30b06ffd",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-09-25T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_09_25_nap_ipr_race_3",
+      "date": "2026-09-26",
+      "event_id": "naples_2026",
+      "event": "NAP_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-09-25T16:45:00Z",
+      "available_at_ms": 1790425831865,
+      "correction_available_at_ms": null,
+      "source": "https://www.americascup.com/results",
+      "source_url": "https://www.americascup.com/results",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI",
+        "USA"
+      ],
+      "scheduled_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL G",
+        "NZL B",
+        "SUI",
+        "USA"
+      ],
+      "dns_entries": [],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "ITA B",
+        "SUI",
+        "GBR B",
+        "ITA G",
+        "USA",
+        "FRA",
+        "GBR G",
+        "NZL B",
+        "NZL G"
+      ],
+      "official_order": [
+        "ITA B",
+        "SUI",
+        "GBR B",
+        "ITA G",
+        "USA",
+        "FRA",
+        "GBR G",
+        "NZL B",
+        "NZL G"
+      ],
+      "published_partial_order": [
+        "ITA B",
+        "SUI",
+        "GBR B",
+        "ITA G",
+        "USA",
+        "FRA",
+        "GBR G",
+        "NZL B",
+        "NZL G"
+      ],
+      "nonfinishers": [],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Naples Race 3 official result verified.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sail-world.com/news/300205/Luna-Rossa-at-Preliminary-Regatta-Naples-Day-2",
+          "captured_path": ".forecast/evidence_sources/sailworld_naples_day2.html",
+          "captured_bytes": 90190,
+          "source_sha256": "3cf197ad838fc02d2142bd3a0eaf249d65ac9b979b84e9f3ed14c1abfcc26c08",
+          "result_scope": "partial_podium",
+          "available_at_utc": "2026-09-26T19:00:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_09_25_nap_ipr_race_3)",
+          "captured_path": ".forecast/dataset/26_09_25_nap_ipr_race_3.json",
+          "captured_bytes": 1097804,
+          "source_sha256": "8612a992826e05a3f514a3dc8f5ddee9711aad34694e22ecc5f9341ec1d3b884",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-09-26T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_09_26_nap_ipr_race_4",
+      "date": "2026-09-26",
+      "event_id": "naples_2026",
+      "event": "NAP_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-09-26T14:15:00Z",
+      "available_at_ms": 1790428067268,
+      "correction_available_at_ms": null,
+      "source": "https://www.americascup.com/results",
+      "source_url": "https://www.americascup.com/results",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI",
+        "USA"
+      ],
+      "scheduled_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL G",
+        "NZL B",
+        "SUI",
+        "USA"
+      ],
+      "dns_entries": [],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "FRA",
+        "NZL B",
+        "SUI",
+        "NZL G",
+        "ITA G",
+        "ITA B",
+        "USA",
+        "GBR G",
+        "GBR B"
+      ],
+      "official_order": [
+        "FRA",
+        "NZL B",
+        "SUI",
+        "NZL G",
+        "ITA G",
+        "ITA B",
+        "USA",
+        "GBR G",
+        "GBR B"
+      ],
+      "published_partial_order": [
+        "FRA",
+        "NZL B",
+        "SUI",
+        "NZL G",
+        "ITA G",
+        "ITA B",
+        "USA",
+        "GBR G",
+        "GBR B"
+      ],
+      "nonfinishers": [],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Naples Race 4 official result verified.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sail-world.com/news/300205/Luna-Rossa-at-Preliminary-Regatta-Naples-Day-2",
+          "captured_path": ".forecast/evidence_sources/sailworld_naples_day2.html",
+          "captured_bytes": 90190,
+          "source_sha256": "3cf197ad838fc02d2142bd3a0eaf249d65ac9b979b84e9f3ed14c1abfcc26c08",
+          "result_scope": "partial_podium",
+          "available_at_utc": "2026-09-26T19:00:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_09_26_nap_ipr_race_4)",
+          "captured_path": ".forecast/dataset/26_09_26_nap_ipr_race_4.json",
+          "captured_bytes": 1240048,
+          "source_sha256": "a8143d7daef52365b2415a14ca5ceda5b7909275d23de2ee8d5ef43a0a6dceb0",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-09-26T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_09_26_nap_ipr_race_5",
+      "date": "2026-09-26",
+      "event_id": "naples_2026",
+      "event": "NAP_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-09-26T15:30:00Z",
+      "available_at_ms": 1790430454395,
+      "correction_available_at_ms": null,
+      "source": "https://www.americascup.com/results",
+      "source_url": "https://www.americascup.com/results",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI",
+        "USA"
+      ],
+      "scheduled_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL G",
+        "NZL B",
+        "SUI",
+        "USA"
+      ],
+      "dns_entries": [
+        "FRA"
+      ],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "NZL G",
+        "ITA B",
+        "NZL B",
+        "USA",
+        "SUI",
+        "GBR B",
+        "GBR G",
+        "ITA G"
+      ],
+      "official_order": [
+        "NZL G",
+        "ITA B",
+        "NZL B",
+        "USA",
+        "SUI",
+        "GBR B",
+        "GBR G",
+        "ITA G"
+      ],
+      "published_partial_order": [
+        "NZL G",
+        "ITA B",
+        "NZL B",
+        "USA",
+        "SUI",
+        "GBR B",
+        "GBR G",
+        "ITA G"
+      ],
+      "nonfinishers": [
+        {
+          "entry_id": "FRA",
+          "classification": "DNS",
+          "points_awarded": 0
+        }
+      ],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "FRA DNS due to equipment issues prior to start.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sail-world.com/news/300205/Luna-Rossa-at-Preliminary-Regatta-Naples-Day-2",
+          "captured_path": ".forecast/evidence_sources/sailworld_naples_day2.html",
+          "captured_bytes": 90190,
+          "source_sha256": "3cf197ad838fc02d2142bd3a0eaf249d65ac9b979b84e9f3ed14c1abfcc26c08",
+          "result_scope": "partial_podium",
+          "available_at_utc": "2026-09-26T19:00:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_09_26_nap_ipr_race_5)",
+          "captured_path": ".forecast/dataset/26_09_26_nap_ipr_race_5.json",
+          "captured_bytes": 1156699,
+          "source_sha256": "d28edb4f9d47f2098fb1664fe1ebd4d12b7f9d5fbd2544348fcd4b01a52a7ae1",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-09-26T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_09_26_nap_ipr_race_6",
+      "date": "2026-09-26",
+      "event_id": "naples_2026",
+      "event": "NAP_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-09-26T16:45:00Z",
+      "available_at_ms": 1790432723540,
+      "correction_available_at_ms": null,
+      "source": "https://www.americascup.com/results",
+      "source_url": "https://www.americascup.com/results",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI",
+        "USA"
+      ],
+      "scheduled_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL G",
+        "NZL B",
+        "SUI",
+        "USA"
+      ],
+      "dns_entries": [],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "FRA",
+        "NZL B",
+        "ITA B",
+        "GBR B",
+        "ITA G",
+        "GBR G",
+        "SUI",
+        "USA",
+        "NZL G"
+      ],
+      "official_order": [
+        "FRA",
+        "NZL B",
+        "ITA B",
+        "GBR B",
+        "ITA G",
+        "GBR G",
+        "SUI",
+        "USA",
+        "NZL G"
+      ],
+      "published_partial_order": [
+        "FRA",
+        "NZL B",
+        "ITA B",
+        "GBR B",
+        "ITA G",
+        "GBR G",
+        "SUI",
+        "USA",
+        "NZL G"
+      ],
+      "nonfinishers": [],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Naples Race 6 official result verified.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sail-world.com/news/300205/Luna-Rossa-at-Preliminary-Regatta-Naples-Day-2",
+          "captured_path": ".forecast/evidence_sources/sailworld_naples_day2.html",
+          "captured_bytes": 90190,
+          "source_sha256": "3cf197ad838fc02d2142bd3a0eaf249d65ac9b979b84e9f3ed14c1abfcc26c08",
+          "result_scope": "partial_podium",
+          "available_at_utc": "2026-09-26T19:00:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_09_26_nap_ipr_race_6)",
+          "captured_path": ".forecast/dataset/26_09_26_nap_ipr_race_6.json",
+          "captured_bytes": 942633,
+          "source_sha256": "5cf0462b3b519de4d649f07e1798fd625703ef4aebff326ffa4e5174c2a56b7d",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-09-26T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_09_27_nap_ipr_race_7",
+      "date": "2026-09-27",
+      "event_id": "naples_2026",
+      "event": "NAP_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-09-27T14:15:00Z",
+      "available_at_ms": 1790515296236,
+      "correction_available_at_ms": null,
+      "source": "https://www.americascup.com/results",
+      "source_url": "https://www.americascup.com/results",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI",
+        "USA"
+      ],
+      "scheduled_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL G",
+        "NZL B",
+        "SUI",
+        "USA"
+      ],
+      "dns_entries": [],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "ITA B",
+        "NZL B",
+        "FRA",
+        "GBR B",
+        "NZL G",
+        "GBR G",
+        "ITA G",
+        "SUI",
+        "USA"
+      ],
+      "official_order": [
+        "ITA B",
+        "NZL B",
+        "FRA",
+        "GBR B",
+        "NZL G",
+        "GBR G",
+        "ITA G",
+        "SUI",
+        "USA"
+      ],
+      "published_partial_order": [
+        "ITA B",
+        "NZL B",
+        "FRA",
+        "GBR B",
+        "NZL G",
+        "GBR G",
+        "ITA G",
+        "SUI",
+        "USA"
+      ],
+      "nonfinishers": [],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Naples Race 7 official result verified.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sail-world.com/news/300230/Americas-Cup-Preliminary-Regatta-2-Overall",
+          "captured_path": ".forecast/evidence_sources/sailworld_naples_day3.html",
+          "captured_bytes": 115563,
+          "source_sha256": "bffa2d609e1a2aedfe70b0d0d0ca7531cd102ba93dce58b361901a5e3ca990b4",
+          "result_scope": "partial_winner_and_standings",
+          "available_at_utc": "2026-09-27T19:10:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_09_27_nap_ipr_race_7)",
+          "captured_path": ".forecast/dataset/26_09_27_nap_ipr_race_7.json",
+          "captured_bytes": 708802,
+          "source_sha256": "4c5e424a4ba2bdb89fba4adc15aaa399d33d65e31494b0567dc7777611ec191a",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-09-27T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "26_09_27_nap_ipr_race_8",
+      "date": "2026-09-27",
+      "event_id": "naples_2026",
+      "event": "NAP_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-09-27T15:30:00Z",
+      "available_at_ms": 1790517451987,
+      "correction_available_at_ms": null,
+      "source": "https://www.americascup.com/results",
+      "source_url": "https://www.americascup.com/results",
+      "source_sha256": null,
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL B",
+        "NZL G",
+        "SUI",
+        "USA"
+      ],
+      "scheduled_entries": [
+        "FRA",
+        "GBR B",
+        "GBR G",
+        "ITA B",
+        "ITA G",
+        "NZL G",
+        "NZL B",
+        "SUI",
+        "USA"
+      ],
+      "dns_entries": [],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "ITA B",
+        "FRA",
+        "USA",
+        "GBR B",
+        "NZL G",
+        "ITA G",
+        "NZL B",
+        "SUI",
+        "GBR G"
+      ],
+      "official_order": [
+        "ITA B",
+        "FRA",
+        "USA",
+        "GBR B",
+        "NZL G",
+        "ITA G",
+        "NZL B",
+        "SUI",
+        "GBR G"
+      ],
+      "published_partial_order": [
+        "ITA B",
+        "FRA",
+        "USA",
+        "GBR B",
+        "NZL G",
+        "ITA G",
+        "NZL B",
+        "SUI",
+        "GBR G"
+      ],
+      "nonfinishers": [],
+      "verified": false,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Naples Race 8 official result verified.",
+      "evidence": {
+        "primary_review_status": "telemetry_reconstructed_with_partial_web_anchor",
+        "independent_anchor": {
+          "supporting_source": "https://www.sail-world.com/news/300230/Americas-Cup-Preliminary-Regatta-2-Overall",
+          "captured_path": ".forecast/evidence_sources/sailworld_naples_day3.html",
+          "captured_bytes": 115563,
+          "source_sha256": "bffa2d609e1a2aedfe70b0d0d0ca7531cd102ba93dce58b361901a5e3ca990b4",
+          "result_scope": "partial_winner_and_standings",
+          "available_at_utc": "2026-09-27T19:10:00Z",
+          "review_status": "partial_anchor_only"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (26_09_27_nap_ipr_race_8)",
+          "captured_path": ".forecast/dataset/26_09_27_nap_ipr_race_8.json",
+          "captured_bytes": 1354778,
+          "source_sha256": "c7e81a7a0d0c09bb0798d56d7150d963e37ddcd6e3702b903056524c03a6433b",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-09-27T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    },
+    {
+      "race_id": "naples_mr_final",
+      "date": "2026-09-27",
+      "event_id": "naples_2026",
+      "event": "NAP_IPR",
+      "status": "final",
+      "version": "2.0",
+      "practice": false,
+      "published_at_utc": "2026-09-27T17:00:00Z",
+      "available_at_ms": 1790520075375,
+      "correction_available_at_ms": null,
+      "source": "https://www.americascup.com/results",
+      "source_url": "https://www.sail-world.com/news/300230/Americas-Cup-Preliminary-Regatta-2-Overall",
+      "source_sha256": "bffa2d609e1a2aedfe70b0d0d0ca7531cd102ba93dce58b361901a5e3ca990b4",
+      "accessed": "2026-11-08",
+      "registered_entries": [
+        "ITA B",
+        "NZL B"
+      ],
+      "scheduled_entries": [
+        "ITA B",
+        "NZL B"
+      ],
+      "dns_entries": [],
+      "dnf_entries": [],
+      "ocs_or_dsq_entries": [],
+      "on_water_finish_order": [
+        "ITA B",
+        "NZL B"
+      ],
+      "official_order": [
+        "ITA B",
+        "NZL B"
+      ],
+      "published_partial_order": [
+        "ITA B",
+        "NZL B"
+      ],
+      "nonfinishers": [],
+      "verified": true,
+      "protest_modified_from_on_water": false,
+      "protest_penalties": [],
+      "jury_decisions_applied_at_ms": null,
+      "notes": "Naples Match Race Final: Luna Rossa defeated Emirates Team New Zealand.",
+      "evidence": {
+        "primary_review_status": "independently_anchored",
+        "independent_anchor": {
+          "supporting_source": "https://www.sail-world.com/news/300230/Americas-Cup-Preliminary-Regatta-2-Overall",
+          "captured_path": ".forecast/evidence_sources/sailworld_naples_day3.html",
+          "captured_bytes": 115563,
+          "source_sha256": "bffa2d609e1a2aedfe70b0d0d0ca7531cd102ba93dce58b361901a5e3ca990b4",
+          "result_scope": "match_final_winner",
+          "available_at_utc": "2026-09-27T19:10:00Z",
+          "review_status": "independently_anchored"
+        },
+        "telemetry_reconstruction": {
+          "supporting_source": "AC38 race telemetry dataset cache (naples_mr_final)",
+          "captured_path": ".forecast/dataset/naples_mr_final.json",
+          "captured_bytes": 448763,
+          "source_sha256": "53ffc2dfb60c135c2aa9f329e34e978e2c5a705ad25c788163180a80de993524",
+          "result_scope": "on_water_finish_order",
+          "available_at_utc": "2026-09-27T18:00:00Z",
+          "review_status": "telemetry_on_water_reconstructed"
+        }
+      }
+    }
+  ]
+}

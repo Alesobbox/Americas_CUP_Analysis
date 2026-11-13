@@ -45,6 +45,28 @@ def atomic_json(path: Path, value):
             temporary.unlink(missing_ok=True)
 
 
+def atomic_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=path.parent, prefix="."+path.name+".", suffix=".tmp", delete=False, mode="w", encoding="utf-8", newline="\n") as stream:
+            temporary = Path(stream.name)
+            stream.write(text)
+            stream.flush()
+            os.fsync(stream.fileno())
+        for attempt in range(8):
+            try:
+                os.replace(temporary, path)
+                break
+            except PermissionError:
+                if attempt == 7:
+                    raise
+                time.sleep(min(.1*2**attempt, 1.))
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
+
 def validate_cup(value):
     """Validate additive scenario evidence while accepting earlier cup-1 files."""
     analysis = value.get("scenario_analysis")
@@ -111,8 +133,13 @@ def validate_cup(value):
         require(abs(numerical["worst_case_95_half_width"] - 1.96 * math.sqrt(.25 / n)) < 1e-12
                 and "excludes model/rule" in numerical["scope"], "invalid Monte Carlo precision")
         require(re.fullmatch(r"[a-f0-9]{64}", record["input_hash"]) is not None, "invalid scenario input hash")
-        require(content_hash(dict(analysis["simulation_inputs"], scenario=record["scenario"],
-                                  seed=record["seed"], trials=n)) == record["input_hash"], "scenario input hash mismatch")
+        expected_inputs = dict(analysis["simulation_inputs"], scenario=record["scenario"],
+                               seed=record["seed"], trials=n)
+        if "posterior_draws_sha256" in record:
+            require(re.fullmatch(r"[a-f0-9]{64}", str(record["posterior_draws_sha256"])) is not None,
+                    "invalid scenario posterior draws hash")
+            expected_inputs["posterior_draws_sha256"] = record["posterior_draws_sha256"]
+        require(content_hash(expected_inputs) == record["input_hash"], "scenario input hash mismatch")
         require(record["source_manifest_hash"] == value["header"]["source_manifest_hash"], "scenario source mismatch")
         require(record.get("model_ref") == analysis["model_lineage"].get("model_ref"), "scenario model mismatch")
     baseline = next(record for record in records if record["scenario_id"] == analysis["baseline_scenario_id"])
@@ -203,6 +230,316 @@ def validate_race(value):
     return True
 
 
+def _assert_prob_dict(mapping: dict, team_ids: list[str], *, allow_null: bool = False) -> None:
+    if not isinstance(mapping, dict) or set(mapping.keys()) != set(team_ids):
+        raise ValueError("AC38 forecast team dictionary keys mismatch")
+    for val in mapping.values():
+        if val is None and allow_null:
+            continue
+        if not isinstance(val, (int, float)) or isinstance(val, bool) or not math.isfinite(val) or not 0.0 <= val <= 1.0:
+            raise ValueError(f"Invalid probability value in AC38 forecast: {val}")
+
+
+def _is_num(val: Any) -> bool:
+    return isinstance(val, (int, float)) and not isinstance(val, bool) and math.isfinite(val)
+
+
+def _is_int(val: Any) -> bool:
+    return isinstance(val, int) and not isinstance(val, bool)
+
+
+PRIVATE_AC38_POSTERIOR_KEYS = frozenset({
+    "active_conditionals",
+    "posterior_grid",
+    "grid_axes",
+    "weights_normalized",
+    "z_grid",
+    "h_grid",
+})
+
+
+def assert_no_private_posterior_keys(payload: Any, *, context: str = "public artifact") -> None:
+    stack: list[Any] = [payload]
+    while stack:
+        node = stack.pop()
+        if isinstance(node, dict):
+            leaked = PRIVATE_AC38_POSTERIOR_KEYS.intersection(node.keys())
+            if leaked:
+                raise ValueError(f"Private posterior key(s) {sorted(leaked)} leaked into {context}")
+            stack.extend(node.values())
+        elif isinstance(node, list):
+            stack.extend(node)
+
+
+def validate_ac38_forecast(value: dict) -> bool:
+    """Validate ac38-forecast-1 schema, bounds, lineage, probability mass, and status semantics."""
+    from datetime import datetime
+
+    if not isinstance(value, dict) or not isinstance(value.get("header"), dict):
+        raise ValueError("Invalid AC38 forecast structure")
+    assert_no_private_posterior_keys(value, context="ac38-forecast-1")
+    h = value["header"]
+    if h.get("schema_version") != "ac38-forecast-1" or h.get("experimental") is not True:
+        raise ValueError("Unsupported AC38 forecast schema or missing experimental flag")
+    if h.get("status") not in ("experimental_conditional", "experimental_rule_bounds"):
+        raise ValueError("Invalid AC38 forecast status")
+    cutoff = h.get("issuance_cutoff_utc")
+    if not isinstance(cutoff, str) or not cutoff.strip():
+        raise ValueError("Missing issuance_cutoff_utc")
+    try:
+        datetime.fromisoformat(cutoff.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ValueError(f"Invalid issuance_cutoff_utc ISO datetime: {cutoff}") from exc
+    if not isinstance(h.get("conditioning"), str) or not h["conditioning"].strip():
+        raise ValueError("Missing or empty conditioning description")
+    if not _is_num(h.get("scale_kappa")) or abs(float(h["scale_kappa"]) - 1.0) > 1e-9:
+        raise ValueError("AC38 forecast scale_kappa must equal 1")
+    if h.get("selected_transfer_candidate") not in ("results_only", "results_plus_telemetry"):
+        raise ValueError("Invalid selected_transfer_candidate")
+    if not isinstance(h.get("telemetry_retained"), bool):
+        raise ValueError("AC38 forecast header.telemetry_retained must be a boolean")
+    if not _is_int(h.get("trials")) or h["trials"] < 1:
+        raise ValueError("AC38 forecast header.trials must be a positive integer")
+    if not _is_int(h.get("seed")):
+        raise ValueError("AC38 forecast header.seed must be an integer")
+    for hash_key in ("transfer_posterior_sha256", "eligibility_ledger_sha256", "inventory_sha256", "backtest_report_sha256", "model_ref"):
+        if not isinstance(h.get(hash_key), str) or not re.fullmatch(r"[a-f0-9]{64}", h[hash_key]):
+            raise ValueError(f"Invalid lineage hash: {hash_key}")
+
+    teams = value.get("teams", [])
+    if not isinstance(teams, list) or len(teams) != 7 or not all(isinstance(t, dict) for t in teams):
+        raise ValueError("AC38 forecast must define exactly 7 team objects")
+    team_ids = [t.get("id") for t in teams]
+    if any(not isinstance(tid, str) or not tid for tid in team_ids) or len(set(team_ids)) != 7:
+        raise ValueError("AC38 forecast must define 7 unique non-empty team ids")
+    for t in teams:
+        if t.get("campaign_team_id") != f"ac38:{t['id']}":
+            raise ValueError(f"Invalid campaign_team_id for {t['id']}")
+        if not isinstance(t.get("name"), str) or not t["name"].strip():
+            raise ValueError(f"Missing team name for {t['id']}")
+        if not isinstance(t.get("role"), str) or not t["role"].strip():
+            raise ValueError(f"Missing team role for {t['id']}")
+
+    rules = value.get("rules", {})
+    if not isinstance(rules, dict):
+        raise ValueError("Missing rules section")
+    trials = h["trials"]
+    res_trials = rules.get("resolved_trials")
+    unres_trials = rules.get("unresolved_trials")
+    if not _is_int(res_trials) or not _is_int(unres_trials) or res_trials < 0 or unres_trials < 0 or res_trials + unres_trials != trials:
+        raise ValueError("AC38 forecast trial counts do not reconcile")
+    if unres_trials > 0 and h["status"] != "experimental_rule_bounds":
+        raise ValueError("Unresolved trials require status experimental_rule_bounds")
+    if unres_trials == 0 and h["status"] != "experimental_conditional":
+        raise ValueError("Zero unresolved trials require status experimental_conditional")
+    res_frac = rules.get("resolved_fraction")
+    unres_frac = rules.get("unresolved_fraction")
+    if (
+        not _is_num(res_frac)
+        or not _is_num(unres_frac)
+        or abs(float(res_frac) - res_trials / trials) > 1e-4
+        or abs(float(unres_frac) - unres_trials / trials) > 1e-4
+        or abs(float(res_frac) + float(unres_frac) - 1.0) > 1e-4
+    ):
+        raise ValueError("AC38 forecast resolved/unresolved fractions do not reconcile")
+    stage_counts = rules.get("first_unresolved_stage_counts")
+    if not isinstance(stage_counts, dict) or any(not _is_int(v) or v < 0 for v in stage_counts.values()) or sum(stage_counts.values()) != unres_trials:
+        raise ValueError("first_unresolved_stage_counts must be non-negative ints summing to unresolved_trials")
+
+    fc = value.get("forecast", {})
+    if not isinstance(fc, dict):
+        raise ValueError("Missing forecast section")
+    for matrix_key in ("pairwise_single_match", "series_best_of_9", "series_best_of_13"):
+        mat = fc.get(matrix_key, {})
+        if not isinstance(mat, dict) or set(mat.keys()) != set(team_ids):
+            raise ValueError(f"Incomplete pairwise matrix {matrix_key}")
+        for ti in team_ids:
+            if not isinstance(mat[ti], dict) or set(mat[ti].keys()) != set(team_ids):
+                raise ValueError(f"Incomplete row {ti} in {matrix_key}")
+            for tj in team_ids:
+                v = mat[ti].get(tj)
+                if ti == tj:
+                    if v is not None:
+                        raise ValueError("Self-matchup must be null")
+                elif not _is_num(v) or not 0.0 <= float(v) <= 1.0 or not _is_num(mat[tj].get(ti)) or abs(float(v) + float(mat[tj][ti]) - 1.0) > 1e-4:
+                    raise ValueError(f"Pairwise complementarity violation in {matrix_key}")
+
+    trophy_probs = fc.get("trophy_probabilities", {})
+    _assert_prob_dict(trophy_probs, team_ids, allow_null=(unres_trials > 0))
+    if unres_trials > 0 and any(v is not None for v in trophy_probs.values()):
+        raise ValueError("Unresolved forecast cannot publish point trophy probabilities")
+    if unres_trials == 0 and abs(sum(float(trophy_probs[t]) for t in team_ids) - 1.0) > 1e-3:
+        raise ValueError("Resolved trophy_probabilities must sum to 1")
+
+    bounds = fc.get("trophy_rule_bounds", {})
+    if not isinstance(bounds, dict) or set(bounds.keys()) != set(team_ids):
+        raise ValueError("Incomplete trophy_rule_bounds")
+    lower_sum = 0.0
+    upper_sum = 0.0
+    for tid in team_ids:
+        b = bounds[tid]
+        if not isinstance(b, dict) or not _is_num(b.get("lower")) or not _is_num(b.get("upper")) or not 0.0 <= float(b["lower"]) <= float(b["upper"]) <= 1.0:
+            raise ValueError(f"Invalid trophy bounds for {tid}")
+        lower_sum += float(b["lower"])
+        upper_sum += float(b["upper"])
+    if lower_sum > 1.0 + 1e-3 or upper_sum < 1.0 - 1e-3:
+        raise ValueError("trophy_rule_bounds lower/upper sums violate probability simplex envelope")
+
+    fleet_pos = fc.get("expected_fleet_position", {})
+    if (
+        not isinstance(fleet_pos, dict)
+        or set(fleet_pos.keys()) != set(team_ids)
+        or any(not _is_num(v) or not 1.0 <= float(v) <= 7.0 for v in fleet_pos.values())
+        or abs(sum(float(v) for v in fleet_pos.values()) - 28.0) > 0.05
+    ):
+        raise ValueError("Expected fleet positions must be in [1, 7] and sum to 28")
+
+    fleet_dist = fc.get("fleet_position_distribution", {})
+    if not isinstance(fleet_dist, dict) or set(fleet_dist.keys()) != set(team_ids):
+        raise ValueError("Incomplete fleet_position_distribution")
+    for tid in team_ids:
+        row = fleet_dist[tid]
+        if (
+            not isinstance(row, list)
+            or len(row) != 7
+            or any(not _is_num(p) or not 0.0 <= float(p) <= 1.0 for p in row)
+            or abs(sum(float(p) for p in row) - 1.0) > 1e-3
+        ):
+            raise ValueError(f"Invalid fleet_position_distribution row for {tid}")
+
+    adv = fc.get("advancement_probabilities", {})
+    adv_caps = {
+        "round_robin_top3": 3.0,
+        "repechage_1_win": 1.0,
+        "repechage_2_win": 1.0,
+        "semifinal": 4.0,
+        "semifinal_1_win": 1.0,
+        "semifinal_2_win": 1.0,
+        "challenger_final_win": 1.0,
+    }
+    if not isinstance(adv, dict) or not set(adv_caps.keys()).issubset(set(adv.keys())):
+        raise ValueError("Incomplete advancement_probabilities stages")
+    for stage_key, cap in adv_caps.items():
+        _assert_prob_dict(adv[stage_key], team_ids, allow_null=False)
+        if sum(float(v) for v in adv[stage_key].values()) > cap + 1e-3:
+            raise ValueError(f"advancement_probabilities[{stage_key}] exceeds {cap}")
+
+    sens = value.get("structural_sensitivities", [])
+    if not isinstance(sens, list) or not sens:
+        raise ValueError("structural_sensitivities must be a non-empty list")
+    s_ids: list[str] = []
+    seen_configs: set[tuple[Any, ...]] = set()
+    for sc in sens:
+        if not isinstance(sc, dict) or not isinstance(sc.get("scenario_id"), str) or not sc["scenario_id"]:
+            raise ValueError("Invalid structural sensitivity entry")
+        s_ids.append(sc["scenario_id"])
+        sc_trials = sc.get("trials")
+        sc_res = sc.get("resolved_trials")
+        sc_unres = sc.get("unresolved_trials")
+        if not _is_int(sc_trials) or sc_trials < 1 or not _is_int(sc_res) or not _is_int(sc_unres) or sc_res < 0 or sc_unres < 0 or sc_res + sc_unres != sc_trials:
+            raise ValueError(f"Invalid trial counts in sensitivity {sc['scenario_id']}")
+        sc_bounds = sc.get("trophy_rule_bounds", {})
+        if not isinstance(sc_bounds, dict) or set(sc_bounds.keys()) != set(team_ids):
+            raise ValueError(f"Incomplete trophy_rule_bounds in sensitivity {sc['scenario_id']}")
+        sc_lo_sum = 0.0
+        sc_hi_sum = 0.0
+        for tid in team_ids:
+            b = sc_bounds[tid]
+            if not isinstance(b, dict) or not _is_num(b.get("lower")) or not _is_num(b.get("upper")) or not 0.0 <= float(b["lower"]) <= float(b["upper"]) <= 1.0:
+                raise ValueError(f"Invalid trophy_rule_bounds for {tid} in sensitivity {sc['scenario_id']}")
+            sc_lo_sum += float(b["lower"])
+            sc_hi_sum += float(b["upper"])
+        if sc_lo_sum > 1.0 + 1e-3 or sc_hi_sum < 1.0 - 1e-3:
+            raise ValueError(f"Sensitivity {sc['scenario_id']} bounds violate simplex envelope")
+        if not _is_num(sc.get("residual_scale")) or not _is_num(sc.get("failure_probability", 0.0)):
+            raise ValueError(f"Invalid numeric sensitivity parameter in {sc['scenario_id']}")
+        cfg = (
+            round(float(sc["residual_scale"]), 6),
+            bool(sc.get("zero_transfer")),
+            sc.get("mapping_policy"),
+            sc.get("evidence_scope"),
+            bool(sc.get("conditional_on_completed", True)),
+            round(float(sc.get("failure_probability", 0.0)), 6),
+        )
+        if cfg in seen_configs:
+            raise ValueError(f"Duplicate structural sensitivity configuration for {sc['scenario_id']}")
+        seen_configs.add(cfg)
+    if len(set(s_ids)) != len(s_ids):
+        raise ValueError("Duplicate structural sensitivity scenario IDs")
+
+    unc = value.get("uncertainty", {})
+    if not isinstance(unc, dict):
+        raise ValueError("Missing uncertainty section")
+    mc = unc.get("monte_carlo", {})
+    if not isinstance(mc, dict) or not _is_num(mc.get("worst_case_95_half_width")) or float(mc["worst_case_95_half_width"]) < 0.0:
+        raise ValueError("Invalid uncertainty.monte_carlo")
+    mc_se = mc.get("actual_mc_se_by_team", {})
+    if not isinstance(mc_se, dict) or set(mc_se.keys()) != set(team_ids):
+        raise ValueError("Incomplete uncertainty.monte_carlo.actual_mc_se_by_team")
+    for tid in team_ids:
+        entry = mc_se[tid]
+        if (
+            not isinstance(entry, dict)
+            or not _is_num(entry.get("lower"))
+            or not _is_num(entry.get("upper"))
+            or float(entry["lower"]) < 0.0
+            or float(entry["upper"]) < 0.0
+        ):
+            raise ValueError(f"Invalid actual_mc_se_by_team entry for {tid}")
+    pair_se = mc.get("pairwise_single_match_mc_se", {})
+    if not isinstance(pair_se, dict) or set(pair_se.keys()) != set(team_ids):
+        raise ValueError("Incomplete uncertainty.monte_carlo.pairwise_single_match_mc_se")
+    for ti in team_ids:
+        row = pair_se[ti]
+        if not isinstance(row, dict) or set(row.keys()) != set(team_ids):
+            raise ValueError(f"Incomplete pairwise_single_match_mc_se row for {ti}")
+        for tj in team_ids:
+            v = row[tj]
+            if ti == tj:
+                if v is not None:
+                    raise ValueError("Self-matchup pairwise_single_match_mc_se must be null")
+            elif not _is_num(v) or float(v) < 0.0:
+                raise ValueError(f"Invalid pairwise_single_match_mc_se for {ti} vs {tj}")
+    nested = unc.get("posterior_nested_intervals", {})
+    if (
+        not isinstance(nested, dict)
+        or not isinstance(nested.get("converged_within_0_5pp"), bool)
+        or not _is_num(nested.get("stabilization_target_pp"))
+        or not _is_int(nested.get("computation_cap_trials"))
+        or nested["computation_cap_trials"] < 1
+    ):
+        raise ValueError("Invalid uncertainty.posterior_nested_intervals metadata")
+    ibt = nested.get("intervals_by_team", {})
+    if not isinstance(ibt, dict) or set(ibt.keys()) != set(team_ids):
+        raise ValueError("Incomplete posterior_nested_intervals.intervals_by_team")
+    for tid in team_ids:
+        entry = ibt[tid]
+        if not isinstance(entry, dict):
+            raise ValueError(f"Invalid nested interval entry for {tid}")
+        for band_key in ("lower_p05_p95", "upper_p05_p95"):
+            band = entry.get(band_key)
+            if (
+                not isinstance(band, dict)
+                or not all(_is_num(band.get(q)) for q in ("p05", "p50", "p95"))
+                or not 0.0 <= float(band["p05"]) <= float(band["p50"]) <= float(band["p95"]) <= 1.0
+            ):
+                raise ValueError(f"Invalid nested interval ordering for {tid}.{band_key}")
+    tps = unc.get("transfer_parameter_summary", {})
+    if not isinstance(tps, dict):
+        raise ValueError("Missing uncertainty.transfer_parameter_summary")
+    for pkey in ("beta_percentiles", "tau_percentiles", "rho_percentiles"):
+        pct = tps.get(pkey)
+        if (
+            not isinstance(pct, dict)
+            or not all(_is_num(pct.get(q)) for q in ("p05", "p50", "p95"))
+            or not float(pct["p05"]) <= float(pct["p50"]) <= float(pct["p95"])
+        ):
+            raise ValueError(f"Invalid percentile ordering in transfer_parameter_summary.{pkey}")
+
+    canonical(value)
+    return True
+
+
 def verify_public(root: Path, *, index=None):
     directory = root/"public"/"data"/"predictions"
     index = index or json.loads((directory/"index.json").read_text())
@@ -220,6 +557,12 @@ def verify_public(root: Path, *, index=None):
     manifest_hash=content_hash(manifest)
     if manifest_hash != index["source_manifest_hash"] or manifest_path.stem != manifest_hash:
         raise ValueError("Source manifest content hash mismatch")
+    if "evidence_manifest_hash" in index:
+        ev_path = safe_path(index.get("evidence_manifest_path", "manifests/" + index["evidence_manifest_hash"] + ".json"))
+        ev_manifest = json.loads(ev_path.read_text())
+        ev_hash = content_hash(ev_manifest)
+        if ev_hash != index["evidence_manifest_hash"] or ev_path.stem != ev_hash:
+            raise ValueError("Evidence manifest content hash mismatch")
     paths = [safe_path(entry["path"]) for entry in index["races"]]
     model_paths,scenario_paths=set(),set()
     for path, entry in zip(paths, index["races"]):
@@ -272,7 +615,21 @@ def verify_public(root: Path, *, index=None):
     if cup_path.stem != content_hash(cup):
         raise ValueError("Cup artifact content hash mismatch")
     validate_cup(cup)
+    cup_model_ref = cup.get("header", {}).get("model_ref")
+    if cup_model_ref:
+        cup_model_path = safe_path("models/" + cup_model_ref + ".json")
+        cup_model_card = json.loads(cup_model_path.read_text())
+        if content_hash(cup_model_card) != cup_model_ref:
+            raise ValueError("Cup-referenced model content hash mismatch")
+        model_paths.add(cup_model_path)
     raw = sum(p.stat().st_size for p in paths)+len(canonical(index))+cup_path.stat().st_size
+    if index.get("ac38_forecast_path"):
+        ac38_path = safe_path(index["ac38_forecast_path"])
+        ac38_doc = json.loads(ac38_path.read_text(encoding="utf-8"))
+        validate_ac38_forecast(ac38_doc)
+        if not ac38_path.stem.endswith(content_hash(ac38_doc)):
+            raise ValueError("AC38 forecast artifact content hash mismatch")
+        raw += ac38_path.stat().st_size
     compressed = sum(len(gzip.compress(p.read_bytes(), mtime=0)) for p in paths)
     if raw > 3*1024*1024:
         raise ValueError(f"Forecast baseline exceeds 3 MiB hard budget: {raw}")

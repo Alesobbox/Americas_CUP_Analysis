@@ -1,0 +1,5 @@
+{
+  "schema": "market-odds-2",
+  "description": "Published bookmaker odds snapshots with strict issue-time and complete-book validation. Empty until verified complete-book snapshots are sourced.",
+  "snapshots": []
+}

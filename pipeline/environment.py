@@ -290,56 +290,77 @@ def build_archive(root: Path, *, race_id=None, force=False, fetcher=None, clock=
             "races_with_source_errors": {a["race_id"]: a["errors"] for a in artifacts if a["errors"]}}
 
 
+def _verify_v1_race(artifact: dict, metadata: dict, output: Path, response_hashes: set, counts: dict, source_errors: dict) -> None:
+    if (artifact.get("schema_version") != "environment-1" or artifact.get("race_id") != metadata["race_id"]
+            or artifact.get("context") != "historical_replay_only"
+            or artifact.get("requested_location") != {"latitude": metadata["latitude"], "longitude": metadata["longitude"]}
+            or artifact.get("replay_window") != {"start_ms": metadata["window_start_ms"], "end_ms": metadata["window_end_ms"]}
+            or artifact.get("units") != {"time_ms": "Unix milliseconds UTC", "air_temperature_c": "°C",
+                                        "wave_height_m": "m", "water_temperature_c": "°C"}):
+        raise ValueError(f"Environment metadata/unit mismatch: {metadata['race_id']}")
+    sources, errors = artifact.get("sources"), artifact.get("errors")
+    if (not isinstance(sources, dict) or not isinstance(errors, dict)
+            or set(sources) & set(errors) or set(sources) | set(errors) != set(VARIABLES)
+            or any(not isinstance(reason, str) or not reason for reason in errors.values())):
+        raise ValueError(f"Environment source/error contract mismatch: {metadata['race_id']}")
+    columns = {}
+    for source, provenance in sources.items():
+        if (not isinstance(provenance, dict) or provenance.get("provider") != "Open-Meteo"
+                or provenance.get("product") != "historical_model"
+                or provenance.get("request_url") != request_url(source, metadata)
+                or not re.fullmatch(r"[0-9a-f]{64}", provenance.get("response_sha256", ""))
+                or provenance.get("response_file") != "responses/" + provenance["response_sha256"] + ".json"):
+            raise ValueError(f"Environment response provenance mismatch: {metadata['race_id']}/{source}")
+        _parse_retrieved(provenance.get("retrieved_at"))
+        data = (output / provenance["response_file"]).read_bytes()
+        if hashlib.sha256(data).hexdigest() != provenance["response_sha256"]:
+            raise ValueError(f"Environment response hash mismatch: {metadata['race_id']}/{source}")
+        source_columns, grid = parse_response(data, source, metadata)
+        if provenance.get("grid_location") != grid:
+            raise ValueError(f"Environment grid location mismatch: {metadata['race_id']}/{source}")
+        columns.update(source_columns)
+        response_hashes.add(provenance["response_sha256"])
+    times = sorted({t for values in columns.values() for t in values})
+    expected = {"time_ms": times, **{f: [columns.get(f, {}).get(t) for t in times] for f in OUTPUT_FIELDS}}
+    if artifact.get("hourly") != expected:
+        raise ValueError(f"Environment hourly values differ from original responses: {metadata['race_id']}")
+    for field in OUTPUT_FIELDS:
+        counts[field] += any(v is not None for v in expected[field])
+    if errors:
+        source_errors[metadata["race_id"]] = errors
+
+
 def verify_archive(root: Path, *, race_id=None):
-    """Verify every catalog artifact and its original response bytes, offline."""
+    """Verify every catalog artifact (v1 or v2) and its original source hashes, offline."""
+    from pipeline.env.cli import verify_all_environment_artifacts
+    from pipeline.env.contracts import validate_environment_v2
+
     output = root / "public" / "data" / "environment"
     counts = dict.fromkeys(OUTPUT_FIELDS, 0)
-    response_hashes, races, source_errors = set(), 0, {}
+    response_hashes, races, source_errors, v2_races = set(), 0, {}, 0
     for metadata in catalog_metadata(root, race_id):
         artifact = json.loads((output / (metadata["race_id"] + ".json")).read_bytes())
-        if (artifact.get("schema_version") != "environment-1" or artifact.get("race_id") != metadata["race_id"]
-                or artifact.get("context") != "historical_replay_only"
-                or artifact.get("requested_location") != {"latitude": metadata["latitude"], "longitude": metadata["longitude"]}
-                or artifact.get("replay_window") != {"start_ms": metadata["window_start_ms"], "end_ms": metadata["window_end_ms"]}
-                or artifact.get("units") != {"time_ms": "Unix milliseconds UTC", "air_temperature_c": "°C",
-                                            "wave_height_m": "m", "water_temperature_c": "°C"}):
-            raise ValueError(f"Environment metadata/unit mismatch: {metadata['race_id']}")
-        sources, errors = artifact.get("sources"), artifact.get("errors")
-        if (not isinstance(sources, dict) or not isinstance(errors, dict)
-                or set(sources) & set(errors) or set(sources) | set(errors) != set(VARIABLES)
-                or any(not isinstance(reason, str) or not reason for reason in errors.values())):
-            raise ValueError(f"Environment source/error contract mismatch: {metadata['race_id']}")
-        columns = {}
-        for source, provenance in sources.items():
-            if (not isinstance(provenance, dict) or provenance.get("provider") != "Open-Meteo"
-                    or provenance.get("product") != "historical_model"
-                    or provenance.get("request_url") != request_url(source, metadata)
-                    or not re.fullmatch(r"[0-9a-f]{64}", provenance.get("response_sha256", ""))
-                    or provenance.get("response_file") != "responses/" + provenance["response_sha256"] + ".json"):
-                raise ValueError(f"Environment response provenance mismatch: {metadata['race_id']}/{source}")
-            _parse_retrieved(provenance.get("retrieved_at"))
-            data = (output / provenance["response_file"]).read_bytes()
-            if hashlib.sha256(data).hexdigest() != provenance["response_sha256"]:
-                raise ValueError(f"Environment response hash mismatch: {metadata['race_id']}/{source}")
-            source_columns, grid = parse_response(data, source, metadata)
-            if provenance.get("grid_location") != grid:
-                raise ValueError(f"Environment grid location mismatch: {metadata['race_id']}/{source}")
-            columns.update(source_columns)
-            response_hashes.add(provenance["response_sha256"])
-        times = sorted({t for values in columns.values() for t in values})
-        expected = {"time_ms": times, **{f: [columns.get(f, {}).get(t) for t in times] for f in OUTPUT_FIELDS}}
-        if artifact.get("hourly") != expected:
-            raise ValueError(f"Environment hourly values differ from original responses: {metadata['race_id']}")
-        for field in OUTPUT_FIELDS:
-            counts[field] += any(v is not None for v in expected[field])
+        if artifact.get("schema_version") == "environment-2":
+            validate_environment_v2(artifact)
+            if artifact.get("race_id") != metadata["race_id"]:
+                raise ValueError(f"Environment-2 race_id mismatch: {metadata['race_id']}")
+            v2_races += 1
+        else:
+            _verify_v1_race(artifact, metadata, output, response_hashes, counts, source_errors)
         races += 1
-        if errors:
-            source_errors[metadata["race_id"]] = errors
+    if v2_races:
+        v2_stats = verify_all_environment_artifacts(root)
+        return {"status": "pass", "schema_version": "environment-2", "races": races, **v2_stats}
     return {"status": "pass", "races": races, "verified_response_objects": len(response_hashes),
             "races_with_available_field": counts, "races_with_source_errors": source_errors}
 
 
 def main():
+    import sys
+    from pipeline.env.cli import ENV_SUBCOMMANDS, run_env_cli
+
+    if len(sys.argv) > 1 and sys.argv[1] in ENV_SUBCOMMANDS:
+        raise SystemExit(run_env_cli(sys.argv[1:]))
     parser = argparse.ArgumentParser(description="Cache historical replay environmental context from Open-Meteo")
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--race")

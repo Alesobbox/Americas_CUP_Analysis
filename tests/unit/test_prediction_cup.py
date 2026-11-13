@@ -309,6 +309,397 @@ class CupEvidenceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "outside public"):
                 build_cup_candidate(root, trials=5, output_path=directory / "candidate.json")
 
+    def test_feasible_slot_rule_bounds_tightness_and_consistency(self):
+        # 1. Zero unresolved trials: bounds match point probabilities exactly
+        forecast_resolved = simulate_cup({}, rules=fixed_results(), trials=20, seed=12,
+                                         feasible_slot_rule_bounds=True)
+        self.assertEqual(forecast_resolved["unresolved_trials"], 0)
+        for team in TEAM_IDS:
+            b = forecast_resolved["rule_bounds"][team]
+            prob = forecast_resolved["probabilities"][team]
+            self.assertAlmostEqual(b["lower"], prob, places=6)
+            self.assertAlmostEqual(b["upper"], prob, places=6)
+            self.assertLessEqual(b["lower"], b["upper"])
+            self.assertGreaterEqual(b["lower"], 0.0)
+            self.assertLessEqual(b["upper"], 1.0)
+
+        # 2. Late unresolved stage: fixed semifinal / cup match tie produces tighter bounds
+        # than naive outer bounds which add unresolved_trials to ALL teams
+        semifinal_unresolved_rules = fixed_results()
+        # Drop cup match results so cup match is unresolved
+        scores_without_cup = {k: v for k, v in semifinal_unresolved_rules.known_match_scores.items()
+                              if not k.startswith("cup_match:")}
+        # Inject an unresolved withdrawal or stage failure at cup match
+        forecast_tight = simulate_cup({}, rules=replace(semifinal_unresolved_rules,
+                                                        known_match_scores=scores_without_cup),
+                                      trials=30, seed=42, failure_probability=0.3,
+                                      conditional_on_completed_scored_races=False,
+                                      feasible_slot_rule_bounds=True)
+        forecast_naive = simulate_cup({}, rules=replace(semifinal_unresolved_rules,
+                                                        known_match_scores=scores_without_cup),
+                                      trials=30, seed=42, failure_probability=0.3,
+                                      conditional_on_completed_scored_races=False,
+                                      feasible_slot_rule_bounds=False)
+        self.assertGreater(forecast_tight["unresolved_trials"], 0)
+        self.assertIn("feasible_slot_rule_bounds", forecast_tight["bounds_kind"])
+        for team in TEAM_IDS:
+            tight_b = forecast_tight["rule_bounds"][team]
+            naive_b = forecast_naive["rule_bounds"][team]
+            self.assertLessEqual(tight_b["lower"], tight_b["upper"])
+            self.assertGreaterEqual(tight_b["lower"], 0.0)
+            self.assertLessEqual(tight_b["upper"], 1.0)
+            self.assertLessEqual(tight_b["upper"], naive_b["upper"] + 1e-12)
+
+        # 3. Unresolved at repechage_1 / repechage_2: verify no NameError and bounds valid
+        scores_without_rep = {k: v for k, v in semifinal_unresolved_rules.known_match_scores.items()
+                              if not k.startswith("repechage_") and not k.startswith("semifinal_")
+                              and not k.startswith("challenger_final:") and not k.startswith("cup_match:")}
+        forecast_rep = simulate_cup({}, rules=replace(semifinal_unresolved_rules,
+                                                      known_match_scores=scores_without_rep),
+                                    trials=20, seed=10, failure_probability=0.3,
+                                    conditional_on_completed_scored_races=False,
+                                    feasible_slot_rule_bounds=True)
+        self.assertGreater(forecast_rep["unresolved_trials"], 0)
+        for team in TEAM_IDS:
+            b = forecast_rep["rule_bounds"][team]
+            self.assertLessEqual(b["lower"], b["upper"])
+            self.assertGreaterEqual(b["lower"], 0.0)
+            self.assertLessEqual(b["upper"], 1.0)
+
+        # 4. Round-robin tie where 6th challenger is eliminated strictly below tie
+        # Build rules where challenger 1-5 have points and challenger 6 has 0
+        from pipeline.prediction.cup import MatchScore
+        fixed_rr_scores = {}
+        # Challengers are TEAM_IDS[1:7]
+        # Match matches so team 1..5 beat team 6 always, and 4 & 5 tie
+        for r_num in (1, 2):
+            for i in range(1, 6):
+                # i beats 6
+                fixed_rr_scores[f"rr:{r_num}:{TEAM_IDS[min(i, 6)]}:{TEAM_IDS[max(i, 6)]}"] = (
+                    MatchScore(TEAM_IDS[min(i, 6)], TEAM_IDS[max(i, 6)],
+                               1.0 if min(i, 6) == i else 0.0,
+                               0.0 if min(i, 6) == i else 1.0,
+                               resolved=True)
+                )
+        # Leave other matches unplayed so tie for 4th/5th occurs or withdrawal/unresolved
+        rr_rules = CupRules(tie_policy="unresolved", round_robins=2, fleet_races=6,
+                            known_match_scores=fixed_rr_scores)
+        forecast_rr_tie = simulate_cup({}, rules=rr_rules, trials=20, seed=77,
+                                       failure_probability=0.0,
+                                       conditional_on_completed_scored_races=True,
+                                       feasible_slot_rule_bounds=True)
+        if forecast_rr_tie["unresolved_trials"] > 0:
+            for team in TEAM_IDS:
+                b = forecast_rr_tie["rule_bounds"][team]
+                self.assertLessEqual(b["lower"], b["upper"])
+
+    def test_verify_public_checks_cup_only_model_and_evidence_manifest(self):
+        from pipeline.prediction.contracts import verify_public
+        from pipeline.prediction.cup import public_cup_artifact
+
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            directory = root / "public" / "data" / "predictions"
+            directory.mkdir(parents=True)
+            (directory / "models").mkdir()
+            (directory / "manifests").mkdir()
+            (directory / "cup").mkdir()
+
+            manifest = {"source": "fixture"}
+            m_hash = content_hash(manifest)
+            (directory / "manifests" / (m_hash + ".json")).write_text(json.dumps(manifest))
+
+            ev_manifest = {"files": {"doc1": "hash1"}}
+            ev_hash = content_hash(ev_manifest)
+            (directory / "manifests" / (ev_hash + ".json")).write_text(json.dumps(ev_manifest))
+
+            race_model = {"source_manifest_hash": m_hash, "training_before_day": "2026-05-22",
+                          "strength": {"method": "fixture", "effects": {}}}
+            race_model_ref = content_hash(race_model)
+            (directory / "models" / (race_model_ref + ".json")).write_text(json.dumps(race_model))
+
+            cup_model = {"source_manifest_hash": m_hash, "training_before_day": "2026-09-26",
+                         "strength": {"method": "fixture", "effects": {"NZL B": 0.5}}}
+            cup_model_ref = content_hash(cup_model)
+            cup_model_file = directory / "models" / (cup_model_ref + ".json")
+            cup_model_file.write_text(json.dumps(cup_model))
+
+            lineage = {"model_ref": cup_model_ref, "training_before_day": "2026-09-26",
+                       "training_cutoff_ms": 1790380800000, "selection_policy": "pinned",
+                       "strength_method": "fixture", "source_manifest_hash": m_hash}
+            effects = {"NZL B": 0.5}
+            cup = public_cup_artifact(source_manifest_hash=m_hash, mapped_strength=map_ac40_to_cup(effects),
+                                      trials=10, seed=42, model_lineage=lineage, mapping_provenance=cup_mapping_provenance(effects))
+            cup["header"]["model_ref"] = cup_model_ref
+            cup_hash = content_hash(cup)
+            cup_path = "cup/" + cup_hash + ".json"
+            (directory / cup_path).write_text(json.dumps(cup))
+
+            (directory / "races").mkdir()
+            scen_hash = content_hash({"scenario": "fixture"})
+            boats = ["b1", "b2"]
+            race_art = {
+                "header": {
+                    "schema_version": "prediction-1", "race_id": "r1", "boat_ids": boats,
+                    "boat_class": "AC40",
+                    "source_manifest_hash": m_hash, "model_ref": race_model_ref, "scenario_hash": scen_hash,
+                    "status_dictionary": ["available", "estimated", "gate_ambiguous", "unavailable"],
+                    "method_and_assumption_refs": ["fixture"], "units": {}
+                },
+                "pre_race": {
+                    "status": "unavailable",
+                    "expected_position_by_boat": {b: None for b in boats},
+                    "nonfinish_score": "N"
+                },
+                "live": {
+                    "published_at_ms": [], "state_timestamps_ms": [], "progress_band": [],
+                    "no_finisher_prob": [], "status_code": [], "numerical_error": [], "reason_code": [],
+                    "win_prob_by_boat": {b: [] for b in boats},
+                    "source_age_ms_by_boat": {b: [] for b in boats},
+                    "position_uncertainty_summary_by_boat": {b: [] for b in boats},
+                    "quality_code_by_boat": {b: [] for b in boats}
+                }
+            }
+            race_art_hash = content_hash(race_art)
+            race_rel = f"races/r1_{race_art_hash}.json"
+            (directory / race_rel).write_text(json.dumps(race_art))
+
+            index = {
+                "schema_version": "prediction-index-1",
+                "source_manifest_path": f"manifests/{m_hash}.json",
+                "source_manifest_hash": m_hash,
+                "evidence_manifest_path": f"manifests/{ev_hash}.json",
+                "evidence_manifest_hash": ev_hash,
+                "races": [{
+                    "race_id": "r1", "path": race_rel, "model_ref": race_model_ref,
+                    "source_manifest_hash": m_hash, "scenario_hash": scen_hash
+                }],
+                "cup_path": cup_path
+            }
+            (directory / "index.json").write_text(json.dumps(index))
+
+            # 1. Clean verification passes
+            report = verify_public(root)
+            self.assertEqual(report["races"], 1)
+
+            # 2. Tampering with Cup model fails verify_public
+            cup_model_file.write_text(json.dumps({"tampered": True}))
+            with self.assertRaisesRegex(ValueError, "Cup-referenced model content hash mismatch"):
+                verify_public(root)
+            cup_model_file.write_text(json.dumps(cup_model))
+
+            # 3. Tampering with evidence manifest fails verify_public
+            ev_file = directory / "manifests" / (ev_hash + ".json")
+            ev_file.write_text(json.dumps({"tampered": True}))
+            with self.assertRaisesRegex(ValueError, "Evidence manifest content hash mismatch"):
+                verify_public(root)
+
+    def test_private_bundle_refits_model_when_verified_label_changes(self):
+        from pipeline.prediction.build import build_private_forecast_bundle, publish_forecast_bundle
+
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            directory = root / "public" / "data" / "predictions"
+            directory.mkdir(parents=True)
+            (directory / "models").mkdir()
+            (directory / "manifests").mkdir()
+            (directory / "cup").mkdir()
+
+            manifest = {"source": "fixture"}
+            m_hash = content_hash(manifest)
+            (directory / "manifests" / (m_hash + ".json")).write_text(json.dumps(manifest))
+
+            model = {"source_manifest_hash": m_hash, "training_before_day": "2026-09-26",
+                     "strength": {"method": "fixture", "effects": {"NZL B": 0.2}}}
+            model_ref = content_hash(model)
+            (directory / "models" / (model_ref + ".json")).write_text(json.dumps(model))
+
+            lineage = {"model_ref": model_ref, "training_before_day": "2026-09-26",
+                       "training_cutoff_ms": 1790380800000, "selection_policy": "pinned",
+                       "strength_method": "fixture", "source_manifest_hash": m_hash}
+            cup = public_cup_artifact(source_manifest_hash=m_hash, mapped_strength={"ETNZ": 0.2},
+                                      trials=10, seed=42, model_lineage=lineage, mapping_provenance={"teams": []})
+            cup["header"]["model_ref"] = model_ref
+            cup_path = "cup/" + content_hash(cup) + ".json"
+            (directory / cup_path).write_text(json.dumps(cup))
+
+            (directory / "races").mkdir()
+            scen_hash = content_hash({"scenario": "fixture"})
+            boats = ["b1", "b2"]
+            race_art = {
+                "header": {
+                    "schema_version": "prediction-1", "race_id": "r1", "boat_ids": boats,
+                    "boat_class": "AC40",
+                    "source_manifest_hash": m_hash, "model_ref": model_ref, "scenario_hash": scen_hash,
+                    "status_dictionary": ["available", "estimated", "gate_ambiguous", "unavailable"],
+                    "method_and_assumption_refs": ["fixture"], "units": {}
+                },
+                "pre_race": {
+                    "status": "unavailable",
+                    "expected_position_by_boat": {b: None for b in boats},
+                    "nonfinish_score": "N"
+                },
+                "live": {
+                    "published_at_ms": [], "state_timestamps_ms": [], "progress_band": [],
+                    "no_finisher_prob": [], "status_code": [], "numerical_error": [], "reason_code": [],
+                    "win_prob_by_boat": {b: [] for b in boats},
+                    "source_age_ms_by_boat": {b: [] for b in boats},
+                    "position_uncertainty_summary_by_boat": {b: [] for b in boats},
+                    "quality_code_by_boat": {b: [] for b in boats}
+                }
+            }
+            race_rel = f"races/r1_{content_hash(race_art)}.json"
+            (directory / race_rel).write_text(json.dumps(race_art))
+
+            index = {
+                "schema_version": "prediction-index-1",
+                "source_manifest_path": f"manifests/{m_hash}.json",
+                "source_manifest_hash": m_hash,
+                "races": [{
+                    "race_id": "r1", "path": race_rel, "model_ref": model_ref,
+                    "source_manifest_hash": m_hash, "scenario_hash": scen_hash
+                }],
+                "cup_path": cup_path
+            }
+            (directory / "index.json").write_text(json.dumps(index))
+
+            bundle_res = build_private_forecast_bundle(root, trials=10, seed=42, use_official_results=False)
+            self.assertFalse(Path(bundle_res["bundle_dir"]).is_relative_to(directory))
+            self.assertEqual(bundle_res["candidate_model_ref"], model_ref)
+            self.assertTrue((Path(bundle_res["bundle_dir"]) / "bundle.json").is_file())
+
+            pub_res = publish_forecast_bundle(root, Path(bundle_res["bundle_dir"]))
+            self.assertEqual(pub_res["verification"], "passed")
+            updated_index = json.loads((directory / "index.json").read_text())
+            self.assertIn("evidence_manifest_hash", updated_index)
+
+            # Test cutoff guard in select_training_order_rows
+            from pipeline.prediction.labels import select_training_order_rows
+            labels_sample = [{
+                "race_id": "r1", "date": "2026-05-22", "order": ["A", "B"],
+                "on_water_result": {"order": ["A", "B"], "available_at_ms": 1000},
+                "official_result": {"order": ["B", "A"], "available_at_ms": 5000}
+            }]
+            pre_cutoff = select_training_order_rows(labels_sample, target="official", cutoff_ms=4000)
+            self.assertEqual(pre_cutoff[0]["order"], ["A", "B"])
+            self.assertEqual(pre_cutoff[0]["training_target"], "on_water_fallback")
+
+            post_cutoff = select_training_order_rows(labels_sample, target="official", cutoff_ms=6000)
+            self.assertEqual(post_cutoff[0]["order"], ["B", "A"])
+            self.assertEqual(post_cutoff[0]["training_target"], "official")
+
+    def test_market_odds_evaluation(self):
+        from pipeline.prediction.evaluation import implied_probabilities, compare_market_to_forecast
+
+        # 1. Invalid odd <= 1.0 or non-finite
+        with self.assertRaises(ValueError):
+            implied_probabilities({"ETNZ": 0.8, "GB1": 2.5})
+        with self.assertRaises(ValueError):
+            implied_probabilities({"ETNZ": float("inf"), "GB1": 2.5})
+
+        # 2. Valid de-vigging
+        devig = implied_probabilities({"A": 2.0, "B": 2.0})
+        self.assertAlmostEqual(devig["overround"], 0.0)
+        self.assertAlmostEqual(devig["probabilities"]["A"], 0.5)
+        self.assertAlmostEqual(devig["probabilities"]["B"], 0.5)
+
+        # 3. Causal timestamp guard
+        post_snap = {"captured_at_ms": 2000, "market": "ac38_winner", "selections": {}}
+        res_post = compare_market_to_forecast(post_snap, {}, forecast_issue_time_ms=1000)
+        self.assertEqual(res_post["status"], "post_issue_time_excluded")
+
+        # 4. Incomplete book guard for ac38_winner
+        incomplete_snap = {
+            "captured_at_ms": 500, "market": "ac38_winner",
+            "selections": {"ETNZ": 1.8, "GB1": 3.0}
+        }
+        res_inc = compare_market_to_forecast(incomplete_snap, {}, forecast_issue_time_ms=1000)
+        self.assertEqual(res_inc["status"], "incomplete_book_excluded")
+
+        # 5. Complete book validation
+        complete_odds = {
+            "ETNZ": 2.0, "GB1": 6.0, "LUNA_ROSSA": 4.0, "ALINGHI": 12.0,
+            "LA_ROCHE_POSAY": 15.0, "ARC_USA": 15.0, "AUSTRALIA": 20.0
+        }
+        complete_snap = {
+            "captured_at_ms": 500, "market": "ac38_winner",
+            "selections": complete_odds
+        }
+        dummy_forecast = {"probabilities": {t: 1.0 / 7.0 for t in complete_odds}}
+        res_valid = compare_market_to_forecast(complete_snap, dummy_forecast, forecast_issue_time_ms=1000)
+        self.assertEqual(res_valid["status"], "valid")
+        self.assertIn("market_probabilities", res_valid)
+        self.assertIn("forecast_differences", res_valid)
+
+    def test_exposure_hazard_probability(self):
+        from pipeline.prediction.cup import exposure_hazard_probability
+
+        self.assertEqual(exposure_hazard_probability(0.0), 0.0)
+        p1 = exposure_hazard_probability(0.1, duration_hours=0.2)
+        p2 = exposure_hazard_probability(0.1, duration_hours=0.5)
+        self.assertGreater(p2, p1)
+        self.assertGreater(p1, 0.0)
+
+        with self.assertRaises(ValueError):
+            exposure_hazard_probability(-0.1)
+
+    def test_daily_drift_sd(self):
+        from pipeline.prediction.cup import CupScenario, simulate_cup
+
+        with self.assertRaises(ValueError):
+            CupScenario(daily_drift_sd=-0.1).validate()
+        with self.assertRaises(ValueError):
+            CupScenario(daily_drift_sd=0.6).validate()
+
+        scen = CupScenario(daily_drift_sd=0.05)
+        scen.validate()
+        self.assertIn("drift", scen.scenario_id)
+
+        sim = simulate_cup({"ETNZ": 0.2, "GB1": 0.1}, scenario=scen, trials=100, seed=42)
+        self.assertEqual(sim["trials"], 100)
+        self.assertIn("ETNZ", sim["probabilities"])
+
+    def test_direct_ac75_distribution(self):
+        import numpy as np
+        from pipeline.prediction.cup import simulate_cup, update_cup_from_2027_results, TEAM_IDS
+
+        # 1. Invalid covariance shape or team order
+        with self.assertRaises(ValueError):
+            simulate_cup({}, direct_ac75_distribution={"team_order": ["ETNZ"], "covariance": [[1.0]], "mean": {}})
+
+        # 2. Valid direct AC75 distribution
+        cov = np.eye(7) * 0.25
+        mean = {t: 0.1 * i for i, t in enumerate(TEAM_IDS)}
+        dist = {"team_order": list(TEAM_IDS), "covariance": cov.tolist(), "mean": mean}
+        sim = simulate_cup({}, direct_ac75_distribution=dist, trials=100, seed=42)
+        self.assertEqual(sim["diagnostics"]["capability_source"], "direct_ac75_posterior")
+
+        # 3. Update from 2027 results
+        orders = [
+            ["ETNZ", "GB1", "LUNA_ROSSA"],
+            ["GB1", "ALINGHI", "LA_ROCHE_POSAY"]
+        ]
+        updated = update_cup_from_2027_results(mean, cov, orders)
+        self.assertEqual(updated["team_order"], list(TEAM_IDS))
+        self.assertIn("ETNZ", updated["mean"])
+        self.assertEqual(len(updated["covariance"]), 7)
+
+    def test_cup_bounds_never_exclude_sixth_seed_repechage_champion_seed_521(self):
+        """Audit Finding 2: conservative bounds must never exclude 6th seed repechage champion."""
+        res = simulate_cup({t: 0.0 for t in TEAM_IDS}, trials=1, seed=521, feasible_slot_rule_bounds=True)
+        self.assertEqual(res["rule_bounds"]["LA_ROCHE_POSAY"]["upper"], 1.0)
+
+        # Bounds must be conservative across seeds 500..530: lower <= upper
+        for s in range(500, 530):
+            r = simulate_cup({t: 0.0 for t in TEAM_IDS}, trials=1, seed=s, feasible_slot_rule_bounds=True)
+            for team in TEAM_IDS:
+                lower = r["rule_bounds"][team]["lower"]
+                upper = r["rule_bounds"][team]["upper"]
+                self.assertLessEqual(lower, upper)
+                self.assertGreaterEqual(lower, 0.0)
+                self.assertLessEqual(upper, 1.0)
+
+
 
 if __name__ == "__main__":
     unittest.main()

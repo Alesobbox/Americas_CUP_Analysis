@@ -336,8 +336,10 @@ class TestAdversarialSyntheticDatasetPipeline(unittest.TestCase):
 
 def run_real_dataset_benchmark() -> dict:
     """Runs ingestion benchmark on Data/26 09 22 NAP IPR PR1.jsonl."""
-    dataset_rel_path = os.path.join("Data", "26 09 22 NAP IPR PR1.jsonl")
-    dataset_abs_path = os.path.join(WORKSPACE_ROOT, dataset_rel_path)
+    dataset_abs_path = os.path.join(WORKSPACE_ROOT, "Data", "26 09 22 NAP IPR PR1.jsonl")
+    if not os.path.exists(dataset_abs_path):
+        dataset_abs_path = os.path.join(WORKSPACE_ROOT, "Data", "AC38", "26 09 22 NAP IPR PR1.jsonl")
+    dataset_rel_path = os.path.relpath(dataset_abs_path, WORKSPACE_ROOT)
 
     print(f"\n=======================================================")
     print(f" REAL DATASET INGESTION BENCHMARK")
