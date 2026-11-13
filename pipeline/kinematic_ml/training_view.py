@@ -20,7 +20,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 import pyarrow.parquet as pq
 
@@ -201,10 +201,6 @@ def load_authenticated_training_view(
     )
 
 
-# =============================================================================
-# Centralized Component-Level Isolation Filters
-# =============================================================================
-
 def filter_steady_windows(
     tv: TrainingView,
     windows: Sequence[Mapping[str, Any]],
@@ -384,10 +380,6 @@ def filter_residual_estimation_data(
     tv.validate_no_reserved_leakage(checked_fams)
     return dev_res
 
-
-# =============================================================================
-# Verification and Gate A Assurance Utilities
-# =============================================================================
 
 def verify_steady_windows_baseline(
     parquet_path: Path | str | None = None,

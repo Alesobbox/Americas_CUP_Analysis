@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field, asdict
 from typing import Any, Mapping, Sequence
 
-from .basis import EvidenceBasis, QualifiedFieldEvidence
+from .basis import QualifiedFieldEvidence
 from .policy import EvidencePolicy
 
 

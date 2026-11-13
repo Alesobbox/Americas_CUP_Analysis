@@ -555,10 +555,6 @@ def validate_scenario_v2(obj: Mapping[str, Any]) -> None:
             raise ValueError(f"Status '{status}' requires non-empty reason_codes")
 
 
-# =============================================================================
-# Wave 0 / P0 Shared Interfaces: Isolation, Evidence, Selection, Serving
-# =============================================================================
-
 
 @dataclass(frozen=True)
 class SplitRef:

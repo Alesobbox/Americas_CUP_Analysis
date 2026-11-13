@@ -15,7 +15,7 @@ Enforces:
 from __future__ import annotations
 
 import math
-from typing import Any, Mapping, Sequence
+from typing import Mapping, Sequence
 
 import numpy as np
 

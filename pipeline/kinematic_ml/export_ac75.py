@@ -381,7 +381,6 @@ def export_ac75_learned_bundle(
     res_npz_path = target_dir / "residual_blocks.npz"
     catalog_path = target_dir / "scenarios_catalog.json"
 
-    # Step 1: Write placeholder catalog so authenticated loader can verify preliminary bundle
     initial_catalog = {
         "schema_version": "ac75-catalog-2",
         "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -463,10 +462,8 @@ def export_ac75_learned_bundle(
     }
     manifest_file.write_text(json.dumps(manifest_doc, indent=2), encoding="utf-8")
 
-    # Step 2: Reload fitted bundle through production authenticated loader
     reloaded_bundle = load_authenticated_bundle(manifest_file, root=root)
 
-    # Step 3: Generate cached scenarios from reloaded model
     key_pairs = [
         ("ac37:ETNZ", "ac37:INEOS"),
         ("ac37:ETNZ", "ac37:LUNA_ROSSA"),
@@ -553,17 +550,14 @@ def export_ac75_learned_bundle(
     catalog_path.write_text(json.dumps(catalog_envelope, indent=2), encoding="utf-8")
     catalog_hash = _sha256_file(catalog_path)
 
-    # Step 4: Finalize manifest with exact catalog hash
     manifest_doc["status_notice"] = status_notice
     manifest_doc["total_scenarios_cached"] = len(scenarios)
     manifest_doc["artifacts"]["scenarios_catalog_sha256"] = catalog_hash
     manifest_file.write_text(json.dumps(manifest_doc, indent=2), encoding="utf-8")
     manifest_hash = _sha256_file(manifest_file)
 
-    # Step 5: Verify catalog and references through production authenticated loader
     load_authenticated_bundle(manifest_file, root=root)
 
-    # Step 6: Atomically advance private candidate pointer after acceptance
     latest_doc = {
         "candidate_id": candidate_id,
         "staged_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),

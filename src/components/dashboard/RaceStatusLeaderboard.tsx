@@ -92,7 +92,7 @@ export function RaceStatusLeaderboard({
 
       {/* 3. Fleet Leaderboard Table */}
       <div className="fleet-table-container">
-        <table className="fleet-table" role="table">
+        <table className="fleet-table" >
           <thead>
             <tr>
               <th className="th-rank">#</th>
