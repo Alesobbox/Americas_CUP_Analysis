@@ -1,1 +1,301 @@
-{"context":"historical_replay_only","errors":{},"hourly":{"air_temperature_c":[18.1,18.0,17.8,17.7,17.3,16.9,18.2,20.0,22.1,23.7,25.3,26.6,28.6,28.5,26.9,25.6,24.4,23.2,23.3,22.8,22.7,22.4,21.6,21.0],"time_ms":[1790467200000,1790470800000,1790474400000,1790478000000,1790481600000,1790485200000,1790488800000,1790492400000,1790496000000,1790499600000,1790503200000,1790506800000,1790510400000,1790514000000,1790517600000,1790521200000,1790524800000,1790528400000,1790532000000,1790535600000,1790539200000,1790542800000,1790546400000,1790550000000],"water_temperature_c":[24.6,24.6,24.6,24.6,24.5,24.5,24.5,24.6,24.6,24.7,24.7,24.8,24.8,24.8,24.8,24.7,24.7,24.6,24.6,24.6,24.6,24.6,24.6,24.6],"wave_height_m":[0.34,0.32,0.28,0.26,0.24,0.22,0.2,0.18,0.14,0.12,0.1,0.1,0.08,0.08,0.08,0.08,0.08,0.06,0.06,0.06,0.08,0.08,0.08,0.08]},"race_id":"26_09_27_nap_ipr_race_7","replay_window":{"end_ms":1790515320000,"start_ms":1790513820000},"requested_location":{"latitude":40.80948067,"longitude":14.23726898},"schema_version":"environment-1","sources":{"air":{"grid_location":{"latitude":40.878735,"longitude":14.210526},"product":"historical_model","provider":"Open-Meteo","request_url":"https://archive-api.open-meteo.com/v1/archive?latitude=40.80948067&longitude=14.23726898&start_date=2026-09-27&end_date=2026-09-27&hourly=temperature_2m&timezone=GMT&timeformat=unixtime&temperature_unit=celsius","response_file":"responses/9a3bd6bd1db8c0a499ce0118f7bd6661015118182f8315b9aebb7807bf9bd8d2.json","response_sha256":"9a3bd6bd1db8c0a499ce0118f7bd6661015118182f8315b9aebb7807bf9bd8d2","retrieved_at":"2026-10-16T09:06:04.889442Z"},"marine":{"grid_location":{"latitude":40.791664,"longitude":14.2083435},"product":"historical_model","provider":"Open-Meteo","request_url":"https://marine-api.open-meteo.com/v1/marine?latitude=40.80948067&longitude=14.23726898&start_date=2026-09-27&end_date=2026-09-27&hourly=wave_height%2Csea_surface_temperature&timezone=GMT&timeformat=unixtime&temperature_unit=celsius&cell_selection=sea","response_file":"responses/3bb6c3ca9cc656d12604e241864d54f5d629b43cfd547158af86d9e9572dc220.json","response_sha256":"3bb6c3ca9cc656d12604e241864d54f5d629b43cfd547158af86d9e9572dc220","retrieved_at":"2026-10-16T09:06:04.994206Z"}},"units":{"air_temperature_c":"°C","time_ms":"Unix milliseconds UTC","water_temperature_c":"°C","wave_height_m":"m"}}
+{
+  "schema_version": "environment-2",
+  "registry_version": "env-registry-1",
+  "race_id": "26_09_27_nap_ipr_race_7",
+  "session_id": "26_09_27_nap_ipr_race_7",
+  "attempt_id": "26_09_27_nap_ipr_race_7",
+  "family_id": "26_09_27_nap_ipr_race_7",
+  "cycle": "ac38",
+  "boat_class": "AC40",
+  "domain": "competitive",
+  "venue_id": "naples",
+  "context": "historical_replay_only",
+  "bundle_sha256": "9f644b8c5c28e185",
+  "bundle_relpath": "bundles/9f644b8c5c28e185.json",
+  "boats_relpath": "boats/26_09_27_nap_ipr_race_7.json",
+  "location": {
+    "latitude": 40.812152,
+    "longitude": 14.239965,
+    "bbox": {
+      "lat_min": 40.802960001844475,
+      "lat_max": 40.821344899614715,
+      "lon_min": 14.226063845309426,
+      "lon_max": 14.2538667015518,
+      "center_lat": 40.8121524507296,
+      "center_lon": 14.239965273430613
+    }
+  },
+  "window": {
+    "start_ms": 1790513820000,
+    "end_ms": 1790515320000,
+    "start_utc": "2026-09-27T12:57:00Z",
+    "end_utc": "2026-09-27T13:22:00Z",
+    "gun_ms": 1790514000000
+  },
+  "channels": {
+    "currents": {
+      "channel": "currents",
+      "provider": "Copernicus Marine Mediterranean Physics",
+      "provider_id": "copernicus_med_currents",
+      "dataset": "cmems_mod_med_phy-cur_my_4.2km_PT1H-m",
+      "dataset_version": "202511",
+      "variables": [
+        "uo",
+        "vo"
+      ],
+      "native_spatial_support": {
+        "spacing_deg": 0.041666666666666664
+      },
+      "native_temporal_support": "hourly_mean",
+      "averaging_bounds": {
+        "rule": "hour_start_to_hour_end_mean",
+        "native_step_s": 3600
+      },
+      "depth_m": 1.0182366,
+      "temperature_convention": null,
+      "units": {
+        "uo": "m/s",
+        "vo": "m/s"
+      },
+      "mask_handling": "wet_bilinear_or_1cell_nearest_with_land_barrier_guard",
+      "interpolation": "none",
+      "quality_status": "unavailable",
+      "request_spec": {},
+      "returned_coordinates": {},
+      "retrieval_time_utc": "unknown",
+      "raw_subset_sha256": "",
+      "metadata_sha256": "",
+      "valid_time_bounds": {},
+      "initialization_time_utc": "unknown",
+      "availability_time_utc": "unknown",
+      "product_classification": "retrospective_reanalysis",
+      "missingness": {
+        "missing_count": 21012,
+        "total_count": 21012
+      },
+      "fallback_used": false,
+      "fallback_reason": "copernicus_med_currents: copernicus_med_currents failed after 3 retries: Copernicus Marine credentials not configured; run `copernicusmarine login` first.",
+      "distance_to_wet_cell_m": null,
+      "attribution_url": "https://data.marine.copernicus.eu/product/MEDSEA_MULTIYEAR_PHY_006_004/description",
+      "chunk_sha256s": []
+    },
+    "waves": {
+      "channel": "waves",
+      "provider": "UniParthenope CCMMMA WW3 (Naples d03)",
+      "provider_id": "parthenope_naples_ww3",
+      "dataset": "ww33_d03",
+      "dataset_version": "d03-archive",
+      "variables": [
+        "hs",
+        "period",
+        "dir"
+      ],
+      "native_spatial_support": {
+        "spacing_deg": 0.003
+      },
+      "native_temporal_support": "hourly_instantaneous",
+      "averaging_bounds": {
+        "rule": "instantaneous",
+        "native_step_s": 3600
+      },
+      "depth_m": null,
+      "temperature_convention": null,
+      "units": {
+        "hs": "m",
+        "period": "s",
+        "dir": "deg"
+      },
+      "mask_handling": "wet_bilinear_or_1cell_nearest_with_land_barrier_guard",
+      "interpolation": "none",
+      "quality_status": "unavailable",
+      "request_spec": {},
+      "returned_coordinates": {},
+      "retrieval_time_utc": "unknown",
+      "raw_subset_sha256": "",
+      "metadata_sha256": "",
+      "valid_time_bounds": {},
+      "initialization_time_utc": "unknown",
+      "availability_time_utc": "unknown",
+      "product_classification": "archived_forecast",
+      "missingness": {
+        "missing_count": 21012,
+        "total_count": 21012
+      },
+      "fallback_used": true,
+      "fallback_reason": "parthenope_naples_ww3: parthenope_naples_ww3 failed after 3 retries: module 'netCDF4' has no attribute 'Dataset'; copernicus_med_waves: copernicus_med_waves failed after 3 retries: Copernicus Marine credentials not configured; run `copernicusmarine login` first.",
+      "distance_to_wet_cell_m": null,
+      "attribution_url": "https://meteo.uniparthenope.it/open-data/",
+      "chunk_sha256s": []
+    },
+    "air_temperature": {
+      "channel": "air_temperature",
+      "provider": "ARPAE ICON-2I via Open-Meteo",
+      "provider_id": "open_meteo_icon_2i",
+      "dataset": "italia_meteo_arpae_icon_2i",
+      "dataset_version": "historical-forecast-api",
+      "variables": [
+        "temperature_2m"
+      ],
+      "native_spatial_support": {
+        "cell_selection": "sea",
+        "spacing_deg": 0.02
+      },
+      "native_temporal_support": "hourly_instantaneous",
+      "averaging_bounds": {
+        "rule": "instantaneous",
+        "native_step_s": 3600
+      },
+      "depth_m": 2.0,
+      "temperature_convention": null,
+      "units": {
+        "temperature_2m": "degC"
+      },
+      "mask_handling": "wet_bilinear_or_1cell_nearest_with_land_barrier_guard",
+      "interpolation": "nearest_point",
+      "quality_status": "fallback",
+      "request_spec": {
+        "bbox": {
+          "lat_max": 40.861742,
+          "lat_min": 40.755311,
+          "lon_max": 14.294549,
+          "lon_min": 14.181269
+        },
+        "end_ms": 1790523720000,
+        "start_ms": 1790510220000,
+        "variables": [
+          "temperature_2m"
+        ]
+      },
+      "returned_coordinates": {
+        "lat": [
+          40.8
+        ],
+        "lon": [
+          14.25
+        ],
+        "time_count": 24
+      },
+      "retrieval_time_utc": "2026-11-16T09:44:57Z",
+      "raw_subset_sha256": "5de53a5836357426216556983216cfd1f0bdf197cd11d94701f2368540e1c01f",
+      "metadata_sha256": "7cb6b1130b7a56b6c2f457ed3c087c0d6a6a9257131a67568e4a8c66b6f18a73",
+      "valid_time_bounds": {
+        "min_utc": "2026-09-27T00:00:00Z",
+        "max_utc": "2026-09-27T23:00:00Z",
+        "count": 24
+      },
+      "initialization_time_utc": "unknown",
+      "availability_time_utc": "unknown",
+      "product_classification": "archived_forecast",
+      "missingness": {
+        "missing_count": 0,
+        "total_count": 21012
+      },
+      "fallback_used": true,
+      "fallback_reason": "parthenope_naples_wrf: parthenope_naples_wrf failed after 3 retries: module 'netCDF4' has no attribute 'Dataset'",
+      "distance_to_wet_cell_m": {
+        "min_m": 1593.52,
+        "max_m": 1593.52
+      },
+      "attribution_url": "https://open-meteo.com/en/docs/historical-forecast-api",
+      "chunk_sha256s": [
+        "5de53a5836357426216556983216cfd1f0bdf197cd11d94701f2368540e1c01f"
+      ]
+    },
+    "water_temperature": {
+      "channel": "water_temperature",
+      "provider": "UniParthenope CCMMMA ROMS (Naples d03)",
+      "provider_id": "parthenope_naples_rms3_temp",
+      "dataset": "rms3_d03",
+      "dataset_version": "d03-archive",
+      "variables": [
+        "tempSurface"
+      ],
+      "native_spatial_support": {
+        "spacing_deg": 0.002
+      },
+      "native_temporal_support": "hourly_instantaneous",
+      "averaging_bounds": {
+        "rule": "instantaneous",
+        "native_step_s": 3600
+      },
+      "depth_m": null,
+      "temperature_convention": "potential",
+      "units": {
+        "tempSurface": "degC"
+      },
+      "mask_handling": "wet_bilinear_or_1cell_nearest_with_land_barrier_guard",
+      "interpolation": "none",
+      "quality_status": "unavailable",
+      "request_spec": {},
+      "returned_coordinates": {},
+      "retrieval_time_utc": "unknown",
+      "raw_subset_sha256": "",
+      "metadata_sha256": "",
+      "valid_time_bounds": {},
+      "initialization_time_utc": "unknown",
+      "availability_time_utc": "unknown",
+      "product_classification": "archived_forecast",
+      "missingness": {
+        "missing_count": 21012,
+        "total_count": 21012
+      },
+      "fallback_used": true,
+      "fallback_reason": "parthenope_naples_rms3_temp: parthenope_naples_rms3_temp failed after 3 retries: DLL load failed while importing _netCDF4: Un criterio di controllo dell'applicazione ha bloccato il file.; copernicus_med_water_temp: copernicus_med_water_temp failed after 3 retries: Copernicus Marine credentials not configured; run `copernicusmarine login` first.",
+      "distance_to_wet_cell_m": null,
+      "attribution_url": "https://meteo.uniparthenope.it/open-data/",
+      "chunk_sha256s": []
+    }
+  },
+  "course_centre": {
+    "time_ms": [
+      1790510400000,
+      1790514000000,
+      1790517600000
+    ],
+    "current_u_mps": [
+      null,
+      null,
+      null
+    ],
+    "current_v_mps": [
+      null,
+      null,
+      null
+    ],
+    "current_speed_mps": [
+      null,
+      null,
+      null
+    ],
+    "current_dir_towards_deg": [
+      null,
+      null,
+      null
+    ],
+    "wave_height_m": [
+      null,
+      null,
+      null
+    ],
+    "wave_period_s": [
+      null,
+      null,
+      null
+    ],
+    "wave_dir_from_deg": [
+      null,
+      null,
+      null
+    ],
+    "air_temperature_c": [
+      23.0,
+      23.6,
+      24.2
+    ],
+    "water_temperature_c": [
+      null,
+      null,
+      null
+    ]
+  }
+}

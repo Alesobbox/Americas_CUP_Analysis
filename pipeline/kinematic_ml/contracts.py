@@ -216,6 +216,14 @@ MOTION_PREDICTOR_ALLOWLIST = frozenset({
     "heading_cog_offset_deg",
     "team_id",
     "practice_domain",  # boolean: 0 = competitive, 1 = practice
+    # Environmental extensions (ac75-model-2)
+    "current_speed_mps",
+    "current_dir_towards_deg",
+    "wave_height_m",
+    "wave_period_s",
+    "wave_dir_from_deg",
+    "air_temperature_c",
+    "water_temperature_c",
 })
 
 MOTION_TARGET_ALLOWLIST = frozenset({
@@ -331,6 +339,13 @@ class SteadyWindowRecord:
     max_gap_ms: int = 0
     status: str = "valid"
     reason_codes: list[str] = field(default_factory=list)
+    current_speed_mps: float | None = None
+    current_dir_towards_deg: float | None = None
+    wave_height_m: float | None = None
+    wave_period_s: float | None = None
+    wave_dir_from_deg: float | None = None
+    air_temperature_c: float | None = None
+    water_temperature_c: float | None = None
 
 
 @dataclass(frozen=True)
@@ -351,6 +366,13 @@ class ManeuverRecord:
     min_sog_mps: float = 0.0
     censoring: str = "uncensored"
     review_status: str = "provisional"
+    current_speed_mps: float | None = None
+    current_dir_towards_deg: float | None = None
+    wave_height_m: float | None = None
+    wave_period_s: float | None = None
+    wave_dir_from_deg: float | None = None
+    air_temperature_c: float | None = None
+    water_temperature_c: float | None = None
 
 
 @dataclass(frozen=True)

@@ -1,0 +1,101 @@
+{
+  "schema_version": "ac75-repair-experiment-1",
+  "experiment_id": "ac75_repair_experiment_v1",
+  "registered_at": "2026-11-10T21:50:00Z",
+  "status": "registered",
+  "baseline_git_state": {
+    "head_commit": "d641b2d63882b61cbbe26b21051c5b1e1e713184",
+    "branch": "master",
+    "pre_existing_modified_count": 25,
+    "pre_existing_untracked_count": 49
+  },
+  "public_preservation_root": {
+    "directory": "public/data",
+    "merkle_root_sha256": "48c293e43146c65d6ec4b627312d7bf3dfaf0c44a98745d4f76cdf0b6368d09b",
+    "total_files": 506,
+    "total_bytes": 263706323,
+    "verification_receipt": ".forecast/ac75_learning/preservation_receipt.json"
+  },
+  "previous_candidate_audit": {
+    "candidate_id": "ac75_0a7b20091ee7",
+    "staged_at": "2026-11-10T14:44:50Z",
+    "manifest_path": ".forecast/ac75_learning/candidates/ac75_0a7b20091ee7/candidate_manifest.json",
+    "manifest_sha256": "cec16f2ea5672034763c660b79c317be4f957dfa10da998410c971bbd7c60b58",
+    "holdout_exposure": {
+      "contaminated": true,
+      "total_steady_windows_used": 16128,
+      "training_steady_windows": 15533,
+      "validation_steady_windows": 595,
+      "reserved_holdout_windows_exposed": 2578,
+      "exposure_mechanism": "export_ac75.py looked for date_reservation.json which did not exist, defaulting holdout_dates to empty set and omitting isolation against frozen_evaluation_families.json"
+    }
+  },
+  "frozen_evaluation_families": {
+    "registry_path": ".forecast/ac75_learning/frozen_evaluation_families.json",
+    "content_sha256": "1ddde3fd253eea492d55eb3b7f5718b5c92643d3cc4aa153b01f0a7f41839820",
+    "reserved_holdout_families": [
+      "ac37_lvc_final_r3",
+      "ac37_lvc_final_r4",
+      "ac37_lvc_final_r5",
+      "ac37_lvc_final_r6",
+      "ac37_lvc_final_r7",
+      "ac37_lvc_final_r8",
+      "ac37_lvc_final_r9",
+      "ac37_lvc_final_r10",
+      "ac37_lvc_final_r11"
+    ],
+    "reserved_holdout_families_count": 9,
+    "development_families_count": 105,
+    "total_families_count": 114
+  },
+  "dataset_lineage": {
+    "sealed_steady_windows": ".forecast/ac75_learning/sealed/steady_windows.parquet",
+    "dataset_manifest_hash": "fc4bd7405d872a588b784d7689ee838da5636694ab6d7137594b0ef2cc42173c",
+    "target_counts": {
+      "total_steady_windows": 16128,
+      "reserved_holdout_windows_to_exclude": 2578,
+      "development_windows": 13550,
+      "september_28_stopped_attempt_windows_excluded": 539
+    }
+  },
+  "model_family": "empirical_vs_spline_vs_2x32_silu_nn",
+  "candidate_architectures": [
+    "empirical_binned_polar",
+    "thin_plate_spline",
+    "silu_neural_net_2x32"
+  ],
+  "feature_keys": [
+    "course_wind_angle_deg",
+    "heading_cog_offset_deg",
+    "leg_type",
+    "practice_domain",
+    "tack_side",
+    "team_id",
+    "twa_cos",
+    "twa_sin",
+    "tws_mps"
+  ],
+  "target_names": [
+    "duration_s",
+    "race_margin_s",
+    "sog_mps",
+    "total_event_s",
+    "winner"
+  ],
+  "hyperparameters": {
+    "nn_hidden_layers": [32, 32],
+    "nn_activation": "SiLU",
+    "nn_seeds": [2027, 2028, 2029],
+    "spline_alphas": [0.1, 1.0, 10.0, 100.0],
+    "window_duration_s": 5.0,
+    "max_cpu_threads": 4
+  },
+  "shared_contracts": {
+    "split_ref_schema": "ac75-split-ref-1",
+    "training_view_schema": "ac75-training-view-1",
+    "evidence_policy_schema": "ac75-evidence-policy-1",
+    "selection_decision_schema": "ac75-selection-decision-1",
+    "normalized_scenario_request_schema": "ac75-scenario-request-1",
+    "evaluation_receipt_schema": "ac75-evaluation-receipt-1"
+  }
+}

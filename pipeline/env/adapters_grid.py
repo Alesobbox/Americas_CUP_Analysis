@@ -32,6 +32,13 @@ def _canonical_hash(obj: Any) -> str:
 def _serialize_dataset_netcdf(ds: xr.Dataset) -> bytes:
     with tempfile.TemporaryDirectory() as tmpdir:
         out_path = Path(tmpdir) / "subset.nc"
+        # Try pure-python engines (scipy, h5netcdf) before compiled netcdf4 to avoid DLL blocks
+        for eng in ("scipy", "h5netcdf"):
+            try:
+                ds.to_netcdf(out_path, engine=eng)
+                return out_path.read_bytes()
+            except (ValueError, TypeError, OSError, RuntimeError):
+                continue
         enc = {"time": {"units": "seconds since 1970-01-01 00:00:00", "dtype": "float64"}} if "time" in ds.coords else None
         ds.to_netcdf(out_path, engine="netcdf4", encoding=enc)
         return out_path.read_bytes()
@@ -55,14 +62,17 @@ def _coord_spacing_metrics(lat_vals: np.ndarray, lon_vals: np.ndarray) -> dict[s
 
 
 def _open_netcdf_bytes(raw_bytes: bytes) -> xr.Dataset:
-    try:
-        return xr.open_dataset(io.BytesIO(raw_bytes), engine="scipy", mask_and_scale=True)
-    except Exception:
-        with tempfile.TemporaryDirectory() as tmpdir:
-            tmp_file = Path(tmpdir) / "raw.nc"
-            tmp_file.write_bytes(raw_bytes)
-            with xr.open_dataset(tmp_file, engine="netcdf4", mask_and_scale=True) as ds:
-                return ds.load()
+    # Try pure-python engines (scipy, h5netcdf) before compiled netcdf4 to avoid DLL blocks
+    for eng in ("scipy", "h5netcdf"):
+        try:
+            return xr.open_dataset(io.BytesIO(raw_bytes), engine=eng, mask_and_scale=True)
+        except (ValueError, TypeError, OSError, RuntimeError):
+            continue
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_file = Path(tmpdir) / "raw.nc"
+        tmp_file.write_bytes(raw_bytes)
+        with xr.open_dataset(tmp_file, engine="netcdf4", mask_and_scale=True) as ds:
+            return ds.load()
 
 
 def _default_http_get(url: str, timeout: float) -> tuple[int, bytes, dict[str, str]]:

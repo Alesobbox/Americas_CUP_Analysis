@@ -1,0 +1,43 @@
+{
+  "schema_version": "environment-bundle-1",
+  "registry_version": "env-registry-1",
+  "venue_id": "naples",
+  "utc_date": "2026-09-24",
+  "channels": {
+    "currents": {
+      "provider_id": "copernicus_med_currents",
+      "dataset": "cmems_mod_med_phy-cur_my_4.2km_PT1H-m",
+      "dataset_version": "202511",
+      "chunk_sha256s": [],
+      "metadata_sha256": "",
+      "retrieval_time_utc": "unknown"
+    },
+    "waves": {
+      "provider_id": "parthenope_naples_ww3",
+      "dataset": "ww33_d03",
+      "dataset_version": "d03-archive",
+      "chunk_sha256s": [],
+      "metadata_sha256": "",
+      "retrieval_time_utc": "unknown"
+    },
+    "air_temperature": {
+      "provider_id": "open_meteo_icon_2i",
+      "dataset": "italia_meteo_arpae_icon_2i",
+      "dataset_version": "historical-forecast-api",
+      "chunk_sha256s": [
+        "0ab5ce645a447aee38c41eb2ffd8fbd7d1c2e271b53f7b50979c69f4efc148e2"
+      ],
+      "metadata_sha256": "1f6eec0e6fcd329419e2ac9f1b690ba24ce77745eedc5afb58e2d8d1406c2251",
+      "retrieval_time_utc": "2026-11-16T09:44:11Z"
+    },
+    "water_temperature": {
+      "provider_id": "parthenope_naples_rms3_temp",
+      "dataset": "rms3_d03",
+      "dataset_version": "d03-archive",
+      "chunk_sha256s": [],
+      "metadata_sha256": "",
+      "retrieval_time_utc": "unknown"
+    }
+  },
+  "bundle_sha256": "bd5846ed3d4debff"
+}

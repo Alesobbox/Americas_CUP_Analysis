@@ -137,6 +137,7 @@ class InstalledModelBundle:
         self.margin_interval_scale: float = float(margin_scale)
         cal_info = kwargs.get("calibration_info")
         self.calibration_info: dict[str, Any] = dict(cal_info) if isinstance(cal_info, Mapping) else {}
+        self.schema_version: str = str(kwargs.get("schema_version", "ac75-model-1"))
 
     def predict_motion_distribution(
         self,
@@ -154,6 +155,18 @@ class InstalledModelBundle:
             mu_log, log_sig = self.empirical_model.predict_distribution(features_dict)
             raw_sig = max(0.05, math.exp(log_sig))
             return float(mu_log), float(max(0.05, raw_sig * self.motion_residual_scale))
+
+        if getattr(self, "schema_version", "ac75-model-1") == "ac75-model-2":
+            from pipeline.kinematic_ml.feature_registry import encode_features_matrix, AC75_MODEL_SCHEMA_V2
+            X, _, _ = encode_features_matrix(
+                [features_dict],
+                schema_version=AC75_MODEL_SCHEMA_V2,
+                scaler_mean=self.scaler_mean,
+                scaler_scale=self.scaler_scale,
+            )
+            mu, log_scale = numpy_forward_pass(X, self.motion_weights)
+            raw_sig = max(0.05, math.exp(float(log_scale[0])))
+            return float(mu[0]), float(max(0.05, raw_sig * self.motion_residual_scale))
 
         X = np.zeros((1, 14), dtype=np.float32)
         X[0, 0] = float(features_dict.get("tws_mps", 10.0))
@@ -243,6 +256,7 @@ def _compile_team_leg_candidates(
     leg_cfg: Mapping[str, Any],
     tws_mps: float,
     twd_deg: float,
+    env_params: Mapping[str, Any] | None = None,
 ) -> tuple[list[list[tuple[str, float, float, float]]], np.ndarray] | None:
     """Pre-evaluates all matching route templates for (team_id, leg_type) on the target leg.
 
@@ -288,6 +302,18 @@ def _compile_team_leg_candidates(
                     "course_wind_angle_deg": abs(twa_deg),
                     "practice_domain": 0,
                 }
+                if env_params:
+                    for k in (
+                        "current_speed_mps",
+                        "current_dir_towards_deg",
+                        "wave_height_m",
+                        "wave_period_s",
+                        "wave_dir_from_deg",
+                        "air_temperature_c",
+                        "water_temperature_c",
+                    ):
+                        if k in env_params and env_params[k] is not None:
+                            feat[k] = float(env_params[k])
                 mu_log, sigma_log = installed_model.predict_motion_distribution(feat)
                 prev_pred_sog = math.exp(mu_log + 0.5 * (sigma_log ** 2))
                 seg_specs.append(("straight", float(s.distance_m), mu_log, sigma_log))
@@ -477,14 +503,15 @@ def predict_scenario(
     swapped = team_a > team_b
     team_0, team_1 = (team_b, team_a) if swapped else (team_a, team_b)
 
+    env_params = request.get("environment") if isinstance(request.get("environment"), Mapping) else None
     compiled_legs_0 = []
     compiled_legs_1 = []
     for leg in legs_config:
         comp_0 = _compile_team_leg_candidates(
-            installed_model, team_0, leg, tws_mps, twd_deg
+            installed_model, team_0, leg, tws_mps, twd_deg, env_params
         )
         comp_1 = _compile_team_leg_candidates(
-            installed_model, team_1, leg, tws_mps, twd_deg
+            installed_model, team_1, leg, tws_mps, twd_deg, env_params
         )
         if comp_0 is None or comp_1 is None:
             unavail = ScenarioV2Result(

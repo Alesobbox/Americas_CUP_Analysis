@@ -75,6 +75,7 @@ def build_inventory(root: Path = ROOT) -> dict:
             race_paths.setdefault(relative, (None, "Forecast archive artifact", "Forecast"))
     entries = []
     kinds = {"Replay": "replay", "Analysis": "analysis", "Historical environment": "environment",
+             "Historical boat environment": "environment_boats", "Environment provenance bundle": "provenance",
              "Race summary CSV": "summary_csv", "Boat and leg performance CSV": "performance_csv",
              "Race forecast": "forecast", "Pre-race condition scenario": "scenario",
              "Race catalog": "catalog", "Historical analysis index": "catalog", "Forecast catalog": "catalog", "Race course preview index": "catalog",
@@ -91,12 +92,12 @@ def build_inventory(root: Path = ROOT) -> dict:
         if not path.is_file():
             raise FileNotFoundError(f"Dashboard artifact is missing: {relative}")
         kind = kinds[label]
-        status = "retained" if kind == "archive" else "supporting" if kind in {"source", "model", "provenance", "verification", "alias"} else "current"
+        status = "retained" if kind == "archive" else "supporting" if kind in {"source", "model", "provenance", "verification", "alias", "environment_boats"} else "current"
         entries.append({"id": relative, "url": "/data/" + relative, "race_id": race_id,
                         "label": label, "view": view, "bytes": path.stat().st_size,
                         "format": path.suffix.removeprefix("."), "kind": kind, "status": status,
                         "scope": "race" if race_id else "archive",
-                        "primary_download": race_id is not None and kind in primary})
+                        "primary_download": race_id is not None and kind in primary and label != "Historical boat environment"})
     replayed = sum(race["competitors_count"] for race in races)
     result = {"schema_version": "1.1", "summary": {"race_count": len(races),
               "replayed_boat_races": replayed},

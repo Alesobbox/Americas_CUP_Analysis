@@ -85,8 +85,18 @@ class CachedGridField:
 
 
 def _load_netcdf_chunk(path: Path, meta: Mapping[str, Any], temporal_support: str, native_step_s: int) -> CachedGridField:
-    with xr.open_dataset(path, engine="netcdf4", decode_cf=True, mask_and_scale=True) as ds_raw:
-        ds = ds_raw.load()
+    ds: xr.Dataset | None = None
+    # Try pure-python engines (scipy, h5netcdf) before compiled netcdf4 to avoid DLL blocks
+    for eng in ("scipy", "h5netcdf"):
+        try:
+            with xr.open_dataset(path, engine=eng, decode_cf=True, mask_and_scale=True) as ds_raw:
+                ds = ds_raw.load()
+                break
+        except (ValueError, TypeError, OSError, RuntimeError):
+            continue
+    if ds is None:
+        with xr.open_dataset(path, engine="netcdf4", decode_cf=True, mask_and_scale=True) as ds_raw:
+            ds = ds_raw.load()
     lat_name = "latitude" if "latitude" in ds.coords else "lat"
     lon_name = "longitude" if "longitude" in ds.coords else "lon"
     lats = np.asarray(ds[lat_name].values, dtype=float)

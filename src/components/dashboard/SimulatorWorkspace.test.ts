@@ -387,6 +387,9 @@ describe('Kinematic Simulator Engine & Catalog Reversal Integrity', () => {
             purpose: 'preview',
           }),
         })
+        if (res60004.status !== 200) {
+          console.error('RES60004 ERROR BODY:', await res60004.text())
+        }
         expect(res60004.status).toBe(200)
         const body60004 = (await res60004.json()) as KinematicScenarioV2
         expect(body60004.applied_inputs.environment.tws_mps).toBe(6.0004)

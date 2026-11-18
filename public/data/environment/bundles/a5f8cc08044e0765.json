@@ -1,0 +1,43 @@
+{
+  "schema_version": "environment-bundle-1",
+  "registry_version": "env-registry-1",
+  "venue_id": "cagliari",
+  "utc_date": "2026-05-22",
+  "channels": {
+    "currents": {
+      "provider_id": "copernicus_med_currents",
+      "dataset": "cmems_mod_med_phy-cur_my_4.2km_PT1H-m",
+      "dataset_version": "202511",
+      "chunk_sha256s": [],
+      "metadata_sha256": "",
+      "retrieval_time_utc": "unknown"
+    },
+    "waves": {
+      "provider_id": "copernicus_med_waves",
+      "dataset": "cmems_mod_med_wav_my_4.2km_PT1H-i",
+      "dataset_version": "202511",
+      "chunk_sha256s": [],
+      "metadata_sha256": "",
+      "retrieval_time_utc": "unknown"
+    },
+    "air_temperature": {
+      "provider_id": "open_meteo_icon_2i",
+      "dataset": "italia_meteo_arpae_icon_2i",
+      "dataset_version": "historical-forecast-api",
+      "chunk_sha256s": [
+        "dd37a0dbb9c9897be53e0df0874dc5992b35ad474633768deffe905c1ccc9b26"
+      ],
+      "metadata_sha256": "908d13405d1a15d71cc0879d08f99f4acb98cb4407111f718b54cea06705fd54",
+      "retrieval_time_utc": "2026-11-16T09:42:09Z"
+    },
+    "water_temperature": {
+      "provider_id": "copernicus_med_water_temp",
+      "dataset": "cmems_mod_med_phy-temp_my_4.2km_P1D-m",
+      "dataset_version": "202511",
+      "chunk_sha256s": [],
+      "metadata_sha256": "",
+      "retrieval_time_utc": "unknown"
+    }
+  },
+  "bundle_sha256": "a5f8cc08044e0765"
+}

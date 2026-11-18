@@ -1,1 +1,301 @@
-{"context":"historical_replay_only","errors":{},"hourly":{"air_temperature_c":[17.4,17.2,16.7,16.5,16.3,17.1,20.0,22.3,24.0,25.1,25.2,24.6,24.3,23.9,23.7,23.2,22.1,21.2,20.8,20.5,20.5,20.3,20.1,20.0],"time_ms":[1779580800000,1779584400000,1779588000000,1779591600000,1779595200000,1779598800000,1779602400000,1779606000000,1779609600000,1779613200000,1779616800000,1779620400000,1779624000000,1779627600000,1779631200000,1779634800000,1779638400000,1779642000000,1779645600000,1779649200000,1779652800000,1779656400000,1779660000000,1779663600000],"water_temperature_c":[20.2,20.2,20.1,20.1,20.0,20.0,20.1,20.2,20.3,20.5,20.7,20.9,21.0,21.0,21.0,21.0,21.0,21.0,20.9,20.9,20.8,20.8,20.7,20.7],"wave_height_m":[0.08,0.06,0.06,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.06,0.06,0.06,0.06,0.06,0.06,0.04]},"race_id":"26_05_24_cag_ipr_race_8","replay_window":{"end_ms":1779631740978,"start_ms":1779630180000},"requested_location":{"latitude":39.18,"longitude":9.12},"schema_version":"environment-1","sources":{"air":{"grid_location":{"latitude":39.26186,"longitude":9.173553},"product":"historical_model","provider":"Open-Meteo","request_url":"https://archive-api.open-meteo.com/v1/archive?latitude=39.18&longitude=9.12&start_date=2026-05-24&end_date=2026-05-24&hourly=temperature_2m&timezone=GMT&timeformat=unixtime&temperature_unit=celsius","response_file":"responses/002c4afca36895eaf819c1dca81b2e1f8584305111964e3fe5c185213185fde1.json","response_sha256":"002c4afca36895eaf819c1dca81b2e1f8584305111964e3fe5c185213185fde1","retrieved_at":"2026-10-16T09:06:02.915395Z"},"marine":{"grid_location":{"latitude":39.208336,"longitude":9.125015},"product":"historical_model","provider":"Open-Meteo","request_url":"https://marine-api.open-meteo.com/v1/marine?latitude=39.18&longitude=9.12&start_date=2026-05-24&end_date=2026-05-24&hourly=wave_height%2Csea_surface_temperature&timezone=GMT&timeformat=unixtime&temperature_unit=celsius&cell_selection=sea","response_file":"responses/104453e3b3239cd0d36754d434ceb65b1220ce511cecff766db1a94cf65301ad.json","response_sha256":"104453e3b3239cd0d36754d434ceb65b1220ce511cecff766db1a94cf65301ad","retrieved_at":"2026-10-16T09:06:03.024689Z"}},"units":{"air_temperature_c":"°C","time_ms":"Unix milliseconds UTC","water_temperature_c":"°C","wave_height_m":"m"}}
+{
+  "schema_version": "environment-2",
+  "registry_version": "env-registry-1",
+  "race_id": "26_05_24_cag_ipr_race_8",
+  "session_id": "26_05_24_cag_ipr_race_8",
+  "attempt_id": "26_05_24_cag_ipr_race_8",
+  "family_id": "26_05_24_cag_ipr_race_8",
+  "cycle": "ac38",
+  "boat_class": "AC40",
+  "domain": "competitive",
+  "venue_id": "cagliari",
+  "context": "historical_replay_only",
+  "bundle_sha256": "adda8defb1038471",
+  "bundle_relpath": "bundles/adda8defb1038471.json",
+  "boats_relpath": "boats/26_05_24_cag_ipr_race_8.json",
+  "location": {
+    "latitude": 39.183151,
+    "longitude": 9.118915,
+    "bbox": {
+      "lat_min": 39.164905044037,
+      "lat_max": 39.20139609070902,
+      "lon_min": 9.1065708860231,
+      "lon_max": 9.131259658725519,
+      "center_lat": 39.183150567373005,
+      "center_lon": 9.11891527237431
+    }
+  },
+  "window": {
+    "start_ms": 1779630180000,
+    "end_ms": 1779631740978,
+    "start_utc": "2026-05-24T13:43:00Z",
+    "end_utc": "2026-05-24T14:09:00Z",
+    "gun_ms": 1779630360000
+  },
+  "channels": {
+    "currents": {
+      "channel": "currents",
+      "provider": "Copernicus Marine Mediterranean Physics",
+      "provider_id": "copernicus_med_currents",
+      "dataset": "cmems_mod_med_phy-cur_my_4.2km_PT1H-m",
+      "dataset_version": "202511",
+      "variables": [
+        "uo",
+        "vo"
+      ],
+      "native_spatial_support": {
+        "spacing_deg": 0.041666666666666664
+      },
+      "native_temporal_support": "hourly_mean",
+      "averaging_bounds": {
+        "rule": "hour_start_to_hour_end_mean",
+        "native_step_s": 3600
+      },
+      "depth_m": 1.0182366,
+      "temperature_convention": null,
+      "units": {
+        "uo": "m/s",
+        "vo": "m/s"
+      },
+      "mask_handling": "wet_bilinear_or_1cell_nearest_with_land_barrier_guard",
+      "interpolation": "none",
+      "quality_status": "unavailable",
+      "request_spec": {},
+      "returned_coordinates": {},
+      "retrieval_time_utc": "unknown",
+      "raw_subset_sha256": "",
+      "metadata_sha256": "",
+      "valid_time_bounds": {},
+      "initialization_time_utc": "unknown",
+      "availability_time_utc": "unknown",
+      "product_classification": "retrospective_reanalysis",
+      "missingness": {
+        "missing_count": 20292,
+        "total_count": 20292
+      },
+      "fallback_used": false,
+      "fallback_reason": "copernicus_med_currents: copernicus_med_currents failed after 3 retries: Copernicus Marine credentials not configured; run `copernicusmarine login` first.",
+      "distance_to_wet_cell_m": null,
+      "attribution_url": "https://data.marine.copernicus.eu/product/MEDSEA_MULTIYEAR_PHY_006_004/description",
+      "chunk_sha256s": []
+    },
+    "waves": {
+      "channel": "waves",
+      "provider": "Copernicus Marine Mediterranean Waves",
+      "provider_id": "copernicus_med_waves",
+      "dataset": "cmems_mod_med_wav_my_4.2km_PT1H-i",
+      "dataset_version": "202511",
+      "variables": [
+        "VHM0",
+        "VTM10",
+        "VMDR"
+      ],
+      "native_spatial_support": {
+        "spacing_deg": 0.041666666666666664
+      },
+      "native_temporal_support": "hourly_instantaneous",
+      "averaging_bounds": {
+        "rule": "instantaneous",
+        "native_step_s": 3600
+      },
+      "depth_m": null,
+      "temperature_convention": null,
+      "units": {
+        "VHM0": "m",
+        "VTM10": "s",
+        "VMDR": "deg"
+      },
+      "mask_handling": "wet_bilinear_or_1cell_nearest_with_land_barrier_guard",
+      "interpolation": "none",
+      "quality_status": "unavailable",
+      "request_spec": {},
+      "returned_coordinates": {},
+      "retrieval_time_utc": "unknown",
+      "raw_subset_sha256": "",
+      "metadata_sha256": "",
+      "valid_time_bounds": {},
+      "initialization_time_utc": "unknown",
+      "availability_time_utc": "unknown",
+      "product_classification": "retrospective_reanalysis",
+      "missingness": {
+        "missing_count": 20292,
+        "total_count": 20292
+      },
+      "fallback_used": false,
+      "fallback_reason": "copernicus_med_waves: copernicus_med_waves failed after 3 retries: Copernicus Marine credentials not configured; run `copernicusmarine login` first.",
+      "distance_to_wet_cell_m": null,
+      "attribution_url": "https://data.marine.copernicus.eu/product/MEDSEA_MULTIYEAR_WAV_006_012/description",
+      "chunk_sha256s": []
+    },
+    "air_temperature": {
+      "channel": "air_temperature",
+      "provider": "ARPAE ICON-2I via Open-Meteo",
+      "provider_id": "open_meteo_icon_2i",
+      "dataset": "italia_meteo_arpae_icon_2i",
+      "dataset_version": "historical-forecast-api",
+      "variables": [
+        "temperature_2m"
+      ],
+      "native_spatial_support": {
+        "cell_selection": "sea",
+        "spacing_deg": 0.02
+      },
+      "native_temporal_support": "hourly_instantaneous",
+      "averaging_bounds": {
+        "rule": "instantaneous",
+        "native_step_s": 3600
+      },
+      "depth_m": 2.0,
+      "temperature_convention": null,
+      "units": {
+        "temperature_2m": "degC"
+      },
+      "mask_handling": "wet_bilinear_or_1cell_nearest_with_land_barrier_guard",
+      "interpolation": "nearest_point",
+      "quality_status": "available",
+      "request_spec": {
+        "bbox": {
+          "lat_max": 39.241396,
+          "lat_min": 39.124643,
+          "lon_max": 9.171767,
+          "lon_min": 9.066571
+        },
+        "end_ms": 1779637678000,
+        "start_ms": 1779624420000,
+        "variables": [
+          "temperature_2m"
+        ]
+      },
+      "returned_coordinates": {
+        "lat": [
+          39.18
+        ],
+        "lon": [
+          9.125
+        ],
+        "time_count": 24
+      },
+      "retrieval_time_utc": "2026-11-16T09:42:13Z",
+      "raw_subset_sha256": "cea97f83c49f8c65f224105cf73936e4421f205c0da3148477ca4b7dfa3cbe38",
+      "metadata_sha256": "908d13405d1a15d71cc0879d08f99f4acb98cb4407111f718b54cea06705fd54",
+      "valid_time_bounds": {
+        "min_utc": "2026-05-24T00:00:00Z",
+        "max_utc": "2026-05-24T23:00:00Z",
+        "count": 24
+      },
+      "initialization_time_utc": "unknown",
+      "availability_time_utc": "unknown",
+      "product_classification": "archived_forecast",
+      "missingness": {
+        "missing_count": 0,
+        "total_count": 20292
+      },
+      "fallback_used": false,
+      "fallback_reason": null,
+      "distance_to_wet_cell_m": {
+        "min_m": 630.7,
+        "max_m": 630.7
+      },
+      "attribution_url": "https://open-meteo.com/en/docs/historical-forecast-api",
+      "chunk_sha256s": [
+        "cea97f83c49f8c65f224105cf73936e4421f205c0da3148477ca4b7dfa3cbe38"
+      ]
+    },
+    "water_temperature": {
+      "channel": "water_temperature",
+      "provider": "Copernicus Marine Mediterranean Physics",
+      "provider_id": "copernicus_med_water_temp",
+      "dataset": "cmems_mod_med_phy-temp_my_4.2km_P1D-m",
+      "dataset_version": "202511",
+      "variables": [
+        "thetao"
+      ],
+      "native_spatial_support": {
+        "spacing_deg": 0.041666666666666664
+      },
+      "native_temporal_support": "daily_mean",
+      "averaging_bounds": {
+        "rule": "00:00Z_to_24:00Z_daily_mean",
+        "native_step_s": 86400
+      },
+      "depth_m": 1.0182366,
+      "temperature_convention": "potential",
+      "units": {
+        "thetao": "degC"
+      },
+      "mask_handling": "wet_bilinear_or_1cell_nearest_with_land_barrier_guard",
+      "interpolation": "none",
+      "quality_status": "unavailable",
+      "request_spec": {},
+      "returned_coordinates": {},
+      "retrieval_time_utc": "unknown",
+      "raw_subset_sha256": "",
+      "metadata_sha256": "",
+      "valid_time_bounds": {},
+      "initialization_time_utc": "unknown",
+      "availability_time_utc": "unknown",
+      "product_classification": "retrospective_reanalysis",
+      "missingness": {
+        "missing_count": 20292,
+        "total_count": 20292
+      },
+      "fallback_used": false,
+      "fallback_reason": "copernicus_med_water_temp: copernicus_med_water_temp failed after 3 retries: Copernicus Marine credentials not configured; run `copernicusmarine login` first.",
+      "distance_to_wet_cell_m": null,
+      "attribution_url": "https://data.marine.copernicus.eu/product/MEDSEA_MULTIYEAR_PHY_006_004/description",
+      "chunk_sha256s": []
+    }
+  },
+  "course_centre": {
+    "time_ms": [
+      1779627600000,
+      1779631200000,
+      1779634800000
+    ],
+    "current_u_mps": [
+      null,
+      null,
+      null
+    ],
+    "current_v_mps": [
+      null,
+      null,
+      null
+    ],
+    "current_speed_mps": [
+      null,
+      null,
+      null
+    ],
+    "current_dir_towards_deg": [
+      null,
+      null,
+      null
+    ],
+    "wave_height_m": [
+      null,
+      null,
+      null
+    ],
+    "wave_period_s": [
+      null,
+      null,
+      null
+    ],
+    "wave_dir_from_deg": [
+      null,
+      null,
+      null
+    ],
+    "air_temperature_c": [
+      20.1,
+      20.2,
+      20.2
+    ],
+    "water_temperature_c": [
+      null,
+      null,
+      null
+    ]
+  }
+}

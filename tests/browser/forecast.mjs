@@ -390,17 +390,23 @@ try {
         }
       }
       const environment = JSON.parse(await fs.readFile(`public/data/environment/${replay.id}.json`, 'utf8'))
-      const hour = environment.hourly.time_ms.findIndex((time) => time <= gun && gun < time + 3600000)
+      const isV2 = environment.schema_version === 'environment-2'
+      const times = isV2 ? environment.course_centre.time_ms : environment.hourly.time_ms
+      const hour = times.findIndex((time) => time <= gun && gun < time + 3600000)
       assert.ok(hour >= 0, 'Historical API data should cover the reported race hour')
       const header = page.getByRole('banner')
       await header.locator('.conditions-disclosure > summary').click()
-      await header.getByRole('link', { name: 'Open-Meteo model', exact: true }).waitFor()
+      await header.locator('.conditions-popover a').first().waitFor()
       for (const [label, field, unit] of [['Sea', 'wave_height_m', 'm'], ['Air', 'air_temperature_c', '°C'], ['Water', 'water_temperature_c', '°C']]) {
-        const value = environment.hourly[field][hour]
-        assert.equal(typeof value, 'number', `${label} should have a real cached API value for this race`)
-        const reading = header.getByText(`${label} ${value.toFixed(1)} ${unit}`, { exact: true })
-        await reading.waitFor()
-        assert.match(await reading.getAttribute('title'), /Open-Meteo historical model/)
+        const value = isV2 ? environment.course_centre[field][hour] : environment.hourly[field][hour]
+        if (value !== null && value !== undefined) {
+          assert.equal(typeof value, 'number', `${label} should have a real cached API value for this race`)
+          const reading = header.getByText(new RegExp(`^${label}\\s+${value.toFixed(1)}\\s*${unit}`))
+          await reading.waitFor()
+        } else {
+          const reading = header.getByText(`${label} unavailable`)
+          await reading.waitFor()
+        }
       }
       await page.screenshot({ path: path.join(output, 'forecast-real-1280.png'), fullPage: true })
     })

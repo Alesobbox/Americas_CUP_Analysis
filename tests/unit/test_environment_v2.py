@@ -59,7 +59,10 @@ def _make_nc_bytes(
     ds = xr.Dataset(ds_vars, coords=coords)
     with tempfile.TemporaryDirectory() as td:
         p = Path(td) / "sub.nc"
-        ds.to_netcdf(p, engine="netcdf4")
+        try:
+            ds.to_netcdf(p, engine="scipy")
+        except Exception:
+            ds.to_netcdf(p, engine="h5netcdf")
         return p.read_bytes()
 
 

@@ -1,6 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { environmentalReading, environmentHourIndex, loadRaceEnvironment, parseRaceEnvironment } from './environment'
-import type { RaceEnvironment } from './environment'
+import {
+  environmentalReading,
+  environmentHourIndex,
+  getEnvironmentalReadings,
+  getProviderLinks,
+  loadRaceEnvironment,
+  parseRaceEnvironment,
+} from './environment'
+import type { RaceEnvironment, RaceEnvironmentV2 } from './environment'
 
 const hour = 3_600_000
 const start = Date.parse('2026-09-22T12:00:00Z')
@@ -17,6 +24,74 @@ function fixture(): RaceEnvironment {
     units: { time_ms: 'Unix milliseconds UTC', air_temperature_c: '°C', wave_height_m: 'm', water_temperature_c: '°C' },
     hourly: { time_ms: [start, start + hour, start + 3 * hour], air_temperature_c: [24, 25, 26], wave_height_m: [0.4, null, 0.5], water_temperature_c: [23, 24, 25] },
     sources: { air: source, marine: { ...source, request_url: 'https://marine-api.open-meteo.com/v1/marine?latitude=40.8&longitude=14.2' } }, errors: {},
+  }
+}
+
+function fixtureV2(): RaceEnvironmentV2 {
+  return {
+    schema_version: 'environment-2',
+    registry_version: 'env-registry-1',
+    race_id: 'naples_pr1',
+    context: 'historical_replay_only',
+    bundle_sha256: 'abc123',
+    bundle_relpath: 'bundles/abc123.json',
+    boats_relpath: 'boats/naples_pr1.json',
+    location: { latitude: 40.8, longitude: 14.2, bbox: {} },
+    window: { window_start_ms: start, window_end_ms: start + hour, start_utc: '2026-09-22T12:00:00Z', end_utc: '2026-09-22T13:00:00Z' },
+    channels: {
+      currents: {
+        channel: 'currents', provider: 'Copernicus Marine', provider_id: 'copernicus_med_currents',
+        dataset: 'cmems_cur', dataset_version: '202511', variables: ['uo', 'vo'], native_spatial_support: {},
+        native_temporal_support: 'hourly_mean', averaging_bounds: {}, depth_m: 0, temperature_convention: null,
+        units: { uo: 'm/s', vo: 'm/s' }, mask_handling: 'nearest_wet_cell', interpolation: 'bilinear',
+        quality_status: 'available', request_spec: {}, returned_coordinates: {}, retrieval_time_utc: '2026-10-16T12:00:00Z',
+        raw_subset_sha256: 'a'.repeat(64), metadata_sha256: 'b'.repeat(64), valid_time_bounds: {},
+        initialization_time_utc: 'unknown', availability_time_utc: 'unknown', product_classification: 'retrospective_reanalysis',
+        missingness: { missing_count: 0, total_count: 2 }, fallback_used: false, fallback_reason: null,
+      },
+      waves: {
+        channel: 'waves', provider: 'UniParthenope CCMMMA', provider_id: 'parthenope_naples_ww3',
+        dataset: 'ww33', dataset_version: '202511', variables: ['hs', 'tm', 'dir'], native_spatial_support: {},
+        native_temporal_support: 'hourly_mean', averaging_bounds: {}, depth_m: null, temperature_convention: null,
+        units: { hs: 'm' }, mask_handling: 'nearest_wet_cell', interpolation: 'bilinear',
+        quality_status: 'available', request_spec: {}, returned_coordinates: {}, retrieval_time_utc: '2026-10-16T12:00:00Z',
+        raw_subset_sha256: 'a'.repeat(64), metadata_sha256: 'b'.repeat(64), valid_time_bounds: {},
+        initialization_time_utc: 'unknown', availability_time_utc: 'unknown', product_classification: 'retrospective_reanalysis',
+        missingness: { missing_count: 0, total_count: 2 }, fallback_used: false, fallback_reason: null,
+      },
+      air_temperature: {
+        channel: 'air_temperature', provider: 'AROME France HD via Open-Meteo', provider_id: 'open_meteo_arome_france_hd',
+        dataset: 'arome_france_hd', dataset_version: '202511', variables: ['t2m'], native_spatial_support: {},
+        native_temporal_support: 'hourly_instant', averaging_bounds: {}, depth_m: 2.0, temperature_convention: null,
+        units: { t2m: 'degC' }, mask_handling: 'bilinear', interpolation: 'bilinear',
+        quality_status: 'available', request_spec: {}, returned_coordinates: {}, retrieval_time_utc: '2026-10-16T12:00:00Z',
+        raw_subset_sha256: 'a'.repeat(64), metadata_sha256: 'b'.repeat(64), valid_time_bounds: {},
+        initialization_time_utc: 'unknown', availability_time_utc: 'unknown', product_classification: 'retrospective_reanalysis',
+        missingness: { missing_count: 0, total_count: 2 }, fallback_used: false, fallback_reason: null,
+      },
+      water_temperature: {
+        channel: 'water_temperature', provider: 'UniParthenope ROMS', provider_id: 'parthenope_naples_rms3_temp',
+        dataset: 'rms3', dataset_version: '202511', variables: ['temp'], native_spatial_support: {},
+        native_temporal_support: 'hourly_instant', averaging_bounds: {}, depth_m: 3.1657, temperature_convention: 'potential',
+        units: { temp: 'degC' }, mask_handling: 'nearest_wet_cell', interpolation: 'bilinear',
+        quality_status: 'available', request_spec: {}, returned_coordinates: {}, retrieval_time_utc: '2026-10-16T12:00:00Z',
+        raw_subset_sha256: 'a'.repeat(64), metadata_sha256: 'b'.repeat(64), valid_time_bounds: {},
+        initialization_time_utc: 'unknown', availability_time_utc: 'unknown', product_classification: 'retrospective_reanalysis',
+        missingness: { missing_count: 0, total_count: 2 }, fallback_used: false, fallback_reason: null,
+      },
+    },
+    course_centre: {
+      time_ms: [start, start + hour],
+      current_u_mps: [0.1, 0.0],
+      current_v_mps: [0.1, 0.005],
+      current_speed_mps: [0.1414, 0.005],
+      current_dir_towards_deg: [45.0, null],
+      wave_height_m: [0.6, 0.03],
+      wave_period_s: [4.2, null],
+      wave_dir_from_deg: [210.0, null],
+      air_temperature_c: [25.5, 26.0],
+      water_temperature_c: [22.8, 23.0],
+    },
   }
 }
 
@@ -117,5 +192,54 @@ describe('historical environmental data', () => {
     await expect(loadRaceEnvironment('other')).rejects.toThrow('another race')
     await expect(loadRaceEnvironment('../other')).rejects.toThrow('race identifier')
     expect(fetchMock).toHaveBeenCalledTimes(3)
+  })
+
+  it('parses and validates environment-2 artifacts with all canonical channels', () => {
+    const v2 = fixtureV2()
+    const parsed = parseRaceEnvironment(v2, 'naples_pr1')
+    expect(parsed.schema_version).toBe('environment-2')
+    expect((parsed as RaceEnvironmentV2).course_centre.wave_height_m[0]).toBe(0.6)
+    expect(() => parseRaceEnvironment(v2, 'wrong_race')).toThrow('another race')
+    const badLocation = fixtureV2()
+    // @ts-expect-error test invalid location
+    badLocation.location = null
+    expect(() => parseRaceEnvironment(badLocation, 'naples_pr1')).toThrow('format')
+  })
+
+  it('samples environment-2 channels correctly with slack and calm thresholds', () => {
+    const v2 = fixtureV2()
+    const readings = getEnvironmentalReadings(v2, start)
+    expect(readings.find((r) => r.label === 'Current')?.text).toContain('kt')
+    expect(readings.find((r) => r.label === 'Current')?.text).toContain('45° T')
+    expect(readings.find((r) => r.label === 'Sea')?.text).toContain('0.6 m')
+    expect(readings.find((r) => r.label === 'Sea')?.text).toContain('4.2 s')
+    expect(readings.find((r) => r.label === 'Sea')?.text).toContain('210° T')
+    expect(readings.find((r) => r.label === 'Air')?.text).toBe('25.5 °C')
+    expect(readings.find((r) => r.label === 'Water')?.text).toBe('22.8 °C')
+
+    // At start + hour: slack current (< 0.01 m/s) and calm wave (< 0.05 m)
+    const slackCalmReadings = getEnvironmentalReadings(v2, start + hour)
+    const slackCurrent = slackCalmReadings.find((r) => r.label === 'Current')
+    expect(slackCurrent?.text).toContain('Slack')
+    const calmSea = slackCalmReadings.find((r) => r.label === 'Sea')
+    expect(calmSea?.text).toBe('0.0 m')
+    expect(calmSea?.title).toContain('calm sea')
+  })
+
+  it('includes water temperature depth coordinate and temperature convention in title', () => {
+    const v2 = fixtureV2()
+    const water = environmentalReading(v2, 'water_temperature_c', start)
+    expect(water.text).toBe('22.8 °C')
+    expect(water.title).toContain('3.2 m')
+    expect(water.title).toContain('potential')
+  })
+
+  it('generates provider links dynamically for active environmental sources', () => {
+    const v2 = fixtureV2()
+    const links = getProviderLinks(v2)
+    const labels = links.map((l) => l.label)
+    expect(labels).toContain('Copernicus Marine')
+    expect(labels).toContain('UniParthenope CCMMMA')
+    expect(labels).toContain('Open-Meteo model')
   })
 })

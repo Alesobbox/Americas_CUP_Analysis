@@ -38,7 +38,7 @@ from pipeline.kinematic_ml.uncertainty import (
 
 ROOT = Path(__file__).resolve().parents[2]
 
-SUPPORTED_MODEL_SCHEMAS = frozenset({"ac75-model-1"})
+SUPPORTED_MODEL_SCHEMAS = frozenset({"ac75-model-1", "ac75-model-2"})
 SUPPORTED_CATALOG_SCHEMAS = frozenset({"ac75-catalog-2"})
 
 MANDATORY_ARTIFACTS = frozenset({
@@ -117,9 +117,20 @@ def verify_array_shapes_and_dtypes(
     weights: Mapping[str, np.ndarray],
     scaler_mean: np.ndarray,
     scaler_scale: np.ndarray,
+    schema_version: str = "ac75-model-1",
 ) -> None:
     """Validate neural network weight array shapes, float32 dtypes, and finite values."""
-    for key, expected_shape in EXPECTED_WEIGHT_SHAPES.items():
+    in_dim = 21 if schema_version == "ac75-model-2" else 14
+    cont_dim = 15 if schema_version == "ac75-model-2" else 8
+    expected_shapes = {
+        "fc1.weight": (32, in_dim),
+        "fc1.bias": (32,),
+        "fc2.weight": (32, 32),
+        "fc2.bias": (32,),
+        "fc_out.weight": (2, 32),
+        "fc_out.bias": (2,),
+    }
+    for key, expected_shape in expected_shapes.items():
         if key not in weights:
             raise BundleValidationError(f"Missing mandatory neural weight tensor: {key}")
         arr = weights[key]
@@ -137,10 +148,10 @@ def verify_array_shapes_and_dtypes(
             raise BundleValidationError(f"Weight array {key} contains non-finite values (NaN or Inf)")
 
     # Scaler validation
-    if scaler_mean.shape != (8,):
-        raise BundleValidationError(f"Invalid shape for scaler_mean: expected (8,), got {scaler_mean.shape}")
-    if scaler_scale.shape != (8,):
-        raise BundleValidationError(f"Invalid shape for scaler_scale: expected (8,), got {scaler_scale.shape}")
+    if scaler_mean.shape != (cont_dim,):
+        raise BundleValidationError(f"Invalid shape for scaler_mean: expected ({cont_dim},), got {scaler_mean.shape}")
+    if scaler_scale.shape != (cont_dim,):
+        raise BundleValidationError(f"Invalid shape for scaler_scale: expected ({cont_dim},), got {scaler_scale.shape}")
     if not np.all(np.isfinite(scaler_mean)):
         raise BundleValidationError("scaler_mean contains non-finite values")
     if not np.all(np.isfinite(scaler_scale)):
@@ -259,7 +270,12 @@ def load_authenticated_bundle(
         raise BundleValidationError(f"Failed to load weights npz {npz_path}: {e}") from e
 
 
-    verify_array_shapes_and_dtypes(weights, scaler_mean, scaler_scale)
+    verify_array_shapes_and_dtypes(
+        weights,
+        scaler_mean,
+        scaler_scale,
+        schema_version=str(manifest_doc.get("schema_version", "ac75-model-1")),
+    )
 
     # 2. Empirical baseline polar
     emp_path = resolved_artifacts["empirical_polar_json"]
@@ -379,6 +395,7 @@ def load_authenticated_bundle(
         motion_residual_scale=motion_res_scale,
         margin_interval_scale=margin_int_scale,
         calibration_info=cal_info,
+        schema_version=str(manifest_doc.get("schema_version", "ac75-model-1")),
     )
 
 

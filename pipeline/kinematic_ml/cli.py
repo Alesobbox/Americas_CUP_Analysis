@@ -327,19 +327,33 @@ def run_simulate_cli(
     course_id: str,
     mode: str,
 ) -> dict[str, Any]:
-    """Execute single scenario simulation via Simulator."""
+    """Execute single scenario simulation via learned AC75 bundle."""
     t0 = time.perf_counter()
-    from .simulator import Simulator
+    from .inference import predict_scenario
+    from .loader import load_staged_ac75_bundle
 
-    sim = Simulator()
-    scen = sim.run_scenario(
-        team_a, team_b, tws_kt, mode=mode, course_id=course_id, twd_deg=twd_deg
-    )
+    bundle = load_staged_ac75_bundle()
+    tws_mps = round(float(tws_kt) / 1.943844, 4)
+    c_a = team_a if team_a.startswith("ac37:") else f"ac37:{team_a}"
+    c_b = team_b if team_b.startswith("ac37:") else f"ac37:{team_b}"
+    scen_req = {
+        "schema_version": "kinematic-race-sim-2",
+        "model_id": bundle.model_id,
+        "team_a": c_a,
+        "team_b": c_b,
+        "course_id": course_id or "barcelona_lvc_4leg",
+        "environment": {"tws_mps": tws_mps, "twd_deg": twd_deg},
+        "purpose": "preview",
+        "trial_count": 2000,
+        "seed": 2027,
+    }
+    scen_res = predict_scenario(bundle, scen_req)
+    res_dict = scen_res.to_dict()
     return make_receipt(
         command="simulate",
-        status="complete" if scen.get("status") != "unavailable" else "unavailable",
-        reason_codes=scen.get("reason_codes", []),
-        output_ids={"scenario": scen},
+        status="complete" if scen_res.status == "available" else scen_res.status,
+        reason_codes=scen_res.reason_codes,
+        output_ids={"scenario": res_dict},
         elapsed_s=time.perf_counter() - t0,
     )
 
