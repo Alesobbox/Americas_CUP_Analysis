@@ -16,6 +16,7 @@ import {
   performanceChartMaximum,
   performanceView,
 } from './BoatPerformanceRadar'
+import { ArchiveObservedPolarSection, RaceObservedPolarSection } from './ObservedPolarPanel'
 import { TeamDebrief } from './TeamDebrief'
 import { selectTacticalSnapshot, TacticalInsightsPanel } from './TacticalInsightsPanel'
 
@@ -414,5 +415,260 @@ describe('evidence-linked team debrief', () => {
     )
     expect(disabled).toContain('disabled=""')
     expect(disabled).toContain('Replay unavailable')
+  })
+})
+
+describe('observed ground-speed polar and conditional residuals', () => {
+  it('renders race observed ground-speed polar with honest caveats and bootstrap confidence intervals', () => {
+    const sampleBoat = {
+      ...boat(),
+      polar: {
+        schema_version: '1.0' as const,
+        method_version: 'polar-1',
+        quality: 'derived' as const,
+        reason: null,
+        evaluation_scope: 'out_of_sample_archive_cv',
+        steady_sample_count: 240,
+        steady_coverage_s: 240,
+        leg_cluster_count: 4,
+        sog_residual_kt: { value: 0.45, ci_low_kt: 0.12, ci_high_kt: 0.78, bootstrap_se_kt: 0.17 },
+        wind_vmg_residual_kt: {
+          value: 0.31,
+          ci_low_kt: -0.02,
+          ci_high_kt: 0.64,
+          bootstrap_se_kt: 0.17,
+        },
+        loro_sog_residual_kt: 0.49,
+        lodo_sog_residual_kt: 0.45,
+        port_sog_residual_kt: 0.3,
+        starboard_sog_residual_kt: 0.6,
+        above_p90_share: 0.145,
+        traffic_excluded_s: 32,
+        observed_bins: {
+          upwind: [
+            {
+              tack: 'PORT' as const,
+              tws_bin_kt: 12,
+              twa_bin_deg: 45,
+              sog_mean_kt: 26.5,
+              sog_p90_kt: 28.0,
+              wind_vmg_mean_kt: 18.7,
+              predicted_sog_kt: 26.0,
+              sample_count: 30,
+            },
+          ],
+          downwind: [],
+        },
+      },
+    } as AnalysisDetailBoat
+    const raceDetail = {
+      race: { id: 'race' },
+      boats: [sampleBoat],
+      polar_analysis: {
+        schema_version: '1.0' as const,
+        method_version: 'polar-1',
+        race_id: 'race',
+        quality: 'derived' as const,
+        reason: null,
+        evaluation_scope: 'out_of_sample_archive_cv',
+        caveats: ['Observed ground-speed polar'],
+        definitions: {},
+        validation_summary: null,
+        brackets: {
+          upwind: [
+            {
+              id: 'race_window',
+              label: 'Race wind (11.0–13.0 kt)',
+              tws_min_kt: 11,
+              tws_max_kt: 13,
+              tws_ref_kt: 12,
+              points: [
+                {
+                  twa_deg: 40,
+                  mean_sog_kt: 24.5,
+                  p50_sog_kt: 24.6,
+                  p90_sog_kt: 26.2,
+                  mean_wind_vmg_kt: 18.8,
+                  p50_wind_vmg_kt: 18.9,
+                  p90_wind_vmg_kt: 20.1,
+                  effective_coverage_s: 120,
+                  support_clusters: 4,
+                },
+                {
+                  twa_deg: 45,
+                  mean_sog_kt: 26.1,
+                  p50_sog_kt: 26.2,
+                  p90_sog_kt: 27.9,
+                  mean_wind_vmg_kt: 18.5,
+                  p50_wind_vmg_kt: 18.6,
+                  p90_wind_vmg_kt: 19.8,
+                  effective_coverage_s: 140,
+                  support_clusters: 5,
+                },
+              ],
+            },
+          ],
+          downwind: [],
+        },
+      },
+    } as unknown as AnalysisDetail
+    const html = renderToStaticMarkup(
+      React.createElement(RaceObservedPolarSection, { detail: raceDetail, boat: sampleBoat })
+    )
+    expect(html).toContain('Observed ground-speed polar')
+    expect(html).toContain('SOG includes surface current')
+    expect(html).toContain('observed upper conditional percentile')
+    expect(html).toContain('fixed effect')
+    expect(html).toContain('95% bootstrap CI')
+    expect(html).not.toContain('credible interval')
+    expect(html).toContain('14.5%')
+  })
+  it('renders archive Day-Grouped vs LORO CV validation and fixed-effect tack contrast', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(ArchiveObservedPolarSection, {
+        selectedTeam: 'NZL B',
+        polarModel: {
+          schema_version: '1.0',
+          method_version: 'polar-1',
+          evaluation_scope: '28-session AC40 archive',
+          steady_state_filter: {
+            sample_cadence_hz: 1,
+            min_sog_kt: 5,
+            max_sog_kt: 50,
+            min_tws_kt: 2,
+            max_tws_kt: 35,
+            upwind_abs_twa_deg: [28, 75],
+            downwind_abs_twa_deg: [105, 172],
+            manoeuvre_exclusion_s: 6.5,
+            gate_exclusion_s: 8,
+            max_turn_rate_deg_s: 6,
+            min_competitor_separation_m: 60,
+          },
+          caveats: [],
+          definitions: {},
+          counts: {
+            eligible_races: 25,
+            excluded_races: 3,
+            distinct_days: 8,
+            boat_leg_clusters: 987,
+            steady_coverage_s: 131620,
+            steady_cells: 29601,
+          },
+          tack_fixed_effect: {
+            specification: 'Two-category fixed effect',
+            bootstrap_draws: 500,
+            upwind: {
+              contrast_kt: -0.174,
+              ci_low_kt: -0.312,
+              ci_high_kt: -0.049,
+              bootstrap_se_kt: 0.069,
+              coverage_s: 76293,
+            },
+            downwind: {
+              contrast_kt: -0.044,
+              ci_low_kt: -0.195,
+              ci_high_kt: 0.104,
+              bootstrap_se_kt: 0.077,
+              coverage_s: 55327,
+            },
+            overall: {
+              contrast_kt: -0.119,
+              ci_low_kt: -0.215,
+              ci_high_kt: -0.027,
+              bootstrap_se_kt: 0.051,
+              coverage_s: 131620,
+            },
+          },
+          validation: {
+            baseline_mode_only: {
+              label: 'Unconditioned leg-mode baseline',
+              folds: 8,
+              sog_rmse_kt: 3.878,
+              sog_mae_kt: 3.007,
+              sog_r2: 0.5,
+              vmg_rmse_kt: 4.844,
+              vmg_mae_kt: 3.698,
+              vmg_r2: 0.405,
+              p50_pinball_loss_kt: 1.497,
+              p90_pinball_loss_kt: 0.658,
+              p50_empirical_coverage: 0.5085,
+              p90_empirical_coverage: 0.8551,
+            },
+            leave_one_race_out: {
+              label: 'Leave-One-Race-Out CV (LORO)',
+              folds: 25,
+              sog_rmse_kt: 2.289,
+              sog_mae_kt: 1.64,
+              sog_r2: 0.8259,
+              vmg_rmse_kt: 1.831,
+              vmg_mae_kt: 1.359,
+              vmg_r2: 0.915,
+              p50_pinball_loss_kt: 0.819,
+              p90_pinball_loss_kt: 0.354,
+              p50_empirical_coverage: 0.5018,
+              p90_empirical_coverage: 0.9103,
+            },
+            leave_one_day_out: {
+              label: 'Day-Grouped CV (Leave-One-Day-Out)',
+              folds: 8,
+              sog_rmse_kt: 2.421,
+              sog_mae_kt: 1.756,
+              sog_r2: 0.8052,
+              vmg_rmse_kt: 1.986,
+              vmg_mae_kt: 1.469,
+              vmg_r2: 0.9,
+              p50_pinball_loss_kt: 0.886,
+              p90_pinball_loss_kt: 0.41,
+              p50_empirical_coverage: 0.504,
+              p90_empirical_coverage: 0.8755,
+            },
+          },
+          team_residuals: [
+            {
+              team_code: 'NZL B',
+              race_count: 24,
+              leg_cluster_count: 112,
+              steady_coverage_s: 15200,
+              lodo_sog_residual_kt: {
+                value: 0.468,
+                ci_low_kt: 0.128,
+                ci_high_kt: 0.839,
+                bootstrap_se_kt: 0.185,
+              },
+              loro_sog_residual_kt: {
+                value: 0.384,
+                ci_low_kt: 0.07,
+                ci_high_kt: 0.712,
+                bootstrap_se_kt: 0.167,
+              },
+              in_sample_sog_residual_kt: {
+                value: 0.39,
+                ci_low_kt: 0.08,
+                ci_high_kt: 0.7,
+                bootstrap_se_kt: 0.16,
+              },
+              wind_vmg_residual_kt: {
+                value: 0.312,
+                ci_low_kt: 0.035,
+                ci_high_kt: 0.603,
+                bootstrap_se_kt: 0.155,
+              },
+              upwind_sog_residual_kt: 0.52,
+              downwind_sog_residual_kt: 0.39,
+              port_sog_residual_kt: 0.41,
+              starboard_sog_residual_kt: 0.51,
+              above_p90_share: 0.154,
+              bootstrap_draws: 500,
+            },
+          ],
+          curves: { upwind: [], downwind: [] },
+        },
+      })
+    )
+    expect(html).toContain('Day-grouped vs. Leave-One-Race-Out validation')
+    expect(html).toContain('Two-category fixed effect for tack')
+    expect(html).toContain('polar-row-selected')
+    expect(html).toContain('leg-cluster bootstrap confidence intervals')
+    expect(html).not.toContain('credible interval')
   })
 })

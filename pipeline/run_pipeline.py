@@ -372,8 +372,15 @@ def main():
             sys.exit(exit_code)
 
     if not args.no_export:
+        import json
+        from pipeline.historical_analysis import build_historical_index
         from scripts.build_race_previews import write_previews
         from scripts.build_artifact_inventory import build_inventory
+
+        if len(files_to_process) > 1:
+            index_payload = build_historical_index(update_details=True)
+            with open(os.path.join("public", "data", "analysis", "index.json"), "w", encoding="utf-8") as f:
+                json.dump(index_payload, f, separators=(",", ":"), allow_nan=False)
         write_previews()
         build_inventory()
     sys.exit(0)

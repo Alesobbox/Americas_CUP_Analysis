@@ -40,6 +40,14 @@ The additive `scope` evidence records expected and matched course legs, excluded
 
 The queue contains up to three largest positive leg-time differences from the mean of other eligible boats on that same completed and sufficiently covered leg, plus up to two covered detected manoeuvres with the largest entry-to-minimum SOG reductions. Items retain units, source, quality, timestamps and peer identities where applicable. A leg-time difference is an observed deficit; manoeuvre speed reduction is neither seconds lost nor distance lost. Replay links support analyst review; neither item identifies a causal explanation.
 
+## Observed ground-speed polar: polar-1, schema 1.0
+
+Conditional steady-state **observed ground-speed polar** extracted at 1 Hz over completed post-gun legs across `25` eligible races (`8` racing days, `987` boat-leg clusters, `131,620 s` steady coverage, excluding `±6.5 s` around manoeuvres, `±8.0 s` around mark/gate crossings, `>6°/s` turn rates, `<60 m` close traffic, and source coverage gaps):
+
+- **Explicit epistemic scope**: Outputs measure an *observed ground-speed polar*, not hull speed through water: `SOG` includes surface current, and conditional residuals reflect tactics, traffic, sea state, and wind-measurement error and cannot isolate crew or flight-control skill. The conditional `p90` curve is reported strictly as an *observed upper conditional percentile*, not a proven optimal target or theoretical VPP ceiling.
+- **Two-category fixed tack effect**: Tack (`STARBOARD` vs. `PORT`) is modeled as an explicit two-category fixed effect (`I_stbd = +0.5` starboard, `-0.5` port) controlling for a bivariate quadratic `(TWS, |TWA|)` surface per leg mode (`STARBOARD - PORT`: `-0.174 kt` [`-0.312`, `-0.049`] upwind, `-0.044 kt` [`-0.195`, `+0.104`] downwind, `-0.119 kt` [`-0.218`, `-0.022`] overall).
+- **Cross-validation & uncertainty**: Out-of-sample fit is reported under both Leave-One-Race-Out CV (`25` folds: SOG RMSE `2.289 kt`, `R² = 0.826`) and Day-Grouped Leave-One-Day-Out CV (`8` day folds: SOG RMSE `2.421 kt`, `R² = 0.805`) against the unconditioned leg-mode baseline (`3.878 kt`, `R² = 0.500`). Uncertainty bounds use 500-draw frequentist boat-leg-cluster bootstrap confidence intervals (never "credible intervals").
+
 ## Refresh and compatibility
 
 Run `npm run analytics` to stream source wind and refresh all race extensions, the historical index and the artifact inventory. Replay telemetry arrays, existing historical scalar values, historical schema `2.0` / method `historical-2`, event-feed schema `1.0` / method `event-feed-1`, and historical environment artifacts remain compatible. New ingestion also exports the extensions automatically.
@@ -53,11 +61,12 @@ Use `python scripts/analysis_snapshot.py` for the bounded archive overview. Set 
 | Archive | 28 sessions, 224 replayed boat-races |
 | Boat performance | 173 eligible boats have all six dimensions and an overall index |
 | Team debrief | 720 evidence-linked review items across 181 boats |
+| Observed ground-speed polar | 25 eligible races across 8 days (`987` boat-leg clusters, `131,620 s` steady): LORO RMSE `2.289 kt`, Day-Grouped LODO RMSE `2.421 kt` vs. `3.878 kt` baseline |
 | Tactical snapshots | 3,455 snapshots; 3,438 valid direction windows and 3,438 valid speed windows |
 | Five-minute projections | Zero windows pass the deterministic stability gates; projection remains unavailable |
 | Pregun practice session | Explicit empty timeline for `26_09_23_nap_ipr_pr1`, whose recorded window ends before its gun |
-| Frontend | 368 tests passed across 35 files |
-| Python unit tests | 196 passed, including circular wind, future-prefix invariance, independent fields, source gaps, peer exclusion, matching legs, custom-cadence detector windows, and reconstruction/OCS guards |
+| Frontend | 371 tests passed across 35 files |
+| Python unit tests | 200 passed, including circular wind, future-prefix invariance, independent fields, source gaps, peer exclusion, matching legs, custom-cadence detector windows, `polar-1` fixed tack effect / LORO+LODO CV / bootstrap CIs, and reconstruction/OCS guards |
 | Reconstruction / workloads | 123 passed |
 | Generated-data integrity | 8 passed |
 | Total deterministic tests | Unit, E2E, environment, and analytics verification gates passed |

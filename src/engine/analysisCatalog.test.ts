@@ -225,4 +225,45 @@ describe('additive analysis contracts', () => {
     wrongUnit.boats[0].performance!.dimensions[0].unit = '%'
     expect(() => validateAnalysisEnhancements(wrongUnit)).toThrow('Boat performance')
   })
+  it('validates observed ground-speed polar contracts and rejects inverted bootstrap bounds', () => {
+    const valid = fixture()
+    valid.boats[0].polar = {
+      schema_version: '1.0',
+      method_version: 'polar-1',
+      quality: 'derived',
+      reason: null,
+      evaluation_scope: 'out_of_sample_archive_cv',
+      steady_sample_count: 100,
+      steady_coverage_s: 100,
+      leg_cluster_count: 2,
+      sog_residual_kt: { value: 0.4, ci_low_kt: 0.1, ci_high_kt: 0.7, bootstrap_se_kt: 0.15 },
+      wind_vmg_residual_kt: { value: 0.3, ci_low_kt: 0.0, ci_high_kt: 0.6, bootstrap_se_kt: 0.15 },
+      loro_sog_residual_kt: 0.42,
+      lodo_sog_residual_kt: 0.4,
+      above_p90_share: 0.12,
+      traffic_excluded_s: 10,
+      observed_bins: { upwind: [], downwind: [] },
+    }
+    valid.polar_analysis = {
+      schema_version: '1.0',
+      method_version: 'polar-1',
+      race_id: 'race',
+      quality: 'derived',
+      reason: null,
+      evaluation_scope: 'out_of_sample_archive_cv',
+      caveats: ['Observed ground-speed polar: SOG includes surface current.'],
+      definitions: {},
+      validation_summary: null,
+      brackets: { upwind: [], downwind: [] },
+    }
+    expect(() => validateAnalysisEnhancements(valid)).not.toThrow()
+
+    const badCi = structuredClone(valid)
+    badCi.boats[0].polar!.sog_residual_kt!.ci_low_kt = 0.8
+    expect(() => validateAnalysisEnhancements(badCi)).toThrow('Boat polar')
+
+    const mismatchPolar = structuredClone(valid)
+    mismatchPolar.polar_analysis!.race_id = 'other'
+    expect(() => validateAnalysisEnhancements(mismatchPolar)).toThrow('Observed polar')
+  })
 })

@@ -1,7 +1,7 @@
 import type { AnalysisDetail, AnalysisIndex, AnalysisIndexRace } from '../types/analysis'
 
-const finiteOrNull = (value: unknown) =>
-  value === null || (typeof value === 'number' && Number.isFinite(value))
+const finite = (value: unknown) => typeof value === 'number' && Number.isFinite(value)
+const finiteOrNull = (value: unknown) => value === null || finite(value)
 const nonnegative = (value: unknown) =>
   typeof value === 'number' && Number.isFinite(value) && value >= 0
 const count = (value: unknown) => nonnegative(value) && Number.isInteger(value)
@@ -238,6 +238,46 @@ export function validateAnalysisEnhancements(detail: AnalysisDetail): void {
   ) {
     throw new Error('Tactical insights have an unsupported format')
   }
+  const validBootstrap = (
+    interval:
+      | { value: number; ci_low_kt: number; ci_high_kt: number; bootstrap_se_kt: number }
+      | null
+      | undefined
+  ) =>
+    interval == null ||
+    (finite(interval.value) &&
+      finite(interval.ci_low_kt) &&
+      finite(interval.ci_high_kt) &&
+      nonnegative(interval.bootstrap_se_kt) &&
+      interval.ci_low_kt <= interval.value + 1e-6 &&
+      interval.value <= interval.ci_high_kt + 1e-6)
+  for (const boat of detail.boats) {
+    if (boat.polar) {
+      const p = boat.polar
+      if (
+        p.schema_version !== '1.0' ||
+        !string(p.method_version) ||
+        !['derived', 'unavailable'].includes(p.quality) ||
+        !count(p.steady_sample_count) ||
+        !nonnegative(p.steady_coverage_s) ||
+        !validBootstrap(p.sog_residual_kt) ||
+        !validBootstrap(p.wind_vmg_residual_kt)
+      ) {
+        throw new Error('Boat polar residuals have an unsupported format')
+      }
+    }
+  }
+  const polar = detail.polar_analysis
+  if (
+    polar &&
+    (polar.schema_version !== '1.0' ||
+      !string(polar.method_version) ||
+      polar.race_id !== detail.race.id ||
+      !['derived', 'unavailable'].includes(polar.quality) ||
+      !Array.isArray(polar.caveats))
+  ) {
+    throw new Error('Observed polar analysis has an unsupported format')
+  }
 }
 
 export async function loadAnalysisIndex(signal?: AbortSignal): Promise<AnalysisIndex> {
@@ -249,7 +289,13 @@ export async function loadAnalysisIndex(signal?: AbortSignal): Promise<AnalysisI
   if (
     index.schema_version !== '2.0' ||
     !Array.isArray(index.races) ||
-    !Array.isArray(index.histories)
+    !Array.isArray(index.histories) ||
+    (index.polar_model &&
+      (index.polar_model.schema_version !== '1.0' ||
+        !string(index.polar_model.method_version) ||
+        !Array.isArray(index.polar_model.team_residuals) ||
+        !index.polar_model.validation?.leave_one_day_out ||
+        !index.polar_model.validation?.leave_one_race_out))
   ) {
     throw new Error('Analysis archive has an unsupported format')
   }

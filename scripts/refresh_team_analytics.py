@@ -20,6 +20,13 @@ if str(ROOT) not in sys.path:
 
 from pipeline.config import MPS_TO_KNOTS, OFFICIAL_WIND_ASSET_ID  # noqa: E402
 from pipeline.historical_analysis import attach_performance_analysis, build_historical_index  # noqa: E402
+from pipeline.polar_analysis import (  # noqa: E402
+    POLAR_CAVEATS,
+    POLAR_DEFINITIONS,
+    POLAR_METHOD_VERSION,
+    POLAR_SCHEMA_VERSION,
+    extract_race_polar_cells,
+)
 from pipeline.run_pipeline import infer_race_metadata  # noqa: E402
 from pipeline.tactical_insights import TACTICAL_DEFINITIONS, attach_tactical_insights  # noqa: E402
 from scripts.build_artifact_inventory import build_inventory  # noqa: E402
@@ -200,8 +207,55 @@ def verify(root=ROOT):
             check(not tactical["snapshots"] and bool(tactical.get("reason")), f"Pregun session tactical reason: {race_id}")
         else:
             check(bool(tactical["snapshots"]), f"Empty tactical snapshot grid: {race_id}")
+        polar = detail.get("polar_analysis")
+        check(
+            isinstance(polar, dict)
+            and polar.get("schema_version") == POLAR_SCHEMA_VERSION
+            and polar.get("method_version") == POLAR_METHOD_VERSION,
+            f"Polar analysis schema/method mismatch: {race_id}",
+        )
+        check(polar.get("definitions") == POLAR_DEFINITIONS, f"Stale polar definitions: {race_id}")
+        check(polar.get("caveats") == POLAR_CAVEATS, f"Missing polar caveats: {race_id}")
+        finite_tree(polar, f"{race_id}/polar_analysis")
+        for boat in detail["boats"]:
+            bpolar = boat.get("polar")
+            check(
+                isinstance(bpolar, dict)
+                and bpolar.get("schema_version") == POLAR_SCHEMA_VERSION
+                and bpolar.get("method_version") == POLAR_METHOD_VERSION,
+                f"Boat polar schema/method mismatch: {race_id}/{boat['id']}",
+            )
+            finite_tree(bpolar, f"{race_id}/{boat['id']}/polar")
+            if bpolar.get("quality") == "derived":
+                sres = bpolar.get("sog_residual_kt") or {}
+                check(
+                    sres.get("ci_low_kt") <= sres.get("value") <= sres.get("ci_high_kt"),
+                    f"Invalid boat polar SOG bootstrap CI: {race_id}/{boat['id']}",
+                )
         relative = f"analysis/{race_id}.json"
         check(relative in inventory_by_path and inventory_by_path[relative]["bytes"] == (data / relative).stat().st_size, f"Stale Reports size: {relative}")
+    index_doc = json.loads((data / "analysis" / "index.json").read_text(encoding="utf-8"))
+    polar_model = index_doc.get("polar_model")
+    check(
+        isinstance(polar_model, dict)
+        and polar_model.get("schema_version") == POLAR_SCHEMA_VERSION
+        and polar_model.get("method_version") == POLAR_METHOD_VERSION,
+        "Missing or invalid archive polar_model in analysis/index.json",
+    )
+    finite_tree(polar_model, "index/polar_model")
+    validation = polar_model.get("validation") or {}
+    check(
+        all(k in validation for k in ("baseline_mode_only", "leave_one_race_out", "leave_one_day_out")),
+        "Missing LORO or Day-Grouped validation metrics in polar_model",
+    )
+    tack_fe = polar_model.get("tack_fixed_effect") or {}
+    check("fixed effect" in str(tack_fe.get("specification", "")).lower(), "Missing tack fixed-effect specification")
+    for team_row in polar_model.get("team_residuals") or []:
+        lodo = team_row.get("lodo_sog_residual_kt") or {}
+        check(
+            lodo.get("ci_low_kt") <= lodo.get("value") <= lodo.get("ci_high_kt"),
+            f"Invalid team polar LODO bootstrap CI: {team_row.get('team_code')}",
+        )
     check(inventory["summary"]["race_count"] == len(races)
           and inventory["summary"]["replayed_boat_races"] == boat_count, "Reports archive totals differ from analytics")
     check(inventory_by_path["analysis/index.json"]["bytes"] == (data / "analysis" / "index.json").stat().st_size, "Stale Reports index size")
@@ -236,6 +290,10 @@ def refresh(root=ROOT, race_ids=None, *, performance_only=False):
             if end is not None:
                 detail["race"]["window_end_ms"] = end
         attach_performance_analysis(detail)
+        replay_path = data / "replays" / (race["id"] + ".json")
+        needs_polar_cells = any("polar_cells" not in boat for boat in detail["boats"])
+        if replay_path.is_file() and (not performance_only or needs_polar_cells):
+            extract_race_polar_cells(detail, replay_path=replay_path)
         if not performance_only:
             attach_tactical_insights(detail, samples, window_end_ms=end, source_provenance=provenance)
         _write_json(path, detail)
@@ -249,7 +307,10 @@ def refresh(root=ROOT, race_ids=None, *, performance_only=False):
         print(json.dumps({"race_id": race["id"], "snapshots": len(tactical_snapshots),
                           "refresh": "performance_only" if performance_only else "all_team_analytics",
                           "source_bytes": 0 if performance_only else provenance["source_size_bytes"]}), flush=True)
-    _write_json(data / "analysis" / "index.json", build_historical_index(str(catalog_path), str(data / "analysis")))
+    _write_json(
+        data / "analysis" / "index.json",
+        build_historical_index(str(catalog_path), str(data / "analysis"), update_details=True),
+    )
     build_inventory(root)
     return summary
 

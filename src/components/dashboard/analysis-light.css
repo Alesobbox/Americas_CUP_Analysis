@@ -345,6 +345,62 @@
 .analysis-modal :is(button, select, input):disabled {
   color: var(--text-secondary);
 }
+.analysis-modal .polar-chart-card {
+  margin: 16px 0 20px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+}
+.analysis-modal .polar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-bottom: 12px;
+  font: 400 12px/1.4 var(--font-ui);
+  color: var(--text-secondary);
+}
+.analysis-modal .polar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.analysis-modal .polar-swatch {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  border-top: 2.5px solid #1a73e8;
+}
+.analysis-modal .polar-swatch.p90 {
+  border-top: 2px dashed #0f766e;
+}
+.analysis-modal .polar-swatch.mean {
+  border-top: 2px dotted #334155;
+}
+.analysis-modal .polar-swatch.port {
+  width: 8px;
+  height: 8px;
+  border-top: 0;
+  border-radius: 50%;
+  background: #c2410c;
+}
+.analysis-modal .polar-swatch.stbd {
+  width: 8px;
+  height: 8px;
+  border-top: 0;
+  border-radius: 2px;
+  background: #0369a1;
+}
+.analysis-modal .polar-svg-chart {
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}
+.analysis-modal .polar-row-selected {
+  background: var(--bg-active);
+  font-weight: 500;
+}
 @media (max-width: 768px) {
   .tactical-dashboard-root .analysis-modal.dashboard-inline-analysis {
     width: calc(100% - 32px);

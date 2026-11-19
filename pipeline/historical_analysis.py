@@ -945,6 +945,9 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
                                                   "median_lateral_m": round(median(v[1] for v in vals), 2)}
                                                  for leg, vals in sorted(by_leg.items())]})
     attach_performance_analysis(result)
+    from pipeline.polar_analysis import attach_single_race_polar_fallback, extract_race_polar_cells
+    extract_race_polar_cells(result, ingest_result=ingest_result)
+    attach_single_race_polar_fallback(result)
     from pipeline.tactical_insights import attach_tactical_insights
     attach_tactical_insights(result, getattr(ingest_result.official_wind, "causal_samples", []),
                             window_end_ms=chronology.window_end,
@@ -953,7 +956,12 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
     return result
 
 
-def build_historical_index(catalog_path="public/data/manifests.json", analysis_dir="public/data/analysis"):
+def build_historical_index(
+    catalog_path="public/data/manifests.json",
+    analysis_dir="public/data/analysis",
+    *,
+    update_details: bool = False,
+):
     """Build from catalog entries only; count boat-races, not telemetry frames."""
     with open(catalog_path, encoding="utf-8") as f:
         catalog = json.load(f)
@@ -961,6 +969,7 @@ def build_historical_index(catalog_path="public/data/manifests.json", analysis_d
     if not entries:
         entries = catalog.get("races", [])
     races = []
+    details_by_race = {}
     groups = defaultdict(list)
     event_groups = defaultdict(list)
     for entry in sorted(entries, key=lambda r: (r.get("date", ""), r.get("id", ""))):
@@ -974,6 +983,7 @@ def build_historical_index(catalog_path="public/data/manifests.json", analysis_d
             detail = json.load(f)
         if detail.get("schema_version") != SCHEMA_VERSION or detail.get("race", {}).get("id") != race_id:
             continue
+        details_by_race[race_id] = detail
         race = detail["race"]
         compact = []
         for boat in detail["boats"]:
@@ -1047,8 +1057,19 @@ def build_historical_index(catalog_path="public/data/manifests.json", analysis_d
         histories.append({"team_code": team, "boat_class": boat_class, "race_type": race_type,
                           "race_count": len(observations), "observations": observations, "summary": summary,
                           "leg_summary": leg_summary, "manoeuvre_summary": manoeuvre_summary})
-    return {"schema_version": SCHEMA_VERSION, "method_version": METHOD_VERSION,
-            "races": races, "histories": histories}
+    index_payload = {"schema_version": SCHEMA_VERSION, "method_version": METHOD_VERSION,
+                     "races": races, "histories": histories}
+    if details_by_race:
+        from pipeline.polar_analysis import refresh_archive_polar_models
+        polar_model = refresh_archive_polar_models(details_by_race)
+        if polar_model is not None:
+            index_payload["polar_model"] = polar_model
+        if update_details:
+            for race_id, detail in details_by_race.items():
+                detail_path = os.path.join(analysis_dir, race_id + ".json")
+                with open(detail_path, "w", encoding="utf-8") as f:
+                    json.dump(detail, f, separators=(",", ":"), allow_nan=False)
+    return index_payload
 
 
 def export_analysis_artifacts(detail, catalog_path="public/data/manifests.json", analysis_dir="public/data/analysis"):

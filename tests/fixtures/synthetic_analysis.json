@@ -1114,6 +1114,36 @@
           }
         ],
         "reason": null
+      },
+      "polar_cells": [],
+      "polar_filter": {
+        "steady_sample_count": 0,
+        "steady_coverage_s": 0.0,
+        "traffic_excluded_s": 79.0,
+        "manoeuvre_excluded_s": 52.0,
+        "gate_excluded_s": 73.0,
+        "turn_rate_excluded_s": 0.0,
+        "coverage_excluded_s": 0.0
+      },
+      "polar": {
+        "schema_version": "1.0",
+        "method_version": "polar-1",
+        "quality": "unavailable",
+        "reason": "no steady-state 1 Hz samples on completed active legs",
+        "evaluation_scope": "single_race_unavailable",
+        "steady_sample_count": 0,
+        "steady_coverage_s": 0.0,
+        "leg_cluster_count": 0,
+        "traffic_excluded_s": 79.0,
+        "sog_residual_kt": null,
+        "wind_vmg_residual_kt": null,
+        "loro_sog_residual_kt": null,
+        "lodo_sog_residual_kt": null,
+        "above_p90_share": null,
+        "observed_bins": {
+          "upwind": [],
+          "downwind": []
+        }
       }
     },
     {
@@ -2182,6 +2212,36 @@
           }
         ],
         "reason": null
+      },
+      "polar_cells": [],
+      "polar_filter": {
+        "steady_sample_count": 0,
+        "steady_coverage_s": 0.0,
+        "traffic_excluded_s": 25.0,
+        "manoeuvre_excluded_s": 52.0,
+        "gate_excluded_s": 74.0,
+        "turn_rate_excluded_s": 0.0,
+        "coverage_excluded_s": 0.0
+      },
+      "polar": {
+        "schema_version": "1.0",
+        "method_version": "polar-1",
+        "quality": "unavailable",
+        "reason": "no steady-state 1 Hz samples on completed active legs",
+        "evaluation_scope": "single_race_unavailable",
+        "steady_sample_count": 0,
+        "steady_coverage_s": 0.0,
+        "leg_cluster_count": 0,
+        "traffic_excluded_s": 25.0,
+        "sog_residual_kt": null,
+        "wind_vmg_residual_kt": null,
+        "loro_sog_residual_kt": null,
+        "lodo_sog_residual_kt": null,
+        "above_p90_share": null,
+        "observed_bins": {
+          "upwind": [],
+          "downwind": []
+        }
       }
     },
     {
@@ -2415,6 +2475,36 @@
         "method_version": "debrief-1",
         "items": [],
         "reason": "no qualifying peer leg deficit or covered manoeuvre available"
+      },
+      "polar_cells": [],
+      "polar_filter": {
+        "steady_sample_count": 0,
+        "steady_coverage_s": 0.0,
+        "traffic_excluded_s": 0.0,
+        "manoeuvre_excluded_s": 0.0,
+        "gate_excluded_s": 0.0,
+        "turn_rate_excluded_s": 0.0,
+        "coverage_excluded_s": 0.0
+      },
+      "polar": {
+        "schema_version": "1.0",
+        "method_version": "polar-1",
+        "quality": "unavailable",
+        "reason": "boat retired, OCS, DNS, missing start crossing, or has source-state conflict",
+        "evaluation_scope": "single_race_unavailable",
+        "steady_sample_count": 0,
+        "steady_coverage_s": 0.0,
+        "leg_cluster_count": 0,
+        "traffic_excluded_s": 0.0,
+        "sog_residual_kt": null,
+        "wind_vmg_residual_kt": null,
+        "loro_sog_residual_kt": null,
+        "lodo_sog_residual_kt": null,
+        "above_p90_share": null,
+        "observed_bins": {
+          "upwind": [],
+          "downwind": []
+        }
       }
     }
   ],
@@ -2574,5 +2664,74 @@
         "insights": []
       }
     ]
+  },
+  "polar_analysis": {
+    "schema_version": "1.0",
+    "method_version": "polar-1",
+    "race_id": "synthetic_pr1",
+    "quality": "unavailable",
+    "reason": "no steady-state 1 Hz telemetry samples available for ground-speed polar",
+    "evaluation_scope": "single_race_unavailable",
+    "caveats": [
+      "Observed ground-speed polar: SOG includes surface current and cannot separate water speed from tidal or residual flow.",
+      "Conditional residuals also include tactics, traffic, sea state, and wind-measurement error; they cannot isolate crew or flight-control skill.",
+      "The conditional 90th percentile (p90) is an observed upper conditional percentile, not a proven optimal target.",
+      "Tack (PORT vs STARBOARD) is modeled as a fixed effect; intervals are leg-cluster bootstrap confidence intervals."
+    ],
+    "definitions": {
+      "polar_sog_mean_kt": {
+        "label": "Observed conditional mean ground speed",
+        "unit": "kt",
+        "formula": "Kernel-smoothed conditional mean steady-state SOG(TWS, |TWA|, mode) + fixed-effect tack contrast (SOG includes surface current)",
+        "window": "steady-state 1 Hz samples on completed active legs",
+        "denominator": "valid steady-state seconds (excludes \u00b16.5 s manoeuvres, \u00b18 s gates, >6\u00b0/s turns, <60 m traffic)",
+        "source": "interpolated 1 Hz SOG, heading, COG, TWD, and TWS within validated source coverage"
+      },
+      "polar_sog_p50_kt": {
+        "label": "Observed conditional median ground speed (50th percentile)",
+        "unit": "kt",
+        "formula": "Kernel-weighted conditional 50th percentile of steady-state SOG(TWS, |TWA|, mode) + fixed-effect tack contrast",
+        "window": "steady-state 1 Hz samples on completed active legs",
+        "denominator": "valid steady-state seconds with >=12 s kernel support across >=2 boat-leg clusters",
+        "source": "observed steady-state SOG; descriptive quantile, not a physical VPP prediction"
+      },
+      "polar_sog_p90_kt": {
+        "label": "Observed upper conditional percentile (90th percentile)",
+        "unit": "kt",
+        "formula": "Kernel-weighted conditional 90th percentile of steady-state SOG(TWS, |TWA|, mode) + fixed-effect tack contrast",
+        "window": "steady-state 1 Hz samples on completed active legs",
+        "denominator": "valid steady-state seconds with >=12 s kernel support across >=2 boat-leg clusters",
+        "source": "observed steady-state SOG; observed upper conditional percentile, not a proven optimal target"
+      },
+      "sog_residual_kt": {
+        "label": "Conditional ground-speed residual",
+        "unit": "kt",
+        "formula": "Observed steady-state SOG minus conditional expected ground speed under Day-Grouped (LODO) or Leave-One-Race-Out (LORO) cross-validation",
+        "window": "steady-state 1 Hz samples on completed active legs",
+        "denominator": "boat steady-state coverage seconds; 95% intervals are leg-cluster bootstrap confidence intervals",
+        "source": "steady-state SOG, TWS, |TWA|, and tack; reflects current, tactics, traffic, sea state, and wind error alongside boat speed"
+      },
+      "wind_vmg_residual_kt": {
+        "label": "Conditional wind-VMG residual",
+        "unit": "kt",
+        "formula": "Observed steady-state wind-relative VMG minus conditional expected wind-VMG(TWS, |TWA|, tack)",
+        "window": "steady-state 1 Hz samples on completed active legs",
+        "denominator": "boat steady-state coverage seconds; 95% intervals are leg-cluster bootstrap confidence intervals",
+        "source": "steady-state SOG, COG, TWD, TWS, heading; reflects current, wind-angle choices, and measurement noise"
+      },
+      "tack_fixed_effect_kt": {
+        "label": "Fixed-effect tack contrast (Starboard \u2212 Port)",
+        "unit": "kt",
+        "formula": "Weighted OLS contrast coefficient on two-category fixed effect I_stbd (+0.5 STARBOARD, -0.5 PORT) controlling for bivariate quadratic (TWS, |TWA|)",
+        "window": "all steady-state 1 Hz samples within mode",
+        "denominator": "valid steady-state seconds; 95% CI from 500 leg-cluster bootstrap draws",
+        "source": "signed TWA derived from boat heading and TWD; reflects persistent current/wave/sensor asymmetry across tacks"
+      }
+    },
+    "validation_summary": null,
+    "brackets": {
+      "upwind": [],
+      "downwind": []
+    }
   }
 }

@@ -2,6 +2,10 @@ import { evidenceText } from '../../utils/evidenceText'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { loadAnalysisDetail, loadAnalysisIndex } from '../../engine/analysisCatalog'
 import { BoatPerformanceRadar } from '../dashboard/BoatPerformanceRadar'
+import {
+  ArchiveObservedPolarSection,
+  RaceObservedPolarSection,
+} from '../dashboard/ObservedPolarPanel'
 import { TeamDebrief } from '../dashboard/TeamDebrief'
 import type {
   AnalysisDetail,
@@ -461,6 +465,7 @@ function RaceView({
             replayAvailable={replayRaceIds.includes(race.id)}
             onOpenReplay={onOpenReplay}
           />
+          <RaceObservedPolarSection detail={detail} boat={boat} onSelectBoat={onSelectBoat} />
           <section className="analysis-section">
             <div className="analysis-section-heading">
               <h4>Race metrics</h4>
@@ -790,7 +795,10 @@ function RaceView({
               metric indicate the available evidence. An unavailable value is not treated as zero.
             </p>
             <div className="analysis-definition-list">
-              {Object.entries(detail.definitions).map(([id, definition]) => (
+              {Object.entries({
+                ...detail.definitions,
+                ...(detail.polar_analysis?.definitions ?? {}),
+              }).map(([id, definition]) => (
                 <div key={id}>
                   <strong>{evidenceText(definition.label)}</strong>
                   <span>
@@ -1341,6 +1349,10 @@ function HistoryView({
           </p>
         </section>
       )}
+      <ArchiveObservedPolarSection
+        polarModel={index.polar_model}
+        selectedTeam={history.team_code}
+      />
       {allTeamObservations.length > history.observations.length && (
         <section className="analysis-section">
           <div className="analysis-section-heading">
