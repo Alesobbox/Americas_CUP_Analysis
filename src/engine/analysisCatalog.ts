@@ -249,13 +249,12 @@ export function validateAnalysisEnhancements(detail: AnalysisDetail): void {
       finite(interval.ci_low_kt) &&
       finite(interval.ci_high_kt) &&
       nonnegative(interval.bootstrap_se_kt) &&
-      interval.ci_low_kt <= interval.value + 1e-6 &&
-      interval.value <= interval.ci_high_kt + 1e-6)
+      interval.ci_low_kt <= interval.ci_high_kt)
   for (const boat of detail.boats) {
     if (boat.polar) {
       const p = boat.polar
       if (
-        p.schema_version !== '1.0' ||
+        !['1.0', '2.0'].includes(p.schema_version) ||
         !string(p.method_version) ||
         !['derived', 'unavailable'].includes(p.quality) ||
         !count(p.steady_sample_count) ||
@@ -270,7 +269,7 @@ export function validateAnalysisEnhancements(detail: AnalysisDetail): void {
   const polar = detail.polar_analysis
   if (
     polar &&
-    (polar.schema_version !== '1.0' ||
+    (!['1.0', '2.0'].includes(polar.schema_version) ||
       !string(polar.method_version) ||
       polar.race_id !== detail.race.id ||
       !['derived', 'unavailable'].includes(polar.quality) ||
@@ -291,7 +290,7 @@ export async function loadAnalysisIndex(signal?: AbortSignal): Promise<AnalysisI
     !Array.isArray(index.races) ||
     !Array.isArray(index.histories) ||
     (index.polar_model &&
-      (index.polar_model.schema_version !== '1.0' ||
+      (!['1.0', '2.0'].includes(index.polar_model.schema_version) ||
         !string(index.polar_model.method_version) ||
         !Array.isArray(index.polar_model.team_residuals) ||
         !index.polar_model.validation?.leave_one_day_out ||

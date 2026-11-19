@@ -24,10 +24,10 @@ Each AC38 race replay can be accompanied by historical retrospective environment
 
 | Channel | Naples (Gulf of Naples) Primary | Cagliari (Sardinia) Primary | Secondary / Fallback |
 | --- | --- | --- | --- |
-| `currents` | Copernicus `cmems_mod_med_phy-cur_anfc_4.2km_PT1H-m` | Copernicus `cmems_mod_med_phy-cur_anfc_4.2km_PT1H-m` | Copernicus GLORYS12 (`cmems_mod_glo_phy_my_0.083deg_P1D-m`) |
-| `waves` | Parthenope WW3 (`ww33`) | Copernicus `cmems_mod_med_wav_anfc_4.2km_PT1H-i` | Copernicus WAVERYS / Open-Meteo |
+| `currents` | Copernicus `cmems_mod_med_phy-cur_my_4.2km_PT1H-m` | Copernicus `cmems_mod_med_phy-cur_my_4.2km_PT1H-m` | Copernicus GLORYS12 (`cmems_mod_glo_phy_my_0.083deg_P1D-m`) |
+| `waves` | Parthenope WW3 (`ww33`) | Copernicus `cmems_mod_med_wav_my_4.2km_PT1H-i` | Copernicus WAVERYS / Open-Meteo |
 | `air_temperature` | Parthenope WRF (`wrf5`) | Open-Meteo `arome_france_hd` | Open-Meteo `icon_2i` / `ecmwf_ifs` |
-| `water_temperature` | Parthenope RMS3 (`rms3`) | Copernicus `cmems_mod_med_phy-tem_anfc_4.2km_PT1H-m` | Copernicus GLORYS12 |
+| `water_temperature` | Parthenope RMS3 (`rms3`) | Copernicus `cmems_mod_med_phy-temp_my_4.2km_P1D-m` | Copernicus GLORYS12 |
 
 `parthenope_rms3_currents` is explicitly excluded in `REJECTED_SOURCES` because its rotated grid axes lack reliable vector rotation angles in OPeNDAP metadata.
 
@@ -44,3 +44,7 @@ python -m pipeline.environment verify      # Offline SHA-256 & schema verificati
 ```
 
 Copernicus Marine credentials (`COPERNICUSMARINE_SERVICE_USERNAME`, `COPERNICUSMARINE_SERVICE_PASSWORD`) can be configured via `.env` (see [`.env.example`](../.env.example)); Open-Meteo and Università Parthenope endpoints are unauthenticated.
+
+## Statistical use
+
+The actual provider registry and exported channel provenance are authoritative. Mediterranean current uses hourly multiyear reanalysis at approximately 1.018 m depth. Cagliari water temperature is daily mean potential temperature at that level; Naples RMS3 has its own depth (approximately 3.166 m). Wave period is energy period Tm-1,0. Track sampling frequency does not increase native model resolution, and partial channels require matched-cohort evaluation. See [AC38 statistical research](ac38_research.md).

@@ -29,36 +29,246 @@ DEBRIEF_METHOD_VERSION = "debrief-1"
 
 
 DEFINITIONS = {
-    "sog_mean_kt": ("Mean speed", "kt", "Time-weighted mean SOG", "active race", "valid seconds", "interpolated boat SOG"),
-    "course_vmg_kt": ("Leg-directed course VMG", "kt", "SOG × cos(COG − active leg bearing)", "active leg", "valid seconds", "interpolated SOG and COG; reconstructed leg"),
-    "course_vmg_p10_kt": ("Course VMG 10th percentile", "kt", "Time-weighted 10th percentile of leg-directed course VMG", "active leg", "valid seconds", "interpolated SOG and COG"),
-    "course_vmg_p90_kt": ("Course VMG 90th percentile", "kt", "Time-weighted 90th percentile of leg-directed course VMG", "active leg", "valid seconds", "interpolated SOG and COG"),
-    "wind_vmg_kt": ("Wind-relative VMG", "kt", "SOG × cos(COG − true wind-from bearing) on upwind legs; negative of this on downwind legs", "active leg", "valid wind seconds", "interpolated boat SOG, COG and TWD"),
-    "wind_vmg_p10_kt": ("Wind VMG 10th percentile", "kt", "Time-weighted 10th percentile of wind-relative VMG", "active leg", "valid wind seconds", "interpolated boat SOG, COG and TWD"),
-    "wind_vmg_p90_kt": ("Wind VMG 90th percentile", "kt", "Time-weighted 90th percentile of wind-relative VMG", "active leg", "valid wind seconds", "interpolated boat SOG, COG and TWD"),
-    "distance_m": ("Distance sailed", "m", "Sum of projected GNSS point-to-point distances, clipped at reconstructed crossings", "active race or leg", "valid path segments", "interpolated projected GNSS"),
-    "elapsed_s": ("Leg time", "s", "End crossing − previous crossing", "completed leg", "one leg", "official event time or reconstructed fallback"),
-    "route_ratio": ("Geometric route ratio", "ratio", "Direct distance between observed leg endpoints ÷ distance sailed; geometric reference only, not a feasible tactical route", "completed leg", "one leg", "interpolated projected GNSS"),
-    "abs_twa_mean_deg": ("Absolute true wind angle", "°", "Time-weighted mean |signed TWA|; port/starboard are not averaged as signed angles", "active leg", "valid wind seconds", "derived TWA from boat heading and TWD"),
-    "port_abs_twa_median_deg": ("Port absolute TWA median", "°", "Time-weighted median |TWA| during stable port periods", "active leg", "stable port seconds", "derived TWA"),
-    "starboard_abs_twa_median_deg": ("Starboard absolute TWA median", "°", "Time-weighted median |TWA| during stable starboard periods", "active leg", "stable starboard seconds", "derived TWA"),
-    "port_time_s": ("Port tack time", "s", "Stable samples with signed TWA below −15° excluding ±3 s around manoeuvres", "active leg", "valid stable seconds", "derived TWA and detected manoeuvres"),
-    "starboard_time_s": ("Starboard tack time", "s", "Stable samples with signed TWA above +15° excluding ±3 s around manoeuvres", "active leg", "valid stable seconds", "derived TWA and detected manoeuvres"),
-    "port_distance_m": ("Port tack distance", "m", "Projected path length during stable port samples", "active leg", "valid stable segments", "interpolated GNSS and derived TWA"),
-    "starboard_distance_m": ("Starboard tack distance", "m", "Projected path length during stable starboard samples", "active leg", "valid stable segments", "interpolated GNSS and derived TWA"),
-    "boundary_nearest_m": ("Nearest race boundary", "m", "Minimum signed distance from boat centre to active race-boundary polygon; negative is outside", "active race", "valid 100 ms samples", "interpolated GNSS; timestamped session race boundary"),
-    "boundary_buffer_s": ("Within 25 m of race boundary", "s", "Time with signed distance from 0 to 25 m", "active race", "valid 100 ms samples", "interpolated GNSS; timestamped session race boundary"),
-    "boundary_outside_s": ("Outside race boundary", "s", "Time with negative signed distance; sampled exposure, not a rules ruling", "active race", "valid 100 ms samples", "interpolated GNSS; timestamped session race boundary"),
-    "start_distance_m": ("Bow distance to start line at gun", "m", "Signed bow distance to moving start line; positive is course side", "gun instant", "one observation", "interpolated GNSS/heading and dynamic marks"),
-    "start_along_line": ("Start line location", "fraction", "Bow projection along the source sequence-0 port to starboard marks; 0 and 1 are line ends; outside range is beyond an end", "gun instant", "one observation", "interpolated GNSS/heading and dynamic marks"),
-    "start_sog_kt": ("Speed at gun", "kt", "Interpolated SOG at gun", "gun instant", "one observation", "interpolated boat SOG"),
-    "start_closing_kt": ("Speed toward line at gun", "kt", "SOG component along start-line course-side normal; signed", "gun instant", "one observation", "interpolated SOG and COG; dynamic marks"),
-    "tack_loss_median_kt": ("Median tack speed loss", "kt", "Median detector entry SOG − minimum SOG", "active race", "detected tack events", "reconstructed manoeuvres"),
-    "tack_count": ("Tack count", "events", "Number of detected tack events", "active race", "detected events", "reconstructed manoeuvres"),
-    "gybe_loss_median_kt": ("Median gybe speed loss", "kt", "Median detector entry SOG − minimum SOG", "active race", "detected gybe events", "reconstructed manoeuvres"),
-    "gybe_count": ("Gybe count", "events", "Number of detected gybe events", "active race", "detected events", "reconstructed manoeuvres"),
-    "tack_recovery_median_s": ("Median tack recovery", "s", "Median recovered-event time to 95% entry SOG, within 15 s", "active race", "recovered tack events", "interpolated SOG; reconstructed manoeuvres"),
-    "gybe_recovery_median_s": ("Median gybe recovery", "s", "Median recovered-event time to 95% entry SOG, within 15 s", "active race", "recovered gybe events", "interpolated SOG; reconstructed manoeuvres"),
+    "sog_mean_kt": (
+        "Mean speed",
+        "kt",
+        "Time-weighted mean SOG",
+        "active race",
+        "valid seconds",
+        "interpolated boat SOG",
+    ),
+    "course_vmg_kt": (
+        "Leg-directed course VMG",
+        "kt",
+        "SOG × cos(COG − active leg bearing)",
+        "active leg",
+        "valid seconds",
+        "interpolated SOG and COG; reconstructed leg",
+    ),
+    "course_vmg_p10_kt": (
+        "Course VMG 10th percentile",
+        "kt",
+        "Time-weighted 10th percentile of leg-directed course VMG",
+        "active leg",
+        "valid seconds",
+        "interpolated SOG and COG",
+    ),
+    "course_vmg_p90_kt": (
+        "Course VMG 90th percentile",
+        "kt",
+        "Time-weighted 90th percentile of leg-directed course VMG",
+        "active leg",
+        "valid seconds",
+        "interpolated SOG and COG",
+    ),
+    "wind_vmg_kt": (
+        "Wind-relative VMG",
+        "kt",
+        "SOG × cos(COG − true wind-from bearing) on upwind legs; negative of this on downwind legs",
+        "active leg",
+        "valid wind seconds",
+        "interpolated boat SOG, COG and TWD",
+    ),
+    "wind_vmg_p10_kt": (
+        "Wind VMG 10th percentile",
+        "kt",
+        "Time-weighted 10th percentile of wind-relative VMG",
+        "active leg",
+        "valid wind seconds",
+        "interpolated boat SOG, COG and TWD",
+    ),
+    "wind_vmg_p90_kt": (
+        "Wind VMG 90th percentile",
+        "kt",
+        "Time-weighted 90th percentile of wind-relative VMG",
+        "active leg",
+        "valid wind seconds",
+        "interpolated boat SOG, COG and TWD",
+    ),
+    "distance_m": (
+        "Distance sailed",
+        "m",
+        "Sum of projected GNSS point-to-point distances, clipped at reconstructed crossings",
+        "active race or leg",
+        "valid path segments",
+        "interpolated projected GNSS",
+    ),
+    "elapsed_s": (
+        "Leg time",
+        "s",
+        "End crossing − previous crossing",
+        "completed leg",
+        "one leg",
+        "official event time or reconstructed fallback",
+    ),
+    "route_ratio": (
+        "Geometric route ratio",
+        "ratio",
+        "Direct distance between observed leg endpoints ÷ distance sailed; geometric reference only, not a feasible tactical route",
+        "completed leg",
+        "one leg",
+        "interpolated projected GNSS",
+    ),
+    "abs_twa_mean_deg": (
+        "Absolute true wind angle",
+        "°",
+        "Time-weighted mean |signed TWA|; port/starboard are not averaged as signed angles",
+        "active leg",
+        "valid wind seconds",
+        "derived TWA from boat heading and TWD",
+    ),
+    "port_abs_twa_median_deg": (
+        "Port absolute TWA median",
+        "°",
+        "Time-weighted median |TWA| during stable port periods",
+        "active leg",
+        "stable port seconds",
+        "derived TWA",
+    ),
+    "starboard_abs_twa_median_deg": (
+        "Starboard absolute TWA median",
+        "°",
+        "Time-weighted median |TWA| during stable starboard periods",
+        "active leg",
+        "stable starboard seconds",
+        "derived TWA",
+    ),
+    "port_time_s": (
+        "Port tack time",
+        "s",
+        "Stable samples with signed TWA below −15° excluding ±3 s around manoeuvres",
+        "active leg",
+        "valid stable seconds",
+        "derived TWA and detected manoeuvres",
+    ),
+    "starboard_time_s": (
+        "Starboard tack time",
+        "s",
+        "Stable samples with signed TWA above +15° excluding ±3 s around manoeuvres",
+        "active leg",
+        "valid stable seconds",
+        "derived TWA and detected manoeuvres",
+    ),
+    "port_distance_m": (
+        "Port tack distance",
+        "m",
+        "Projected path length during stable port samples",
+        "active leg",
+        "valid stable segments",
+        "interpolated GNSS and derived TWA",
+    ),
+    "starboard_distance_m": (
+        "Starboard tack distance",
+        "m",
+        "Projected path length during stable starboard samples",
+        "active leg",
+        "valid stable segments",
+        "interpolated GNSS and derived TWA",
+    ),
+    "boundary_nearest_m": (
+        "Nearest race boundary",
+        "m",
+        "Minimum signed distance from boat centre to active race-boundary polygon; negative is outside",
+        "active race",
+        "valid 100 ms samples",
+        "interpolated GNSS; timestamped session race boundary",
+    ),
+    "boundary_buffer_s": (
+        "Within 25 m of race boundary",
+        "s",
+        "Time with signed distance from 0 to 25 m",
+        "active race",
+        "valid 100 ms samples",
+        "interpolated GNSS; timestamped session race boundary",
+    ),
+    "boundary_outside_s": (
+        "Outside race boundary",
+        "s",
+        "Time with negative signed distance; sampled exposure, not a rules ruling",
+        "active race",
+        "valid 100 ms samples",
+        "interpolated GNSS; timestamped session race boundary",
+    ),
+    "start_distance_m": (
+        "Bow distance to start line at gun",
+        "m",
+        "Signed bow distance to moving start line; positive is course side",
+        "gun instant",
+        "one observation",
+        "interpolated GNSS/heading and dynamic marks",
+    ),
+    "start_along_line": (
+        "Start line location",
+        "fraction",
+        "Bow projection along the source sequence-0 port to starboard marks; 0 and 1 are line ends; outside range is beyond an end",
+        "gun instant",
+        "one observation",
+        "interpolated GNSS/heading and dynamic marks",
+    ),
+    "start_sog_kt": (
+        "Speed at gun",
+        "kt",
+        "Interpolated SOG at gun",
+        "gun instant",
+        "one observation",
+        "interpolated boat SOG",
+    ),
+    "start_closing_kt": (
+        "Speed toward line at gun",
+        "kt",
+        "SOG component along start-line course-side normal; signed",
+        "gun instant",
+        "one observation",
+        "interpolated SOG and COG; dynamic marks",
+    ),
+    "tack_loss_median_kt": (
+        "Median tack speed loss",
+        "kt",
+        "Median detector entry SOG − minimum SOG",
+        "active race",
+        "detected tack events",
+        "reconstructed manoeuvres",
+    ),
+    "tack_count": (
+        "Tack count",
+        "events",
+        "Number of detected tack events",
+        "active race",
+        "detected events",
+        "reconstructed manoeuvres",
+    ),
+    "gybe_loss_median_kt": (
+        "Median gybe speed loss",
+        "kt",
+        "Median detector entry SOG − minimum SOG",
+        "active race",
+        "detected gybe events",
+        "reconstructed manoeuvres",
+    ),
+    "gybe_count": (
+        "Gybe count",
+        "events",
+        "Number of detected gybe events",
+        "active race",
+        "detected events",
+        "reconstructed manoeuvres",
+    ),
+    "tack_recovery_median_s": (
+        "Median tack recovery",
+        "s",
+        "Median recovered-event time to 95% entry SOG, within 15 s",
+        "active race",
+        "recovered tack events",
+        "interpolated SOG; reconstructed manoeuvres",
+    ),
+    "gybe_recovery_median_s": (
+        "Median gybe recovery",
+        "s",
+        "Median recovered-event time to 95% entry SOG, within 15 s",
+        "active race",
+        "recovered gybe events",
+        "interpolated SOG; reconstructed manoeuvres",
+    ),
 }
 
 
@@ -113,8 +323,12 @@ def start_line_geometry(bow, port, starboard, axis_deg):
     axis = (math.sin(math.radians(axis_deg)), math.cos(math.radians(axis_deg)))
     if nx * axis[0] + ny * axis[1] < 0:
         nx, ny = -nx, -ny
-    return ((bow[0] - port[0]) * nx + (bow[1] - port[1]) * ny,
-            ((bow[0] - port[0]) * dx + (bow[1] - port[1]) * dy) / (length * length), nx, ny)
+    return (
+        (bow[0] - port[0]) * nx + (bow[1] - port[1]) * ny,
+        ((bow[0] - port[0]) * dx + (bow[1] - port[1]) * dy) / (length * length),
+        nx,
+        ny,
+    )
 
 
 def _weighted_quantile(observations, fraction):
@@ -133,8 +347,12 @@ def _weighted_quantile(observations, fraction):
 def _metric(value, unit, quality="derived", coverage_s=None, reason=None, sample_count=None):
     if value is not None and not math.isfinite(value):
         value, quality, reason = None, "unavailable", "non-finite source value"
-    result = {"value": value if value is not None else None, "unit": unit,
-              "quality": quality if value is not None else "unavailable", "coverage_s": round(coverage_s, 3) if coverage_s is not None else None}
+    result = {
+        "value": value if value is not None else None,
+        "unit": unit,
+        "quality": quality if value is not None else "unavailable",
+        "coverage_s": round(coverage_s, 3) if coverage_s is not None else None,
+    }
     if reason:
         result["reason"] = reason
     if sample_count is not None:
@@ -154,7 +372,11 @@ def _interp(t, times, values, circular=False):
     if times[p] == t:
         return values[p]
     u = (t - times[p]) / (times[i] - times[p])
-    return (values[p] + u * circular_delta_deg(values[p], values[i])) % 360 if circular else values[p] + u * (values[i] - values[p])
+    return (
+        (values[p] + u * circular_delta_deg(values[p], values[i])) % 360
+        if circular
+        else values[p] + u * (values[i] - values[p])
+    )
 
 
 def _source_valid(boat, t, fields=("gnss", "heading", "sog", "cog")):
@@ -173,9 +395,14 @@ def _source_valid(boat, t, fields=("gnss", "heading", "sog", "cog")):
 def _boat_at(t, times, boat):
     if not _source_valid(boat, t):
         return None
-    values = (_interp(t, times, boat.x), _interp(t, times, boat.y),
-              _interp(t, times, boat.heading, True), _interp(t, times, boat.cog, True),
-              _interp(t, times, boat.sog_kt), _interp(t, times, boat.twd_deg, True))
+    values = (
+        _interp(t, times, boat.x),
+        _interp(t, times, boat.y),
+        _interp(t, times, boat.heading, True),
+        _interp(t, times, boat.cog, True),
+        _interp(t, times, boat.sog_kt),
+        _interp(t, times, boat.twd_deg, True),
+    )
     return values if all(v is not None and math.isfinite(v) for v in values) else None
 
 
@@ -203,7 +430,7 @@ def _samples_between(start, end, times):
     """Sample intervals with exact endpoint interpolation and their actual seconds."""
     if end <= start:
         return
-    interior = times[bisect_right(times, start):bisect_left(times, end)]
+    interior = times[bisect_right(times, start) : bisect_left(times, end)]
     points = [start, *interior, end]
     for a, b in zip(points, points[1:]):
         if b > a:
@@ -211,10 +438,19 @@ def _samples_between(start, end, times):
 
 
 def _unavailable_leg(reason):
-    units = {"elapsed_s": "s", "distance_m": "m", "route_ratio": "ratio",
-             "sog_mean_kt": "kt", "course_vmg_kt": "kt", "wind_vmg_kt": "kt",
-             "abs_twa_mean_deg": "°", "port_time_s": "s", "starboard_time_s": "s",
-             "port_distance_m": "m", "starboard_distance_m": "m"}
+    units = {
+        "elapsed_s": "s",
+        "distance_m": "m",
+        "route_ratio": "ratio",
+        "sog_mean_kt": "kt",
+        "course_vmg_kt": "kt",
+        "wind_vmg_kt": "kt",
+        "abs_twa_mean_deg": "°",
+        "port_time_s": "s",
+        "starboard_time_s": "s",
+        "port_distance_m": "m",
+        "starboard_distance_m": "m",
+    }
     return {key: _metric(None, unit, reason=reason) for key, unit in units.items()}
 
 
@@ -262,25 +498,69 @@ def _leg_metrics(start, end, leg, times, boat, axis, manoeuvres):
         missing["elapsed_s"] = _metric(elapsed, "s", "reconstructed")
         return missing
     start_pos, end_pos = _boat_at(start, times, boat), _boat_at(end, times, boat)
-    direct = math.hypot(end_pos[0] - start_pos[0], end_pos[1] - start_pos[1]) if start_pos and end_pos else None
+    direct = (
+        math.hypot(end_pos[0] - start_pos[0], end_pos[1] - start_pos[1])
+        if start_pos and end_pos
+        else None
+    )
     coverage = accum["valid_s"]
     quality = "derived" if coverage >= 0.95 * elapsed else "partial"
     route_ok = direct is not None and path > 0 and direct <= path + 1e-6 and quality == "derived"
     m = {
         "elapsed_s": _metric(elapsed, "s", "reconstructed"),
         "distance_m": _metric(path, "m", quality, coverage),
-        "route_ratio": _metric(direct / path if route_ok else None, "ratio", quality, coverage, "geometric reference only" if route_ok else "incomplete path or endpoints"),
+        "route_ratio": _metric(
+            direct / path if route_ok else None,
+            "ratio",
+            quality,
+            coverage,
+            "geometric reference only" if route_ok else "incomplete path or endpoints",
+        ),
         "sog_mean_kt": _metric(accum["sog"] / coverage, "kt", quality, coverage),
         "course_vmg_kt": _metric(accum["course"] / coverage, "kt", quality, coverage),
-        "course_vmg_p10_kt": _metric(_weighted_quantile(distributions["course"], 0.1), "kt", quality, coverage),
-        "course_vmg_p90_kt": _metric(_weighted_quantile(distributions["course"], 0.9), "kt", quality, coverage),
-        "wind_vmg_kt": _metric(accum["wind"] / accum["wind_s"] if accum["wind_s"] else None, "kt", "derived" if accum["wind_s"] >= 0.95 * elapsed else "partial", accum["wind_s"], "boat wind unavailable" if not accum["wind_s"] else None),
-        "wind_vmg_p10_kt": _metric(_weighted_quantile(distributions["wind"], 0.1), "kt", "derived" if accum["wind_s"] >= 0.95 * elapsed else "partial", accum["wind_s"], "boat wind unavailable" if not accum["wind_s"] else None),
-        "wind_vmg_p90_kt": _metric(_weighted_quantile(distributions["wind"], 0.9), "kt", "derived" if accum["wind_s"] >= 0.95 * elapsed else "partial", accum["wind_s"], "boat wind unavailable" if not accum["wind_s"] else None),
-        "abs_twa_mean_deg": _metric(accum["abs_twa"] / accum["wind_s"] if accum["wind_s"] else None, "°", "derived" if accum["wind_s"] >= 0.95 * elapsed else "partial", accum["wind_s"], "boat wind unavailable" if not accum["wind_s"] else None),
+        "course_vmg_p10_kt": _metric(
+            _weighted_quantile(distributions["course"], 0.1), "kt", quality, coverage
+        ),
+        "course_vmg_p90_kt": _metric(
+            _weighted_quantile(distributions["course"], 0.9), "kt", quality, coverage
+        ),
+        "wind_vmg_kt": _metric(
+            accum["wind"] / accum["wind_s"] if accum["wind_s"] else None,
+            "kt",
+            "derived" if accum["wind_s"] >= 0.95 * elapsed else "partial",
+            accum["wind_s"],
+            "boat wind unavailable" if not accum["wind_s"] else None,
+        ),
+        "wind_vmg_p10_kt": _metric(
+            _weighted_quantile(distributions["wind"], 0.1),
+            "kt",
+            "derived" if accum["wind_s"] >= 0.95 * elapsed else "partial",
+            accum["wind_s"],
+            "boat wind unavailable" if not accum["wind_s"] else None,
+        ),
+        "wind_vmg_p90_kt": _metric(
+            _weighted_quantile(distributions["wind"], 0.9),
+            "kt",
+            "derived" if accum["wind_s"] >= 0.95 * elapsed else "partial",
+            accum["wind_s"],
+            "boat wind unavailable" if not accum["wind_s"] else None,
+        ),
+        "abs_twa_mean_deg": _metric(
+            accum["abs_twa"] / accum["wind_s"] if accum["wind_s"] else None,
+            "°",
+            "derived" if accum["wind_s"] >= 0.95 * elapsed else "partial",
+            accum["wind_s"],
+            "boat wind unavailable" if not accum["wind_s"] else None,
+        ),
     }
     for side in ("port", "starboard"):
-        m[side + "_abs_twa_median_deg"] = _metric(_weighted_quantile(distributions[side + "_twa"], 0.5), "°", quality, accum[side + "_time"], "no stable samples" if not distributions[side + "_twa"] else None)
+        m[side + "_abs_twa_median_deg"] = _metric(
+            _weighted_quantile(distributions[side + "_twa"], 0.5),
+            "°",
+            quality,
+            accum[side + "_time"],
+            "no stable samples" if not distributions[side + "_twa"] else None,
+        )
         m[side + "_time_s"] = _metric(accum[side + "_time"], "s", quality, coverage)
         m[side + "_distance_m"] = _metric(accum[side + "_distance"], "m", quality, coverage)
     return m, bins
@@ -304,13 +584,23 @@ def _event_analysis(event, times, boat, legs, marks):
             recovery = (times[i] - min_time) / 1000
             break
     near_gate = any(abs(t - gate.crossing_time) < 5000 for gate in marks)
-    return {"type": event.type, "timestamp": t, "leg": leg,
-            "position": {"x": round(pos[0], 2), "y": round(pos[1], 2)} if pos else None,
-            "entry_speed_kt": event.entry_speed_kt, "min_speed_kt": event.min_speed_kt,
-            "speed_loss_kt": event.speed_loss_kt, "recovery_time_s": recovery,
-            "acceleration_kt_s": round((0.95 * base - min_speed) / recovery, 3) if recovery and min_speed < math.inf else None,
-            "quality": "ambiguous_rounding" if near_gate else "reconstructed",
-            "recovery_reason": None if recovery is not None else "95% entry speed not reached within 15 s"}
+    return {
+        "type": event.type,
+        "timestamp": t,
+        "leg": leg,
+        "position": {"x": round(pos[0], 2), "y": round(pos[1], 2)} if pos else None,
+        "entry_speed_kt": event.entry_speed_kt,
+        "min_speed_kt": event.min_speed_kt,
+        "speed_loss_kt": event.speed_loss_kt,
+        "recovery_time_s": recovery,
+        "acceleration_kt_s": round((0.95 * base - min_speed) / recovery, 3)
+        if recovery and min_speed < math.inf
+        else None,
+        "quality": "ambiguous_rounding" if near_gate else "reconstructed",
+        "recovery_reason": None
+        if recovery is not None
+        else "95% entry speed not reached within 15 s",
+    }
 
 
 def _gate_analysis(gate, times, boat, marks):
@@ -327,14 +617,20 @@ def _gate_analysis(gate, times, boat, marks):
         distance = math.hypot(target[0] - approach[0], target[1] - approach[1])
     before = _boat_at(t - 5000, times, boat)
     after = _boat_at(t + 5000, times, boat)
-    return {"leg": gate.leg, "crossing_time_ms": t, "mark_chosen": gate.mark_chosen,
-            "side": gate.side, "source": "official" if gate.is_official else "reconstructed",
-            "position": {"x": round(at[0], 2), "y": round(at[1], 2)} if at else None,
-            "approach_20s_distance_m": round(distance, 2) if distance is not None else None,
-            "approach_angle_deg": round(angle, 2) if angle is not None else None,
-            "entry_speed_kt": round(before[4], 2) if before else None,
-            "exit_speed_kt": round(after[4], 2) if after else None,
-            "rounding_time_s": None, "rounding_reason": "no stable entry/exit boundary in source"}
+    return {
+        "leg": gate.leg,
+        "crossing_time_ms": t,
+        "mark_chosen": gate.mark_chosen,
+        "side": gate.side,
+        "source": "official" if gate.is_official else "reconstructed",
+        "position": {"x": round(at[0], 2), "y": round(at[1], 2)} if at else None,
+        "approach_20s_distance_m": round(distance, 2) if distance is not None else None,
+        "approach_angle_deg": round(angle, 2) if angle is not None else None,
+        "entry_speed_kt": round(before[4], 2) if before else None,
+        "exit_speed_kt": round(after[4], 2) if after else None,
+        "rounding_time_s": None,
+        "rounding_reason": "no stable entry/exit boundary in source",
+    }
 
 
 def build_event_feed(detail):
@@ -352,36 +648,58 @@ def build_event_feed(detail):
     def add(event_id, timestamp, kind, label, source, quality, boat_id=None):
         if isinstance(timestamp, bool) or not isinstance(timestamp, int):
             return
-        event = {"id": event_id, "timestamp_ms": timestamp, "type": kind,
-                 "label": label, "source": source, "quality": quality}
+        event = {
+            "id": event_id,
+            "timestamp_ms": timestamp,
+            "type": kind,
+            "label": label,
+            "source": source,
+            "quality": quality,
+        }
         if boat_id is not None:
             event["boat_id"] = boat_id
         events.append(event)
 
-    add(f"{race_id}:gun", race.get("gun_time_ms"), "gun", "Start gun",
-        "source session race-start timestamp", "source")
-    total_legs = max((leg.get("leg", 0) for boat in detail["boats"]
-                      for leg in boat.get("legs", [])), default=0)
+    add(
+        f"{race_id}:gun",
+        race.get("gun_time_ms"),
+        "gun",
+        "Start gun",
+        "source session race-start timestamp",
+        "source",
+    )
+    total_legs = max(
+        (leg.get("leg", 0) for boat in detail["boats"] for leg in boat.get("legs", [])), default=0
+    )
     for boat in detail["boats"]:
         boat_id = boat["id"]
         team = boat["team_code"]
         start = boat.get("start") or {}
-        add(f"{race_id}:start:{boat_id}", start.get("crossing_time_ms"),
-            "start", f"{team} start crossing", "reconstructed bow-line crossing",
-            "source_conflict" if boat.get("source_conflicts") else "reconstructed", boat_id)
+        add(
+            f"{race_id}:start:{boat_id}",
+            start.get("crossing_time_ms"),
+            "start",
+            f"{team} start crossing",
+            "reconstructed bow-line crossing",
+            "source_conflict" if boat.get("source_conflicts") else "reconstructed",
+            boat_id,
+        )
         for gate in boat.get("gates", []):
             leg = gate.get("leg")
             if not isinstance(leg, int) or leg < 1:
                 continue
-            is_finish = (boat.get("classification", "").startswith("RANK_")
-                         and leg == total_legs)
-            add(f"{race_id}:gate:{boat_id}:{leg}", gate.get("crossing_time_ms"),
+            is_finish = boat.get("classification", "").startswith("RANK_") and leg == total_legs
+            add(
+                f"{race_id}:gate:{boat_id}:{leg}",
+                gate.get("crossing_time_ms"),
                 "finish" if is_finish else "gate",
                 f"{team} {'finish' if is_finish else f'gate {leg}'} crossing",
-                "source leg timing" if gate.get("source") == "official"
+                "source leg timing"
+                if gate.get("source") == "official"
                 else "geometric crossing fallback",
-                "source_timing" if gate.get("source") == "official"
-                else "reconstructed", boat_id)
+                "source_timing" if gate.get("source") == "official" else "reconstructed",
+                boat_id,
+            )
         manoeuvre_counts = defaultdict(int)
         for manoeuvre in boat.get("manoeuvres", []):
             kind = manoeuvre.get("type", "").lower()
@@ -390,17 +708,25 @@ def build_event_feed(detail):
                 continue
             key = (timestamp, kind)
             manoeuvre_counts[key] += 1
-            add(f"{race_id}:{kind}:{boat_id}:{timestamp}:{manoeuvre_counts[key]}",
-                timestamp, kind, f"{team} {kind}",
+            add(
+                f"{race_id}:{kind}:{boat_id}:{timestamp}:{manoeuvre_counts[key]}",
+                timestamp,
+                kind,
+                f"{team} {kind}",
                 "manoeuvre detector on synchronized boat telemetry",
-                manoeuvre.get("quality", "reconstructed"), boat_id)
+                manoeuvre.get("quality", "reconstructed"),
+                boat_id,
+            )
 
     wind = detail.get("wind") or {}
-    samples = [sample for sample in wind.get("timeline", [])
-               if isinstance(sample.get("timestamp"), int)
-               and not isinstance(sample.get("timestamp"), bool)
-               and isinstance(sample.get("shift_deg"), (int, float))
-               and math.isfinite(sample["shift_deg"])]
+    samples = [
+        sample
+        for sample in wind.get("timeline", [])
+        if isinstance(sample.get("timestamp"), int)
+        and not isinstance(sample.get("timestamp"), bool)
+        and isinstance(sample.get("shift_deg"), (int, float))
+        and math.isfinite(sample["shift_deg"])
+    ]
     samples.sort(key=lambda sample: sample["timestamp"])
     if samples:
         reference = samples[0]["shift_deg"]
@@ -408,30 +734,48 @@ def build_event_feed(detail):
         for sample in samples[1:]:
             timestamp = sample["timestamp"]
             change = circular_delta_deg(reference, sample["shift_deg"])
-            if (abs(change) < WIND_SHIFT_THRESHOLD_DEG
-                    or timestamp - last_emitted < WIND_SHIFT_MIN_INTERVAL_MS):
+            if (
+                abs(change) < WIND_SHIFT_THRESHOLD_DEG
+                or timestamp - last_emitted < WIND_SHIFT_MIN_INTERVAL_MS
+            ):
                 continue
-            add(f"{race_id}:wind_shift:{timestamp}", timestamp, "wind_shift",
-                f"Official wind shift {change:+.1f}°", "official wind asset",
-                "measured_sample")
+            add(
+                f"{race_id}:wind_shift:{timestamp}",
+                timestamp,
+                "wind_shift",
+                f"Official wind shift {change:+.1f}°",
+                "official wind asset",
+                "measured_sample",
+            )
             reference = sample["shift_deg"]
             last_emitted = timestamp
 
     events.sort(key=lambda event: (event["timestamp_ms"], event["id"]))
-    return {"schema_version": EVENT_FEED_SCHEMA_VERSION,
-            "method_version": EVENT_FEED_METHOD_VERSION, "events": events}
+    return {
+        "schema_version": EVENT_FEED_SCHEMA_VERSION,
+        "method_version": EVENT_FEED_METHOD_VERSION,
+        "events": events,
+    }
 
 
 def _performance_eligible(boat):
     """Retain valid completed legs even when the rest of a race was not finished."""
     start = boat.get("start") or {}
-    return (boat.get("classification") not in ("OCS", "RET", "DNS", "DID_NOT_START", "RETIRED")
-            and not start.get("ocs") and start.get("crossing_time_ms") is not None
-            and not boat.get("source_conflicts"))
+    return (
+        boat.get("classification") not in ("OCS", "RET", "DNS", "DID_NOT_START", "RETIRED")
+        and not start.get("ocs")
+        and start.get("crossing_time_ms") is not None
+        and not boat.get("source_conflicts")
+    )
 
 
 def _positive_finite(value):
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value > 0
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+        and value > 0
+    )
 
 
 def _performance_exclusion_reason(boat, number, metric_id, retention=False):
@@ -441,18 +785,32 @@ def _performance_exclusion_reason(boat, number, metric_id, retention=False):
         return "retired, non-starting, OCS or missing a valid start crossing"
     leg = next((item for item in boat.get("legs", []) if item.get("leg") == number), None)
     if not leg or not leg.get("complete"):
-        return "missing previous crossing" if leg and leg.get("gate") else "missing or incomplete leg crossing"
+        return (
+            "missing previous crossing"
+            if leg and leg.get("gate")
+            else "missing or incomplete leg crossing"
+        )
     start, end = leg.get("start_ms"), leg.get("end_ms")
     if start is not None and end is not None and end <= start:
         return "non-increasing crossing timestamps in source/reconstruction"
     if retention:
-        return "no qualifying same-kind manoeuvre with a fully covered detector window inside this leg"
-    metric = leg.get("metrics", {}).get(metric_id, {})
+        return (
+            "no qualifying same-kind manoeuvre with a fully covered detector window inside this leg"
+        )
+    metric = _leg_metric(leg, metric_id)
     if metric.get("quality") != "derived":
         return metric.get("reason") or "partial or unavailable source-covered leg metric"
     if not _positive_finite(metric.get("value")):
         return "leg metric is not positive and finite"
     return "less than 95% valid source coverage or invalid crossing interval"
+
+
+def _leg_metric(leg, metric_id):
+    metrics = leg.get("metrics")
+    if not isinstance(metrics, dict):
+        return {}
+    metric = metrics.get(metric_id)
+    return metric if isinstance(metric, dict) else {}
 
 
 def _performance_leg(boat, leg_number, metric_id):
@@ -464,10 +822,14 @@ def _performance_leg(boat, leg_number, metric_id):
         start, end = leg.get("start_ms"), leg.get("end_ms")
         if start is None or end is None or end <= start:
             continue
-        metric = leg.get("metrics", {}).get(metric_id, {})
+        metric = _leg_metric(leg, metric_id)
         value, coverage = metric.get("value"), metric.get("coverage_s")
-        if (metric.get("quality") != "derived" or not _positive_finite(value)
-                or not _positive_finite(coverage) or coverage + 1e-6 < .95 * ((end - start) / 1000)):
+        if (
+            metric.get("quality") != "derived"
+            or not _positive_finite(value)
+            or not _positive_finite(coverage)
+            or coverage + 1e-6 < 0.95 * ((end - start) / 1000)
+        ):
             continue
         return leg, value, coverage
     return None
@@ -498,20 +860,33 @@ def _retention_by_leg(boat, kind, sample_interval_ms=100):
         leg = completed.get(event.get("leg"))
         timestamp = event.get("timestamp")
         entry, minimum = event.get("entry_speed_kt"), event.get("min_speed_kt")
-        if (event.get("type") != kind or event.get("quality") != "reconstructed" or not leg
-                or not _positive_finite(entry) or not isinstance(minimum, (int, float))
-                or not math.isfinite(minimum) or not 0 <= minimum <= entry
-                or not _positive_finite(event.get("speed_loss_kt")) or event["speed_loss_kt"] < 2.5
-                or not _covered_event_window(boat, timestamp, sample_interval_ms)):
+        if (
+            event.get("type") != kind
+            or event.get("quality") != "reconstructed"
+            or not leg
+            or not _positive_finite(entry)
+            or not isinstance(minimum, (int, float))
+            or not math.isfinite(minimum)
+            or not 0 <= minimum <= entry
+            or not _positive_finite(event.get("speed_loss_kt"))
+            or event["speed_loss_kt"] < 2.5
+            or not _covered_event_window(boat, timestamp, sample_interval_ms)
+        ):
             continue
         start, end = leg.get("start_ms"), leg.get("end_ms")
-        if (start is None or end is None or timestamp - 65 * sample_interval_ms < start
-                or timestamp + 60 * sample_interval_ms > end):
+        if (
+            start is None
+            or end is None
+            or timestamp - 65 * sample_interval_ms < start
+            or timestamp + 60 * sample_interval_ms > end
+        ):
             continue
         groups[event["leg"]].append((100 * minimum / entry, timestamp, event))
     result = {}
     for leg, observations in groups.items():
-        windows = sorted((t - 65 * sample_interval_ms, t + 60 * sample_interval_ms) for _, t, _ in observations)
+        windows = sorted(
+            (t - 65 * sample_interval_ms, t + 60 * sample_interval_ms) for _, t, _ in observations
+        )
         merged = []
         for start, end in windows:
             if merged and start <= merged[-1][1]:
@@ -519,12 +894,22 @@ def _retention_by_leg(boat, kind, sample_interval_ms=100):
             else:
                 merged.append([start, end])
         covered_s = sum(end - start for start, end in merged) / 1000
-        result[leg] = (sum(value for value, _, _ in observations) / len(observations), len(observations), covered_s,
-                       [{"timestamp_ms": t, "entry_speed_kt": event["entry_speed_kt"],
-                         "minimum_speed_kt": event["min_speed_kt"], "retention_pct": value,
-                         "window_start_ms": t - 65 * sample_interval_ms,
-                         "window_end_ms": t + 60 * sample_interval_ms}
-                        for value, t, event in observations])
+        result[leg] = (
+            sum(value for value, _, _ in observations) / len(observations),
+            len(observations),
+            covered_s,
+            [
+                {
+                    "timestamp_ms": t,
+                    "entry_speed_kt": event["entry_speed_kt"],
+                    "minimum_speed_kt": event["min_speed_kt"],
+                    "retention_pct": value,
+                    "window_start_ms": t - 65 * sample_interval_ms,
+                    "window_end_ms": t + 60 * sample_interval_ms,
+                }
+                for value, t, event in observations
+            ],
+        )
     return result
 
 
@@ -537,17 +922,23 @@ def attach_performance_analysis(detail):
     telemetry, and never replaces the original historical scalars.
     """
     boats = detail.get("boats", [])
-    sample_interval_ms = detail.get("race", {}).get("sample_interval_ms", 100)
+    race = detail.get("race")
+    sample_interval_ms = race.get("sample_interval_ms", 100) if race else 100
     if not _positive_finite(sample_interval_ms):
         raise ValueError("performance sample_interval_ms must be positive and finite")
-    dimensions = (("upwind_vmg", "Upwind course VMG", "course_vmg_kt", 1),
-                  ("downwind_vmg", "Downwind course VMG", "course_vmg_kt", 0),
-                  ("upwind_speed", "Upwind speed", "sog_mean_kt", 1),
-                  ("downwind_speed", "Downwind speed", "sog_mean_kt", 0),
-                  ("tack_retention", "Tack retention", "TACK", None),
-                  ("gybe_retention", "Gybe retention", "GYBE", None))
-    retention = {(b["id"], kind): _retention_by_leg(b, kind, sample_interval_ms)
-                 for b in boats for kind in ("TACK", "GYBE")}
+    dimensions = (
+        ("upwind_vmg", "Upwind course VMG", "course_vmg_kt", 1),
+        ("downwind_vmg", "Downwind course VMG", "course_vmg_kt", 0),
+        ("upwind_speed", "Upwind speed", "sog_mean_kt", 1),
+        ("downwind_speed", "Downwind speed", "sog_mean_kt", 0),
+        ("tack_retention", "Tack retention", "TACK", None),
+        ("gybe_retention", "Gybe retention", "GYBE", None),
+    )
+    retention = {
+        (b["id"], kind): _retention_by_leg(b, kind, sample_interval_ms)
+        for b in boats
+        for kind in ("TACK", "GYBE")
+    }
     for boat in boats:
         exported = []
         for dimension_id, label, metric_id, parity in dimensions:
@@ -557,7 +948,11 @@ def attach_performance_analysis(detail):
                 number = leg.get("leg")
                 if not isinstance(number, int) or (parity is not None and number % 2 != parity):
                     continue
-                own = retention[(boat["id"], metric_id)].get(number) if is_retention else _performance_leg(boat, number, metric_id)
+                own = (
+                    retention[(boat["id"], metric_id)].get(number)
+                    if is_retention
+                    else _performance_leg(boat, number, metric_id)
+                )
                 if own is None:
                     continue
                 value = own[0] if is_retention else own[1]
@@ -566,81 +961,176 @@ def attach_performance_analysis(detail):
                 for other in boats:
                     if other["id"] == boat["id"]:
                         continue
-                    candidate = retention[(other["id"], metric_id)].get(number) if is_retention else _performance_leg(other, number, metric_id)
+                    candidate = (
+                        retention[(other["id"], metric_id)].get(number)
+                        if is_retention
+                        else _performance_leg(other, number, metric_id)
+                    )
                     if candidate is not None:
                         peers.append((other["id"], candidate[0] if is_retention else candidate[1]))
                         other_leg = next(item for item in other["legs"] if item["leg"] == number)
-                        peer_details.append({"id": other["id"], "team_code": other.get("team_code", other["id"]),
-                                             "team_name": other.get("team_name", other.get("team_code", other["id"])),
-                                             "value": candidate[0] if is_retention else candidate[1],
-                                             "coverage_s": candidate[2], "sample_count": candidate[1] if is_retention else 1,
-                                             "start_ms": other_leg["start_ms"], "end_ms": other_leg["end_ms"],
-                                             "quality": "reconstructed" if is_retention else "derived"})
+                        peer_details.append(
+                            {
+                                "id": other["id"],
+                                "team_code": other.get("team_code", other["id"]),
+                                "team_name": other.get(
+                                    "team_name", other.get("team_code", other["id"])
+                                ),
+                                "value": candidate[0] if is_retention else candidate[1],
+                                "coverage_s": candidate[2],
+                                "sample_count": candidate[1] if is_retention else 1,
+                                "start_ms": other_leg["start_ms"],
+                                "end_ms": other_leg["end_ms"],
+                                "quality": "reconstructed" if is_retention else "derived",
+                            }
+                        )
                     else:
-                        excluded_peers.append({"id": other["id"], "team_code": other.get("team_code", other["id"]),
-                                               "reason": _performance_exclusion_reason(other, number, metric_id, is_retention)})
+                        excluded_peers.append(
+                            {
+                                "id": other["id"],
+                                "team_code": other.get("team_code", other["id"]),
+                                "reason": _performance_exclusion_reason(
+                                    other, number, metric_id, is_retention
+                                ),
+                            }
+                        )
                 peer_mean = sum(v for _, v in peers) / len(peers) if peers else None
                 if not _positive_finite(peer_mean):
                     continue
                 peer_ids.update(p for p, _ in peers)
-                evidence.append({"leg": number, "value": value, "peer_mean": peer_mean,
-                                 "index": 100 * value / peer_mean, "peer_count": len(peers),
-                                 "peer_ids": [p for p, _ in peers],
-                                 "sample_count": own[1] if is_retention else 1,
-                                 "coverage_s": own[2], "start_ms": own_leg["start_ms"], "end_ms": own_leg["end_ms"],
-                                 "quality": "reconstructed" if is_retention else "derived",
-                                 "peers": peer_details, "excluded_peers": excluded_peers,
-                                 "events": own[3] if is_retention else []})
+                evidence.append(
+                    {
+                        "leg": number,
+                        "value": value,
+                        "peer_mean": peer_mean,
+                        "index": 100 * value / peer_mean,
+                        "peer_count": len(peers),
+                        "peer_ids": [p for p, _ in peers],
+                        "sample_count": own[1] if is_retention else 1,
+                        "coverage_s": own[2],
+                        "start_ms": own_leg["start_ms"],
+                        "end_ms": own_leg["end_ms"],
+                        "quality": "reconstructed" if is_retention else "derived",
+                        "peers": peer_details,
+                        "excluded_peers": excluded_peers,
+                        "events": own[3] if is_retention else [],
+                    }
+                )
             count = len(evidence)
-            formula = ("Mean over matched legs of 100 × boat mean(100 × minimum SOG / entry SOG) / other-boats mean retention"
-                       if is_retention else f"Mean over matched legs of 100 × boat {metric_id} / other-boats mean {metric_id}")
-            item = {"id": dimension_id, "label": label,
-                    "index": sum(e["index"] for e in evidence) / count if count else None,
-                    "value": sum(e["value"] for e in evidence) / count if count else None,
-                    "peer_mean": sum(e["peer_mean"] for e in evidence) / count if count else None,
-                    "unit": "%" if is_retention else "kt", "higher_is_better": True,
-                    "peer_count": len(peer_ids), "coverage_s": round(sum(e["coverage_s"] for e in evidence), 3),
-                    "sample_count": sum(e["sample_count"] for e in evidence),
-                    "matched_legs": [e["leg"] for e in evidence], "leg_evidence": evidence,
-                    "quality": ("reconstructed" if is_retention else "derived") if count else "unavailable",
-                    "formula": formula, "window": "matching completed legs in this retrospective race",
-                    "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
-                    "source": (f"detected manoeuvres; full SOG, heading and local TWD source coverage over [-{65 * sample_interval_ms / 1000:g},+{60 * sample_interval_ms / 1000:g}] s"
-                               if is_retention else "historical leg metrics; reconstructed crossings; >=95% valid source seconds")}
+            formula = (
+                "Mean over matched legs of 100 × boat mean(100 × minimum SOG / entry SOG) / other-boats mean retention"
+                if is_retention
+                else f"Mean over matched legs of 100 × boat {metric_id} / other-boats mean {metric_id}"
+            )
+            item = {
+                "id": dimension_id,
+                "label": label,
+                "index": sum(e["index"] for e in evidence) / count if count else None,
+                "value": sum(e["value"] for e in evidence) / count if count else None,
+                "peer_mean": sum(e["peer_mean"] for e in evidence) / count if count else None,
+                "unit": "%" if is_retention else "kt",
+                "higher_is_better": True,
+                "peer_count": len(peer_ids),
+                "coverage_s": round(sum(e["coverage_s"] for e in evidence), 3),
+                "sample_count": sum(e["sample_count"] for e in evidence),
+                "matched_legs": [e["leg"] for e in evidence],
+                "leg_evidence": evidence,
+                "quality": ("reconstructed" if is_retention else "derived")
+                if count
+                else "unavailable",
+                "formula": formula,
+                "window": "matching completed legs in this retrospective race",
+                "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+                "source": (
+                    f"detected manoeuvres; full SOG, heading and local TWD source coverage over [-{65 * sample_interval_ms / 1000:g},+{60 * sample_interval_ms / 1000:g}] s"
+                    if is_retention
+                    else "historical leg metrics; reconstructed crossings; >=95% valid source seconds"
+                ),
+            }
             relevant_parity = parity if parity is not None else (1 if metric_id == "TACK" else 0)
-            expected = sorted({leg["leg"] for leg in boat.get("legs", []) if leg["leg"] % 2 == relevant_parity}
-                              | {e["leg"] for e in evidence})
-            item["excluded_legs"] = [{"leg": number, "reason": (
-                "no other eligible boat has a positive comparison on this exact leg"
-                if (retention[(boat["id"], metric_id)].get(number) if is_retention else _performance_leg(boat, number, metric_id))
-                else _performance_exclusion_reason(boat, number, metric_id, is_retention))}
-                for number in expected if number not in item["matched_legs"]]
+            expected = sorted(
+                {leg["leg"] for leg in boat.get("legs", []) if leg["leg"] % 2 == relevant_parity}
+                | {e["leg"] for e in evidence}
+            )
+            item["excluded_legs"] = [
+                {
+                    "leg": number,
+                    "reason": (
+                        "no other eligible boat has a positive comparison on this exact leg"
+                        if (
+                            retention[(boat["id"], metric_id)].get(number)
+                            if is_retention
+                            else _performance_leg(boat, number, metric_id)
+                        )
+                        else _performance_exclusion_reason(boat, number, metric_id, is_retention)
+                    ),
+                }
+                for number in expected
+                if number not in item["matched_legs"]
+            ]
             if not count:
-                item["reason"] = ("boat has no eligible racing window or has a source-state conflict" if not _performance_eligible(boat)
-                                  else "no qualifying detected manoeuvres and other-boat comparison on matching completed legs" if is_retention
-                                  else "no positive, >=95%-covered matching completed leg and eligible other boat")
+                item["reason"] = (
+                    "boat has no eligible racing window or has a source-state conflict"
+                    if not _performance_eligible(boat)
+                    else "no qualifying detected manoeuvres and other-boat comparison on matching completed legs"
+                    if is_retention
+                    else "no positive, >=95%-covered matching completed leg and eligible other boat"
+                )
             exported.append(item)
         all_available = all(d["index"] is not None for d in exported)
-        boat["performance"] = {"schema_version": PERFORMANCE_SCHEMA_VERSION, "method_version": PERFORMANCE_METHOD_VERSION,
-                               "baseline_index": 100, "dimensions": exported,
-                               "overall_index": sum(d["index"] for d in exported) / 6 if all_available else None,
-                               "notes": ["Post-race comparison; changing wind and different crossing times are not controlled for.",
-                                         "Index is the mean of per-leg ratios; displayed value and peer mean are arithmetic matched-leg means.",
-                                         "Retention describes qualifying detected events only; the detector requires at least 2.5 kt speed loss.",
-                                         f"Retention coverage is the union of validated {125 * sample_interval_ms / 1000:g} s event source windows within matched completed legs.",
-                                         "Overall index weights all six dimensions equally and requires all six."]}
+        boat["performance"] = {
+            "schema_version": PERFORMANCE_SCHEMA_VERSION,
+            "method_version": PERFORMANCE_METHOD_VERSION,
+            "baseline_index": 100,
+            "dimensions": exported,
+            "overall_index": sum(d["index"] for d in exported) / 6 if all_available else None,
+            "notes": [
+                "Post-race comparison; changing wind and different crossing times are not controlled for.",
+                "Index is the mean of per-leg ratios; displayed value and peer mean are arithmetic matched-leg means.",
+                "Retention describes qualifying detected events only; the detector requires at least 2.5 kt speed loss.",
+                f"Retention coverage is the union of validated {125 * sample_interval_ms / 1000:g} s event source windows within matched completed legs.",
+                "Overall index weights all six dimensions equally and requires all six.",
+            ],
+        }
         expected = sorted({leg["leg"] for leg in boat.get("legs", [])})
-        matched = sorted({number for dimension in exported[:2] for number in dimension["matched_legs"]})
-        directional_evidence = [entry for dimension in exported[:2] for entry in dimension["leg_evidence"]]
-        exclusions = {entry["leg"]: entry["reason"] for dimension in exported[:2] for entry in dimension["excluded_legs"]}
-        boat["performance"]["scope"] = {"expected_legs": expected, "matched_legs": matched,
-            "expected_leg_count": len(expected), "matched_leg_count": len(matched),
-            "min_peer_count": min((entry["peer_count"] for dimension in exported for entry in dimension["leg_evidence"]), default=0),
+        matched = sorted(
+            {number for dimension in exported[:2] for number in dimension["matched_legs"]}
+        )
+        directional_evidence = [
+            entry for dimension in exported[:2] for entry in dimension["leg_evidence"]
+        ]
+        exclusions = {
+            entry["leg"]: entry["reason"]
+            for dimension in exported[:2]
+            for entry in dimension["excluded_legs"]
+        }
+        boat["performance"]["scope"] = {
+            "expected_legs": expected,
+            "matched_legs": matched,
+            "expected_leg_count": len(expected),
+            "matched_leg_count": len(matched),
+            "min_peer_count": min(
+                (
+                    entry["peer_count"]
+                    for dimension in exported
+                    for entry in dimension["leg_evidence"]
+                ),
+                default=0,
+            ),
             "covered_s": round(sum(entry["coverage_s"] for entry in directional_evidence), 3),
-            "excluded_legs": [{"leg": number, "reason": exclusions.get(number, "no comparable source-covered leg")}
-                              for number in expected if number not in matched]}
+            "excluded_legs": [
+                {
+                    "leg": number,
+                    "reason": exclusions.get(number, "no comparable source-covered leg"),
+                }
+                for number in expected
+                if number not in matched
+            ],
+        }
         if not all_available:
-            boat["performance"]["reason"] = "overall index requires all six dimensions; missing dimensions are not imputed"
+            boat["performance"]["reason"] = (
+                "overall index requires all six dimensions; missing dimensions are not imputed"
+            )
         boat["debrief"] = _build_peer_debrief(boat, boats, sample_interval_ms)
     return detail
 
@@ -650,66 +1140,149 @@ def _build_peer_debrief(boat, boats, sample_interval_ms=100):
     if _performance_eligible(boat):
         for leg in boat.get("legs", []):
             number = leg.get("leg")
-            elapsed = leg.get("metrics", {}).get("elapsed_s", {}).get("value")
-            if _performance_leg(boat, number, "sog_mean_kt") is None or not _positive_finite(elapsed):
+            elapsed = _leg_metric(leg, "elapsed_s").get("value")
+            if _performance_leg(boat, number, "sog_mean_kt") is None or not _positive_finite(
+                elapsed
+            ):
                 continue
             peers = []
             for other in boats:
                 if other["id"] == boat["id"] or not _performance_eligible(other):
                     continue
                 for candidate in other.get("legs", []):
-                    value = candidate.get("metrics", {}).get("elapsed_s", {}).get("value")
-                    if (candidate.get("leg") == number and _performance_leg(other, number, "sog_mean_kt") is not None
-                            and _positive_finite(value)):
+                    value = _leg_metric(candidate, "elapsed_s").get("value")
+                    if (
+                        candidate.get("leg") == number
+                        and _performance_leg(other, number, "sog_mean_kt") is not None
+                        and _positive_finite(value)
+                    ):
                         peers.append((other["id"], value))
             if peers:
                 baseline = sum(value for _, value in peers) / len(peers)
                 deficit = elapsed - baseline
                 if deficit > 0:
-                    items.append({"id": f"{boat['id']}:leg:{number}", "kind": "leg_deficit", "leg": number,
-                                  "title": f"Leg {number}: {deficit:.1f} s longer than peers",
-                                  "detail": f"Observed leg time {elapsed:.1f} s versus other-boats mean {baseline:.1f} s ({len(peers)} peers). Different crossing times and conditions can contribute; this does not identify a cause.",
-                                  "timestamp_ms": leg["end_ms"], "value": deficit, "unit": "s", "quality": "reconstructed",
-                                  "source": "completed-leg crossing timestamps; >=95%-covered eligible boats on the same leg",
-                                  "start_ms": leg["start_ms"], "end_ms": leg["end_ms"],
-                                  "gate_timing_source": "source_timing" if (leg.get("gate") or {}).get("source") == "official" else "reconstructed",
-                                  "peer_count": len(peers), "peer_mean": baseline, "peer_ids": [p for p, _ in peers]})
+                    items.append(
+                        {
+                            "id": f"{boat['id']}:leg:{number}",
+                            "kind": "leg_deficit",
+                            "leg": number,
+                            "title": f"Leg {number}: {deficit:.1f} s longer than peers",
+                            "detail": f"Observed leg time {elapsed:.1f} s versus other-boats mean {baseline:.1f} s ({len(peers)} peers). Different crossing times and conditions can contribute; this does not identify a cause.",
+                            "timestamp_ms": leg["end_ms"],
+                            "value": deficit,
+                            "unit": "s",
+                            "quality": "reconstructed",
+                            "source": "completed-leg crossing timestamps; >=95%-covered eligible boats on the same leg",
+                            "start_ms": leg["start_ms"],
+                            "end_ms": leg["end_ms"],
+                            "gate_timing_source": "source_timing"
+                            if (leg.get("gate") or {}).get("source") == "official"
+                            else "reconstructed",
+                            "peer_count": len(peers),
+                            "peer_mean": baseline,
+                            "peer_ids": [p for p, _ in peers],
+                        }
+                    )
         items = sorted(items, key=lambda x: (-x["value"], x["timestamp_ms"], x["id"]))[:3]
-        eligible_events = [event for event in boat.get("manoeuvres", [])
-                           if event.get("quality") == "reconstructed" and _positive_finite(event.get("speed_loss_kt"))
-                           and _covered_event_window(boat, event.get("timestamp"), sample_interval_ms)]
-        for event in sorted(eligible_events, key=lambda e: (-e["speed_loss_kt"], e["timestamp"]))[:2]:
-            items.append({"id": f"{boat['id']}:manoeuvre:{event['type']}:{event['timestamp']}", "kind": "manoeuvre_loss",
-                          "leg": event.get("leg"), "title": f"{event['type'].title()}: {event['speed_loss_kt']:.1f} kt speed reduction",
-                          "detail": "Review the detected entry-to-minimum SOG reduction. This is a speed observation, not an estimate of time or distance lost.",
-                          "timestamp_ms": event["timestamp"], "value": event["speed_loss_kt"], "unit": "kt",
-                          "quality": "reconstructed", "source": "qualifying manoeuvre detector; validated source SOG, heading and local TWD window"})
-    return {"schema_version": PERFORMANCE_SCHEMA_VERSION, "method_version": DEBRIEF_METHOD_VERSION, "items": items,
-            "reason": None if items else "no qualifying peer leg deficit or covered manoeuvre available"}
+        eligible_events = [
+            event
+            for event in boat.get("manoeuvres", [])
+            if event.get("quality") == "reconstructed"
+            and _positive_finite(event.get("speed_loss_kt"))
+            and _covered_event_window(boat, event.get("timestamp"), sample_interval_ms)
+        ]
+        for event in sorted(eligible_events, key=lambda e: (-e["speed_loss_kt"], e["timestamp"]))[
+            :2
+        ]:
+            items.append(
+                {
+                    "id": f"{boat['id']}:manoeuvre:{event['type']}:{event['timestamp']}",
+                    "kind": "manoeuvre_loss",
+                    "leg": event.get("leg"),
+                    "title": f"{event['type'].title()}: {event['speed_loss_kt']:.1f} kt speed reduction",
+                    "detail": "Review the detected entry-to-minimum SOG reduction. This is a speed observation, not an estimate of time or distance lost.",
+                    "timestamp_ms": event["timestamp"],
+                    "value": event["speed_loss_kt"],
+                    "unit": "kt",
+                    "quality": "reconstructed",
+                    "source": "qualifying manoeuvre detector; validated source SOG, heading and local TWD window",
+                }
+            )
+    return {
+        "schema_version": PERFORMANCE_SCHEMA_VERSION,
+        "method_version": DEBRIEF_METHOD_VERSION,
+        "items": items,
+        "reason": None
+        if items
+        else "no qualifying peer leg deficit or covered manoeuvre available",
+    }
 
 
-def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat,
-                        leg_by_boat, race_id, race_name, race_date, venue):
+def build_race_analysis(
+    ingest_result,
+    reconstruction_result,
+    manoeuvres_by_boat,
+    leg_by_boat,
+    race_id,
+    race_name,
+    race_date,
+    venue,
+):
     sess = ingest_result.session
     course_sequences = getattr(sess, "course_sequences", None)
     total_legs = len(course_sequences) - 1 if course_sequences else 4
     times = ingest_result.grid_timestamps_ms
     chronology = reconstruction_result.chronology
     comps = reconstruction_result.competitors
-    start_order = {c.team_code: i + 1 for i, c in enumerate(sorted(
-        (c for c in comps.values() if c.start.crossing_time is not None and not c.start.ocs),
-        key=lambda c: c.start.crossing_time))}
-    definitions = {key: {"label": d[0], "unit": d[1], "formula": d[2], "window": d[3],
-                         "denominator": d[4], "source": d[5], "display": d[0]} for key, d in DEFINITIONS.items()}
-    result = {"schema_version": SCHEMA_VERSION, "method_version": METHOD_VERSION,
-              "race": {"id": race_id, "name": race_name, "date": race_date, "venue": venue,
-                       "boat_class": sess.boat_class, "race_type": sess.race_type,
-                       "gun_time_ms": chronology.gun_time, "window_end_ms": chronology.window_end,
-                       "boat_count": len(ingest_result.boats),
-                       "result_provenance": "Reconstructed from source leg timings and geometric fallbacks; source classifications are not verified official results."},
-              "definitions": definitions, "boats": [], "wind": {}, "pairs": [],
-              "limitations": ["No measured target TWA or polar: tactical laylines unavailable.",
-                              "Route ratio is a geometric reference, not a feasible tactical route."]}
+    start_order = {
+        c.team_code: i + 1
+        for i, c in enumerate(
+            sorted(
+                (
+                    c
+                    for c in comps.values()
+                    if c.start.crossing_time is not None and not c.start.ocs
+                ),
+                key=lambda c: c.start.crossing_time,
+            )
+        )
+    }
+    definitions = {
+        key: {
+            "label": d[0],
+            "unit": d[1],
+            "formula": d[2],
+            "window": d[3],
+            "denominator": d[4],
+            "source": d[5],
+            "display": d[0],
+        }
+        for key, d in DEFINITIONS.items()
+    }
+    result = {
+        "schema_version": SCHEMA_VERSION,
+        "method_version": METHOD_VERSION,
+        "race": {
+            "id": race_id,
+            "name": race_name,
+            "date": race_date,
+            "venue": venue,
+            "boat_class": sess.boat_class,
+            "race_type": sess.race_type,
+            "gun_time_ms": chronology.gun_time,
+            "window_end_ms": chronology.window_end,
+            "boat_count": len(ingest_result.boats),
+            "result_provenance": "Reconstructed from source leg timings and geometric fallbacks; source classifications are not verified official results.",
+        },
+        "definitions": definitions,
+        "boats": [],
+        "wind": {},
+        "pairs": [],
+        "limitations": [
+            "No measured target TWA or polar: tactical laylines unavailable.",
+            "Route ratio is a geometric reference, not a feasible tactical route.",
+        ],
+    }
     if len(times) > 1:
         grid_interval = times[1] - times[0]
         if grid_interval <= 0 or any(b - a != grid_interval for a, b in zip(times, times[1:])):
@@ -741,38 +1314,83 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
             start_stbd_code = s_code
 
     for code, boat in ingest_result.boats.items():
-        boat.source_coverage = ingest_result.stream_coverage.get(code) if getattr(ingest_result, "stream_coverage", None) else None
+        boat.source_coverage = (
+            ingest_result.stream_coverage.get(code)
+            if getattr(ingest_result, "stream_coverage", None)
+            else None
+        )
         comp = comps[code]
         active = _race_window(comp, chronology, times)
-        events = [event for event in manoeuvres_by_boat.get(code, [])
-                  if active and active[0] <= event.timestamp <= active[1]]
-        item = {"id": boat.asset_id, "team_code": code, "team_name": boat.name,
-                "color": boat.color, "classification": comp.classification,
-                "official_rank": comp.official_rank if comp.classification.startswith("RANK_") else None,
-                "official_elapsed_s": comp.elapsed_s if comp.classification.startswith("RANK_") else None,
-                "metrics": {}, "start": {}, "legs": [], "manoeuvres": [], "gates": [], "boundary_periods": [],
-                "source_coverage": boat.source_coverage, "source_conflicts": []}
+        events = [
+            event
+            for event in manoeuvres_by_boat.get(code, [])
+            if active and active[0] <= event.timestamp <= active[1]
+        ]
+        item = {
+            "id": boat.asset_id,
+            "team_code": code,
+            "team_name": boat.name,
+            "color": boat.color,
+            "classification": comp.classification,
+            "official_rank": comp.official_rank
+            if comp.classification.startswith("RANK_")
+            else None,
+            "official_elapsed_s": comp.elapsed_s
+            if comp.classification.startswith("RANK_")
+            else None,
+            "metrics": {},
+            "start": {},
+            "legs": [],
+            "manoeuvres": [],
+            "gates": [],
+            "boundary_periods": [],
+            "source_coverage": boat.source_coverage,
+            "source_conflicts": [],
+        }
         raw_events = getattr(ingest_result, "competitor_events", {}).get(boat.asset_id, [])
-        nested_started = [e.get("start_state", {}).get("started") for e in raw_events if isinstance(e.get("start_state"), dict) and isinstance(e["start_state"].get("started"), bool)]
+        nested_started = [
+            e["start_state"].get("started")
+            for e in raw_events
+            if isinstance(e.get("start_state"), dict)
+            and isinstance(e["start_state"].get("started"), bool)
+        ]
         if nested_started and not any(nested_started) and comp.start.crossing_time is not None:
-            item["source_conflicts"].append("source start_state.started is false, but a start crossing was reconstructed")
-            result["limitations"].append(f"{code}: source start state conflicts with reconstructed crossing; result requires adjudication.")
+            item["source_conflicts"].append(
+                "source start_state.started is false, but a start crossing was reconstructed"
+            )
+            result["limitations"].append(
+                f"{code}: source start state conflicts with reconstructed crossing; result requires adjudication."
+            )
         at_gun = _boat_at(gun, times, boat)
-        port = _mark_at(gun, times, ingest_result.marks[start_port_code]) if start_port_code in ingest_result.marks else None
-        stbd = _mark_at(gun, times, ingest_result.marks[start_stbd_code]) if start_stbd_code in ingest_result.marks else None
+        port = (
+            _mark_at(gun, times, ingest_result.marks[start_port_code])
+            if start_port_code in ingest_result.marks
+            else None
+        )
+        stbd = (
+            _mark_at(gun, times, ingest_result.marks[start_stbd_code])
+            if start_stbd_code in ingest_result.marks
+            else None
+        )
         gun_metrics = {}
         if at_gun and port and stbd:
             bow = compute_bow_position(at_gun[0], at_gun[1], at_gun[2])
             distance, fraction, nx, ny = start_line_geometry(bow, port, stbd, sess.course_axis_deg)
             velx = at_gun[4] * KT_TO_MPS * math.sin(math.radians(at_gun[3]))
             vely = at_gun[4] * KT_TO_MPS * math.cos(math.radians(at_gun[3]))
-            gun_metrics = {"start_distance_m": _metric(distance, "m"),
-                           "start_along_line": _metric(fraction, "fraction"),
-                           "start_sog_kt": _metric(at_gun[4], "kt"),
-                           "start_closing_kt": _metric((velx * nx + vely * ny) / KT_TO_MPS, "kt")}
+            gun_metrics = {
+                "start_distance_m": _metric(distance, "m"),
+                "start_along_line": _metric(fraction, "fraction"),
+                "start_sog_kt": _metric(at_gun[4], "kt"),
+                "start_closing_kt": _metric((velx * nx + vely * ny) / KT_TO_MPS, "kt"),
+            }
         item["metrics"].update(gun_metrics)
-        item["start"] = {"crossing_time_ms": comp.start.crossing_time, "crossing_order": start_order.get(code),
-                         "ocs": comp.start.ocs, "gun": {"timestamp": gun, "metrics": gun_metrics}}
+        item["start"] = {
+            "crossing_time_ms": comp.start.crossing_time,
+            "crossing_order": start_order.get(code),
+            "ocs": comp.start.ocs,
+            "gun": {"timestamp": gun, "metrics": gun_metrics},
+        }
         gates = sorted(comp.gates, key=lambda g: g.leg)
         item["gates"] = [_gate_analysis(g, times, boat, ingest_result.marks) for g in gates]
         previous = comp.start.crossing_time if active else None
@@ -793,31 +1411,94 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
                             metric["reason"] = "observed incomplete leg through telemetry end"
             else:
                 metrics = _unavailable_leg("previous or current gate missing")
-            item["legs"].append({"leg": leg, "start_ms": previous, "end_ms": end,
-                                 "complete": gate is not None and previous is not None,
-                                 "metrics": metrics, "gate": next((g for g in item["gates"] if g["leg"] == leg), None),
-                                 "twa_bins_s": leg_bins.get(leg, {})})
+            item["legs"].append(
+                {
+                    "leg": leg,
+                    "start_ms": previous,
+                    "end_ms": end,
+                    "complete": gate is not None and previous is not None,
+                    "metrics": metrics,
+                    "gate": next((g for g in item["gates"] if g["leg"] == leg), None),
+                    "twa_bins_s": leg_bins.get(leg, {}),
+                }
+            )
             previous = gate.crossing_time if gate and previous is not None else None
-        item["manoeuvres"] = [_event_analysis(m, times, boat, leg_by_boat.get(code, []), gates) for m in events]
+        item["manoeuvres"] = [
+            _event_analysis(m, times, boat, leg_by_boat.get(code, []), gates) for m in events
+        ]
         for kind in ("TACK", "GYBE"):
             group = [m for m in item["manoeuvres"] if m["type"] == kind]
             losses = [m["speed_loss_kt"] for m in group if m["speed_loss_kt"] is not None]
             recoveries = [m["recovery_time_s"] for m in group if m["recovery_time_s"] is not None]
             stem = kind.lower()
-            item["metrics"][stem + "_count"] = _metric(len(group), "events", "reconstructed", sample_count=len(group))
-            item["metrics"][stem + "_loss_median_kt"] = _metric(median(losses) if losses else None, "kt", "reconstructed", reason="no detected events" if not losses else None, sample_count=len(losses))
-            item["metrics"][stem + "_recovery_median_s"] = _metric(median(recoveries) if recoveries else None, "s", "derived", reason="no recovered events" if not recoveries else None, sample_count=len(recoveries))
+            item["metrics"][stem + "_count"] = _metric(
+                len(group), "events", "reconstructed", sample_count=len(group)
+            )
+            item["metrics"][stem + "_loss_median_kt"] = _metric(
+                median(losses) if losses else None,
+                "kt",
+                "reconstructed",
+                reason="no detected events" if not losses else None,
+                sample_count=len(losses),
+            )
+            item["metrics"][stem + "_recovery_median_s"] = _metric(
+                median(recoveries) if recoveries else None,
+                "s",
+                "derived",
+                reason="no recovered events" if not recoveries else None,
+                sample_count=len(recoveries),
+            )
         if active:
-            observed = [leg["metrics"] for leg in item["legs"] if leg["metrics"].get("distance_m", {}).get("value") is not None]
+            observed = [
+                leg["metrics"]
+                for leg in item["legs"]
+                if "distance_m" in leg["metrics"]
+                and leg["metrics"]["distance_m"].get("value") is not None
+            ]
             distance = sum(m["distance_m"]["value"] for m in observed)
             duration = sum(m["sog_mean_kt"]["coverage_s"] or 0 for m in observed)
             for metric_id in ("distance_m", "sog_mean_kt", "course_vmg_kt", "wind_vmg_kt"):
                 if metric_id == "distance_m":
-                    item["metrics"][metric_id] = _metric(distance if observed else None, "m", "derived" if comp.finish_time_ms is not None and duration >= 0.95 * ((active[1] - active[0]) / 1000) else "partial", duration, "no valid track" if not observed else ("race did not finish" if comp.finish_time_ms is None else None))
+                    item["metrics"][metric_id] = _metric(
+                        distance if observed else None,
+                        "m",
+                        "derived"
+                        if comp.finish_time_ms is not None
+                        and duration >= 0.95 * ((active[1] - active[0]) / 1000)
+                        else "partial",
+                        duration,
+                        "no valid track"
+                        if not observed
+                        else ("race did not finish" if comp.finish_time_ms is None else None),
+                    )
                 else:
-                    weight = sum((m[metric_id]["coverage_s"] or 0) for m in observed if m.get(metric_id, {}).get("value") is not None)
-                    value = sum(m[metric_id]["value"] * (m[metric_id]["coverage_s"] or 0) for m in observed if m.get(metric_id, {}).get("value") is not None) / weight if weight else None
-                    item["metrics"][metric_id] = _metric(value, "kt", "derived" if comp.finish_time_ms is not None and weight >= 0.95 * ((active[1] - active[0]) / 1000) else "partial", weight, "insufficient valid samples" if value is None else ("race did not finish" if comp.finish_time_ms is None else None))
+                    weight = sum(
+                        (m[metric_id]["coverage_s"] or 0)
+                        for m in observed
+                        if metric_id in m and m[metric_id].get("value") is not None
+                    )
+                    value = (
+                        sum(
+                            m[metric_id]["value"] * (m[metric_id]["coverage_s"] or 0)
+                            for m in observed
+                            if metric_id in m and m[metric_id].get("value") is not None
+                        )
+                        / weight
+                        if weight
+                        else None
+                    )
+                    item["metrics"][metric_id] = _metric(
+                        value,
+                        "kt",
+                        "derived"
+                        if comp.finish_time_ms is not None
+                        and weight >= 0.95 * ((active[1] - active[0]) / 1000)
+                        else "partial",
+                        weight,
+                        "insufficient valid samples"
+                        if value is None
+                        else ("race did not finish" if comp.finish_time_ms is None else None),
+                    )
             timeline = sorted(sess.boundary_timeline, key=lambda x: x["t"])
             boundary_min = math.inf
             buffer_s = outside_s = valid_s = 0.0
@@ -828,7 +1509,9 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
                 state = _boat_at(mid, times, boat)
                 if state is None:
                     if outside_start is not None and outside_end - outside_start >= 1000:
-                        item["boundary_periods"].append({"start_ms": outside_start, "end_ms": outside_end})
+                        item["boundary_periods"].append(
+                            {"start_ms": outside_start, "end_ms": outside_end}
+                        )
                     outside_start = outside_end = None
                     continue
                 polygon = _active_polygon(mid, timeline, sess.race_boundary)
@@ -845,22 +1528,59 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
                     outside_end = b
                 elif outside_start is not None:
                     if outside_end - outside_start >= 1000:
-                        item["boundary_periods"].append({"start_ms": outside_start, "end_ms": outside_end})
+                        item["boundary_periods"].append(
+                            {"start_ms": outside_start, "end_ms": outside_end}
+                        )
                     outside_start = outside_end = None
             if outside_start is not None and outside_end - outside_start >= 1000:
                 item["boundary_periods"].append({"start_ms": outside_start, "end_ms": outside_end})
-            bquality = "derived" if valid_s >= 0.95 * ((active[1] - active[0]) / 1000) else "partial"
-            item["metrics"].update({"boundary_nearest_m": _metric(boundary_min if valid_s else None, "m", bquality, valid_s, "no valid position or race polygon" if not valid_s else None),
-                                    "boundary_buffer_s": _metric(buffer_s if valid_s else None, "s", bquality, valid_s, "no valid position or race polygon" if not valid_s else None),
-                                    "boundary_outside_s": _metric(outside_s if valid_s else None, "s", bquality, valid_s, "no valid position or race polygon" if not valid_s else None)})
+            bquality = (
+                "derived" if valid_s >= 0.95 * ((active[1] - active[0]) / 1000) else "partial"
+            )
+            item["metrics"].update(
+                {
+                    "boundary_nearest_m": _metric(
+                        boundary_min if valid_s else None,
+                        "m",
+                        bquality,
+                        valid_s,
+                        "no valid position or race polygon" if not valid_s else None,
+                    ),
+                    "boundary_buffer_s": _metric(
+                        buffer_s if valid_s else None,
+                        "s",
+                        bquality,
+                        valid_s,
+                        "no valid position or race polygon" if not valid_s else None,
+                    ),
+                    "boundary_outside_s": _metric(
+                        outside_s if valid_s else None,
+                        "s",
+                        bquality,
+                        valid_s,
+                        "no valid position or race polygon" if not valid_s else None,
+                    ),
+                }
+            )
         else:
-            for key, unit in (("distance_m", "m"), ("sog_mean_kt", "kt"), ("course_vmg_kt", "kt"), ("wind_vmg_kt", "kt"),
-                              ("boundary_nearest_m", "m"), ("boundary_buffer_s", "s"), ("boundary_outside_s", "s")):
-                item["metrics"][key] = _metric(None, unit, reason="no valid racing window (OCS/RET or missing start)")
+            for key, unit in (
+                ("distance_m", "m"),
+                ("sog_mean_kt", "kt"),
+                ("course_vmg_kt", "kt"),
+                ("wind_vmg_kt", "kt"),
+                ("boundary_nearest_m", "m"),
+                ("boundary_buffer_s", "s"),
+                ("boundary_outside_s", "s"),
+            ):
+                item["metrics"][key] = _metric(
+                    None, unit, reason="no valid racing window (OCS/RET or missing start)"
+                )
         result["boats"].append(item)
     # Shared checkpoint deltas use actual crossing timestamps, not continuous progress estimates.
     for leg in range(1, total_legs + 1):
-        times_at_gate = [b["legs"][leg - 1]["end_ms"] for b in result["boats"] if b["legs"][leg - 1]["complete"]]
+        times_at_gate = [
+            b["legs"][leg - 1]["end_ms"] for b in result["boats"] if b["legs"][leg - 1]["complete"]
+        ]
         if not times_at_gate:
             continue
         leader = min(times_at_gate)
@@ -872,14 +1592,22 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
                 g["checkpoint_rank"] = ranking[g["crossing_time_ms"]]
                 previous_gate = b["legs"][leg - 2]["gate"] if leg > 1 else None
                 if previous_gate and previous_gate.get("split_to_leader_s") is not None:
-                    g["split_change_s"] = round(g["split_to_leader_s"] - previous_gate["split_to_leader_s"], 3)
+                    g["split_change_s"] = round(
+                        g["split_to_leader_s"] - previous_gate["split_to_leader_s"], 3
+                    )
                     g["rank_change"] = g["checkpoint_rank"] - previous_gate["checkpoint_rank"]
                 else:
                     g["split_change_s"] = None
                     g["rank_change"] = None
-    result["boats"].sort(key=lambda b: (b["official_rank"] is None, b["official_rank"] or 999, b["team_code"]))
+    result["boats"].sort(
+        key=lambda b: (b["official_rank"] is None, b["official_rank"] or 999, b["team_code"])
+    )
     # Official wind is a roughly 1 Hz asset. Use circular differences from first valid sample.
-    raw_wind = [w for w in ingest_result.official_wind.raw_timeline if chronology.gun_time <= w["t"] <= chronology.window_end and 0 <= w["twd_deg"] < 360]
+    raw_wind = [
+        w
+        for w in ingest_result.official_wind.raw_timeline
+        if chronology.gun_time <= w["t"] <= chronology.window_end and 0 <= w["twd_deg"] < 360
+    ]
     if raw_wind:
         baseline = raw_wind[0]["twd_deg"]
         shifts = [circular_delta_deg(baseline, w["twd_deg"]) for w in raw_wind]
@@ -890,7 +1618,11 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
             local = []
             for code, source_boat in ingest_result.boats.items():
                 window = _race_window(comps[code], chronology, times)
-                if not window or not window[0] <= t <= window[1] or not _source_valid(source_boat, t, ("twd",)):
+                if (
+                    not window
+                    or not window[0] <= t <= window[1]
+                    or not _source_valid(source_boat, t, ("twd",))
+                ):
                     continue
                 state = _boat_at(t, times, source_boat)
                 if state is None:
@@ -901,25 +1633,53 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
                 local.append(delta)
                 local_by_boat[code].append(delta)
             if len(local) >= 2:
-                fleet.append({"timestamp": t, "active_boats": len(local),
-                              "spread_deg": round(max(local) - min(local), 2)})
-        result["wind"] = {"source": "official wind asset", "baseline_twd_deg": baseline,
-                          "sample_count": len(raw_wind), "shift_min_deg": round(min(shifts), 2),
-                          "shift_max_deg": round(max(shifts), 2), "timeline": [
-                              {"timestamp": w["t"], "shift_deg": round(circular_delta_deg(baseline, w["twd_deg"]), 2),
-                               "tws_kt": w["tws_kt"]} for w in raw_wind[::max(1, len(raw_wind) // 180)]],
-                          "fleet_timeline": fleet[::max(1, len(fleet) // 180)],
-                          "boat_exposure": [{"team_code": code, "sample_count": len(values),
-                                             "median_local_minus_official_deg": round(median(values), 2)}
-                                            for code, values in sorted(local_by_boat.items())]}
+                fleet.append(
+                    {
+                        "timestamp": t,
+                        "active_boats": len(local),
+                        "spread_deg": round(max(local) - min(local), 2),
+                    }
+                )
+        result["wind"] = {
+            "source": "official wind asset",
+            "baseline_twd_deg": baseline,
+            "sample_count": len(raw_wind),
+            "shift_min_deg": round(min(shifts), 2),
+            "shift_max_deg": round(max(shifts), 2),
+            "timeline": [
+                {
+                    "timestamp": w["t"],
+                    "shift_deg": round(circular_delta_deg(baseline, w["twd_deg"]), 2),
+                    "tws_kt": w["tws_kt"],
+                }
+                for w in raw_wind[:: max(1, len(raw_wind) // 180)]
+            ],
+            "fleet_timeline": fleet[:: max(1, len(fleet) // 180)],
+            "boat_exposure": [
+                {
+                    "team_code": code,
+                    "sample_count": len(values),
+                    "median_local_minus_official_deg": round(median(values), 2),
+                }
+                for code, values in sorted(local_by_boat.items())
+            ],
+        }
     else:
-        result["wind"] = {"source": "official wind asset", "reason": "no official wind in race window",
-                          "baseline_twd_deg": None, "sample_count": 0, "shift_min_deg": None,
-                          "shift_max_deg": None, "timeline": [], "fleet_timeline": [], "boat_exposure": []}
+        result["wind"] = {
+            "source": "official wind asset",
+            "reason": "no official wind in race window",
+            "baseline_twd_deg": None,
+            "sample_count": 0,
+            "shift_min_deg": None,
+            "shift_max_deg": None,
+            "timeline": [],
+            "fleet_timeline": [],
+            "boat_exposure": [],
+        }
     # One-second pairwise samples in common active windows; same-leg only.
     boats = result["boats"]
     for i, a in enumerate(boats):
-        for b in boats[i + 1:]:
+        for b in boats[i + 1 :]:
             wa = _race_window(comps[a["team_code"]], chronology, times)
             wb = _race_window(comps[b["team_code"]], chronology, times)
             if not wa or not wb:
@@ -939,19 +1699,34 @@ def build_race_analysis(ingest_result, reconstruction_result, manoeuvres_by_boat
                     lateral = (pb[0] - pa[0]) * math.cos(axis) - (pb[1] - pa[1]) * math.sin(axis)
                     by_leg[la[idx]].append((math.hypot(pb[0] - pa[0], pb[1] - pa[1]), abs(lateral)))
             if by_leg:
-                result["pairs"].append({"boat_a": a["team_code"], "boat_b": b["team_code"],
-                                        "legs": [{"leg": leg, "sample_count": len(vals),
-                                                  "median_spatial_m": round(median(v[0] for v in vals), 2),
-                                                  "median_lateral_m": round(median(v[1] for v in vals), 2)}
-                                                 for leg, vals in sorted(by_leg.items())]})
+                result["pairs"].append(
+                    {
+                        "boat_a": a["team_code"],
+                        "boat_b": b["team_code"],
+                        "legs": [
+                            {
+                                "leg": leg,
+                                "sample_count": len(vals),
+                                "median_spatial_m": round(median(v[0] for v in vals), 2),
+                                "median_lateral_m": round(median(v[1] for v in vals), 2),
+                            }
+                            for leg, vals in sorted(by_leg.items())
+                        ],
+                    }
+                )
     attach_performance_analysis(result)
     from pipeline.polar_analysis import attach_single_race_polar_fallback, extract_race_polar_cells
+
     extract_race_polar_cells(result, ingest_result=ingest_result)
     attach_single_race_polar_fallback(result)
     from pipeline.tactical_insights import attach_tactical_insights
-    attach_tactical_insights(result, getattr(ingest_result.official_wind, "causal_samples", []),
-                            window_end_ms=chronology.window_end,
-                            source_provenance=getattr(ingest_result.official_wind, "source_provenance", None))
+
+    attach_tactical_insights(
+        result,
+        getattr(ingest_result.official_wind, "causal_samples", []),
+        window_end_ms=chronology.window_end,
+        source_provenance=getattr(ingest_result.official_wind, "source_provenance", None),
+    )
     result["event_feed"] = build_event_feed(result)
     return result
 
@@ -981,86 +1756,192 @@ def build_historical_index(
             continue
         with open(path, encoding="utf-8") as f:
             detail = json.load(f)
-        if detail.get("schema_version") != SCHEMA_VERSION or detail.get("race", {}).get("id") != race_id:
+        race_metadata = detail.get("race")
+        if (
+            detail.get("schema_version") != SCHEMA_VERSION
+            or not isinstance(race_metadata, dict)
+            or race_metadata.get("id") != race_id
+        ):
             continue
         details_by_race[race_id] = detail
         race = detail["race"]
         compact = []
         for boat in detail["boats"]:
-            metrics = {key: boat["metrics"][key] for key in ("distance_m", "sog_mean_kt", "course_vmg_kt", "wind_vmg_kt",
-                                                             "tack_loss_median_kt", "gybe_loss_median_kt") if key in boat["metrics"]}
-            observation = {key: boat.get(key) for key in ("id", "team_code", "team_name", "color", "classification", "official_rank", "official_elapsed_s")}
+            metrics = {
+                key: boat["metrics"][key]
+                for key in (
+                    "distance_m",
+                    "sog_mean_kt",
+                    "course_vmg_kt",
+                    "wind_vmg_kt",
+                    "tack_loss_median_kt",
+                    "gybe_loss_median_kt",
+                )
+                if key in boat["metrics"]
+            }
+            observation = {
+                key: boat.get(key)
+                for key in (
+                    "id",
+                    "team_code",
+                    "team_name",
+                    "color",
+                    "classification",
+                    "official_rank",
+                    "official_elapsed_s",
+                )
+            }
             observation["metrics"] = metrics
             start = boat.get("start") or {}
-            observation["start"] = {"crossing_time_ms": start.get("crossing_time_ms"),
-                                    "delta_to_gun_s": (start["crossing_time_ms"] - race["gun_time_ms"]) / 1000
-                                    if start.get("crossing_time_ms") is not None and race.get("gun_time_ms") is not None and not start.get("ocs") else None,
-                                    "crossing_order": start.get("crossing_order"),
-                                    "ocs": start.get("ocs", False)}
-            observation["legs"] = [{"leg": leg["leg"], "complete": leg["complete"],
-                                    **{metric_id: leg["metrics"].get(metric_id) for metric_id in
-                                       ("elapsed_s", "course_vmg_kt", "wind_vmg_kt", "distance_m")}}
-                                   for leg in boat.get("legs", [])]
+            observation["start"] = {
+                "crossing_time_ms": start.get("crossing_time_ms"),
+                "delta_to_gun_s": (start["crossing_time_ms"] - race["gun_time_ms"]) / 1000
+                if start.get("crossing_time_ms") is not None
+                and race.get("gun_time_ms") is not None
+                and not start.get("ocs")
+                else None,
+                "crossing_order": start.get("crossing_order"),
+                "ocs": start.get("ocs", False),
+            }
+            observation["legs"] = [
+                {
+                    "leg": leg["leg"],
+                    "complete": leg["complete"],
+                    **{
+                        metric_id: leg["metrics"].get(metric_id)
+                        for metric_id in ("elapsed_s", "course_vmg_kt", "wind_vmg_kt", "distance_m")
+                    },
+                }
+                for leg in boat.get("legs", [])
+            ]
             compact.append(observation)
             group_key = (boat["team_code"], race["boat_class"], race["race_type"])
             groups[group_key].append(
-                {"race_id": race_id, "date": race["date"], "classification": boat["classification"],
-                 "official_rank": boat["official_rank"], "metrics": metrics,
-                 "start": observation["start"], "legs": observation["legs"]})
-            event_groups[group_key].extend({"race_id": race_id, "type": event["type"],
-                                            "loss_kt": event.get("speed_loss_kt"),
-                                            "recovery_s": event.get("recovery_time_s")}
-                                           for event in boat.get("manoeuvres", []))
-        races.append({"id": race_id, "name": race["name"], "date": race["date"],
-                      "boat_class": race["boat_class"], "race_type": race["race_type"],
-                      "analysis_file": "analysis/" + race_id + ".json", "boat_count": len(compact),
-                      "result_provenance": race.get("result_provenance"),
-                      "limitations": detail.get("limitations", []), "boats": compact})
+                {
+                    "race_id": race_id,
+                    "date": race["date"],
+                    "classification": boat["classification"],
+                    "official_rank": boat["official_rank"],
+                    "metrics": metrics,
+                    "start": observation["start"],
+                    "legs": observation["legs"],
+                }
+            )
+            event_groups[group_key].extend(
+                {
+                    "race_id": race_id,
+                    "type": event["type"],
+                    "loss_kt": event.get("speed_loss_kt"),
+                    "recovery_s": event.get("recovery_time_s"),
+                }
+                for event in boat.get("manoeuvres", [])
+            )
+        races.append(
+            {
+                "id": race_id,
+                "name": race["name"],
+                "date": race["date"],
+                "boat_class": race["boat_class"],
+                "race_type": race["race_type"],
+                "analysis_file": "analysis/" + race_id + ".json",
+                "boat_count": len(compact),
+                "result_provenance": race.get("result_provenance"),
+                "limitations": detail.get("limitations", []),
+                "boats": compact,
+            }
+        )
     histories = []
     for (team, boat_class, race_type), observations in sorted(groups.items()):
         summary = {}
         keys = sorted({key for o in observations for key in o["metrics"]})
         for key in keys:
-            values = [o["metrics"][key]["value"] for o in observations if key in o["metrics"] and o["metrics"][key]["value"] is not None and o["metrics"][key]["quality"] not in ("partial", "unavailable")]
+            values = [
+                o["metrics"][key]["value"]
+                for o in observations
+                if key in o["metrics"]
+                and o["metrics"][key]["value"] is not None
+                and o["metrics"][key]["quality"] not in ("partial", "unavailable")
+            ]
             if values:
-                summary[key] = {"median": round(median(values), 4), "min": round(min(values), 4),
-                                "max": round(max(values), 4), "count": len(values)}
+                summary[key] = {
+                    "median": round(median(values), 4),
+                    "min": round(min(values), 4),
+                    "max": round(max(values), 4),
+                    "count": len(values),
+                }
         leg_summary = {}
         max_leg = max((leg["leg"] for obs in observations for leg in obs["legs"]), default=0)
         for leg_number in range(1, max_leg + 1):
             measured = {}
             for metric_id in ("elapsed_s", "course_vmg_kt", "wind_vmg_kt", "distance_m"):
-                values = [leg[metric_id]["value"] for obs in observations for leg in obs["legs"]
-                          if leg["leg"] == leg_number and leg["complete"] and leg.get(metric_id)
-                          and leg[metric_id]["value"] is not None
-                          and leg[metric_id]["quality"] not in ("partial", "unavailable")]
+                values = [
+                    leg[metric_id]["value"]
+                    for obs in observations
+                    for leg in obs["legs"]
+                    if leg["leg"] == leg_number
+                    and leg["complete"]
+                    and leg.get(metric_id)
+                    and leg[metric_id]["value"] is not None
+                    and leg[metric_id]["quality"] not in ("partial", "unavailable")
+                ]
                 if values:
-                    measured[metric_id] = {"median": round(median(values), 4), "min": round(min(values), 4),
-                                           "max": round(max(values), 4), "count": len(values)}
+                    measured[metric_id] = {
+                        "median": round(median(values), 4),
+                        "min": round(min(values), 4),
+                        "max": round(max(values), 4),
+                        "count": len(values),
+                    }
             if measured:
                 leg_summary[str(leg_number)] = measured
         manoeuvre_summary = {}
         for kind in ("TACK", "GYBE"):
-            events = [event for event in event_groups[(team, boat_class, race_type)] if event["type"] == kind]
+            events = [
+                event
+                for event in event_groups[(team, boat_class, race_type)]
+                if event["type"] == kind
+            ]
             losses = [event["loss_kt"] for event in events if event["loss_kt"] is not None]
-            recoveries = [event["recovery_s"] for event in events if event["recovery_s"] is not None]
+            recoveries = [
+                event["recovery_s"] for event in events if event["recovery_s"] is not None
+            ]
             origins = defaultdict(int)
             for event in events:
                 origins[event["race_id"]] += 1
-            manoeuvre_summary[kind] = {"event_count": len(events), "race_count": len(origins),
-                                        "origin_races": dict(sorted(origins.items())),
-                                        "loss_p10_kt": round(_weighted_quantile([(v, 1) for v in losses], 0.1), 4) if losses else None,
-                                        "loss_median_kt": round(median(losses), 4) if losses else None,
-                                        "loss_p90_kt": round(_weighted_quantile([(v, 1) for v in losses], 0.9), 4) if losses else None,
-                                        "recovery_median_s": round(median(recoveries), 4) if recoveries else None,
-                                        "unrecovered_count": len(events) - len(recoveries)}
-        histories.append({"team_code": team, "boat_class": boat_class, "race_type": race_type,
-                          "race_count": len(observations), "observations": observations, "summary": summary,
-                          "leg_summary": leg_summary, "manoeuvre_summary": manoeuvre_summary})
-    index_payload = {"schema_version": SCHEMA_VERSION, "method_version": METHOD_VERSION,
-                     "races": races, "histories": histories}
+            manoeuvre_summary[kind] = {
+                "event_count": len(events),
+                "race_count": len(origins),
+                "origin_races": dict(sorted(origins.items())),
+                "loss_p10_kt": round(_weighted_quantile([(v, 1) for v in losses], 0.1), 4)
+                if losses
+                else None,
+                "loss_median_kt": round(median(losses), 4) if losses else None,
+                "loss_p90_kt": round(_weighted_quantile([(v, 1) for v in losses], 0.9), 4)
+                if losses
+                else None,
+                "recovery_median_s": round(median(recoveries), 4) if recoveries else None,
+                "unrecovered_count": len(events) - len(recoveries),
+            }
+        histories.append(
+            {
+                "team_code": team,
+                "boat_class": boat_class,
+                "race_type": race_type,
+                "race_count": len(observations),
+                "observations": observations,
+                "summary": summary,
+                "leg_summary": leg_summary,
+                "manoeuvre_summary": manoeuvre_summary,
+            }
+        )
+    index_payload = {
+        "schema_version": SCHEMA_VERSION,
+        "method_version": METHOD_VERSION,
+        "races": races,
+        "histories": histories,
+    }
     if details_by_race:
         from pipeline.polar_analysis import refresh_archive_polar_models
+
         polar_model = refresh_archive_polar_models(details_by_race)
         if polar_model is not None:
             index_payload["polar_model"] = polar_model
@@ -1069,15 +1950,21 @@ def build_historical_index(
                 detail_path = os.path.join(analysis_dir, race_id + ".json")
                 with open(detail_path, "w", encoding="utf-8") as f:
                     json.dump(detail, f, separators=(",", ":"), allow_nan=False)
+    from pipeline.research.provenance import attach_cached_research
+
+    attach_cached_research(index_payload, details_by_race, analysis_dir)
     return index_payload
 
 
-def export_analysis_artifacts(detail, catalog_path="public/data/manifests.json", analysis_dir="public/data/analysis"):
+def export_analysis_artifacts(
+    detail, catalog_path="public/data/manifests.json", analysis_dir="public/data/analysis"
+):
     os.makedirs(analysis_dir, exist_ok=True)
     detail_path = os.path.join(analysis_dir, detail["race"]["id"] + ".json")
     with open(detail_path, "w", encoding="utf-8") as f:
         json.dump(detail, f, separators=(",", ":"), allow_nan=False)
     from scripts.build_report_exports import export_report_files
+
     export_report_files(detail, analysis_dir)
     index = build_historical_index(catalog_path, analysis_dir)
     index_path = os.path.join(analysis_dir, "index.json")

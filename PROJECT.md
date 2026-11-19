@@ -28,3 +28,7 @@ The library loads the optional `public/data/presentation/race_previews.json` (`1
 Run `python scripts/verify.py --with-format` (or `.\run.ps1 verify` on Windows). Run `npm run test:browser` against a running preview server for Playwright verification. See [dashboard behavior](docs/dashboard_contract.md), [architecture](docs/architecture.md), [data schema](docs/data_schema.md), [historical formulas](docs/historical_analysis.md), [source audit](docs/source_audit.md), and [ingestion](docs/ingesting_new_regattas.md).
 
 Team analytics adds playhead-aware Tactical insights in Replay/Compare and a peer-relative Boat performance radar plus replay-linked Team debrief in Analysis. Refresh them with `npm run analytics` (or `python scripts/refresh_team_analytics.py --performance-only` without scanning raw JSONL telemetry); see [team analytics](docs/team_analytics.md).
+
+## AC38 statistical research
+
+`pipeline/polar/` owns sample-level conditional distributions and grouped uncertainty. `pipeline/research/` owns matched model/wind/environment comparisons, timing accounting and probabilistic wind experiments. Run `npm run research` after source/environment updates. Versioned research reports and their dependency receipt are exposed in Analysis and Reports; see [methods](docs/ac38_research.md).

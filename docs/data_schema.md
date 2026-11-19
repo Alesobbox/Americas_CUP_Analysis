@@ -2,7 +2,7 @@
 
 The browser loads `public/data/manifests.json` and then the selected `public/data/replays/<id>.json`. `src/types/replay.ts` is the client type contract; `pipeline/export_replay.py` writes the artifact. Keep both in sync when adding a field. Historical analysis has separate versioned artifacts and definitions.
 
-Published output families are `replays/`, `analysis/`, `environment/`, and `presentation/`. The `environment/` family contains retrospective `environment-2` historical model context for the header and 1 Hz track series under `environment/boats/`, plus provenance bundles under `environment/bundles/`; it does not alter measured telemetry channels in replay objects. See [environment data](environment_data.md) for units, UTC-hour selection, source provenance, and acquisition/verification commands. The root `artifacts.json` inventory lists every published data file.
+Published output families are `replays/`, `analysis/`, `environment/`, `presentation/`, and `research/`. The `environment/` family contains retrospective `environment-2` historical model context for the header and 1 Hz track series under `environment/boats/`, plus provenance bundles under `environment/bundles/`; it does not alter measured telemetry channels in replay objects. See [environment data](environment_data.md) for units, UTC-hour selection, source provenance, and acquisition/verification commands. The root `artifacts.json` inventory lists every published data file.
 
 ## Catalog
 
@@ -66,3 +66,7 @@ Inventory schema `1.1` adds producer-owned `kind`, `status`, `scope` and `primar
 
 
 
+
+## AC38 research additions
+
+Polar extensions accept schema `2.0` / method `polar-2`, while legacy `1.0` remains readable as cell-mean evidence. Race detail retains `polar_samples`, `timing_research` and `wind_forecast`; the historical index carries `polar_research`, `wind_forecast_model`, `timing_research` and `research_provenance`. Research JSON downloads and their hash receipt live in `research/`. See [AC38 statistical research](ac38_research.md).

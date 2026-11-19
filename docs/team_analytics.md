@@ -40,13 +40,13 @@ The additive `scope` evidence records expected and matched course legs, excluded
 
 The queue contains up to three largest positive leg-time differences from the mean of other eligible boats on that same completed and sufficiently covered leg, plus up to two covered detected manoeuvres with the largest entry-to-minimum SOG reductions. Items retain units, source, quality, timestamps and peer identities where applicable. A leg-time difference is an observed deficit; manoeuvre speed reduction is neither seconds lost nor distance lost. Replay links support analyst review; neither item identifies a causal explanation.
 
-## Observed ground-speed polar: polar-1, schema 1.0
+## Observed ground-speed polar: polar-2, schema 2.0
 
-Conditional steady-state **observed ground-speed polar** extracted at 1 Hz over completed post-gun legs across `25` eligible races (`8` racing days, `987` boat-leg clusters, `131,620 s` steady coverage, excluding `±6.5 s` around manoeuvres, `±8.0 s` around mark/gate crossings, `>6°/s` turn rates, `<60 m` close traffic, and source coverage gaps):
+The polar now fits and scores individual accepted 1 Hz observations, rather than boat-leg cell means. It retains timestamped sample evidence, sample-level quantiles, support/exclusion counts, day/mode/wind diagnostics and separate chronological evaluation. Descriptive full-archive curves are labelled separately from held-out residuals.
 
-- **Explicit epistemic scope**: Outputs measure an *observed ground-speed polar*, not hull speed through water: `SOG` includes surface current, and conditional residuals reflect tactics, traffic, sea state, and wind-measurement error and cannot isolate crew or flight-control skill. The conditional `p90` curve is reported strictly as an *observed upper conditional percentile*, not a proven optimal target or theoretical VPP ceiling.
-- **Two-category fixed tack effect**: Tack (`STARBOARD` vs. `PORT`) is modeled as an explicit two-category fixed effect (`I_stbd = +0.5` starboard, `-0.5` port) controlling for a bivariate quadratic `(TWS, |TWA|)` surface per leg mode (`STARBOARD - PORT`: `-0.174 kt` [`-0.312`, `-0.049`] upwind, `-0.044 kt` [`-0.195`, `+0.104`] downwind, `-0.119 kt` [`-0.218`, `-0.022`] overall).
-- **Cross-validation & uncertainty**: Out-of-sample fit is reported under both Leave-One-Race-Out CV (`25` folds: SOG RMSE `2.289 kt`, `R² = 0.826`) and Day-Grouped Leave-One-Day-Out CV (`8` day folds: SOG RMSE `2.421 kt`, `R² = 0.805`) against the unconditioned leg-mode baseline (`3.878 kt`, `R² = 0.500`). Uncertainty bounds use 500-draw frequentist boat-leg-cluster bootstrap confidence intervals (never "credible intervals").
+Absolute team residual uncertainty uses refitted day-block bootstrap estimators with race-block sensitivity. Per-boat leg-block intervals are explicitly conditional on the fitted reference. Self-excluding peer contrasts use equal peer, leg and race weights. Eight eligible days limit inference; no physical foil-state or conformal coverage claim is made.
+
+AC38 research adds nested model comparisons, matched wind-source and environmental ablations, exact checkpoint/phase timing ledgers, censored manoeuvre progress deficits and chronological probabilistic wind forecasts. Full methods, provenance, limits and refresh instructions are in [AC38 statistical research](ac38_research.md). Run `npm run research` after ingestion or environmental changes.
 
 ## Refresh and compatibility
 
@@ -61,12 +61,12 @@ Use `python scripts/analysis_snapshot.py` for the bounded archive overview. Set 
 | Archive | 28 sessions, 224 replayed boat-races |
 | Boat performance | 173 eligible boats have all six dimensions and an overall index |
 | Team debrief | 720 evidence-linked review items across 181 boats |
-| Observed ground-speed polar | 25 eligible races across 8 days (`987` boat-leg clusters, `131,620 s` steady): LORO RMSE `2.289 kt`, Day-Grouped LODO RMSE `2.421 kt` vs. `3.878 kt` baseline |
+| Observed ground-speed polar | polar-2 uses accepted 1 Hz observations; current sample counts, supported scores and research comparisons are exported in the historical index |
 | Tactical snapshots | 3,455 snapshots; 3,438 valid direction windows and 3,438 valid speed windows |
 | Five-minute projections | Zero windows pass the deterministic stability gates; projection remains unavailable |
 | Pregun practice session | Explicit empty timeline for `26_09_23_nap_ipr_pr1`, whose recorded window ends before its gun |
-| Frontend | 371 tests passed across 35 files |
-| Python unit tests | 200 passed, including circular wind, future-prefix invariance, independent fields, source gaps, peer exclusion, matching legs, custom-cadence detector windows, `polar-1` fixed tack effect / LORO+LODO CV / bootstrap CIs, and reconstruction/OCS guards |
+| Frontend | 379 tests passed across 36 files |
+| Python unit tests | 234 passed, including circular wind, future-prefix invariance, independent fields, source gaps, peer exclusion, matching legs, custom-cadence detector windows, `polar-2` sample-level quantiles / block bootstrap refits / subgroup diagnostics, matched model/wind/environment comparisons, timing/manoeuvre ledgers, chronological wind forecasts, and reconstruction/OCS guards |
 | Reconstruction / workloads | 123 passed |
 | Generated-data integrity | 8 passed |
 | Total deterministic tests | Unit, E2E, environment, and analytics verification gates passed |

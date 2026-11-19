@@ -137,6 +137,30 @@ describe('additive analysis contracts', () => {
     ).not.toThrow()
     expect(() => validateAnalysisEnhancements(fixture())).not.toThrow()
   })
+  it('accepts sample-level polar-2 and rejects unknown polar schemas', () => {
+    const detail = fixture()
+    const polar = {
+      schema_version: '2.0' as const,
+      method_version: 'polar-2',
+      quality: 'derived' as const,
+      reason: null,
+      evaluation_scope: 'out_of_day',
+      steady_sample_count: 20,
+      steady_coverage_s: 20,
+      leg_cluster_count: 2,
+      sog_residual_kt: { value: 1, ci_low_kt: 1.1, ci_high_kt: 1.5, bootstrap_se_kt: 0.1 },
+      wind_vmg_residual_kt: null,
+      loro_sog_residual_kt: 1,
+      lodo_sog_residual_kt: 1,
+      above_p90_share: 0.1,
+      traffic_excluded_s: 0,
+      observed_bins: { upwind: [], downwind: [] },
+    }
+    detail.boats[0].polar = polar
+    expect(() => validateAnalysisEnhancements(detail)).not.toThrow()
+    Reflect.set(polar, 'schema_version', 'unsupported')
+    expect(() => validateAnalysisEnhancements(detail)).toThrow('Boat polar residuals')
+  })
   it('rejects non-finite scores, invalid peer counts, duplicate axes and fake baselines', () => {
     const nonfinite = fixture()
     nonfinite.boats[0].performance!.dimensions[0].index = Infinity

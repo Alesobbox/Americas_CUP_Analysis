@@ -665,10 +665,11 @@ describe('observed ground-speed polar and conditional residuals', () => {
         },
       })
     )
-    expect(html).toContain('Day-grouped vs. Leave-One-Race-Out validation')
+    expect(html).toContain('Day-grouped, race-held-out and chronological validation')
     expect(html).toContain('Two-category fixed effect for tack')
     expect(html).toContain('polar-row-selected')
-    expect(html).toContain('leg-cluster bootstrap confidence intervals')
+    expect(html).toContain('Legacy polar-1 output')
+    expect(html).toContain('weighted cell means')
     expect(html).not.toContain('credible interval')
   })
 })

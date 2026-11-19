@@ -7,6 +7,7 @@ import {
   RaceObservedPolarSection,
 } from '../dashboard/ObservedPolarPanel'
 import { TeamDebrief } from '../dashboard/TeamDebrief'
+import { ArchiveAc38ResearchSection, RaceAc38ResearchSection } from '../dashboard/Ac38ResearchPanel'
 import type {
   AnalysisDetail,
   AnalysisIndex,
@@ -243,7 +244,7 @@ function GateTable({
               <th>RANK</th>
               <th>LEADER SPLIT</th>
               <th>CHANGE</th>
-              <th></th>
+              <th>REPLAY</th>
             </tr>
           </thead>
           <tbody>
@@ -426,11 +427,7 @@ function RaceView({
           </table>
         </div>
       </section>
-      {detailLoading && (
-        <p className="analysis-state" role="status">
-          Loading detailed analysis…
-        </p>
-      )}
+      {detailLoading && <output className="analysis-state">Loading detailed analysis…</output>}
       {detailError && (
         <p className="analysis-state error" role="alert">
           {detailError}
@@ -466,6 +463,15 @@ function RaceView({
             onOpenReplay={onOpenReplay}
           />
           <RaceObservedPolarSection detail={detail} boat={boat} onSelectBoat={onSelectBoat} />
+          <RaceAc38ResearchSection
+            detail={detail}
+            boatId={boat.id}
+            onReview={
+              replayRaceIds.includes(race.id)
+                ? (timestamp) => onOpenReplay(race.id, timestamp, boat.id)
+                : undefined
+            }
+          />
           <section className="analysis-section">
             <div className="analysis-section-heading">
               <h4>Race metrics</h4>
@@ -562,7 +568,7 @@ function RaceView({
                       <th>RECOVERY</th>
                       <th>ACCELERATION</th>
                       <th>QUALITY</th>
-                      <th></th>
+                      <th>REPLAY</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -797,7 +803,7 @@ function RaceView({
             <div className="analysis-definition-list">
               {Object.entries({
                 ...detail.definitions,
-                ...(detail.polar_analysis?.definitions ?? {}),
+                ...detail.polar_analysis?.definitions,
               }).map(([id, definition]) => (
                 <div key={id}>
                   <strong>{evidenceText(definition.label)}</strong>
@@ -1100,7 +1106,7 @@ function HistoryView({
                 <th>RACE</th>
                 <th>RESULT</th>
                 <th>{effectiveMetricId ? labelFor(effectiveMetricId) : 'METRIC'}</th>
-                <th></th>
+                <th>REPLAY</th>
               </tr>
             </thead>
             <tbody>
@@ -1353,6 +1359,7 @@ function HistoryView({
         polarModel={index.polar_model}
         selectedTeam={history.team_code}
       />
+      <ArchiveAc38ResearchSection index={index} />
       {allTeamObservations.length > history.observations.length && (
         <section className="analysis-section">
           <div className="analysis-section-heading">
@@ -1516,6 +1523,7 @@ export function AnalysisModal({
       <div
         className="analysis-main-tabs"
         role="tablist"
+        tabIndex={-1}
         aria-label="Analysis view"
         onKeyDown={(event) => {
           if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
@@ -1562,9 +1570,7 @@ export function AnalysisModal({
         </button>
       </div>
       {!index && !indexError && (
-        <p className="analysis-state" role="status">
-          Loading analysis archive…
-        </p>
+        <output className="analysis-state">Loading analysis archive…</output>
       )}
       {indexError && (
         <div className="analysis-state error" role="alert">
@@ -1607,6 +1613,7 @@ export function AnalysisModal({
   ) : (
     <div
       className="modal-shade"
+      role="presentation"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose()
       }}
