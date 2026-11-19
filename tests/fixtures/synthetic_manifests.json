@@ -1,0 +1,29 @@
+{
+  "event_edition": "38th America's Cup Preliminary Regatta Naples 2026",
+  "boat_class": "AC40",
+  "regatta": "38th America's Cup Preliminary Regatta Naples 2026",
+  "venue": "Gulf of Naples, Italy",
+  "regattas": [
+    {
+      "id": "naples_2026",
+      "name": "38th America's Cup Preliminary Regatta Naples 2026",
+      "event_edition": "38th America's Cup Preliminary Regatta Naples 2026",
+      "boat_class": "AC40",
+      "venue": "Gulf of Naples, Italy",
+      "races": [
+        {
+          "id": "synthetic_pr1",
+          "name": "Synthetic Practice Race 1",
+          "event_edition": "38th America's Cup Preliminary Regatta Naples 2026",
+          "boat_class": "AC40",
+          "date": "2026-09-22",
+          "replay_file": "replays/synthetic_pr1.json",
+          "competitors_count": 3,
+          "winner": "FRA",
+          "wind_speed_kt": 12.0,
+          "result_provenance": "reconstructed"
+        }
+      ]
+    }
+  ]
+}

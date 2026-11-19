@@ -1,0 +1,2578 @@
+{
+  "schema_version": "2.0",
+  "method_version": "analysis-2",
+  "race": {
+    "id": "synthetic_pr1",
+    "name": "Synthetic Practice Race 1",
+    "date": "2026-09-22",
+    "boat_class": "AC40",
+    "race_type": "practice",
+    "gun_time_ms": 1790078830000
+  },
+  "definitions": {
+    "distance_m": {
+      "label": "Distance sailed",
+      "unit": "m",
+      "formula": "Synthetic Distance sailed",
+      "window": "Race",
+      "denominator": "Time",
+      "source": "Fixture",
+      "display": "Distance sailed"
+    },
+    "sog_mean_kt": {
+      "label": "Mean SOG",
+      "unit": "kt",
+      "formula": "Synthetic Mean SOG",
+      "window": "Race",
+      "denominator": "Time",
+      "source": "Fixture",
+      "display": "Mean SOG"
+    },
+    "tack_count": {
+      "label": "Tacks",
+      "unit": "count",
+      "formula": "Synthetic Tacks",
+      "window": "Race",
+      "denominator": "Time",
+      "source": "Fixture",
+      "display": "Tacks"
+    },
+    "gybe_count": {
+      "label": "Gybes",
+      "unit": "count",
+      "formula": "Synthetic Gybes",
+      "window": "Race",
+      "denominator": "Time",
+      "source": "Fixture",
+      "display": "Gybes"
+    }
+  },
+  "boats": [
+    {
+      "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+      "team_code": "FRA",
+      "team_name": "France SailGP Team",
+      "color": "#ff80c0",
+      "classification": "RANK_1",
+      "official_rank": 1,
+      "official_elapsed_s": 201.0,
+      "source_conflicts": [],
+      "source_coverage": {
+        "sog": {
+          "first_ms": 1790078820000,
+          "last_ms": 1790079080000,
+          "gaps": []
+        },
+        "heading": {
+          "first_ms": 1790078820000,
+          "last_ms": 1790079080000,
+          "gaps": []
+        },
+        "twd": {
+          "first_ms": 1790078820000,
+          "last_ms": 1790079080000,
+          "gaps": []
+        }
+      },
+      "metrics": {
+        "distance_m": {
+          "value": 2560.0,
+          "unit": "m",
+          "quality": "derived",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        },
+        "sog_mean_kt": {
+          "value": 25.0,
+          "unit": "kt",
+          "quality": "derived",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        },
+        "tack_count": {
+          "value": 2,
+          "unit": "count",
+          "quality": "derived",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        },
+        "gybe_count": {
+          "value": 2,
+          "unit": "count",
+          "quality": "derived",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        }
+      },
+      "start": {
+        "crossing_time_ms": 1790078831000,
+        "crossing_order": 1,
+        "ocs": false,
+        "gun": {
+          "metrics": {
+            "sog_mean_kt": {
+              "value": 26.0,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 10.0,
+              "sample_count": 100
+            }
+          }
+        }
+      },
+      "legs": [
+        {
+          "leg": 1,
+          "complete": true,
+          "start_ms": 1790078830000,
+          "end_ms": 1790078880000,
+          "metrics": {
+            "sog_mean_kt": {
+              "value": 25.0,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "course_vmg_kt": {
+              "value": 17.5,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "distance_m": {
+              "value": 640.0,
+              "unit": "m",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "elapsed_s": {
+              "value": 50.0,
+              "unit": "s",
+              "quality": "reconstructed",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            }
+          },
+          "gate": {
+            "leg": 1,
+            "crossing_time_ms": 1790078880000,
+            "mark_chosen": "RM2",
+            "side": "STARBOARD",
+            "source": "official",
+            "approach_20s_distance_m": 200.0,
+            "approach_angle_deg": 40.0,
+            "entry_speed_kt": 25.0,
+            "exit_speed_kt": 24.0,
+            "rounding_time_s": 5.0,
+            "rounding_reason": null,
+            "split_to_leader_s": 0.0
+          }
+        },
+        {
+          "leg": 2,
+          "complete": true,
+          "start_ms": 1790078880000,
+          "end_ms": 1790078930000,
+          "metrics": {
+            "sog_mean_kt": {
+              "value": 25.0,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "course_vmg_kt": {
+              "value": 17.5,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "distance_m": {
+              "value": 640.0,
+              "unit": "m",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "elapsed_s": {
+              "value": 50.0,
+              "unit": "s",
+              "quality": "reconstructed",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            }
+          },
+          "gate": {
+            "leg": 2,
+            "crossing_time_ms": 1790078930000,
+            "mark_chosen": "RM6",
+            "side": "STARBOARD",
+            "source": "official",
+            "approach_20s_distance_m": 200.0,
+            "approach_angle_deg": 40.0,
+            "entry_speed_kt": 25.0,
+            "exit_speed_kt": 24.0,
+            "rounding_time_s": 5.0,
+            "rounding_reason": null,
+            "split_to_leader_s": 0.0
+          }
+        },
+        {
+          "leg": 3,
+          "complete": true,
+          "start_ms": 1790078930000,
+          "end_ms": 1790078980000,
+          "metrics": {
+            "sog_mean_kt": {
+              "value": 25.0,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "course_vmg_kt": {
+              "value": 17.5,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "distance_m": {
+              "value": 640.0,
+              "unit": "m",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "elapsed_s": {
+              "value": 50.0,
+              "unit": "s",
+              "quality": "reconstructed",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            }
+          },
+          "gate": {
+            "leg": 3,
+            "crossing_time_ms": 1790078980000,
+            "mark_chosen": "RM2",
+            "side": "STARBOARD",
+            "source": "official",
+            "approach_20s_distance_m": 200.0,
+            "approach_angle_deg": 40.0,
+            "entry_speed_kt": 25.0,
+            "exit_speed_kt": 24.0,
+            "rounding_time_s": 5.0,
+            "rounding_reason": null,
+            "split_to_leader_s": 0.0
+          }
+        },
+        {
+          "leg": 4,
+          "complete": true,
+          "start_ms": 1790078980000,
+          "end_ms": 1790079030000,
+          "metrics": {
+            "sog_mean_kt": {
+              "value": 25.0,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "course_vmg_kt": {
+              "value": 17.5,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "distance_m": {
+              "value": 640.0,
+              "unit": "m",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "elapsed_s": {
+              "value": 50.0,
+              "unit": "s",
+              "quality": "reconstructed",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            }
+          },
+          "gate": {
+            "leg": 4,
+            "crossing_time_ms": 1790079030000,
+            "mark_chosen": "RM6",
+            "side": "STARBOARD",
+            "source": "official",
+            "approach_20s_distance_m": 200.0,
+            "approach_angle_deg": 40.0,
+            "entry_speed_kt": 25.0,
+            "exit_speed_kt": 24.0,
+            "rounding_time_s": 5.0,
+            "rounding_reason": null,
+            "split_to_leader_s": 0.0
+          }
+        }
+      ],
+      "manoeuvres": [
+        {
+          "type": "TACK",
+          "timestamp": 1790078855000,
+          "leg": 1,
+          "position": {
+            "x": -400.0,
+            "y": -500.0
+          },
+          "entry_speed_kt": 24.0,
+          "min_speed_kt": 19.200000000000003,
+          "speed_loss_kt": 4.799999999999999,
+          "recovery_time_s": 4.2,
+          "quality": "reconstructed"
+        },
+        {
+          "type": "GYBE",
+          "timestamp": 1790078905000,
+          "leg": 2,
+          "position": {
+            "x": -400.0,
+            "y": -500.0
+          },
+          "entry_speed_kt": 24.0,
+          "min_speed_kt": 19.200000000000003,
+          "speed_loss_kt": 4.799999999999999,
+          "recovery_time_s": 4.2,
+          "quality": "reconstructed"
+        },
+        {
+          "type": "TACK",
+          "timestamp": 1790078955000,
+          "leg": 3,
+          "position": {
+            "x": -400.0,
+            "y": -500.0
+          },
+          "entry_speed_kt": 24.0,
+          "min_speed_kt": 19.200000000000003,
+          "speed_loss_kt": 4.799999999999999,
+          "recovery_time_s": 4.2,
+          "quality": "reconstructed"
+        },
+        {
+          "type": "GYBE",
+          "timestamp": 1790079005000,
+          "leg": 4,
+          "position": {
+            "x": -400.0,
+            "y": -500.0
+          },
+          "entry_speed_kt": 24.0,
+          "min_speed_kt": 19.200000000000003,
+          "speed_loss_kt": 4.799999999999999,
+          "recovery_time_s": 4.2,
+          "quality": "reconstructed"
+        }
+      ],
+      "gates": [
+        {
+          "leg": 1,
+          "crossing_time_ms": 1790078880000,
+          "mark_chosen": "RM2",
+          "side": "STARBOARD",
+          "source": "official",
+          "approach_20s_distance_m": 200.0,
+          "approach_angle_deg": 40.0,
+          "entry_speed_kt": 25.0,
+          "exit_speed_kt": 24.0,
+          "rounding_time_s": 5.0,
+          "rounding_reason": null,
+          "split_to_leader_s": 0.0
+        },
+        {
+          "leg": 2,
+          "crossing_time_ms": 1790078930000,
+          "mark_chosen": "RM6",
+          "side": "STARBOARD",
+          "source": "official",
+          "approach_20s_distance_m": 200.0,
+          "approach_angle_deg": 40.0,
+          "entry_speed_kt": 25.0,
+          "exit_speed_kt": 24.0,
+          "rounding_time_s": 5.0,
+          "rounding_reason": null,
+          "split_to_leader_s": 0.0
+        },
+        {
+          "leg": 3,
+          "crossing_time_ms": 1790078980000,
+          "mark_chosen": "RM2",
+          "side": "STARBOARD",
+          "source": "official",
+          "approach_20s_distance_m": 200.0,
+          "approach_angle_deg": 40.0,
+          "entry_speed_kt": 25.0,
+          "exit_speed_kt": 24.0,
+          "rounding_time_s": 5.0,
+          "rounding_reason": null,
+          "split_to_leader_s": 0.0
+        },
+        {
+          "leg": 4,
+          "crossing_time_ms": 1790079030000,
+          "mark_chosen": "RM6",
+          "side": "STARBOARD",
+          "source": "official",
+          "approach_20s_distance_m": 200.0,
+          "approach_angle_deg": 40.0,
+          "entry_speed_kt": 25.0,
+          "exit_speed_kt": 24.0,
+          "rounding_time_s": 5.0,
+          "rounding_reason": null,
+          "split_to_leader_s": 0.0
+        }
+      ],
+      "performance": {
+        "schema_version": "1.0",
+        "method_version": "performance-1",
+        "baseline_index": 100,
+        "dimensions": [
+          {
+            "id": "upwind_vmg",
+            "label": "Upwind course VMG",
+            "index": 108.69565217391306,
+            "value": 17.5,
+            "peer_mean": 16.099999999999998,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 100.0,
+            "sample_count": 2,
+            "matched_legs": [
+              1,
+              3
+            ],
+            "leg_evidence": [
+              {
+                "leg": 1,
+                "value": 17.5,
+                "peer_mean": 16.099999999999998,
+                "index": 108.69565217391306,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078830000,
+                "end_ms": 1790078880000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 16.099999999999998,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078830000,
+                    "end_ms": 1790078880000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              },
+              {
+                "leg": 3,
+                "value": 17.5,
+                "peer_mean": 16.099999999999998,
+                "index": 108.69565217391306,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078930000,
+                "end_ms": 1790078980000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 16.099999999999998,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078930000,
+                    "end_ms": 1790078980000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              }
+            ],
+            "quality": "derived",
+            "formula": "Mean over matched legs of 100 \u00d7 boat course_vmg_kt / other-boats mean course_vmg_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": []
+          },
+          {
+            "id": "downwind_vmg",
+            "label": "Downwind course VMG",
+            "index": 108.69565217391306,
+            "value": 17.5,
+            "peer_mean": 16.099999999999998,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 100.0,
+            "sample_count": 2,
+            "matched_legs": [
+              2,
+              4
+            ],
+            "leg_evidence": [
+              {
+                "leg": 2,
+                "value": 17.5,
+                "peer_mean": 16.099999999999998,
+                "index": 108.69565217391306,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078880000,
+                "end_ms": 1790078930000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 16.099999999999998,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078880000,
+                    "end_ms": 1790078930000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              },
+              {
+                "leg": 4,
+                "value": 17.5,
+                "peer_mean": 16.099999999999998,
+                "index": 108.69565217391306,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078980000,
+                "end_ms": 1790079030000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 16.099999999999998,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078980000,
+                    "end_ms": 1790079030000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              }
+            ],
+            "quality": "derived",
+            "formula": "Mean over matched legs of 100 \u00d7 boat course_vmg_kt / other-boats mean course_vmg_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": []
+          },
+          {
+            "id": "upwind_speed",
+            "label": "Upwind speed",
+            "index": 108.69565217391305,
+            "value": 25.0,
+            "peer_mean": 23.0,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 100.0,
+            "sample_count": 2,
+            "matched_legs": [
+              1,
+              3
+            ],
+            "leg_evidence": [
+              {
+                "leg": 1,
+                "value": 25.0,
+                "peer_mean": 23.0,
+                "index": 108.69565217391305,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078830000,
+                "end_ms": 1790078880000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 23.0,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078830000,
+                    "end_ms": 1790078880000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              },
+              {
+                "leg": 3,
+                "value": 25.0,
+                "peer_mean": 23.0,
+                "index": 108.69565217391305,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078930000,
+                "end_ms": 1790078980000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 23.0,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078930000,
+                    "end_ms": 1790078980000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              }
+            ],
+            "quality": "derived",
+            "formula": "Mean over matched legs of 100 \u00d7 boat sog_mean_kt / other-boats mean sog_mean_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": []
+          },
+          {
+            "id": "downwind_speed",
+            "label": "Downwind speed",
+            "index": 108.69565217391305,
+            "value": 25.0,
+            "peer_mean": 23.0,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 100.0,
+            "sample_count": 2,
+            "matched_legs": [
+              2,
+              4
+            ],
+            "leg_evidence": [
+              {
+                "leg": 2,
+                "value": 25.0,
+                "peer_mean": 23.0,
+                "index": 108.69565217391305,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078880000,
+                "end_ms": 1790078930000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 23.0,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078880000,
+                    "end_ms": 1790078930000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              },
+              {
+                "leg": 4,
+                "value": 25.0,
+                "peer_mean": 23.0,
+                "index": 108.69565217391305,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078980000,
+                "end_ms": 1790079030000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 23.0,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078980000,
+                    "end_ms": 1790079030000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              }
+            ],
+            "quality": "derived",
+            "formula": "Mean over matched legs of 100 \u00d7 boat sog_mean_kt / other-boats mean sog_mean_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": []
+          },
+          {
+            "id": "tack_retention",
+            "label": "Tack retention",
+            "index": 111.11111111111114,
+            "value": 80.00000000000001,
+            "peer_mean": 72.0,
+            "unit": "%",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 25.0,
+            "sample_count": 2,
+            "matched_legs": [
+              1,
+              3
+            ],
+            "leg_evidence": [
+              {
+                "leg": 1,
+                "value": 80.00000000000001,
+                "peer_mean": 72.0,
+                "index": 111.11111111111114,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 12.5,
+                "start_ms": 1790078830000,
+                "end_ms": 1790078880000,
+                "quality": "reconstructed",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 72.0,
+                    "coverage_s": 12.5,
+                    "sample_count": 1,
+                    "start_ms": 1790078830000,
+                    "end_ms": 1790078880000,
+                    "quality": "reconstructed"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": [
+                  {
+                    "timestamp_ms": 1790078855000,
+                    "entry_speed_kt": 24.0,
+                    "minimum_speed_kt": 19.200000000000003,
+                    "retention_pct": 80.00000000000001,
+                    "window_start_ms": 1790078848500,
+                    "window_end_ms": 1790078861000
+                  }
+                ]
+              },
+              {
+                "leg": 3,
+                "value": 80.00000000000001,
+                "peer_mean": 72.0,
+                "index": 111.11111111111114,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 12.5,
+                "start_ms": 1790078930000,
+                "end_ms": 1790078980000,
+                "quality": "reconstructed",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 72.0,
+                    "coverage_s": 12.5,
+                    "sample_count": 1,
+                    "start_ms": 1790078930000,
+                    "end_ms": 1790078980000,
+                    "quality": "reconstructed"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": [
+                  {
+                    "timestamp_ms": 1790078955000,
+                    "entry_speed_kt": 24.0,
+                    "minimum_speed_kt": 19.200000000000003,
+                    "retention_pct": 80.00000000000001,
+                    "window_start_ms": 1790078948500,
+                    "window_end_ms": 1790078961000
+                  }
+                ]
+              }
+            ],
+            "quality": "reconstructed",
+            "formula": "Mean over matched legs of 100 \u00d7 boat mean(100 \u00d7 minimum SOG / entry SOG) / other-boats mean retention",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "detected manoeuvres; full SOG, heading and local TWD source coverage over [-6.5,+6] s",
+            "excluded_legs": []
+          },
+          {
+            "id": "gybe_retention",
+            "label": "Gybe retention",
+            "index": 111.11111111111114,
+            "value": 80.00000000000001,
+            "peer_mean": 72.0,
+            "unit": "%",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 25.0,
+            "sample_count": 2,
+            "matched_legs": [
+              2,
+              4
+            ],
+            "leg_evidence": [
+              {
+                "leg": 2,
+                "value": 80.00000000000001,
+                "peer_mean": 72.0,
+                "index": 111.11111111111114,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 12.5,
+                "start_ms": 1790078880000,
+                "end_ms": 1790078930000,
+                "quality": "reconstructed",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 72.0,
+                    "coverage_s": 12.5,
+                    "sample_count": 1,
+                    "start_ms": 1790078880000,
+                    "end_ms": 1790078930000,
+                    "quality": "reconstructed"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": [
+                  {
+                    "timestamp_ms": 1790078905000,
+                    "entry_speed_kt": 24.0,
+                    "minimum_speed_kt": 19.200000000000003,
+                    "retention_pct": 80.00000000000001,
+                    "window_start_ms": 1790078898500,
+                    "window_end_ms": 1790078911000
+                  }
+                ]
+              },
+              {
+                "leg": 4,
+                "value": 80.00000000000001,
+                "peer_mean": 72.0,
+                "index": 111.11111111111114,
+                "peer_count": 1,
+                "peer_ids": [
+                  "4f5369cd-0fa3-4241-afd2-00f356898e22"
+                ],
+                "sample_count": 1,
+                "coverage_s": 12.5,
+                "start_ms": 1790078980000,
+                "end_ms": 1790079030000,
+                "quality": "reconstructed",
+                "peers": [
+                  {
+                    "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+                    "team_code": "ITA B",
+                    "team_name": "Luna Rossa Blue",
+                    "value": 72.0,
+                    "coverage_s": 12.5,
+                    "sample_count": 1,
+                    "start_ms": 1790078980000,
+                    "end_ms": 1790079030000,
+                    "quality": "reconstructed"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": [
+                  {
+                    "timestamp_ms": 1790079005000,
+                    "entry_speed_kt": 24.0,
+                    "minimum_speed_kt": 19.200000000000003,
+                    "retention_pct": 80.00000000000001,
+                    "window_start_ms": 1790078998500,
+                    "window_end_ms": 1790079011000
+                  }
+                ]
+              }
+            ],
+            "quality": "reconstructed",
+            "formula": "Mean over matched legs of 100 \u00d7 boat mean(100 \u00d7 minimum SOG / entry SOG) / other-boats mean retention",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "detected manoeuvres; full SOG, heading and local TWD source coverage over [-6.5,+6] s",
+            "excluded_legs": []
+          }
+        ],
+        "overall_index": 109.50080515297908,
+        "notes": [
+          "Post-race comparison; changing wind and different crossing times are not controlled for.",
+          "Index is the mean of per-leg ratios; displayed value and peer mean are arithmetic matched-leg means.",
+          "Retention describes qualifying detected events only; the detector requires at least 2.5 kt speed loss.",
+          "Retention coverage is the union of validated 12.5 s event source windows within matched completed legs.",
+          "Overall index weights all six dimensions equally and requires all six."
+        ],
+        "scope": {
+          "expected_legs": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "matched_legs": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "expected_leg_count": 4,
+          "matched_leg_count": 4,
+          "min_peer_count": 1,
+          "covered_s": 200.0,
+          "excluded_legs": []
+        }
+      },
+      "debrief": {
+        "schema_version": "1.0",
+        "method_version": "debrief-1",
+        "items": [
+          {
+            "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb:manoeuvre:TACK:1790078855000",
+            "kind": "manoeuvre_loss",
+            "leg": 1,
+            "title": "Tack: 4.8 kt speed reduction",
+            "detail": "Review the detected entry-to-minimum SOG reduction. This is a speed observation, not an estimate of time or distance lost.",
+            "timestamp_ms": 1790078855000,
+            "value": 4.799999999999999,
+            "unit": "kt",
+            "quality": "reconstructed",
+            "source": "qualifying manoeuvre detector; validated source SOG, heading and local TWD window"
+          },
+          {
+            "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb:manoeuvre:GYBE:1790078905000",
+            "kind": "manoeuvre_loss",
+            "leg": 2,
+            "title": "Gybe: 4.8 kt speed reduction",
+            "detail": "Review the detected entry-to-minimum SOG reduction. This is a speed observation, not an estimate of time or distance lost.",
+            "timestamp_ms": 1790078905000,
+            "value": 4.799999999999999,
+            "unit": "kt",
+            "quality": "reconstructed",
+            "source": "qualifying manoeuvre detector; validated source SOG, heading and local TWD window"
+          }
+        ],
+        "reason": null
+      }
+    },
+    {
+      "id": "4f5369cd-0fa3-4241-afd2-00f356898e22",
+      "team_code": "ITA B",
+      "team_name": "Luna Rossa Blue",
+      "color": "#3b82f6",
+      "classification": "RANK_2",
+      "official_rank": 2,
+      "official_elapsed_s": 202.0,
+      "source_conflicts": [],
+      "source_coverage": {
+        "sog": {
+          "first_ms": 1790078820000,
+          "last_ms": 1790079080000,
+          "gaps": []
+        },
+        "heading": {
+          "first_ms": 1790078820000,
+          "last_ms": 1790079080000,
+          "gaps": []
+        },
+        "twd": {
+          "first_ms": 1790078820000,
+          "last_ms": 1790079080000,
+          "gaps": []
+        }
+      },
+      "metrics": {
+        "distance_m": {
+          "value": 2560.0,
+          "unit": "m",
+          "quality": "derived",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        },
+        "sog_mean_kt": {
+          "value": 23.0,
+          "unit": "kt",
+          "quality": "derived",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        },
+        "tack_count": {
+          "value": 2,
+          "unit": "count",
+          "quality": "derived",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        },
+        "gybe_count": {
+          "value": 2,
+          "unit": "count",
+          "quality": "derived",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        }
+      },
+      "start": {
+        "crossing_time_ms": 1790078832000,
+        "crossing_order": 2,
+        "ocs": false,
+        "gun": {
+          "metrics": {
+            "sog_mean_kt": {
+              "value": 26.0,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 10.0,
+              "sample_count": 100
+            }
+          }
+        }
+      },
+      "legs": [
+        {
+          "leg": 1,
+          "complete": true,
+          "start_ms": 1790078830000,
+          "end_ms": 1790078880000,
+          "metrics": {
+            "sog_mean_kt": {
+              "value": 23.0,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "course_vmg_kt": {
+              "value": 16.099999999999998,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "distance_m": {
+              "value": 640.0,
+              "unit": "m",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "elapsed_s": {
+              "value": 50.0,
+              "unit": "s",
+              "quality": "reconstructed",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            }
+          },
+          "gate": {
+            "leg": 1,
+            "crossing_time_ms": 1790078880000,
+            "mark_chosen": "RM2",
+            "side": "STARBOARD",
+            "source": "official",
+            "approach_20s_distance_m": 200.0,
+            "approach_angle_deg": 40.0,
+            "entry_speed_kt": 23.0,
+            "exit_speed_kt": 22.0,
+            "rounding_time_s": 5.0,
+            "rounding_reason": null,
+            "split_to_leader_s": 1.0
+          }
+        },
+        {
+          "leg": 2,
+          "complete": true,
+          "start_ms": 1790078880000,
+          "end_ms": 1790078930000,
+          "metrics": {
+            "sog_mean_kt": {
+              "value": 23.0,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "course_vmg_kt": {
+              "value": 16.099999999999998,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "distance_m": {
+              "value": 640.0,
+              "unit": "m",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "elapsed_s": {
+              "value": 50.0,
+              "unit": "s",
+              "quality": "reconstructed",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            }
+          },
+          "gate": {
+            "leg": 2,
+            "crossing_time_ms": 1790078930000,
+            "mark_chosen": "RM6",
+            "side": "STARBOARD",
+            "source": "official",
+            "approach_20s_distance_m": 200.0,
+            "approach_angle_deg": 40.0,
+            "entry_speed_kt": 23.0,
+            "exit_speed_kt": 22.0,
+            "rounding_time_s": 5.0,
+            "rounding_reason": null,
+            "split_to_leader_s": 1.0
+          }
+        },
+        {
+          "leg": 3,
+          "complete": true,
+          "start_ms": 1790078930000,
+          "end_ms": 1790078980000,
+          "metrics": {
+            "sog_mean_kt": {
+              "value": 23.0,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "course_vmg_kt": {
+              "value": 16.099999999999998,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "distance_m": {
+              "value": 640.0,
+              "unit": "m",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "elapsed_s": {
+              "value": 50.0,
+              "unit": "s",
+              "quality": "reconstructed",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            }
+          },
+          "gate": {
+            "leg": 3,
+            "crossing_time_ms": 1790078980000,
+            "mark_chosen": "RM2",
+            "side": "STARBOARD",
+            "source": "official",
+            "approach_20s_distance_m": 200.0,
+            "approach_angle_deg": 40.0,
+            "entry_speed_kt": 23.0,
+            "exit_speed_kt": 22.0,
+            "rounding_time_s": 5.0,
+            "rounding_reason": null,
+            "split_to_leader_s": 1.0
+          }
+        },
+        {
+          "leg": 4,
+          "complete": true,
+          "start_ms": 1790078980000,
+          "end_ms": 1790079030000,
+          "metrics": {
+            "sog_mean_kt": {
+              "value": 23.0,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "course_vmg_kt": {
+              "value": 16.099999999999998,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "distance_m": {
+              "value": 640.0,
+              "unit": "m",
+              "quality": "derived",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            },
+            "elapsed_s": {
+              "value": 50.0,
+              "unit": "s",
+              "quality": "reconstructed",
+              "coverage_s": 50.0,
+              "sample_count": 50
+            }
+          },
+          "gate": {
+            "leg": 4,
+            "crossing_time_ms": 1790079030000,
+            "mark_chosen": "RM6",
+            "side": "STARBOARD",
+            "source": "official",
+            "approach_20s_distance_m": 200.0,
+            "approach_angle_deg": 40.0,
+            "entry_speed_kt": 23.0,
+            "exit_speed_kt": 22.0,
+            "rounding_time_s": 5.0,
+            "rounding_reason": null,
+            "split_to_leader_s": 1.0
+          }
+        }
+      ],
+      "manoeuvres": [
+        {
+          "type": "TACK",
+          "timestamp": 1790078855000,
+          "leg": 1,
+          "position": {
+            "x": -400.0,
+            "y": -500.0
+          },
+          "entry_speed_kt": 24.0,
+          "min_speed_kt": 17.28,
+          "speed_loss_kt": 6.720000000000001,
+          "recovery_time_s": 4.2,
+          "quality": "reconstructed"
+        },
+        {
+          "type": "GYBE",
+          "timestamp": 1790078905000,
+          "leg": 2,
+          "position": {
+            "x": -400.0,
+            "y": -500.0
+          },
+          "entry_speed_kt": 24.0,
+          "min_speed_kt": 17.28,
+          "speed_loss_kt": 6.720000000000001,
+          "recovery_time_s": 4.2,
+          "quality": "reconstructed"
+        },
+        {
+          "type": "TACK",
+          "timestamp": 1790078955000,
+          "leg": 3,
+          "position": {
+            "x": -400.0,
+            "y": -500.0
+          },
+          "entry_speed_kt": 24.0,
+          "min_speed_kt": 17.28,
+          "speed_loss_kt": 6.720000000000001,
+          "recovery_time_s": 4.2,
+          "quality": "reconstructed"
+        },
+        {
+          "type": "GYBE",
+          "timestamp": 1790079005000,
+          "leg": 4,
+          "position": {
+            "x": -400.0,
+            "y": -500.0
+          },
+          "entry_speed_kt": 24.0,
+          "min_speed_kt": 17.28,
+          "speed_loss_kt": 6.720000000000001,
+          "recovery_time_s": 4.2,
+          "quality": "reconstructed"
+        }
+      ],
+      "gates": [
+        {
+          "leg": 1,
+          "crossing_time_ms": 1790078880000,
+          "mark_chosen": "RM2",
+          "side": "STARBOARD",
+          "source": "official",
+          "approach_20s_distance_m": 200.0,
+          "approach_angle_deg": 40.0,
+          "entry_speed_kt": 23.0,
+          "exit_speed_kt": 22.0,
+          "rounding_time_s": 5.0,
+          "rounding_reason": null,
+          "split_to_leader_s": 1.0
+        },
+        {
+          "leg": 2,
+          "crossing_time_ms": 1790078930000,
+          "mark_chosen": "RM6",
+          "side": "STARBOARD",
+          "source": "official",
+          "approach_20s_distance_m": 200.0,
+          "approach_angle_deg": 40.0,
+          "entry_speed_kt": 23.0,
+          "exit_speed_kt": 22.0,
+          "rounding_time_s": 5.0,
+          "rounding_reason": null,
+          "split_to_leader_s": 1.0
+        },
+        {
+          "leg": 3,
+          "crossing_time_ms": 1790078980000,
+          "mark_chosen": "RM2",
+          "side": "STARBOARD",
+          "source": "official",
+          "approach_20s_distance_m": 200.0,
+          "approach_angle_deg": 40.0,
+          "entry_speed_kt": 23.0,
+          "exit_speed_kt": 22.0,
+          "rounding_time_s": 5.0,
+          "rounding_reason": null,
+          "split_to_leader_s": 1.0
+        },
+        {
+          "leg": 4,
+          "crossing_time_ms": 1790079030000,
+          "mark_chosen": "RM6",
+          "side": "STARBOARD",
+          "source": "official",
+          "approach_20s_distance_m": 200.0,
+          "approach_angle_deg": 40.0,
+          "entry_speed_kt": 23.0,
+          "exit_speed_kt": 22.0,
+          "rounding_time_s": 5.0,
+          "rounding_reason": null,
+          "split_to_leader_s": 1.0
+        }
+      ],
+      "performance": {
+        "schema_version": "1.0",
+        "method_version": "performance-1",
+        "baseline_index": 100,
+        "dimensions": [
+          {
+            "id": "upwind_vmg",
+            "label": "Upwind course VMG",
+            "index": 91.99999999999999,
+            "value": 16.099999999999998,
+            "peer_mean": 17.5,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 100.0,
+            "sample_count": 2,
+            "matched_legs": [
+              1,
+              3
+            ],
+            "leg_evidence": [
+              {
+                "leg": 1,
+                "value": 16.099999999999998,
+                "peer_mean": 17.5,
+                "index": 91.99999999999999,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078830000,
+                "end_ms": 1790078880000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 17.5,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078830000,
+                    "end_ms": 1790078880000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              },
+              {
+                "leg": 3,
+                "value": 16.099999999999998,
+                "peer_mean": 17.5,
+                "index": 91.99999999999999,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078930000,
+                "end_ms": 1790078980000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 17.5,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078930000,
+                    "end_ms": 1790078980000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              }
+            ],
+            "quality": "derived",
+            "formula": "Mean over matched legs of 100 \u00d7 boat course_vmg_kt / other-boats mean course_vmg_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": []
+          },
+          {
+            "id": "downwind_vmg",
+            "label": "Downwind course VMG",
+            "index": 91.99999999999999,
+            "value": 16.099999999999998,
+            "peer_mean": 17.5,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 100.0,
+            "sample_count": 2,
+            "matched_legs": [
+              2,
+              4
+            ],
+            "leg_evidence": [
+              {
+                "leg": 2,
+                "value": 16.099999999999998,
+                "peer_mean": 17.5,
+                "index": 91.99999999999999,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078880000,
+                "end_ms": 1790078930000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 17.5,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078880000,
+                    "end_ms": 1790078930000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              },
+              {
+                "leg": 4,
+                "value": 16.099999999999998,
+                "peer_mean": 17.5,
+                "index": 91.99999999999999,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078980000,
+                "end_ms": 1790079030000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 17.5,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078980000,
+                    "end_ms": 1790079030000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              }
+            ],
+            "quality": "derived",
+            "formula": "Mean over matched legs of 100 \u00d7 boat course_vmg_kt / other-boats mean course_vmg_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": []
+          },
+          {
+            "id": "upwind_speed",
+            "label": "Upwind speed",
+            "index": 92.0,
+            "value": 23.0,
+            "peer_mean": 25.0,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 100.0,
+            "sample_count": 2,
+            "matched_legs": [
+              1,
+              3
+            ],
+            "leg_evidence": [
+              {
+                "leg": 1,
+                "value": 23.0,
+                "peer_mean": 25.0,
+                "index": 92.0,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078830000,
+                "end_ms": 1790078880000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 25.0,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078830000,
+                    "end_ms": 1790078880000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              },
+              {
+                "leg": 3,
+                "value": 23.0,
+                "peer_mean": 25.0,
+                "index": 92.0,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078930000,
+                "end_ms": 1790078980000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 25.0,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078930000,
+                    "end_ms": 1790078980000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              }
+            ],
+            "quality": "derived",
+            "formula": "Mean over matched legs of 100 \u00d7 boat sog_mean_kt / other-boats mean sog_mean_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": []
+          },
+          {
+            "id": "downwind_speed",
+            "label": "Downwind speed",
+            "index": 92.0,
+            "value": 23.0,
+            "peer_mean": 25.0,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 100.0,
+            "sample_count": 2,
+            "matched_legs": [
+              2,
+              4
+            ],
+            "leg_evidence": [
+              {
+                "leg": 2,
+                "value": 23.0,
+                "peer_mean": 25.0,
+                "index": 92.0,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078880000,
+                "end_ms": 1790078930000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 25.0,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078880000,
+                    "end_ms": 1790078930000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              },
+              {
+                "leg": 4,
+                "value": 23.0,
+                "peer_mean": 25.0,
+                "index": 92.0,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 50.0,
+                "start_ms": 1790078980000,
+                "end_ms": 1790079030000,
+                "quality": "derived",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 25.0,
+                    "coverage_s": 50.0,
+                    "sample_count": 1,
+                    "start_ms": 1790078980000,
+                    "end_ms": 1790079030000,
+                    "quality": "derived"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": []
+              }
+            ],
+            "quality": "derived",
+            "formula": "Mean over matched legs of 100 \u00d7 boat sog_mean_kt / other-boats mean sog_mean_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": []
+          },
+          {
+            "id": "tack_retention",
+            "label": "Tack retention",
+            "index": 89.99999999999999,
+            "value": 72.0,
+            "peer_mean": 80.00000000000001,
+            "unit": "%",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 25.0,
+            "sample_count": 2,
+            "matched_legs": [
+              1,
+              3
+            ],
+            "leg_evidence": [
+              {
+                "leg": 1,
+                "value": 72.0,
+                "peer_mean": 80.00000000000001,
+                "index": 89.99999999999999,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 12.5,
+                "start_ms": 1790078830000,
+                "end_ms": 1790078880000,
+                "quality": "reconstructed",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 80.00000000000001,
+                    "coverage_s": 12.5,
+                    "sample_count": 1,
+                    "start_ms": 1790078830000,
+                    "end_ms": 1790078880000,
+                    "quality": "reconstructed"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": [
+                  {
+                    "timestamp_ms": 1790078855000,
+                    "entry_speed_kt": 24.0,
+                    "minimum_speed_kt": 17.28,
+                    "retention_pct": 72.0,
+                    "window_start_ms": 1790078848500,
+                    "window_end_ms": 1790078861000
+                  }
+                ]
+              },
+              {
+                "leg": 3,
+                "value": 72.0,
+                "peer_mean": 80.00000000000001,
+                "index": 89.99999999999999,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 12.5,
+                "start_ms": 1790078930000,
+                "end_ms": 1790078980000,
+                "quality": "reconstructed",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 80.00000000000001,
+                    "coverage_s": 12.5,
+                    "sample_count": 1,
+                    "start_ms": 1790078930000,
+                    "end_ms": 1790078980000,
+                    "quality": "reconstructed"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": [
+                  {
+                    "timestamp_ms": 1790078955000,
+                    "entry_speed_kt": 24.0,
+                    "minimum_speed_kt": 17.28,
+                    "retention_pct": 72.0,
+                    "window_start_ms": 1790078948500,
+                    "window_end_ms": 1790078961000
+                  }
+                ]
+              }
+            ],
+            "quality": "reconstructed",
+            "formula": "Mean over matched legs of 100 \u00d7 boat mean(100 \u00d7 minimum SOG / entry SOG) / other-boats mean retention",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "detected manoeuvres; full SOG, heading and local TWD source coverage over [-6.5,+6] s",
+            "excluded_legs": []
+          },
+          {
+            "id": "gybe_retention",
+            "label": "Gybe retention",
+            "index": 89.99999999999999,
+            "value": 72.0,
+            "peer_mean": 80.00000000000001,
+            "unit": "%",
+            "higher_is_better": true,
+            "peer_count": 1,
+            "coverage_s": 25.0,
+            "sample_count": 2,
+            "matched_legs": [
+              2,
+              4
+            ],
+            "leg_evidence": [
+              {
+                "leg": 2,
+                "value": 72.0,
+                "peer_mean": 80.00000000000001,
+                "index": 89.99999999999999,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 12.5,
+                "start_ms": 1790078880000,
+                "end_ms": 1790078930000,
+                "quality": "reconstructed",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 80.00000000000001,
+                    "coverage_s": 12.5,
+                    "sample_count": 1,
+                    "start_ms": 1790078880000,
+                    "end_ms": 1790078930000,
+                    "quality": "reconstructed"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": [
+                  {
+                    "timestamp_ms": 1790078905000,
+                    "entry_speed_kt": 24.0,
+                    "minimum_speed_kt": 17.28,
+                    "retention_pct": 72.0,
+                    "window_start_ms": 1790078898500,
+                    "window_end_ms": 1790078911000
+                  }
+                ]
+              },
+              {
+                "leg": 4,
+                "value": 72.0,
+                "peer_mean": 80.00000000000001,
+                "index": 89.99999999999999,
+                "peer_count": 1,
+                "peer_ids": [
+                  "42e39310-fef5-4c5d-b099-a599aad5ddbb"
+                ],
+                "sample_count": 1,
+                "coverage_s": 12.5,
+                "start_ms": 1790078980000,
+                "end_ms": 1790079030000,
+                "quality": "reconstructed",
+                "peers": [
+                  {
+                    "id": "42e39310-fef5-4c5d-b099-a599aad5ddbb",
+                    "team_code": "FRA",
+                    "team_name": "France SailGP Team",
+                    "value": 80.00000000000001,
+                    "coverage_s": 12.5,
+                    "sample_count": 1,
+                    "start_ms": 1790078980000,
+                    "end_ms": 1790079030000,
+                    "quality": "reconstructed"
+                  }
+                ],
+                "excluded_peers": [
+                  {
+                    "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+                    "team_code": "GBR B",
+                    "reason": "retired, non-starting, OCS or missing a valid start crossing"
+                  }
+                ],
+                "events": [
+                  {
+                    "timestamp_ms": 1790079005000,
+                    "entry_speed_kt": 24.0,
+                    "minimum_speed_kt": 17.28,
+                    "retention_pct": 72.0,
+                    "window_start_ms": 1790078998500,
+                    "window_end_ms": 1790079011000
+                  }
+                ]
+              }
+            ],
+            "quality": "reconstructed",
+            "formula": "Mean over matched legs of 100 \u00d7 boat mean(100 \u00d7 minimum SOG / entry SOG) / other-boats mean retention",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "detected manoeuvres; full SOG, heading and local TWD source coverage over [-6.5,+6] s",
+            "excluded_legs": []
+          }
+        ],
+        "overall_index": 91.33333333333333,
+        "notes": [
+          "Post-race comparison; changing wind and different crossing times are not controlled for.",
+          "Index is the mean of per-leg ratios; displayed value and peer mean are arithmetic matched-leg means.",
+          "Retention describes qualifying detected events only; the detector requires at least 2.5 kt speed loss.",
+          "Retention coverage is the union of validated 12.5 s event source windows within matched completed legs.",
+          "Overall index weights all six dimensions equally and requires all six."
+        ],
+        "scope": {
+          "expected_legs": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "matched_legs": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "expected_leg_count": 4,
+          "matched_leg_count": 4,
+          "min_peer_count": 1,
+          "covered_s": 200.0,
+          "excluded_legs": []
+        }
+      },
+      "debrief": {
+        "schema_version": "1.0",
+        "method_version": "debrief-1",
+        "items": [
+          {
+            "id": "4f5369cd-0fa3-4241-afd2-00f356898e22:manoeuvre:TACK:1790078855000",
+            "kind": "manoeuvre_loss",
+            "leg": 1,
+            "title": "Tack: 6.7 kt speed reduction",
+            "detail": "Review the detected entry-to-minimum SOG reduction. This is a speed observation, not an estimate of time or distance lost.",
+            "timestamp_ms": 1790078855000,
+            "value": 6.720000000000001,
+            "unit": "kt",
+            "quality": "reconstructed",
+            "source": "qualifying manoeuvre detector; validated source SOG, heading and local TWD window"
+          },
+          {
+            "id": "4f5369cd-0fa3-4241-afd2-00f356898e22:manoeuvre:GYBE:1790078905000",
+            "kind": "manoeuvre_loss",
+            "leg": 2,
+            "title": "Gybe: 6.7 kt speed reduction",
+            "detail": "Review the detected entry-to-minimum SOG reduction. This is a speed observation, not an estimate of time or distance lost.",
+            "timestamp_ms": 1790078905000,
+            "value": 6.720000000000001,
+            "unit": "kt",
+            "quality": "reconstructed",
+            "source": "qualifying manoeuvre detector; validated source SOG, heading and local TWD window"
+          }
+        ],
+        "reason": null
+      }
+    },
+    {
+      "id": "f535f0dc-a45b-4668-ae07-bd52e0cdd947",
+      "team_code": "GBR B",
+      "team_name": "Athena Pathway Red",
+      "color": "#ef4444",
+      "classification": "RET",
+      "official_rank": null,
+      "official_elapsed_s": null,
+      "source_conflicts": [],
+      "source_coverage": {
+        "sog": {
+          "first_ms": 1790078820000,
+          "last_ms": 1790079080000,
+          "gaps": []
+        },
+        "heading": {
+          "first_ms": 1790078820000,
+          "last_ms": 1790079080000,
+          "gaps": []
+        },
+        "twd": {
+          "first_ms": 1790078820000,
+          "last_ms": 1790079080000,
+          "gaps": []
+        }
+      },
+      "metrics": {
+        "distance_m": {
+          "value": null,
+          "unit": "m",
+          "quality": "unavailable",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        },
+        "sog_mean_kt": {
+          "value": null,
+          "unit": "kt",
+          "quality": "unavailable",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        },
+        "tack_count": {
+          "value": null,
+          "unit": "count",
+          "quality": "unavailable",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        },
+        "gybe_count": {
+          "value": null,
+          "unit": "count",
+          "quality": "unavailable",
+          "coverage_s": 10.0,
+          "sample_count": 100
+        }
+      },
+      "start": {
+        "crossing_time_ms": null,
+        "crossing_order": null,
+        "ocs": true,
+        "gun": {
+          "metrics": {
+            "sog_mean_kt": {
+              "value": 26.0,
+              "unit": "kt",
+              "quality": "derived",
+              "coverage_s": 10.0,
+              "sample_count": 100
+            }
+          }
+        }
+      },
+      "legs": [],
+      "manoeuvres": [],
+      "gates": [],
+      "performance": {
+        "schema_version": "1.0",
+        "method_version": "performance-1",
+        "baseline_index": 100,
+        "dimensions": [
+          {
+            "id": "upwind_vmg",
+            "label": "Upwind course VMG",
+            "index": null,
+            "value": null,
+            "peer_mean": null,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 0,
+            "coverage_s": 0,
+            "sample_count": 0,
+            "matched_legs": [],
+            "leg_evidence": [],
+            "quality": "unavailable",
+            "formula": "Mean over matched legs of 100 \u00d7 boat course_vmg_kt / other-boats mean course_vmg_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": [],
+            "reason": "boat has no eligible racing window or has a source-state conflict"
+          },
+          {
+            "id": "downwind_vmg",
+            "label": "Downwind course VMG",
+            "index": null,
+            "value": null,
+            "peer_mean": null,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 0,
+            "coverage_s": 0,
+            "sample_count": 0,
+            "matched_legs": [],
+            "leg_evidence": [],
+            "quality": "unavailable",
+            "formula": "Mean over matched legs of 100 \u00d7 boat course_vmg_kt / other-boats mean course_vmg_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": [],
+            "reason": "boat has no eligible racing window or has a source-state conflict"
+          },
+          {
+            "id": "upwind_speed",
+            "label": "Upwind speed",
+            "index": null,
+            "value": null,
+            "peer_mean": null,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 0,
+            "coverage_s": 0,
+            "sample_count": 0,
+            "matched_legs": [],
+            "leg_evidence": [],
+            "quality": "unavailable",
+            "formula": "Mean over matched legs of 100 \u00d7 boat sog_mean_kt / other-boats mean sog_mean_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": [],
+            "reason": "boat has no eligible racing window or has a source-state conflict"
+          },
+          {
+            "id": "downwind_speed",
+            "label": "Downwind speed",
+            "index": null,
+            "value": null,
+            "peer_mean": null,
+            "unit": "kt",
+            "higher_is_better": true,
+            "peer_count": 0,
+            "coverage_s": 0,
+            "sample_count": 0,
+            "matched_legs": [],
+            "leg_evidence": [],
+            "quality": "unavailable",
+            "formula": "Mean over matched legs of 100 \u00d7 boat sog_mean_kt / other-boats mean sog_mean_kt",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "historical leg metrics; reconstructed crossings; >=95% valid source seconds",
+            "excluded_legs": [],
+            "reason": "boat has no eligible racing window or has a source-state conflict"
+          },
+          {
+            "id": "tack_retention",
+            "label": "Tack retention",
+            "index": null,
+            "value": null,
+            "peer_mean": null,
+            "unit": "%",
+            "higher_is_better": true,
+            "peer_count": 0,
+            "coverage_s": 0,
+            "sample_count": 0,
+            "matched_legs": [],
+            "leg_evidence": [],
+            "quality": "unavailable",
+            "formula": "Mean over matched legs of 100 \u00d7 boat mean(100 \u00d7 minimum SOG / entry SOG) / other-boats mean retention",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "detected manoeuvres; full SOG, heading and local TWD source coverage over [-6.5,+6] s",
+            "excluded_legs": [],
+            "reason": "boat has no eligible racing window or has a source-state conflict"
+          },
+          {
+            "id": "gybe_retention",
+            "label": "Gybe retention",
+            "index": null,
+            "value": null,
+            "peer_mean": null,
+            "unit": "%",
+            "higher_is_better": true,
+            "peer_count": 0,
+            "coverage_s": 0,
+            "sample_count": 0,
+            "matched_legs": [],
+            "leg_evidence": [],
+            "quality": "unavailable",
+            "formula": "Mean over matched legs of 100 \u00d7 boat mean(100 \u00d7 minimum SOG / entry SOG) / other-boats mean retention",
+            "window": "matching completed legs in this retrospective race",
+            "denominator": "equal-weight matched legs; each other eligible boat has one vote per leg",
+            "source": "detected manoeuvres; full SOG, heading and local TWD source coverage over [-6.5,+6] s",
+            "excluded_legs": [],
+            "reason": "boat has no eligible racing window or has a source-state conflict"
+          }
+        ],
+        "overall_index": null,
+        "notes": [
+          "Post-race comparison; changing wind and different crossing times are not controlled for.",
+          "Index is the mean of per-leg ratios; displayed value and peer mean are arithmetic matched-leg means.",
+          "Retention describes qualifying detected events only; the detector requires at least 2.5 kt speed loss.",
+          "Retention coverage is the union of validated 12.5 s event source windows within matched completed legs.",
+          "Overall index weights all six dimensions equally and requires all six."
+        ],
+        "scope": {
+          "expected_legs": [],
+          "matched_legs": [],
+          "expected_leg_count": 0,
+          "matched_leg_count": 0,
+          "min_peer_count": 0,
+          "covered_s": 0,
+          "excluded_legs": []
+        },
+        "reason": "overall index requires all six dimensions; missing dimensions are not imputed"
+      },
+      "debrief": {
+        "schema_version": "1.0",
+        "method_version": "debrief-1",
+        "items": [],
+        "reason": "no qualifying peer leg deficit or covered manoeuvre available"
+      }
+    }
+  ],
+  "wind": {
+    "source": "Official wind",
+    "baseline_twd_deg": 40.0,
+    "sample_count": 20,
+    "shift_min_deg": 0.0,
+    "shift_max_deg": 0.0,
+    "timeline": [
+      {
+        "timestamp": 1790078820000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078821000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078822000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078823000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078824000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078825000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078826000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078827000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078828000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078829000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078830000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078831000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078832000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078833000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078834000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078835000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078836000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078837000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078838000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      },
+      {
+        "timestamp": 1790078839000,
+        "shift_deg": 0.0,
+        "tws_kt": 12.0
+      }
+    ]
+  },
+  "pairs": [],
+  "event_feed": {
+    "schema_version": "1.0",
+    "method_version": "events-1",
+    "events": [
+      {
+        "id": "gun",
+        "timestamp_ms": 1790078830000,
+        "type": "gun",
+        "label": "Start gun",
+        "source": "session",
+        "quality": "official"
+      }
+    ]
+  },
+  "tactical_insights": {
+    "schema_version": "1.0",
+    "method_version": "tactical-1",
+    "race_id": "synthetic_pr1",
+    "source": "recorded official wind",
+    "snapshot_interval_ms": 10000,
+    "max_snapshot_age_ms": 12000,
+    "window_s": 120,
+    "projection_horizon_s": 300,
+    "availability_basis": "Measurement timestamps only",
+    "snapshots": [
+      {
+        "timestamp_ms": 1790078830000,
+        "window_start_ms": 1790078710000,
+        "window_end_ms": 1790078830000,
+        "coverage_s": 10.0,
+        "sample_count": 10,
+        "quality": "unavailable",
+        "source": "recorded official wind",
+        "reason": "Window shorter than 120 s in synthetic fixture.",
+        "direction_change_deg": null,
+        "direction_rate_deg_per_min": null,
+        "speed_change_kt": null,
+        "speed_coverage_s": 10.0,
+        "speed_sample_count": 10,
+        "speed_quality": "unavailable",
+        "speed_reason": "Window shorter than 120 s.",
+        "projection_change_deg": null,
+        "projection_reason": "Insufficient samples.",
+        "insights": []
+      }
+    ]
+  }
+}
